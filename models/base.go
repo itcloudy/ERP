@@ -11,3 +11,8 @@ type Base struct {
 	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	FormAction string    `orm:"-" form:"formAction"`                  //非数据库字段，用于表示记录的增加，修改
 }
+
+type QueryMap struct {
+	Type    string                 //用户数据库查询的类型:filter,exclude,cond等
+	Context map[string]interface{} //数据库查询的条件
+}

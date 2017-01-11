@@ -119,6 +119,10 @@ func GetAllProductAttribute(query map[string]string, fields []string, sortby []s
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
+	for i, _ := range objArrs {
+		o.LoadRelated(&objArrs[i], "ValueIds")
+	}
+
 	return paginator, objArrs, err
 }
 

@@ -34,7 +34,7 @@ $(document).ready(function() {
     //如果搜索添加不为空，增加提示样式
     $("#listViewSearch input").change(function(e) {
         e.currentTarget.value = e.currentTarget.value.trim();
-        nums = $.grep($("#listViewSearch input"), function(el, index) {
+        var nums = $.grep($("#listViewSearch input"), function(el, index) {
             if (el.value != "") {
                 return true
             } else {
@@ -43,17 +43,17 @@ $(document).ready(function() {
         });
         if (nums.length > 0) {
             if ($("button[id^='clearListSearchCond']:first").hasClass("hide")) {
-                $("button[id^='clearListSearchCond']").toggleClass("hide");
+                $("button[id^='clearListSearchCond']").removeClass("hide");
             }
         } else {
             if (!$("button[id^='clearListSearchCond']:first").hasClass("hide")) {
-                $("button[id^='clearListSearchCond']").toggleClass("hide");
+                $("button[id^='clearListSearchCond']").addClass("hide");
             }
         }
     });
     // 若过滤条件不为空， 显示清空条件按钮
     (function() {
-        nums = $.grep($("#listViewSearch input"), function(el, index) {
+        var nums = $.grep($("#listViewSearch input"), function(el, index) {
             if (el.value != "") {
                 return true
             } else {
@@ -61,7 +61,9 @@ $(document).ready(function() {
             }
         });
         if (nums.length < 1) {
-            $("button[id^='clearListSearchCond']").toggleClass("hide");
+            $("button[id^='clearListSearchCond']").addClass("hide");
+        } else {
+            $("button[id^='clearListSearchCond']").removeClass("hide");
         }
     })();
     $("button[id^='clearListSearchCond']").click(function(e) {
