@@ -1,0 +1,10 @@
+#ignore compile file
+
+
+.project
+*.exe
+*.exe~
+.vscode/
+debug
+debug~
+.idea

@@ -1,0 +1,142 @@
+
+div.DTE div.editor_upload {
+	padding-top: 4px;
+
+	div.eu_table {
+		display: table;
+		width: 100%;
+	}
+
+	div.row {
+		display: table-row;
+	}
+
+	div.cell {
+		display: table-cell;
+		position: relative;
+		width: 50%;
+		vertical-align: top;
+	}
+
+	div.cell + div.cell {
+		padding-left: 10px;
+	}
+
+	div.row + div.row {
+		div.cell {
+			padding-top: 10px;
+		}
+	}
+
+	button.btn,
+	input[type=file] {
+		width: 100%;
+		height: 2.3em;
+		font-size: 0.8em;
+		text-align: center;
+		line-height: 1em;
+	}
+
+	input[type=file] {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		opacity: 0;
+	}
+
+	div.drop {
+		position: relative;
+		box-sizing: border-box;
+		width: 100%;
+		height: 100%;
+		border: 3px dashed #ccc;
+		border-radius: 6px;
+		min-height: 4em;
+		color: #999;
+		padding-top: 3px;
+		text-align: center;
+
+		&.over {
+			border: 3px dashed #111;
+			color: #111;
+		}
+
+		span {
+			max-width: 75%;
+			font-size: 0.85em;
+			line-height: 1em;
+		}
+	}
+
+	div.rendered {
+		img {
+			max-width: 8em;
+			margin: 0 auto;
+		}
+	}
+
+	&.noDrop {
+		div.drop {
+			display: none;
+		}
+
+		div.row.second {
+			display: none;
+		}
+
+		div.rendered {
+			margin-top: 10px;
+		}
+	}
+
+	&.noClear {
+		div.clearValue button {
+			display: none;
+		}
+	}
+
+	&.multi {
+		div.cell {
+			display: block;
+			width: 100%;
+
+			div.drop {
+				min-height: 0;
+				padding-bottom: 5px;
+			}
+		}
+
+		div.clearValue {
+			display: none;
+		}
+
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+
+			li {
+				position: relative;
+				margin-top: 0.5em;
+
+				&:first-child {
+					margin-top: 0;
+				}
+
+				img {
+					vertical-align: middle;
+				}
+
+				button {
+					position: absolute;
+					width: 40px;
+					right: 0;
+					top: 50%;
+					margin-top: -1.5em;
+				}
+			}
+		}
+	}
+}
+

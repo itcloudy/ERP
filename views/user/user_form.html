@@ -1,0 +1,163 @@
+<div class="row">
+    <p id="list-title">{{.PageName}}</p>
+</div>
+<form id="userForm" action="{{.URL}}{{.RecordId}}?action={{.Action}}" method="post" class="post-from form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+    <div class="row">
+        {{if .RecordId}} {{if .Readonly}}
+        <button type="button" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</button> {{end}}{{end}}
+        <button type="submit" form="userForm" id="userForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button> {{if .Readonly}}
+        <button type="button" data-form="userForm" class="btn btn-danger fa fa-remove  pull-left form-cancel-btn">&nbsp取消</button> {{else}}
+        <a href="{{.URL}}" data-form="userForm" class="btn btn-danger fa fa-remove  pull-left">&nbsp取消</a> {{end}}
+
+        <a href="{{.URL}}" class="btn btn-info fa fa-list pull-right">&nbsp列表</a>
+    </div>
+    {{ .xsrf }} {{if .RecordId}}
+    <input type="hidden" name="_recordId" id="record-id" value="{{.RecordId}}">
+    <input type="hidden" name="_method" value="PUT"> {{end}}
+    <fieldset>
+        <legend>基本信息</legend>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="name" class="col-md-4 control-label label-start">用户名<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{.User.Name}} </p>
+                        <input class="form-control" id="name" name="Name" {{if not .Readonly}}autofocus{{end}} type="text" data-oldValue="{{.User.Name}}" value="{{.User.Name}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="namezh" class="col-md-4 control-label">用户名(中文)<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{.User.NameZh}} </p>
+                        <input class="form-control" id="namezh" name="NameZh" type="text" data-oldValue="{{.User.NameZh}}" value="{{.User.NameZh}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="mobile" class="col-md-4 control-label label-start">手机号码<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{.User.Mobile}} </p>
+                        <input class="form-control" name="Mobile" id="mobile" type="text" data-oldValue="{{.User.Mobile}}" value="{{.User.Mobile}}" />
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="tel" class="col-md-4 control-label">座机</label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{.User.Tel}} </p>
+                        <input class="form-control" name="Tel" id="tel" type="text" data-oldValue="{{.User.Tel}}" value="{{.User.Tel}}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!--<div class="col-md-3">
+                <div class="form-group">
+                    <label for="password" class="col-md-4 control-label label-start">密码<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <input class="form-control" name="password" id="password" type="password" />
+                    </div>
+                </div>
+            </div>-->
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="email" class="col-md-4 control-label label-start">邮箱<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{.User.Email}} </p>
+                        <input class="form-control" name="Email" id="email" type="email" data-oldValue="{{.User.Email}}" value="{{.User.Email}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="qq" class="col-md-4 control-label ">QQ</label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{.User.Qq}} </p>
+                        <input class="form-control" name="Qq" id="qq" type="text" data-oldValue="{{.User.Qq}}" value="{{.User.Qq}}" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="Wechat" class="col-md-4 control-label">微信</label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{.User.Wechat}} </p>
+                        <input class="form-control" name="Wechat" id="wechat" data-oldValue="{{.User.Wechat}}" type="text" value="{{.User.Wechat}}" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>部门信息</legend>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="Department" class="col-md-4 control-label label-start">部门<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{if .User}} {{if .User.Department}} {{.User.Department.Name}}{{end}} {{end}}</p>
+                        <select aria-hidden="true" name="Department" id="department" class="form-control select-department " {{if .User}} {{if .User.Department}} data-default-id="{{.User.Department.Id}}" data-default-name="{{.User.Department.Name}}" {{end}} {{end}}>
+                            <!--option不能删除用于bootstrapValidator验证-->
+                            <option value="{{.User.Department.Id}}" selected="selected">{{.User.Department.Name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="position" class="col-md-4 control-label label-start">职位<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{if .User}} {{if .User.Position}} {{.User.Position.Name}}{{end}} {{end}}</p>
+                        <select name="Position" id="position" class="form-control select-position" {{if .User}} {{if .User.Position}} data-default-id="{{.User.Position.Id}}" data-default-name="{{.User.Position.Name}}" {{end}} {{end}}>
+                            <!--option不能删除用于bootstrapValidator验证-->
+                            <option value="{{.User.Position.Id}}" selected="selected">{{.User.Position.Name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>权限信息</legend>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="isadmin" class="col-md-4 control-label ">超级用户</label>
+                    <div class="col-md-8 ">
+                        <input name="isadmin" id="isadmin" class="form-control form-checkbox" type="checkbox">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="active" class="col-md-4 control-label ">有效</label>
+                    <div class="col-md-8 ">
+                        <input name="Active" id="active" class="form-control form-checkbox" checked="checked" type="checkbox">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="usergroup" class="col-md-4 control-label label-start">权限组<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{if .User}} {{if .User.Groups}} {{range .User.Groups}}<a class='display-block label label-primary'>{{.name}}</a>{{end}}{{end}} {{end}}</p>
+                        <select name="Group" id="usergroup" multiple="multiple" class="form-control select-group">
+                            {{range  .User.Groups}}
+                            <option value="{{.id}}" selected="selected">{{.name}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+</form>

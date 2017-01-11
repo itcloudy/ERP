@@ -1,0 +1,184 @@
+
+$editor-datetime-selected: #4E6CA3 !default;
+
+div.editor-datetime {
+	position: absolute;
+	background-color: white;
+	z-index: 2050;
+    border: 1px solid #ccc;
+	box-shadow: 0 5px 15px -5px rgba(0,0,0,.5);
+	padding-bottom: 5px;
+
+	div.editor-datetime-title {
+		text-align: center;
+	    padding: 5px 0px 3px;
+	}
+
+	table {
+		border-spacing: 0;
+		margin: 6px 13px;
+
+		th {
+			font-size: 0.8em;
+			color: #777;
+			font-weight: normal;
+			width: 14.285714286%;
+			padding: 0 0 4px 0;
+			text-align: center;
+		}
+
+		td {
+			font-size: 0.9em;
+			color: #444;
+			padding: 0;
+		}
+
+		td.day {
+			text-align: right;
+			background: #f5f5f5;
+
+			&.disabled {
+				color: #aaa;
+				background: white;
+			}
+
+			&.today {
+				background-color: #ddd;
+				
+				button {
+					font-weight: bold;
+				}
+			}
+
+			&.selected button {
+				background: $editor-datetime-selected;
+				color: white;
+				border-radius: 2px;
+			}
+
+			button:hover {
+				background: #ff8000;
+				color: white;
+				border-radius: 2px;
+			}
+		}
+
+		td.editor-datetime-week {
+			font-size: 0.7em;
+		}
+
+		button {
+			width: 100%;
+			box-sizing: border-box;
+			border: none;
+			background: transparent;
+			font-size: inherit;
+			color: inherit;
+			text-align: inherit;
+			padding: 5px 9px;
+			cursor: pointer;
+			margin: 0;
+		}
+
+		&.weekNumber th {
+			width: 12.5%;
+		}
+	}
+
+	div.editor-datetime-label {
+		position: relative;
+		display: inline-block;
+		height: 30px;
+		padding: 5px 6px;
+		border: 1px solid transparent;
+		box-sizing: border-box;
+		cursor: pointer;
+
+		&:hover {
+			border: 1px solid #ddd;
+			border-radius: 2px;
+			background-color: #f5f5f5;
+		}
+
+		span {
+
+		}
+
+		select {
+			position: absolute;
+			top: 6px;
+			left: 0;
+			cursor: pointer;
+			opacity: 0;
+			-ms-filter: "alpha(opacity=0)";
+		}
+	}
+
+	div.editor-datetime-time {
+		text-align: center;
+
+		> span {
+			vertical-align: middle;
+		}
+
+		div.editor-datetime-timeblock {
+			display: inline-block;
+			vertical-align: middle;
+		}
+	}
+
+
+	div.editor-datetime-iconLeft,
+	div.editor-datetime-iconRight,
+	div.editor-datetime-iconUp,
+	div.editor-datetime-iconDown {
+		width: 30px;
+		height: 30px;
+		background-position: center;
+		background-repeat: no-repeat;
+		opacity: 0.3;
+		overflow: hidden;
+		box-sizing: border-box;
+
+		&:hover {
+			border: 1px solid #ccc;
+			border-radius: 2px;
+			background-color: #f0f0f0;
+			opacity: 0.6;
+		}
+
+		button {
+			border: none;
+			background: transparent;
+			text-indent: 30px;
+			height: 100%;
+			width: 100%;
+			cursor: pointer;
+		}
+	}
+
+	div.editor-datetime-iconLeft {
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAYAAAAsEj5rAAAAUklEQVR42u3VMQoAIBADQf8Pgj+OD9hG2CtONJB2ymQkKe0HbwAP0xucDiQWARITIDEBEnMgMQ8S8+AqBIl6kKgHiXqQqAeJepBo/z38J/U0uAHlaBkBl9I4GwAAAABJRU5ErkJggg==');
+	}
+
+	div.editor-datetime-iconRight {
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAeCAYAAAAsEj5rAAAAU0lEQVR42u3VOwoAMAgE0dwfAnNjU26bYkBCFGwfiL9VVWoO+BJ4Gf3gtsEKKoFBNTCoCAYVwaAiGNQGMUHMkjGbgjk2mIONuXo0nC8XnCf1JXgArVIZAQh5TKYAAAAASUVORK5CYII=');
+	}
+
+	div.editor-datetime-iconUp {
+		height: 20px;
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAALCAMAAABf9c24AAAAFVBMVEX///99fX1+fn57e3t6enoAAAAAAAC73bqPAAAABnRSTlMAYmJkZt92bnysAAAAL0lEQVR4AWOgJmBhxCvLyopHnpmVjY2VCadeoCxIHrcsWJ4RlyxCHlMWCTBRJxwAjrIBDMWSiM0AAAAASUVORK5CYII=');
+	}
+
+	div.editor-datetime-iconDown {
+		height: 20px;
+		background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAALCAMAAABf9c24AAAAFVBMVEX///99fX1+fn57e3t6enoAAAAAAAC73bqPAAAABnRSTlMAYmJkZt92bnysAAAAMElEQVR4AWOgDmBiRQIsmPKMrGxQgJDFlEfIYpoPk8Utz8qM232MYFfhkQfKUg8AANefAQxecJ58AAAAAElFTkSuQmCC');
+	}
+}
+

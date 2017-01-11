@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Provinces>
+  <Province PID="1" ID="1" ProvinceName="北京市">北京市</Province>
+  <Province PID="1" ID="2" ProvinceName="天津市">天津市</Province>
+  <Province PID="1" ID="3" ProvinceName="河北省">河北省</Province>
+  <Province PID="1" ID="4" ProvinceName="山西省">山西省</Province>
+  <Province PID="1" ID="5" ProvinceName="内蒙古自治区">内蒙古自治区</Province>
+  <Province PID="1" ID="6" ProvinceName="辽宁省">辽宁省</Province>
+  <Province PID="1" ID="7" ProvinceName="吉林省">吉林省</Province>
+  <Province PID="1" ID="8" ProvinceName="黑龙江省">黑龙江省</Province>
+  <Province PID="1" ID="9" ProvinceName="上海市">上海市</Province>
+  <Province PID="1" ID="10" ProvinceName="江苏省">江苏省</Province>
+  <Province PID="1" ID="11" ProvinceName="浙江省">浙江省</Province>
+  <Province PID="1" ID="12" ProvinceName="安徽省">安徽省</Province>
+  <Province PID="1" ID="13" ProvinceName="福建省">福建省</Province>
+  <Province PID="1" ID="14" ProvinceName="江西省">江西省</Province>
+  <Province PID="1" ID="15" ProvinceName="山东省">山东省</Province>
+  <Province PID="1" ID="16" ProvinceName="河南省">河南省</Province>
+  <Province PID="1" ID="17" ProvinceName="湖北省">湖北省</Province>
+  <Province PID="1" ID="18" ProvinceName="湖南省">湖南省</Province>
+  <Province PID="1" ID="19" ProvinceName="广东省">广东省</Province>
+  <Province PID="1" ID="20" ProvinceName="广西壮族自治区">广西壮族自治区</Province>
+  <Province PID="1" ID="21" ProvinceName="海南省">海南省</Province>
+  <Province PID="1" ID="22" ProvinceName="重庆市">重庆市</Province>
+  <Province PID="1" ID="23" ProvinceName="四川省">四川省</Province>
+  <Province PID="1" ID="24" ProvinceName="贵州省">贵州省</Province>
+  <Province PID="1" ID="25" ProvinceName="云南省">云南省</Province>
+  <Province PID="1" ID="26" ProvinceName="西藏自治区">西藏自治区</Province>
+  <Province PID="1" ID="27" ProvinceName="陕西省">陕西省</Province>
+  <Province PID="1" ID="28" ProvinceName="甘肃省">甘肃省</Province>
+  <Province PID="1" ID="29" ProvinceName="青海省">青海省</Province>
+  <Province PID="1" ID="30" ProvinceName="宁夏回族自治区">宁夏回族自治区</Province>
+  <Province PID="1" ID="31" ProvinceName="新疆维吾尔自治区">新疆维吾尔自治区</Province>
+  <Province PID="1" ID="32" ProvinceName="香港特别行政区">香港特别行政区</Province>
+  <Province PID="1" ID="33" ProvinceName="澳门特别行政区">澳门特别行政区</Province>
+  <Province PID="1" ID="34" ProvinceName="台湾省">台湾省</Province>
+</Provinces>

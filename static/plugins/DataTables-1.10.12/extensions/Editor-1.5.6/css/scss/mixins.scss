@@ -1,0 +1,176 @@
+
+
+@function tint( $color, $percent ) {
+	@return mix(white, $color, $percent);
+}
+
+@function shade( $color, $percent ) {
+	@return mix(black, $color, $percent);
+}
+
+
+@mixin border-radius ( $radius ) {
+	-webkit-border-radius: $radius;
+	   -moz-border-radius: $radius;
+	    -ms-border-radius: $radius;
+	     -o-border-radius: $radius;
+	        border-radius: $radius;
+}
+
+@mixin box-sizing($box-model) {
+  -webkit-box-sizing: $box-model; // Safari <= 5
+     -moz-box-sizing: $box-model; // Firefox <= 19
+          box-sizing: $box-model;
+}
+
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow:inset $top $left $blur $color;
+    -moz-box-shadow:inset $top $left $blur $color;
+    box-shadow:inset $top $left $blur $color;
+  } @else {
+    -webkit-box-shadow: $top $left $blur $color;
+    -moz-box-shadow: $top $left $blur $color;
+    box-shadow: $top $left $blur $color;
+  }
+}
+
+@mixin three-stop-gradient($fromColor, $middleColor, $toColor) {
+	background-color: $toColor; /* Fallback */
+	background-image: -webkit-linear-gradient(top, $fromColor, $middleColor, $toColor); /* Chrome 10+, Saf5.1+, iOS 5+ */
+	background-image:    -moz-linear-gradient(top, $fromColor, $middleColor, $toColor); /* FF3.6 */
+	background-image:     -ms-linear-gradient(top, $fromColor, $middleColor, $toColor); /* IE10 */
+	background-image:      -o-linear-gradient(top, $fromColor, $middleColor, $toColor); /* Opera 11.10+ */
+	background-image:         linear-gradient(to bottom, $fromColor, $middleColor, $toColor);
+	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#{nth( $fromColor, 1 )}', EndColorStr='#{nth( $toColor, 1 )}');
+}
+
+@mixin radial-gradient ($fromColor, $toColor ) {
+	background: $toColor; /* Fallback */
+	background:     -ms-radial-gradient(center, ellipse farthest-corner, $fromColor 0%, $toColor 100%); /* IE10 Consumer Preview */ 
+	background:    -moz-radial-gradient(center, ellipse farthest-corner, $fromColor 0%, $toColor 100%); /* Firefox */ 
+	background:      -o-radial-gradient(center, ellipse farthest-corner, $fromColor 0%, $toColor 100%); /* Opera */ 
+	background: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, $fromColor), color-stop(1, $toColor)); /* Webkit (Safari/Chrome 10) */ 
+	background: -webkit-radial-gradient(center, ellipse farthest-corner, $fromColor 0%, $toColor 100%); /* Webkit (Chrome 11+) */ 
+	background: radial-gradient(ellipse farthest-corner at center, $fromColor 0%, $toColor 100%); /* W3C Markup, IE10 Release Preview */ 
+}
+
+@mixin keyframe ($animation_name) {
+    @-webkit-keyframes #{$animation_name} {
+        @content;
+    }
+ 
+    @-moz-keyframes #{$animation_name} {
+        @content;
+    }
+ 
+    @-o-keyframes #{$animation_name} {
+        @content;
+    }
+ 
+    @keyframes #{$animation_name} {
+        @content;
+    }
+}
+
+@mixin animation ($duration, $animation) {
+	-webkit-animation-duration: $duration;
+	-webkit-animation-name: $animation;
+	-webkit-animation-fill-mode: forwards;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-webkit-animation-direction: alternate;
+
+	-moz-animation-duration: $duration;
+	-moz-animation-name: $animation;
+	-moz-animation-fill-mode: forwards;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
+	-moz-animation-direction: alternate;
+	
+	-o-animation-duration: $duration;
+	-o-animation-name: $animation;
+	-o-animation-fill-mode: forwards;
+	-o-animation-iteration-count: infinite;
+	-o-animation-timing-function: linear;
+	-o-animation-direction: alternate;
+	
+	animation-duration: $duration;
+	animation-name: $animation;
+	animation-fill-mode: forwards;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	animation-direction: alternate;
+}
+
+@mixin close-icon () {
+	position: absolute;
+	top: -11px;
+	right: -11px;
+	width: 22px;
+	height: 22px;
+	border: 2px solid white;
+	background-color: black;
+	text-align: center;
+	border-radius: 15px;
+	cursor: pointer;
+	z-index: 12;
+	box-shadow: 2px 2px 6px #111;
+
+	&:after {
+		content: '\00d7';
+		color: white;
+		font-weight: bold;
+		font-size: 18px;
+		line-height: 22px;
+		font-family: 'Courier New', Courier, monospace;
+		padding-left: 1px;
+	}
+
+	&:hover {
+		background-color: #092079;
+		box-shadow: 2px 2px 9px #111;
+	}
+}
+
+@mixin overlay-background () {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+
+	@include radial-gradient( rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7) );
+
+	z-index: 10;
+
+	// IE8- doesn't support RGBA and jQuery uses `filter:` for the fade-in
+	// animation, so we need a child element that is used just for the display
+	>div {
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		bottom: 0;
+
+		// IE7-
+		filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+		
+		// IE8
+		-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+	}
+
+	// IE9 has both filter and rgba support, so we need a hack to disable the filter
+	>div:not([dummy]) {
+		filter: progid:DXImageTransform.Microsoft.gradient(enabled='false');
+	}
+}
+
+@mixin background-transision () {
+	-webkit-transition: background-color 500ms linear;
+	   -moz-transition: background-color 500ms linear;
+	    -ms-transition: background-color 500ms linear;
+	     -o-transition: background-color 500ms linear;
+	transition: background-color 500ms linear;
+}
+

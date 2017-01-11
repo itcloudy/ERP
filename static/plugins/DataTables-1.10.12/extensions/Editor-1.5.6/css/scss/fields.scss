@@ -1,0 +1,128 @@
+
+
+// Generic field styling
+div.DTE_Field {
+	input,
+	textarea {
+		box-sizing: border-box;
+		background-color: white;
+		-webkit-transition: background-color ease-in-out .15s;
+		        transition: background-color ease-in-out .15s;
+	}
+
+	input:focus,
+	textarea:focus {
+		background-color: #ffffee; 
+	}
+
+	input[type="color"],
+	input[type="date"],
+	input[type="datetime"],
+	input[type="datetime-local"],
+	input[type="email"],
+	input[type="month"],
+	input[type="number"],
+	input[type="password"],
+	input[type="search"],
+	input[type="tel"],
+	input[type="text"],
+	input[type="time"],
+	input[type="url"],
+	input[type="week"] {
+		padding: 6px 4px;
+		width: 100%;
+	}
+
+
+	div.DTE_Field_Info,
+	div.DTE_Field_Message {
+		font-size: 11px;
+		line-height: 1em;
+	}
+
+	div.DTE_Field_Error {
+		font-size: 11px;
+		line-height: 1em;
+		display: none;
+		color: red;
+		margin-top: 5px;
+	}
+
+	div.multi-value {
+		display: none;
+		border: 1px dotted #666;
+		border-radius: 3px;
+		padding: 5px;
+		background-color: #fafafa;
+		cursor: pointer;
+
+		span {
+			font-size: 0.8em;
+			line-height: 1.25em;
+			display: block;
+			color: #666;
+		}
+
+		&:hover {
+			background-color: #f1f1f1;
+		}
+	}
+
+	div.multi-restore {
+		display: none;
+		margin-top: 0.5em;
+		font-size: 0.8em;
+		line-height: 1.25em;
+		color: #3879d9;
+
+		&:hover {
+			text-decoration: underline;
+			cursor: pointer;
+		}
+	}
+}
+
+// Specific field type styling
+div.DTE_Field_Type_textarea {
+	textarea {
+		padding: 3px;
+		width: 100%;
+		height: 80px;
+	}
+}
+
+div.DTE_Field.DTE_Field_Type_date {
+	img {
+		vertical-align: middle;
+		cursor: pointer;
+		*cursor: hand;
+	}
+
+	input.jqueryui {
+		width: 87%;
+		margin-right: 6px;
+	}
+}
+
+div.DTE_Field_Type_checkbox,
+div.DTE_Field_Type_radio {
+	div.DTE_Field_Input > div > div {
+		margin-bottom: 0.25em;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+
+		input {
+		}
+
+		label {
+			margin-left: 0.75em;
+			vertical-align: middle;
+		}
+	}
+}
+
+div.DTE_Field_Type_select div.DTE_Field_Input {
+	padding-top: 4px;
+}

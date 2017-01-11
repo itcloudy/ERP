@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{i18n .Lang "global.systemName"}}</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> {{template "base/head_css.html" .}}
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <!--<body class="skin-blue sidebar-mini sidebar-collapse">-->
+    <div class="wrapper">
+        {{template "base/head_top.html" .}}
+        <!-- Left side column. contains the logo and sidebar -->
+        {{template "base/aside_left.html" .}}
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <div class="row">
+                <p id="list-title">{{.PageName}}</p>
+            </div>
+            {{.xsrf}}
+            <div class="row text-center">
+                <a href="{{.URL}}?action=create" type="buttom" class="btn btn-success fa fa-plus pull-left">&nbsp新建</a>
+                <a type="button" data-toggle="modal" data-target="#myModal" class="btn btn-warning fa fa-mail-reply pull-left">&nbsp导入</a>
+                <button class="btn btn-info fa fa-search pull-left search-hidden" id='search-enable'>&nbsp开启</button>
+                <div class="btn-group btn-group-sm pull-right">
+                    <button class="btn btn-default fa fa-list-ul list-button active" data-view-type="list"></button>
+                    <button class="btn btn-default fa fa-th-large list-button" data-view-type="kanban"></button>
+                    <!--<button class="btn btn-default fa fa-edit list-button" data-view-type="form"></button>
+                    <button class="btn btn-default fa fa-tree" tdata-view-type="graph"></button>-->
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="panel-group panel-list-info" id="accordion" role="tablist" aria-multiselectable="false">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <p class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#listViewSearch" aria-expanded="false" aria-controls="collapseOne">
+                                    <i class="glyphicon glyphicon-plus icon-plus">过滤条件</i>
+                                    <i class="glyphicon glyphicon-minus icon-minus">过滤条件</i>
+                                </a>
+                                <button id="clearListSearchCond-{{.ViewType}}" class="btn btn-xs btn-primary ">清空条件</button>
+                            </p>
+                        </div>
+                        <div id="listViewSearch" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body list-info-{{.ViewType}}">
+                                {{.LayoutContent}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{if .ViewType}} {{if eq .ViewType "table"}}
+            <div class="row" id="display-table">
+                <table id='{{.tableId}}' class="table-diplay-info table table-bordered table-hover table-condensed table-striped"></table>
+            </div>
+            {{end}} {{end}}
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">数据导入</h4>
+                        </div>
+                        <div class="modal-body">
+                            <input id="import-file-excel" name="importFiles" type="file">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger  fa fa-remove" data-dismiss="modal">&nbsp取消</button>
+                            <!--<button type="button" class="btn btn-primary fa fa-save ">&nbsp保存</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.content-wrapper -->
+        {{template "base/footer_bottom.html" .}}
+
+        <!-- Control Sidebar -->
+        <!--<<template "base/aside_right.html" .>>-->
+        <!-- /.control-sidebar -->
+        <!-- Add the sidebar's background. This div must be placed
+       immediately after the control sidebar -->
+        <!--<div class="control-sidebar-bg"></div>-->
+    </div>
+    <!-- ./wrapper -->
+
+    {{template "base/footer_js.html" .}}
+
+</body>
+
+</html>

@@ -1,0 +1,236 @@
+.content-wrapper {
+    padding: 10px 30px;
+}
+
+
+/*页面提示样式*/
+
+#list-title {
+    color: #337ab7;
+}
+
+
+/*bootstrapvalidator验证符号位置*/
+
+.form-horizontal .has-feedback .form-control-feedback {
+    top: 0;
+    right: -15px;
+}
+
+
+/*bootstrapvalidator验证符号位置*/
+
+.form-horizontal .has-feedback .input-group .form-control-feedback {
+    top: 0;
+    right: -30px;
+}
+
+
+/*#display-table {
+    margin-top: 5px;
+}*/
+
+#list-title {
+    font-size: 1.2em;
+}
+
+
+/*导入模态框*/
+
+.modal-content {
+    border-radius: 5px;
+}
+
+
+/*删选条件*/
+
+.list-filter {
+    position: relative;
+    clear: both;
+}
+
+fieldset legend {
+    color: #337ab7;
+}
+
+
+/*table中翻页信息*/
+
+.w70 {
+    width: 70px !important;
+    height: 30px;
+}
+
+.display-block {
+    margin: 2px;
+}
+
+.table-action {
+    margin: 2px;
+}
+
+
+/*table表头颜色*/
+
+.table-diplay-info thead,
+.fix-sticky thead {
+    background-color: #5bc0de;
+}
+
+.tab-content {
+    margin-top: 20px;
+}
+
+
+/*table中勾选红色*/
+
+td>.fa-check {
+    color: green;
+}
+
+td>.fa-remove {
+    color: red;
+}
+
+
+/*radio选择项字体*/
+
+.input-radio-label {
+    font-weight: normal;
+}
+
+.tab-content legend {
+    font-size: 1em;
+    font-weight: 700;
+    border-bottom-color: #ccccff;
+}
+
+
+/*输入项必填“*”红色*/
+
+.required-input {
+    color: red;
+}
+
+
+/*form中tree增加一行边距*/
+
+.form-table-add-line {
+    margin-top: 5px;
+}
+
+
+/*form中的tree添加一行隐藏*/
+
+.form-disabled .form-table-add-line {
+    display: none;
+}
+
+
+/*默认开启搜索，隐藏关闭搜索*/
+
+.search-hidden {
+    display: none;
+}
+
+.panel-list-info {
+    margin-bottom: 1px;
+}
+
+
+/*过滤条件图标+隐藏*/
+
+a[aria-expanded="true"]>.icon-plus {
+    display: none;
+}
+
+
+/*过滤条件图标-隐藏*/
+
+a[aria-expanded="false"]>.icon-minus {
+    display: none;
+}
+
+.iradio_square-green.checked+label {
+    color: green;
+}
+
+
+/*form表单中只读时显示p标签样式，此时input/select等标签隐藏*/
+
+.p-form-control {
+    font-size: 14px;
+    height: 34px;
+    line-height: 1.42857;
+    padding: 6px 12px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
+
+/*form表单中只读时input/select等标签隐藏
+form表单中可编辑时input/select等标签隐藏，form表单只读是保存编辑按钮隐藏
+*/
+
+.form-disabled input,
+.form-disabled textarea,
+.form-disabled select,
+.form-disabled .select2-selection,
+.form-disabled .form-tree-edit,
+.form-disabled .form-cancel-btn,
+.form-disabled .form-save-btn {
+    display: none;
+}
+
+
+/*form表单中可编辑时p标签显示*/
+
+.form-disabled .p-form-tree-disabled,
+.form-disabled .form-edit-btn {
+    display: block;
+}
+
+
+/*form表单中可编辑时input/select等标签显示
+form表单中可编辑时input/select等标签显示
+*/
+
+.form-edit input,
+.form-edit select,
+.form-edit .select2-selection,
+.form-edit .form-tree-edit,
+.form-edit .form-cancel-btn,
+.form-edit textarea,
+.form-edit .form-save-btn {
+    display: block;
+}
+
+
+/*form表单中可编辑时p标签隐藏
+form表单中可编辑时隐藏p标签样式，此时input/select等标签显示
+form表单中可编辑时input/select等标签显示
+*/
+
+.form-edit .p-form-tree-disabled,
+.form-edit .p-form-control,
+.form-edit .form-tree-edit,
+.form-edit .form-edit-btn {
+    display: none;
+}
+
+
+/*图片modal预览翻页*/
+
+.file-zoom-dialog .btn-navigate {
+    background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+    color: #1c94c4;
+    font-size: 4em;
+    margin: 0;
+    opacity: 0.7;
+    outline: 0 none;
+    padding: 0;
+    position: absolute;
+    text-decoration: none;
+    top: 45%;
+}

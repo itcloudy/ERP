@@ -1,0 +1,147 @@
+
+
+div.DTED_Lightbox_Wrapper {
+	position: fixed;
+	top: 0;
+	left: 50%;
+	margin-left: -390px;
+	width: 780px;
+	height: 100%;
+	z-index: 11;
+
+	div.DTED_Lightbox_Container {
+		*position: absolute; /* IE6 */
+		*top: 50%;
+		#position: absolute; /* IE7 */
+		#top: 50%;
+		display: table;
+		height: 100%;
+		width: 100%;
+
+		div.DTED_Lightbox_Content_Wrapper {
+			*position: relative; /* IE6 */
+			#position: relative; /* IE7 */
+			display: table-cell;
+			vertical-align: middle;
+			width: 100%;
+
+			div.DTED_Lightbox_Content {
+				*top: -50%; /* IE6 */
+				#top: -50%; /* IE7 */
+				position: relative;
+				border: 7px solid rgba(220, 220, 220, 0.5);
+				box-shadow: 2px 2px 10px #555;
+				border-radius: 10px;
+				@include box-sizing(border-box);
+
+				div.DTE {
+					background: white;
+					border-radius: 6px;
+					box-shadow: 0 0 5px #555;
+					border: 2px solid #444;
+					@include box-sizing(border-box);
+
+					div.DTE_Header {
+						top: 2px;
+						left: 2px;
+						right: 2px;
+						width: auto;
+						border-top-left-radius: 5px;
+						border-top-right-radius: 5px;
+					}
+
+					div.DTE_Footer {
+						bottom: 2px;
+						left: 2px;
+						right: 2px;
+						width: auto;
+						border-bottom-left-radius: 5px;
+						border-bottom-right-radius: 5px;
+					}
+				}
+
+				div.DTED_Lightbox_Close {
+					@include close-icon();
+				}
+			}
+		}
+	}
+}
+
+
+div.DTED_Lightbox_Background {
+	@include overlay-background();
+}
+
+
+body.DTED_Lightbox_Mobile {
+	div.DTED_Lightbox_Background {
+		height: 0;
+	}
+
+	div.DTED_Lightbox_Shown {
+		display: none;
+	}
+
+	div.DTED_Lightbox_Wrapper {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		right: 0px;
+		bottom: 0px;
+		width: auto;
+		height: auto;
+		margin-left: 0;
+		-webkit-overflow-scrolling: touch;
+
+		div.DTED_Lightbox_Container {
+			display: block;
+
+			div.DTED_Lightbox_Content_Wrapper {
+				display: block;
+
+				div.DTED_Lightbox_Content {
+					border: 4px solid rgba(220, 220, 220, 0.5);
+					border-radius: 0;
+
+					div.DTE {
+						border-radius: 0;
+						box-shadow: 0 0 5px #555;
+						border: 2px solid #444;
+
+						div.DTE_Header {
+							border-top-left-radius: 0;
+							border-top-right-radius: 0;
+						}
+
+						div.DTE_Footer {
+							border-bottom-left-radius: 0;
+							border-bottom-right-radius: 0;
+						}
+					}
+
+					div.DTED_Lightbox_Close {
+						top: 11px;
+						right: 15px;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media only screen 
+and (max-width: 780px) {
+	div.DTED_Lightbox_Wrapper {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		margin-left: 0;
+	}
+}
+
+
+
+
+

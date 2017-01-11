@@ -1,0 +1,102 @@
+
+/*
+ * Namespace: DTED - DataTables Editor Display - Envelope
+ */
+
+div.DTED_Envelope_Wrapper {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 50%;
+	height: 100%;
+	z-index: 11;
+	display: none;
+	overflow: hidden;
+
+	// Create a shadow display at the top of the evelope to make it look like it has
+	// come from under the element that it is attached to/ Left and right to give a
+	// slight fade and the two ends
+	div.DTED_Envelope_ShadowLeft {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 50%;
+		height: 9px;
+		background: url('../images/shadow_left.png') no-repeat top left;
+		z-index: 10;
+	}
+
+	div.DTED_Envelope_ShadowRight {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 50%;
+		height: 9px;
+		background: url('../images/shadow_right.png') no-repeat top right;
+		z-index: 10;
+	}
+
+
+	div.DTED_Envelope_Container {
+		position: absolute;
+		top: 0;
+		left: 5%;
+		width: 90%;
+
+		border-left: 1px solid #777;
+		border-right: 1px solid #777;
+		border-bottom: 1px solid #777;
+		box-shadow: 3px 3px 10px #555;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
+		background-color: white;
+
+		div.DTE_Processing_Indicator {
+			right: 36px;
+		}
+
+		div.DTE_Footer {
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+		}
+
+		div.DTED_Envelope_Close {
+			position: absolute;
+			top: 16px;
+			right: 10px;
+			width: 18px;
+			height: 18px;
+			cursor: pointer;
+			*cursor: hand;
+			z-index: 12;
+			text-align: center;
+			font-size: 12px;
+
+			background: #F8F8F8;
+			background: -webkit-gradient(linear, center bottom, center top, from(#CCC), to(white));
+			background: -moz-linear-gradient(top, white, #CCC);
+			background: linear-gradient(to bottom, white, #CCC);
+			text-shadow: 0 1px 0 white;
+			border: 1px solid #999;
+			border-radius: 2px;
+			-moz-border-radius: 2px;
+			-webkit-border-radius: 2px;
+			box-shadow: 0px 0px 1px #999;
+			-moz-box-shadow: 0px 0px 1px #999;
+			-webkit-box-shadow: 0px 0px 1px #999;
+		}
+	}
+}
+
+
+div.DTED_Envelope_Background {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	@include radial-gradient( rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.4) );
+}
+
+

@@ -1,0 +1,17 @@
+table.dataTable.dt-checkboxes-select tbody tr,
+table.dataTable thead .dt-checkboxes-select-all {
+  cursor: pointer;
+}
+
+div.dataTables_wrapper span.select-info,
+div.dataTables_wrapper span.select-item {
+  margin-left: 0.5em;
+}
+
+@media screen and (max-width: 640px) {
+  div.dataTables_wrapper span.select-info,
+  div.dataTables_wrapper span.select-item {
+    margin-left: 0;
+    display: block;
+  }
+}

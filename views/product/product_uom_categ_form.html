@@ -1,0 +1,33 @@
+<div class="row">
+    <p id="list-title">{{.PageName}}</p>
+</div>
+
+<form id="productUomCategForm" action="{{.URL}}{{.RecordId}}?action={{.Action}}" method="post" class="post-from form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+    <div class="row">
+        {{if .RecordId}} {{if .Readonly}}
+        <button type="button" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</button> {{end}}{{end}}
+        <button type="submit" form="productUomCategForm" id="productUomCategForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button> {{if .Readonly}}
+        <button type="button" class="btn btn-danger fa fa-remove  pull-left form-cancel-btn">&nbsp取消</button> {{else}}
+        <a href="{{.URL}}" class="btn btn-danger fa fa-remove  pull-left">&nbsp取消</a> {{end}}
+
+        <a href="{{.URL}}" class="btn btn-info fa fa-list pull-right">&nbsp列表</a>
+    </div>
+    {{ .xsrf }} {{if .RecordId}}
+    <input type="hidden" name="_recordId" id="record-id" value="{{.RecordId}}">
+    <input type="hidden" name="_method" value="PUT"> {{end}}
+    <fieldset>
+        <legend>基本信息</legend>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="name" class="col-md-4 control-label label-start">计量单位分类<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control">{{if .UomCateg}} {{.UomCateg.name}} {{end}}</p>
+                        <input class="form-control" name="name" {{if not .Readonly}}autofocus{{end}} type="text" {{if .UomCateg}} value="{{.UomCateg.name}}" {{end}} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+</form>

@@ -1,0 +1,130 @@
+
+// Bubble form editing
+// Very similar to the main form, but attached to a particular node and the
+// form layout is slightly different with the fields container and buttons
+// making up a table of a single row and two columns. This allows the buttons
+// to be removed from the display and under this condition the fields will
+// take up the full width available.
+div.DTE_Bubble {
+	position: absolute;
+	z-index: 11;
+	margin-top: -6px;
+	opacity: 0;
+
+	div.DTE_Bubble_Liner {
+		position: absolute;
+		bottom: 0;
+		border: 1px solid black;
+		width: 300px;
+		margin-left: -150px;
+		background-color: white;
+		box-shadow: 2px 2px 7px #555;
+		border-radius: 5px;
+		border: 2px solid #444;
+		padding: 1em;
+		@include box-sizing(border-box);
+
+		div.DTE_Bubble_Table {
+			display: table;
+			width: 100%;
+
+			> form {
+				display: table-cell;
+
+				div.DTE_Form_Content {
+					padding: 0;
+
+					div.DTE_Field {
+						position: relative;
+						zoom: 1;
+						margin-bottom: 0.5em;
+
+						&:last-child {
+							margin-bottom: 0;
+						}
+					}
+				}
+			}
+
+			div.DTE_Form_Buttons {
+				display: table-cell;
+				vertical-align: bottom;
+				padding: 0 0 0 0.75em;
+				width: 1%; // browser will resize to a min width
+			}
+		}
+
+		div.DTE_Header {
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+		}
+
+		div.DTE_Header + div.DTE_Form_Info,
+		div.DTE_Header + div.DTE_Bubble_Table {
+			padding-top: 42px;
+		}
+
+
+		div.DTE_Form_Error {
+			float: none;
+			display: none;
+			padding: 0;
+			margin-bottom: 0.5em;
+		}
+
+		div.DTE_Bubble_Close {
+			@include close-icon();
+		}
+	}
+
+	div.DTE_Bubble_Triangle {
+		position: absolute;
+		height: 10px;
+		width: 10px;
+		top: -6px;
+		background-color: white;
+		border: 2px solid #444;
+		border-top: none;
+		border-right: none;
+
+		-webkit-transform: rotate(-45deg);
+		   -moz-transform: rotate(-45deg);
+		    -ms-transform: rotate(-45deg);
+		     -o-transform: rotate(-45deg);
+		        transform: rotate(-45deg);
+	}
+
+	&.DTE_Processing {
+		div.DTE_Bubble_Liner:after {
+			position: absolute;
+			content: ' ';
+			display: block;
+			top: 12px;
+			right: 18px;
+			height: 12px;
+			width: 17px;
+			background: url('../images/ajax-loader-small.gif') no-repeat top left;
+		}
+	}
+
+	&.below {
+		div.DTE_Bubble_Liner {
+			top: 10px;
+			bottom: auto;
+		}
+
+		div.DTE_Bubble_Triangle {
+			top: 4px;
+			-webkit-transform: rotate(135deg);
+			   -moz-transform: rotate(135deg);
+			    -ms-transform: rotate(135deg);
+			     -o-transform: rotate(135deg);
+			        transform: rotate(135deg);
+		}
+	}
+}
+
+div.DTE_Bubble_Background {
+	@include overlay-background();
+}
+

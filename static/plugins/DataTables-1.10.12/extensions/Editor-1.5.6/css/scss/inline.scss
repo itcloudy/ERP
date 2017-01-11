@@ -1,0 +1,65 @@
+
+// Inline form editing
+// Hide the label and allow the field to take the full width
+div.DTE_Inline {
+	position: relative;
+	display: table;
+	width: 100%;
+
+	div.DTE_Inline_Field,
+	div.DTE_Inline_Buttons {
+		display: table-cell;
+		vertical-align: middle;
+
+		div.DTE_Field {
+			padding: 0;
+
+			>label {
+				display: none;
+			}
+
+			input {
+				width: 100%;
+			}
+		}
+
+		div.DTE_Form_Buttons button {
+			margin: -6px 0 -6px 4px;
+			padding: 5px;
+		}
+	}
+
+	// Have the input types take up full space, taking into account the cell padding
+	div.DTE_Field input[type="color"],
+	div.DTE_Field input[type="date"],
+	div.DTE_Field input[type="datetime"],
+	div.DTE_Field input[type="datetime-local"],
+	div.DTE_Field input[type="email"],
+	div.DTE_Field input[type="month"],
+	div.DTE_Field input[type="number"],
+	div.DTE_Field input[type="password"],
+	div.DTE_Field input[type="search"],
+	div.DTE_Field input[type="tel"],
+	div.DTE_Field input[type="text"],
+	div.DTE_Field input[type="time"],
+	div.DTE_Field input[type="url"],
+	div.DTE_Field input[type="week"] {
+		margin: -6px 0;
+	}
+
+	&.DTE_Processing:after {
+		position: absolute;
+		content: ' ';
+		display: block;
+		top: 4px;
+		right: 10px;
+		height: 12px;
+		width: 17px;
+		background: url('../images/ajax-loader-small.gif') no-repeat top left;
+	}
+}
+
+// Responsive integration
+span.dtr-data div.DTE_Inline {
+	display: inline-table;
+}

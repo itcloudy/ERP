@@ -1,0 +1,188 @@
+
+
+// The main form.
+// Most of the styles for display of the main form come from the display
+// controller (lightbox and envelope are the two built in options).
+div.DTE_Body {
+	padding: 50px 0; // space for hte header and footer which are position: absolute
+	
+	div.DTE_Body_Content {
+		position: relative;
+		overflow: auto;
+
+		div.DTE_Form_Info {
+			padding: 1em 1em 0 1em;
+			margin: 0;
+		}
+
+		div.DTE_Field {
+			position: relative;
+			zoom: 1;
+			
+			clear: both;
+			padding: 5px 20%;
+			border: 1px solid transparent;
+
+			&:after {
+				display: block;
+				content: ".";
+				height: 0;
+				line-height: 0;
+				clear: both;
+				visibility: hidden;
+			}
+
+			&:hover {
+				background-color: #f9f9f9;
+				border: 1px solid #f3f3f3;
+			}
+
+			>label {
+				float: left;
+				width: 40%;
+				padding-top: 6px;
+			}
+
+			>div.DTE_Field_Input {
+				float: right;
+				width: 60%;
+			}
+
+			// Field in error state
+			&.DTE_Field_StateError { }
+
+			&.full {
+				padding: 5px 0 5px 20%;
+
+				>label {
+					width: 30%;
+				}
+
+				>div.DTE_Field_Input {
+					width: 70%;
+				}
+			}
+
+			&.block {
+				>div.DTE_Field_Input {
+					float: none;
+					clear: both;
+					width: 100%;
+				}
+			}
+		}
+	}
+}
+
+html[dir="rtl"] {
+	div.DTE_Body div.DTE_Body_Content div.DTE_Field {
+		> label {
+			float: right;
+		}
+
+		>div.DTE_Field_Input {
+			float: left;
+		}
+	}
+	
+	div.DTE div.DTE_Form_Buttons button {
+		float: left;
+	}
+}
+
+// iPad in portrait 
+@media only screen 
+and (max-width : 768px) {
+	div.DTE_Body {
+		div.DTE_Body_Content {
+			div.DTE_Field {
+				padding: 5px 10%;
+
+				&.full {
+					padding: 5px 0 5px 10%;
+
+					>label {
+						width: 35.5%;
+					}
+
+					>div.DTE_Field_Input {
+						width: 64.5%;
+					}
+				}
+
+				&.block {
+					>div.DTE_Field_Input {
+						width: 100%;
+					}
+				}
+			}
+		}
+	}
+}
+
+@media only screen 
+and (max-width : 640px) {
+	div.DTE_Body {
+		div.DTE_Body_Content {
+			div.DTE_Field {
+				padding: 5px 0;
+
+				&.full {
+					padding: 5px 0%;
+
+					>label {
+						width: 40%;
+					}
+
+					>div.DTE_Field_Input {
+						width: 60%;
+					}
+				}
+
+				&.block {
+					>div.DTE_Field_Input {
+						width: 100%;
+					}
+				}
+			}
+		}
+	}
+}
+
+// For devices with smaller screens, the fields should be shown stacked
+@media only screen 
+and (max-width : 580px) {
+	div.DTE_Body {
+		div.DTE_Body_Content {
+			div.DTE_Field {
+				position: relative;
+				zoom: 1;
+				
+				clear: both;
+				padding: 5px 0;
+
+				>label {
+					float: none;
+					width: auto;
+					padding-top: 0;
+				}
+
+				>div.DTE_Field_Input {
+					float: none;
+					width: auto;
+				}
+
+				&.full,
+				&.block {
+					padding: 5px 0;
+
+					>label,
+					>div.DTE_Field_Input {
+						width: 100%;
+					}
+				}
+			}
+		}
+	}
+}
+

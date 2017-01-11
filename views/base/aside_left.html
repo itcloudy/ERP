@@ -1,0 +1,115 @@
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="/static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                {{if .LastLogin}}
+                <p>{{i18n .Lang "global.lastLoginTime"}}</p>
+                <p>{{dateformat .LastLogin "2006-01-02 15:04:05"}}</p>
+                {{else}}
+                <p>{{i18n .Lang "global.firstLogin"}}</p>
+                {{end}}
+            </div>
+        </div>
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+            <!--<li class="header text-center">菜单</li>-->
+            <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}
+            {{.MenuCountryActive}}{{.MenuProvinceActive}}{{.MenuCityActive}}{{.MenuDistrictActive}}{{.MenuUserActive}}
+            {{.MenuGroupActive}}{{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}">
+                <a href="#">
+                    <i class="fa fa-gears"></i>
+                    <span>设置</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}"><a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i></i>个人资料</a>
+                        <ul class="treeview-menu">
+                            <li class="{{.MenuSelfInfoActive}}"><a href="/user/{{.user.Id}}?action=detail"><i class="fa fa-user-secret" aria-hidden="true"></i>个人信息</a></li>
+                            <li class="{{.MenuChangePwdActive}}"><a href="/user/{{.user.Id}}?action=changepasswd"><i class="fa fa-unlock"></i>密码修改</a></li>
+                            <li class="{{.MenuRecordActive}}"><a href="/record/"><i class="fa fa-list-ol"></i>登录记录</a></li>
+                        </ul>
+                    </li>
+                    <li class="{{.MenuGroupActive}}"><a class="{{.MenuGroupActive}}" href="/group/"><i class="fa fa-gavel" aria-hidden="true"></i>权限管理</a></li>
+                    <li class="treeview {{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}">
+                        <a href="#"><i class="fa fa-indent" aria-hidden="true"></i>公司管理</a>
+                        <ul class="treeview-menu">
+                            <li><a class="{{.MenuCompanyActive}}" href="/company/"><i class="fa fa-check-circle-o"></i>公司资料</a></li>
+                            <li><a class="{{.MenuDepartmentActive}}" href="/department/"><i class="fa fa-arrow-circle-right"></i>部门管理</a></li>
+                            <li><a class="{{.MenuTeamActive}}" href="/team/"><i class="fa fa-arrow-circle-right"></i>团队管理</a></li>
+                        </ul>
+                    </li>
+                    <li class="{{.MenuUserActive}}"><a href="/user/"><i class="fa fa-users" aria-hidden="true"></i></i>用户管理</a></li>
+                    <li class="treeview {{.MenuCountryActive}}{{.MenuProvinceActive}}{{.MenuCityActive}}{{.MenuDistrictActive}}"><a href="#"><i class="fa fa-building" aria-hidden="true"></i></i>地址管理</a>
+                        <ul class="treeview-menu">
+                            <li class="{{.MenuCountryActive}}"><a href="/address/country/"><i class="fa fa-check-circle-o"></i>国家管理</a></li>
+                            <li class="{{.MenuProvinceActive}}"><a href="/address/province/"><i class="fa fa-arrow-circle-right"></i>省份管理</a></li>
+                            <li class="{{.MenuCityActive}}"><a href="/address/city/"><i class="fa fa-arrow-circle-right"></i>城市管理</a></li>
+                            <li class="{{.MenuDistrictActive}}"><a href="/address/district/"><i class="fa fa-arrow-circle-right"></i>区县管理</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview {{.MenuProductCategoryActive}}{{.MenuProductAttributeActive}}{{.MenuProductAttributeValueActive}}{{.MenuProductTemplateActive}}{{.MenuProductProductActive}}{{.MenuProductUomCategActive}}{{.MenuProductUomActive}}">
+                <a href="#">
+                    <i class="fa fa-newspaper-o" aria-hidden="true"></i><span>产品管理</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{.MenuProductCategoryActive}}"><a href="/product/category/"><i class="fa fa-bars"></i>产品类别</a></li>
+                    <li class="{{.MenuProductAttributeActive}}"><a href="/product/attribute/"><i class="fa fa-bars"></i>产品属性</a></li>
+                    <li class="{{.MenuProductAttributeValueActive}}"><a href="/product/attributevalue/"><i class="fa fa-bars"></i>产品属性值</a></li>
+                    <li class="{{.MenuProductTemplateActive}}"><a href="/product/template/"><i class="fa fa-bars" ></i>产品款式</a></li>
+                    <li class="{{.MenuProductProductActive}}"><a href="/product/product/"><i class="fa fa-bars"></i>产品规格</a></li>
+                    <li class="{{.MenuProductUomCategActive}}"><a href="/product/uomcateg/"><i class="fa fa-bars"></i>计量单位分类</a></li>
+                    <li class="{{.MenuProductUomActive}}"><a href="/product/uom/"><i class="fa fa-bars"></i>产品计量单位</a></li>
+
+                </ul>
+            </li>
+            <li class="treeview {{.MenuPurchaseOrderDraftActive}}{{.MenuPurchaseOrderActive}}{{.MenuPurchaseOrderLineActive}}{{.MenuPurchaseSupplierActive}}">
+                <a href="#">
+                    <i class="fa fa-tasks" aria-hidden="true"></i><span>采购管理</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{.MenuPurchaseSettingActive}}"><a href="/purchase/setting/"><i class="fa fa-gears"></i>设置</a></li>
+                    <li class="{{.MenuPurchaseSupplierActive}}"><a href="/purchase/supplier/"><i class="fa fa-users"></i>供应商管理</a></li>
+                    <li class="{{.MenuPurchaseOrderDraftActive}}"><a href="/purchase/order/?state=draft"><i class="fa fa-bars"></i>询价单</a></li>
+                    <li class="{{.MenuPurchaseOrderActive}}"><a href="/purchase/order/"><i class="fa fa-bars"></i>采购订单</a></li>
+                    <li class="{{.MenuPurchaseOrderLineActive}}"><a href="/purchase/orderline/"><i class="fa fa-bars"></i>订单明细</a></li>
+                    <li class="{{.MenuPurchaseReportActive}}"><a href="/purchase/report/"><i class="fa fa-bar-chart"></i>采购报表</a></li>
+                </ul>
+            </li>
+            <li class="treeview {{.MenuSaleOrderDraftActive}}{{.MenuSaleOrderActive}}{{.MenuSaleOrderLineActive}}{{.MenuSaleCustomerActive}}">
+                <a href="#" id="sale-menu">
+                    <i class="fa fa-shopping-basket" aria-hidden="true"></i><span>销售管理</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{.MenuSaleSettingActive}}"><a href="/sale/setting/"><i class="fa fa-gears"></i>设置</a></li>
+                    <li class="{{.MenuSaleCustomerActive}}"><a href="/purchase/supplier/"><i class="fa fa-users"></i>客户管理</a></li>
+                    <li class="{{.MenuSaleOrderDraftActive}}"><a href="/sale/order/?state=draft"><i class="fa fa-bars"></i>询价单</a></li>
+                    <li class="{{.MenuSaleOrderActive}}"><a href="/sale/order/"><i class="fa fa-bars"></i>销售订单</a></li>
+                    <li class="{{.MenuSaleOrderLineActive}}"><a href="/sale/orderline/"><i class="fa fa-bars"></i>订单明细</a></li>
+                    <li class="{{.MenuSaleReportActive}}"><a href="/sale/report/"><i class="fa fa-line-chart"></i>销售报表</a></li>
+
+                </ul>
+            </li>
+            <li class="treeview {{.MenuStockSettingActive}}">
+                <a href="#">
+                    <i class="fa fa-database" aria-hidden="true"></i><span>仓库管理</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{.MenuStockSettingActive}}"><a href="/stock/setting/"><i class="fa fa-gears"></i>设置</a></li>
+                    <li class="{{.MenuStockReportActive}}"><a href="/stock/report/"><i class="fa fa-pie-chart"></i>库存报表</a></li>
+                </ul>
+            </li>
+            <li class="treeview {{.MenuTemplateActive}}">
+                <a href="/templatefile">
+                    <i class="fa fa-folder-o" aria-hidden="true"></i><span>模版管理</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>
