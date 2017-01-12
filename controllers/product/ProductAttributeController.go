@@ -29,10 +29,10 @@ func (ctl *ProductAttributeController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
 	ctl.URL = "/product/attribute/"
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if attribute, err := md.GetProductAttributeById(idInt64); err == nil {
+		if attribute, err := md.GetProductAttributeByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&attribute); err == nil {
 
-				if err := md.UpdateProductAttributeById(attribute); err == nil {
+				if err := md.UpdateProductAttributeByID(attribute); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -66,7 +66,7 @@ func (ctl *ProductAttributeController) Edit() {
 	attributeInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-			if attribute, err := md.GetProductAttributeById(idInt64); err == nil {
+			if attribute, err := md.GetProductAttributeByID(idInt64); err == nil {
 				ctl.PageAction = attribute.Name
 				attributeInfo["name"] = attribute.Name
 				attributeInfo["code"] = attribute.Code
@@ -75,7 +75,7 @@ func (ctl *ProductAttributeController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["Attribute"] = attributeInfo
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_attribute_form.html"
@@ -109,14 +109,14 @@ func (ctl *ProductAttributeController) PostCreate() {
 func (ctl *ProductAttributeController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	result := make(map[string]bool)
 	obj, err := md.GetProductAttributeByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -147,11 +147,11 @@ func (ctl *ProductAttributeController) productAttributeList(query map[string]str
 			oneLine["code"] = line.Code
 			oneLine["sequence"] = line.Sequence
 			mapValues := make(map[int64]string)
-			oneLine["Id"] = line.Id
-			oneLine["id"] = line.Id
-			values := line.ValueIds
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
+			values := line.ValueIDs
 			for _, line := range values {
-				mapValues[line.Id] = line.Name
+				mapValues[line.ID] = line.Name
 			}
 			oneLine["values"] = mapValues
 			tableLines = append(tableLines, oneLine)

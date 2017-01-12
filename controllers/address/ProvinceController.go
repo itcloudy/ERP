@@ -50,14 +50,14 @@ func (ctl *ProvinceController) PostList() {
 func (ctl *ProvinceController) Validator() {
 	name := ctl.GetString("Name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	result := make(map[string]bool)
 	obj, err := md.GetPositionByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -86,8 +86,8 @@ func (ctl *ProvinceController) provinceList(query map[string]string, fields []st
 			oneLine := make(map[string]interface{})
 			oneLine["Name"] = province.Name
 			oneLine["Country"] = province.Country.Name
-			oneLine["Id"] = province.Id
-			oneLine["id"] = province.Id
+			oneLine["ID"] = province.ID
+			oneLine["id"] = province.ID
 
 			tableLines = append(tableLines, oneLine)
 		}

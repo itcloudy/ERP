@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 区县
+//AddressDistrict 区县
 type AddressDistrict struct {
 	Base
 	Name string       //区县名称
@@ -21,18 +21,18 @@ func init() {
 }
 
 // AddAddressDistrict insert a new AddressDistrict into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddAddressDistrict(obj *AddressDistrict) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetAddressDistrictById retrieves AddressDistrict by Id. Returns error if
-// Id doesn't exist
-func GetAddressDistrictById(id int64) (obj *AddressDistrict, err error) {
+// GetAddressDistrictByID retrieves AddressDistrict by ID. Returns error if
+// ID doesn't exist
+func GetAddressDistrictByID(id int64) (obj *AddressDistrict, err error) {
 	o := orm.NewOrm()
-	obj = &AddressDistrict{Base: Base{Id: id}}
+	obj = &AddressDistrict{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -117,11 +117,11 @@ func GetAllAddressDistrict(query map[string]string, fields []string, sortby []st
 	return paginator, objArrs, err
 }
 
-// UpdateAddressDistrict updates AddressDistrict by Id and returns error if
+// UpdateAddressDistrictByID updates AddressDistrict by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateAddressDistrictById(m *AddressDistrict) (err error) {
+func UpdateAddressDistrictByID(m *AddressDistrict) (err error) {
 	o := orm.NewOrm()
-	v := AddressDistrict{Base: Base{Id: m.Id}}
+	v := AddressDistrict{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -132,15 +132,15 @@ func UpdateAddressDistrictById(m *AddressDistrict) (err error) {
 	return
 }
 
-// DeleteAddressDistrict deletes AddressDistrict by Id and returns error if
+// DeleteAddressDistrict deletes AddressDistrict by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteAddressDistrict(id int64) (err error) {
 	o := orm.NewOrm()
-	v := AddressDistrict{Base: Base{Id: id}}
+	v := AddressDistrict{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&AddressDistrict{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&AddressDistrict{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

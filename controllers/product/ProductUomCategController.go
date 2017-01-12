@@ -47,10 +47,10 @@ func (ctl *ProductUomCategController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
 	ctl.URL = "/product/uomcateg/"
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if uomCateg, err := md.GetProductUomCategById(idInt64); err == nil {
+		if uomCateg, err := md.GetProductUomCategByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&uomCateg); err == nil {
 
-				if err := md.UpdateProductUomCategById(uomCateg); err == nil {
+				if err := md.UpdateProductUomCategByID(uomCateg); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -60,7 +60,7 @@ func (ctl *ProductUomCategController) Put() {
 }
 func (ctl *ProductUomCategController) Validator() {
 	name := ctl.GetString("name")
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	name = strings.TrimSpace(name)
 	result := make(map[string]bool)
 	obj, err := md.GetProductUomCategByName(name)
@@ -68,7 +68,7 @@ func (ctl *ProductUomCategController) Validator() {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -105,12 +105,12 @@ func (ctl *ProductUomCategController) productUomCategList(query map[string]strin
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
 			oneLine["name"] = line.Name
-			oneLine["Id"] = line.Id
-			oneLine["id"] = line.Id
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
 			uoms := line.Uoms
 			mapValues := make(map[int64]string)
 			for _, line := range uoms {
-				mapValues[line.Id] = line.Name
+				mapValues[line.ID] = line.Name
 			}
 			oneLine["uoms"] = mapValues
 			tableLines = append(tableLines, oneLine)
@@ -140,14 +140,14 @@ func (ctl *ProductUomCategController) Edit() {
 	categInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-			if categ, err := md.GetProductUomCategById(idInt64); err == nil {
+			if categ, err := md.GetProductUomCategByID(idInt64); err == nil {
 				ctl.PageAction = categ.Name
 				categInfo["name"] = categ.Name
 			}
 		}
 	}
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["UomCateg"] = categInfo
 	ctl.Layout = "base/base.html"
 

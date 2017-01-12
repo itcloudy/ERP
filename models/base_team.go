@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-//团队
+//Team 团队
 type Team struct {
 	Base
 	Name          string  `orm:"unique" xml:"name"` //组名称
@@ -24,18 +24,18 @@ func init() {
 }
 
 // AddTeam insert a new Team into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddTeam(obj *Team) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetTeamById retrieves Team by Id. Returns error if
-// Id doesn't exist
-func GetTeamById(id int64) (obj *Team, err error) {
+// GetTeamByID retrieves Team by ID. Returns error if
+// ID doesn't exist
+func GetTeamByID(id int64) (obj *Team, err error) {
 	o := orm.NewOrm()
-	obj = &Team{Base: Base{Id: id}}
+	obj = &Team{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -122,11 +122,11 @@ func GetAllTeam(query map[string]string, fields []string, sortby []string, order
 	return paginator, objArrs, err
 }
 
-// UpdateTeam updates Team by Id and returns error if
+// UpdateTeamByID updates Team by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateTeamById(m *Team) (err error) {
+func UpdateTeamByID(m *Team) (err error) {
 	o := orm.NewOrm()
-	v := Team{Base: Base{Id: m.Id}}
+	v := Team{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -137,15 +137,15 @@ func UpdateTeamById(m *Team) (err error) {
 	return
 }
 
-// DeleteTeam deletes Team by Id and returns error if
+// DeleteTeam deletes Team by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteTeam(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Team{Base: Base{Id: id}}
+	v := Team{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Team{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&Team{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

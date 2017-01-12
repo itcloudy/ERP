@@ -33,14 +33,14 @@ func (ctl *ProductTagController) List() {
 func (ctl *ProductTagController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	result := make(map[string]bool)
 	obj, err := md.GetProductTagByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false

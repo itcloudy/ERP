@@ -1,4 +1,3 @@
-//访问用户登录日志信息
 package base
 
 import (
@@ -6,12 +5,12 @@ import (
 	md "goERP/models"
 )
 
-//列表视图列数-1，第一列为checkbox
-
+// RecordController 登录日志
 type RecordController struct {
 	BaseController
 }
 
+// Get 请求
 func (ctl *RecordController) Get() {
 	ctl.PageName = "登陆记录管理"
 	ctl.URL = "/record/"
@@ -21,6 +20,8 @@ func (ctl *RecordController) Get() {
 	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
 
 }
+
+// Post 请求
 func (ctl *RecordController) Post() {
 	action := ctl.Input().Get("action")
 	switch action {
@@ -32,9 +33,13 @@ func (ctl *RecordController) Post() {
 		ctl.PostList()
 	}
 }
+
+// GetOneRecord 获得一条记录
 func (ctl *RecordController) GetOneRecord() {
 
 }
+
+//PostList Post 请求获得登录日志列表json数据
 func (ctl *RecordController) PostList() {
 	query := make(map[string]string)
 	fields := make([]string, 0, 0)
@@ -65,8 +70,8 @@ func (ctl *RecordController) recordList(query map[string]string, fields []string
 			oneLine["UserAgent"] = record.UserAgent
 			oneLine["CreateDate"] = record.CreateDate.Format("2006-01-02 15:04:05")
 			oneLine["Logout"] = record.Logout.Format("2006-01-02 15:04:05")
-			oneLine["Ip"] = record.Ip
-			oneLine["Id"] = record.Id
+			oneLine["Ip"] = record.IP
+			oneLine["ID"] = record.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -78,6 +83,8 @@ func (ctl *RecordController) recordList(query map[string]string, fields []string
 	}
 	return result, err
 }
+
+// GetList 显示table数据
 func (ctl *RecordController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {

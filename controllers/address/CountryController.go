@@ -63,8 +63,8 @@ func (ctl *CountryController) countryList(query map[string]string, fields []stri
 		for _, country := range countries {
 			oneLine := make(map[string]interface{})
 			oneLine["Name"] = country.Name
-			oneLine["Id"] = country.Id
-			oneLine["id"] = country.Id
+			oneLine["ID"] = country.ID
+			oneLine["id"] = country.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -79,14 +79,14 @@ func (ctl *CountryController) countryList(query map[string]string, fields []stri
 func (ctl *CountryController) Validator() {
 	name := ctl.GetString("Name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	result := make(map[string]bool)
 	obj, err := md.GetAddressCountryByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false

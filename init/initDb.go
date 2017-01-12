@@ -20,11 +20,11 @@ func InitDb() {
 		split = "/"
 	}
 	if xmDir, err := os.Getwd(); err == nil {
-		if _, err := md.GetUserById(1); err != nil {
+		if _, err := md.GetUserByID(1); err != nil {
 
 			xmDir += split + "init_xml" + split
 			initUser(xmDir + "Users.xml")
-			if user, err := md.GetUserById(1); err == nil {
+			if user, err := md.GetUserByID(1); err == nil {
 				initGroup(xmDir+"Groups.xml", user)
 				initCountry(xmDir+"Countries.xml", user)
 				initProvince(xmDir+"Provinces.xml", user)
@@ -88,7 +88,7 @@ func initProvince(filename string, user *md.User) {
 				for _, k := range initProvinces.Provinces {
 					var province md.AddressProvince
 					pid := int64(k.PID)
-					if country, err := md.GetAddressCountryById(pid); err == nil {
+					if country, err := md.GetAddressCountryByID(pid); err == nil {
 						province.Country = country
 						province.Name = k.Name
 						md.AddAddressProvince(&province)
@@ -107,7 +107,7 @@ func initCity(filename string, user *md.User) {
 				for _, k := range initCities.Cities {
 					var city md.AddressCity
 					pid := int64(k.PID)
-					if province, e := md.GetAddressProvinceById(pid); e == nil {
+					if province, e := md.GetAddressProvinceByID(pid); e == nil {
 						city.Province = province
 						city.Name = k.Name
 						md.AddAddressCity(&city)
@@ -129,7 +129,7 @@ func initDistrict(filename string, user *md.User) {
 						district md.AddressDistrict
 					)
 					pid := int64(k.PID)
-					if city, e := md.GetAddressCityById(pid); e == nil {
+					if city, e := md.GetAddressCityByID(pid); e == nil {
 						district.City = city
 						district.Name = k.Name
 						md.AddAddressDistrict(&district)

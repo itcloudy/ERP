@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 合作伙伴，包括客户和供应商，后期会为每个合作伙伴自动创建一个登录帐号
+// Partner 合作伙伴，包括客户和供应商，后期会为每个合作伙伴自动创建一个登录帐号
 type Partner struct {
 	Base
 	Name       string           //合作伙伴名称
@@ -37,7 +37,7 @@ func init() {
 }
 
 // AddPartner insert a new Partner into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddPartner(obj *Partner) (id int64, err error) {
 	o := orm.NewOrm()
 
@@ -45,11 +45,11 @@ func AddPartner(obj *Partner) (id int64, err error) {
 	return id, err
 }
 
-// GetPartnerById retrieves Partner by Id. Returns error if
-// Id doesn't exist
-func GetPartnerById(id int64) (obj *Partner, err error) {
+// GetPartnerByID retrieves Partner by ID. Returns error if
+// ID doesn't exist
+func GetPartnerByID(id int64) (obj *Partner, err error) {
 	o := orm.NewOrm()
-	obj = &Partner{Base: Base{Id: id}}
+	obj = &Partner{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -125,11 +125,11 @@ func GetAllPartner(query map[string]string, fields []string, sortby []string, or
 	return paginator, objArrs, err
 }
 
-// UpdatePartner updates Partner by Id and returns error if
+// UpdatePartnerByID updates Partner by ID and returns error if
 // the record to be updated doesn't exist
-func UpdatePartnerById(m *Partner) (err error) {
+func UpdatePartnerByID(m *Partner) (err error) {
 	o := orm.NewOrm()
-	v := Partner{Base: Base{Id: m.Id}}
+	v := Partner{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -151,15 +151,15 @@ func GetPartnerByName(name string) (obj *Partner, err error) {
 	return nil, err
 }
 
-// DeletePartner deletes Partner by Id and returns error if
+// DeletePartner deletes Partner by ID and returns error if
 // the record to be deleted doesn't exist
 func DeletePartner(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Partner{Base: Base{Id: id}}
+	v := Partner{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Partner{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&Partner{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

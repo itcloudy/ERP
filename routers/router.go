@@ -20,7 +20,7 @@ func init() {
 	//部门
 	beego.Router("/department/?:id", &base.DepartmentController{})
 	//职位
-	beego.Router("/position/?:id", &base.TemplateFileController{})
+	beego.Router("/position/?:id", &base.PositionController{})
 
 	//权限
 	beego.Router("/group/?:id", &base.GroupController{})

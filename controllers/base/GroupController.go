@@ -7,10 +7,12 @@ import (
 	"strings"
 )
 
+// GroupController group controller
 type GroupController struct {
 	BaseController
 }
 
+// Post request
 func (ctl *GroupController) Post() {
 
 	action := ctl.Input().Get("action")
@@ -26,6 +28,7 @@ func (ctl *GroupController) Post() {
 	}
 }
 
+// Get request
 func (ctl *GroupController) Get() {
 	ctl.PageName = "权限管理"
 	action := ctl.Input().Get("action")
@@ -44,6 +47,8 @@ func (ctl *GroupController) Get() {
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuGroupActive"] = "active"
 }
+
+// Edit edit group info
 func (ctl *GroupController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
 
@@ -51,7 +56,7 @@ func (ctl *GroupController) Edit() {
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
-			if group, err := md.GetGroupById(idInt64); err == nil {
+			if group, err := md.GetGroupByID(idInt64); err == nil {
 				ctl.PageAction = group.Name
 				groupInfo["Name"] = group.Name
 
@@ -59,24 +64,30 @@ func (ctl *GroupController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["Group"] = groupInfo
 	ctl.Layout = "base/base.html"
 
 	ctl.TplName = "product/product_category_form.html"
 }
+
+// Detail display group info
 func (ctl *GroupController) Detail() {
 	//获取信息一样，直接调用Edit
 	ctl.Edit()
 	ctl.Data["Readonly"] = true
 	ctl.Data["Action"] = "detail"
 }
+
+// Create display group create page
 func (ctl *GroupController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_category_form.html"
 }
+
+// Validator js valid
 func (ctl *GroupController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
@@ -87,7 +98,7 @@ func (ctl *GroupController) Validator() {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordID == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -115,8 +126,8 @@ func (ctl *GroupController) groupList(query map[string]string, fields []string, 
 		for _, group := range groups {
 			oneLine := make(map[string]interface{})
 
-			oneLine["Id"] = group.Id
-			oneLine["id"] = group.Id
+			oneLine["ID"] = group.ID
+			oneLine["id"] = group.ID
 			oneLine["name"] = group.Name
 
 			tableLines = append(tableLines, oneLine)
@@ -130,6 +141,8 @@ func (ctl *GroupController) groupList(query map[string]string, fields []string, 
 	}
 	return result, err
 }
+
+// PostList json response
 func (ctl *GroupController) PostList() {
 	query := make(map[string]string)
 	fields := make([]string, 0, 0)
@@ -148,6 +161,7 @@ func (ctl *GroupController) PostList() {
 
 }
 
+// GetList display group info in table
 func (ctl *GroupController) GetList() {
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-group"

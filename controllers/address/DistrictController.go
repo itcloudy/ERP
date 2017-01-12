@@ -55,18 +55,18 @@ func (ctl *DistrictController) districtList(query map[string]string, fields []st
 			oneLine["Name"] = district.Name
 			oneLine["Province"] = district.City.Province.Name
 
-			provinceId := district.City.Province.Id
-			if _, ok := provinceMap[provinceId]; ok != true {
-				if province, e := md.GetAddressProvinceById(district.City.Province.Id); e == nil {
-					provinceMap[provinceId] = province.Country.Name
+			provinceID := district.City.Province.ID
+			if _, ok := provinceMap[provinceID]; ok != true {
+				if province, e := md.GetAddressProvinceByID(district.City.Province.ID); e == nil {
+					provinceMap[provinceID] = province.Country.Name
 				}
 			}
-			if _, ok := provinceMap[provinceId]; ok {
-				oneLine["Country"] = provinceMap[provinceId]
+			if _, ok := provinceMap[provinceID]; ok {
+				oneLine["Country"] = provinceMap[provinceID]
 			}
 			oneLine["City"] = district.City.Name
-			oneLine["Id"] = district.Id
-			oneLine["id"] = district.Id
+			oneLine["ID"] = district.ID
+			oneLine["id"] = district.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -80,14 +80,14 @@ func (ctl *DistrictController) districtList(query map[string]string, fields []st
 func (ctl *DistrictController) Validator() {
 
 	name := strings.TrimSpace(ctl.GetString("Name"))
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	result := make(map[string]bool)
 	obj, err := md.GetAddressDistrictByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false

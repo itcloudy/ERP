@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 国家
+// AddressCountry 国家
 type AddressCountry struct {
 	Base
 	Name      string             `orm:"size(50)" xml:"name"` //国家名称
@@ -21,18 +21,18 @@ func init() {
 }
 
 // AddAddressCountry insert a new AddressCountry into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddAddressCountry(obj *AddressCountry) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetAddressCountryById retrieves AddressCountry by Id. Returns error if
-// Id doesn't exist
-func GetAddressCountryById(id int64) (obj *AddressCountry, err error) {
+// GetAddressCountryByID retrieves AddressCountry by ID. Returns error if
+// ID doesn't exist
+func GetAddressCountryByID(id int64) (obj *AddressCountry, err error) {
 	o := orm.NewOrm()
-	obj = &AddressCountry{Base: Base{Id: id}}
+	obj = &AddressCountry{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -117,11 +117,11 @@ func GetAllAddressCountry(query map[string]string, fields []string, sortby []str
 	return paginator, objArrs, err
 }
 
-// UpdateAddressCountry updates AddressCountry by Id and returns error if
+// UpdateAddressCountryByID updates AddressCountry by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateAddressCountryById(m *AddressCountry) (err error) {
+func UpdateAddressCountryByID(m *AddressCountry) (err error) {
 	o := orm.NewOrm()
-	v := AddressCountry{Base: Base{Id: m.Id}}
+	v := AddressCountry{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -132,15 +132,15 @@ func UpdateAddressCountryById(m *AddressCountry) (err error) {
 	return
 }
 
-// DeleteAddressCountry deletes AddressCountry by Id and returns error if
+// DeleteAddressCountry deletes AddressCountry by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteAddressCountry(id int64) (err error) {
 	o := orm.NewOrm()
-	v := AddressCountry{Base: Base{Id: id}}
+	v := AddressCountry{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&AddressCountry{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&AddressCountry{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

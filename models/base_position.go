@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 职位
+//Position 职位
 type Position struct {
 	Base
 	Name        string `orm:"unique"` //职位名称
@@ -21,7 +21,7 @@ func init() {
 }
 
 // AddPosition insert a new Position into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddPosition(obj *Position) (id int64, err error) {
 	o := orm.NewOrm()
 
@@ -29,11 +29,11 @@ func AddPosition(obj *Position) (id int64, err error) {
 	return id, err
 }
 
-// GetPositionById retrieves Position by Id. Returns error if
-// Id doesn't exist
-func GetPositionById(id int64) (obj *Position, err error) {
+// GetPositionByID retrieves Position by ID. Returns error if
+// ID doesn't exist
+func GetPositionByID(id int64) (obj *Position, err error) {
 	o := orm.NewOrm()
-	obj = &Position{Base: Base{Id: id}}
+	obj = &Position{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -109,11 +109,11 @@ func GetAllPosition(query map[string]string, fields []string, sortby []string, o
 	return paginator, objArrs, err
 }
 
-// UpdatePosition updates Position by Id and returns error if
+// UpdatePositionByID updates Position by ID and returns error if
 // the record to be updated doesn't exist
-func UpdatePositionById(m *Position) (err error) {
+func UpdatePositionByID(m *Position) (err error) {
 	o := orm.NewOrm()
-	v := Position{Base: Base{Id: m.Id}}
+	v := Position{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -135,15 +135,15 @@ func GetPositionByName(name string) (obj *Position, err error) {
 	return nil, err
 }
 
-// DeletePosition deletes Position by Id and returns error if
+// DeletePosition deletes Position by ID and returns error if
 // the record to be deleted doesn't exist
 func DeletePosition(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Position{Base: Base{Id: id}}
+	v := Position{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Position{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&Position{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

@@ -57,10 +57,10 @@ func (ctl *ProductTemplateController) Put() {
 		ctl.ServeJSON()
 	} else {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-			if template, err := md.GetProductTemplateById(idInt64); err == nil {
+			if template, err := md.GetProductTemplateByID(idInt64); err == nil {
 				if err := ctl.ParseForm(&template); err == nil {
 
-					if err := md.UpdateProductTemplateById(template); err == nil {
+					if err := md.UpdateProductTemplateByID(template); err == nil {
 						ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 					}
 				}
@@ -90,12 +90,12 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 			oneLine["name"] = line.Name
 			attributes := make(map[string]string)
 			if line.Attribute != nil {
-				attributes["id"] = strconv.FormatInt(line.Attribute.Id, 10)
+				attributes["id"] = strconv.FormatInt(line.Attribute.ID, 10)
 				attributes["name"] = line.Attribute.Name
 			}
 			tmpValues := make(map[string]string)
 			if line.ProductTemplate != nil {
-				tmpValues["id"] = strconv.FormatInt(line.ProductTemplate.Id, 10)
+				tmpValues["id"] = strconv.FormatInt(line.ProductTemplate.ID, 10)
 				tmpValues["name"] = line.ProductTemplate.Name
 			}
 			attributeValuesLines := make([]interface{}, 0, 4)
@@ -103,7 +103,7 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 			if attributeValues != nil {
 				for _, line := range attributeValues {
 					mapAttributeValues := make(map[string]string)
-					mapAttributeValues["id"] = strconv.FormatInt(line.Id, 10)
+					mapAttributeValues["id"] = strconv.FormatInt(line.ID, 10)
 					mapAttributeValues["name"] = line.Name
 					attributeValuesLines = append(attributeValuesLines, oneLine)
 				}
@@ -113,8 +113,8 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 			oneLine["ProductTemplate"] = tmpValues
 			oneLine["AttributeValues"] = attributeValuesLines
 
-			oneLine["Id"] = line.Id
-			oneLine["id"] = line.Id
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -142,7 +142,7 @@ func (ctl *ProductTemplateController) Edit() {
 	templateInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-			if template, err := md.GetProductTemplateById(idInt64); err == nil {
+			if template, err := md.GetProductTemplateByID(idInt64); err == nil {
 				ctl.PageAction = template.Name
 				templateInfo["name"] = template.Name
 				templateInfo["defaultCode"] = template.DefaultCode
@@ -157,7 +157,7 @@ func (ctl *ProductTemplateController) Edit() {
 				categ := template.Categ
 				categValues := make(map[string]string)
 				if categ != nil {
-					categValues["id"] = strconv.FormatInt(categ.Id, 10)
+					categValues["id"] = strconv.FormatInt(categ.ID, 10)
 					categValues["name"] = categ.Name
 				}
 				templateInfo["category"] = categValues
@@ -165,7 +165,7 @@ func (ctl *ProductTemplateController) Edit() {
 				firstSaleUom := template.FirstSaleUom
 				firstSaleUomValues := make(map[string]string)
 				if firstSaleUom != nil {
-					firstSaleUomValues["id"] = strconv.FormatInt(firstSaleUom.Id, 10)
+					firstSaleUomValues["id"] = strconv.FormatInt(firstSaleUom.ID, 10)
 					firstSaleUomValues["name"] = firstSaleUom.Name
 				}
 				templateInfo["firstSaleUom"] = firstSaleUomValues
@@ -173,7 +173,7 @@ func (ctl *ProductTemplateController) Edit() {
 				secondSaleUom := template.SecondSaleUom
 				secondSaleUomValues := make(map[string]string)
 				if secondSaleUom != nil {
-					secondSaleUomValues["id"] = strconv.FormatInt(secondSaleUom.Id, 10)
+					secondSaleUomValues["id"] = strconv.FormatInt(secondSaleUom.ID, 10)
 					secondSaleUomValues["name"] = secondSaleUom.Name
 				}
 				templateInfo["secondSaleUom"] = secondSaleUomValues
@@ -181,7 +181,7 @@ func (ctl *ProductTemplateController) Edit() {
 				firstPurchaseUom := template.FirstPurchaseUom
 				firstPurchaseUomValues := make(map[string]string)
 				if firstPurchaseUom != nil {
-					firstPurchaseUomValues["id"] = strconv.FormatInt(firstPurchaseUom.Id, 10)
+					firstPurchaseUomValues["id"] = strconv.FormatInt(firstPurchaseUom.ID, 10)
 					firstPurchaseUomValues["name"] = firstPurchaseUom.Name
 				}
 				templateInfo["firstPurchaseUom"] = firstSaleUomValues
@@ -189,7 +189,7 @@ func (ctl *ProductTemplateController) Edit() {
 				secondPurchaseUom := template.SecondPurchaseUom
 				secondPurchaseUomValues := make(map[string]string)
 				if secondSaleUom != nil {
-					secondPurchaseUomValues["id"] = strconv.FormatInt(secondPurchaseUom.Id, 10)
+					secondPurchaseUomValues["id"] = strconv.FormatInt(secondPurchaseUom.ID, 10)
 					secondPurchaseUomValues["name"] = secondPurchaseUom.Name
 				}
 				templateInfo["secondPurchaseUom"] = secondPurchaseUomValues
@@ -197,7 +197,7 @@ func (ctl *ProductTemplateController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["Tp"] = templateInfo
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_template_form.html"
@@ -219,14 +219,14 @@ func (ctl *ProductTemplateController) Create() {
 func (ctl *ProductTemplateController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	result := make(map[string]bool)
 	obj, err := md.GetProductTemplateByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -255,8 +255,8 @@ func (ctl *ProductTemplateController) productTemplateList(query map[string]strin
 			oneLine := make(map[string]interface{})
 			oneLine["name"] = line.Name
 			oneLine["sequence"] = line.Sequence
-			oneLine["Id"] = line.Id
-			oneLine["id"] = line.Id
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

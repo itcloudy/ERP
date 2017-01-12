@@ -29,14 +29,14 @@ func (ctl *ProductAttributeValueController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
 	ctl.URL = "/product/attributevalue/"
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if attrValue, err := md.GetProductAttributeValueById(idInt64); err == nil {
+		if attrValue, err := md.GetProductAttributeValueByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&attrValue); err == nil {
 				if attributeID, err := ctl.GetInt64("productAttributeID"); err == nil {
-					if attribute, err := md.GetProductAttributeById(attributeID); err == nil {
+					if attribute, err := md.GetProductAttributeByID(attributeID); err == nil {
 						attrValue.Attribute = attribute
 					}
 				}
-				if err := md.UpdateProductAttributeValueById(attrValue); err == nil {
+				if err := md.UpdateProductAttributeValueByID(attrValue); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -76,12 +76,12 @@ func (ctl *ProductAttributeValueController) Edit() {
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
-			if attributeValue, err := md.GetProductAttributeValueById(idInt64); err == nil {
+			if attributeValue, err := md.GetProductAttributeValueByID(idInt64); err == nil {
 				ctl.PageAction = attributeValue.Name
 				mapInfo["name"] = attributeValue.Name
 				attribute := make(map[string]interface{})
 				if attributeValue.Attribute != nil {
-					attribute["id"] = attributeValue.Attribute.Id
+					attribute["id"] = attributeValue.Attribute.ID
 					attribute["name"] = attributeValue.Attribute.Name
 				}
 				mapInfo["attribute"] = attribute
@@ -89,7 +89,7 @@ func (ctl *ProductAttributeValueController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["ProductAttValue"] = mapInfo
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_attribute_value_form.html"
@@ -104,7 +104,7 @@ func (ctl *ProductAttributeValueController) PostCreate() {
 	attrValue := new(md.ProductAttributeValue)
 	if err := ctl.ParseForm(attrValue); err == nil {
 		if attributeID, err := ctl.GetInt64("productAttributeID"); err == nil {
-			if attribute, err := md.GetProductAttributeById(attributeID); err == nil {
+			if attribute, err := md.GetProductAttributeByID(attributeID); err == nil {
 				attrValue.Attribute = attribute
 			}
 		}
@@ -120,14 +120,14 @@ func (ctl *ProductAttributeValueController) PostCreate() {
 func (ctl *ProductAttributeValueController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	result := make(map[string]bool)
 	obj, err := md.GetProductAttributeValueByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -156,8 +156,8 @@ func (ctl *ProductAttributeValueController) productAttributeValueList(query map[
 			oneLine := make(map[string]interface{})
 			oneLine["name"] = line.Name
 			oneLine["attribute"] = line.Attribute.Name
-			oneLine["Id"] = line.Id
-			oneLine["id"] = line.Id
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

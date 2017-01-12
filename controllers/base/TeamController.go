@@ -7,10 +7,12 @@ import (
 	"strings"
 )
 
+// TeamController team
 type TeamController struct {
 	BaseController
 }
 
+// Post request
 func (ctl *TeamController) Post() {
 
 	action := ctl.Input().Get("action")
@@ -26,6 +28,7 @@ func (ctl *TeamController) Post() {
 	}
 }
 
+// Get request
 func (ctl *TeamController) Get() {
 	ctl.PageName = "团队管理"
 	action := ctl.Input().Get("action")
@@ -44,13 +47,15 @@ func (ctl *TeamController) Get() {
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuTeamActive"] = "active"
 }
+
+// Edit edit team
 func (ctl *TeamController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
 	teamInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
-			if team, err := md.GetTeamById(idInt64); err == nil {
+			if team, err := md.GetTeamByID(idInt64); err == nil {
 				ctl.PageAction = team.Name
 				teamInfo["Name"] = team.Name
 
@@ -58,18 +63,22 @@ func (ctl *TeamController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["Team"] = teamInfo
 	ctl.Layout = "base/base.html"
 
 	ctl.TplName = "base/team_form.html"
 }
+
+// Detail dispaly team info
 func (ctl *TeamController) Detail() {
 	//获取信息一样，直接调用Edit
 	ctl.Edit()
 	ctl.Data["Readonly"] = true
 	ctl.Data["Action"] = "detail"
 }
+
+// Create get create page
 func (ctl *TeamController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
@@ -77,6 +86,8 @@ func (ctl *TeamController) Create() {
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "base/team_form.html"
 }
+
+// Validator js valid
 func (ctl *TeamController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
@@ -87,7 +98,7 @@ func (ctl *TeamController) Validator() {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordID == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -115,8 +126,8 @@ func (ctl *TeamController) teamList(query map[string]string, fields []string, so
 		for _, team := range teams {
 			oneLine := make(map[string]interface{})
 
-			oneLine["Id"] = team.Id
-			oneLine["id"] = team.Id
+			oneLine["ID"] = team.ID
+			oneLine["id"] = team.ID
 			oneLine["name"] = team.Name
 
 			tableLines = append(tableLines, oneLine)
@@ -130,6 +141,8 @@ func (ctl *TeamController) teamList(query map[string]string, fields []string, so
 	}
 	return result, err
 }
+
+// PostList post request json response
 func (ctl *TeamController) PostList() {
 	query := make(map[string]string)
 	fields := make([]string, 0, 0)
@@ -148,6 +161,7 @@ func (ctl *TeamController) PostList() {
 
 }
 
+// GetList display team with table
 func (ctl *TeamController) GetList() {
 	ctl.Data["tableId"] = "table-team"
 	ctl.TplName = "base/base_list_view.html"

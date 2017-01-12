@@ -36,14 +36,14 @@ func (ctl *CityController) Get() {
 }
 func (ctl *CityController) Validator() {
 	name := strings.TrimSpace(ctl.GetString("Name"))
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	result := make(map[string]bool)
 	obj, err := md.GetAddressCityByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -73,8 +73,8 @@ func (ctl *CityController) cityList(query map[string]string, fields []string, so
 			oneLine["Name"] = city.Name
 			oneLine["Province"] = city.Province.Name
 			oneLine["Country"] = city.Province.Country.Name
-			oneLine["Id"] = city.Id
-			oneLine["id"] = city.Id
+			oneLine["ID"] = city.ID
+			oneLine["id"] = city.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

@@ -9,6 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// AddressCity table
 // 城市
 type AddressCity struct {
 	Base
@@ -23,7 +24,7 @@ func init() {
 }
 
 // AddAddressCity insert a new AddressCity into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddAddressCity(obj *AddressCity) (id int64, err error) {
 	o := orm.NewOrm()
 
@@ -31,11 +32,11 @@ func AddAddressCity(obj *AddressCity) (id int64, err error) {
 	return id, err
 }
 
-// GetAddressCityById retrieves AddressCity by Id. Returns error if
-// Id doesn't exist
-func GetAddressCityById(id int64) (obj *AddressCity, err error) {
+// GetAddressCityByID retrieves AddressCity by ID. Returns error if
+// ID doesn't exist
+func GetAddressCityByID(id int64) (obj *AddressCity, err error) {
 	o := orm.NewOrm()
-	obj = &AddressCity{Base: Base{Id: id}}
+	obj = &AddressCity{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -121,11 +122,11 @@ func GetAllAddressCity(query map[string]string, fields []string, sortby []string
 	return paginator, objArrs, err
 }
 
-// UpdateAddressCity updates AddressCity by Id and returns error if
+// UpdateAddressCityByID updates AddressCity by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateAddressCityById(m *AddressCity) error {
+func UpdateAddressCityByID(m *AddressCity) error {
 	o := orm.NewOrm()
-	v := AddressCity{Base: Base{Id: m.Id}}
+	v := AddressCity{Base: Base{ID: m.ID}}
 	var err error
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
@@ -134,15 +135,15 @@ func UpdateAddressCityById(m *AddressCity) error {
 	return err
 }
 
-// DeleteAddressCity deletes AddressCity by Id and returns error if
+// DeleteAddressCity deletes AddressCity by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteAddressCity(id int64) (err error) {
 	o := orm.NewOrm()
-	v := AddressCity{Base: Base{Id: id}}
+	v := AddressCity{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&AddressCity{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&AddressCity{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

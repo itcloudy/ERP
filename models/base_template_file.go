@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 模版文件
+//TemplateFile 模版文件
 type TemplateFile struct {
 	Base
 	Name string //模版名称
@@ -21,7 +21,7 @@ func init() {
 }
 
 // AddTemplateFile insert a new TemplateFile into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddTemplateFile(obj *TemplateFile) (id int64, err error) {
 	o := orm.NewOrm()
 
@@ -29,11 +29,11 @@ func AddTemplateFile(obj *TemplateFile) (id int64, err error) {
 	return id, err
 }
 
-// GetTemplateFileById retrieves TemplateFile by Id. Returns error if
-// Id doesn't exist
-func GetTemplateFileById(id int64) (obj *TemplateFile, err error) {
+// GetTemplateFileByID retrieves TemplateFile by ID. Returns error if
+// ID doesn't exist
+func GetTemplateFileByID(id int64) (obj *TemplateFile, err error) {
 	o := orm.NewOrm()
-	obj = &TemplateFile{Base: Base{Id: id}}
+	obj = &TemplateFile{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -51,7 +51,8 @@ func GetTemplateFileByName(name string) (obj *TemplateFile, err error) {
 	return nil, err
 }
 
-func GetLastTemplateFileByUserID(userId int64) (TemplateFile, error) {
+//GetLastTemplateFileByUserID GetLastTemplateFileByUserID
+func GetLastTemplateFileByUserID(userID int64) (TemplateFile, error) {
 	o := orm.NewOrm()
 	var (
 		record TemplateFile
@@ -59,7 +60,7 @@ func GetLastTemplateFileByUserID(userId int64) (TemplateFile, error) {
 	)
 
 	o.Using("default")
-	err = o.QueryTable(&record).Filter("User", userId).RelatedSel().OrderBy("-id").Limit(1).One(&record)
+	err = o.QueryTable(&record).Filter("User", userID).RelatedSel().OrderBy("-id").Limit(1).One(&record)
 	return record, err
 }
 
@@ -131,11 +132,11 @@ func GetAllTemplateFile(query map[string]string, fields []string, sortby []strin
 	return paginator, objArrs, err
 }
 
-// UpdateTemplateFile updates TemplateFile by Id and returns error if
+// UpdateTemplateFileByID updates TemplateFile by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateTemplateFileById(m *TemplateFile) error {
+func UpdateTemplateFileByID(m *TemplateFile) error {
 	o := orm.NewOrm()
-	v := TemplateFile{Base: Base{Id: m.Id}}
+	v := TemplateFile{Base: Base{ID: m.ID}}
 	var err error
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
@@ -144,15 +145,15 @@ func UpdateTemplateFileById(m *TemplateFile) error {
 	return err
 }
 
-// DeleteTemplateFile deletes TemplateFile by Id and returns error if
+// DeleteTemplateFile deletes TemplateFile by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteTemplateFile(id int64) (err error) {
 	o := orm.NewOrm()
-	v := TemplateFile{Base: Base{Id: id}}
+	v := TemplateFile{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&TemplateFile{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&TemplateFile{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

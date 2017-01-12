@@ -6,10 +6,12 @@ import (
 	"strings"
 )
 
+// PositionController position
 type PositionController struct {
 	BaseController
 }
 
+// Post request
 func (ctl *PositionController) Post() {
 
 	action := ctl.Input().Get("action")
@@ -25,6 +27,7 @@ func (ctl *PositionController) Post() {
 	}
 }
 
+// Get request
 func (ctl *PositionController) Get() {
 	ctl.GetList()
 	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
@@ -34,6 +37,7 @@ func (ctl *PositionController) Get() {
 	ctl.Data["MenuPositionActive"] = "active"
 }
 
+// Validator js vaild
 func (ctl *PositionController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
@@ -44,7 +48,7 @@ func (ctl *PositionController) Validator() {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordID == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -73,8 +77,8 @@ func (ctl *PositionController) positionList(query map[string]string, fields []st
 		for _, position := range positions {
 			oneLine := make(map[string]interface{})
 
-			oneLine["Id"] = position.Id
-			oneLine["id"] = position.Id
+			oneLine["ID"] = position.ID
+			oneLine["id"] = position.ID
 			oneLine["name"] = position.Name
 
 			tableLines = append(tableLines, oneLine)
@@ -88,6 +92,8 @@ func (ctl *PositionController) positionList(query map[string]string, fields []st
 	}
 	return result, err
 }
+
+// PostList post request json response
 func (ctl *PositionController) PostList() {
 	query := make(map[string]string)
 	fields := make([]string, 0, 0)
@@ -106,6 +112,7 @@ func (ctl *PositionController) PostList() {
 
 }
 
+// GetList get table display page
 func (ctl *PositionController) GetList() {
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-position"

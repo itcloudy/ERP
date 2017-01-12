@@ -2,52 +2,59 @@ package base
 
 import (
 	"encoding/json"
+	"fmt"
 	md "goERP/models"
 	"strconv"
 	"strings"
 )
 
+// UserController user
 type UserController struct {
 	BaseController
 }
 
+// Put request
 func (ctl *UserController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
 	ctl.URL = "/user/"
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if user, err := md.GetUserById(idInt64); err == nil {
+		if user, err := md.GetUserByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&user); err == nil {
+				fmt.Println(user.DepartmentID)
+				fmt.Println(user.PositionID)
+				fmt.Println(user.GroupIDs)
+				fmt.Println(user.TeamIDs)
 				var upateField []string
-				if departmentId, err := ctl.GetInt64("department"); err == nil {
-					if department, err := md.GetDepartmentById(departmentId); err == nil {
+				if departmentID, err := ctl.GetInt64("department"); err == nil {
+					if department, err := md.GetDepartmentByID(departmentID); err == nil {
 						user.Department = department
 						upateField = append(upateField, "Department")
 					}
 				}
-				groupIdsStr := ctl.GetStrings("group")
-				var groupIds []int64
-				for _, el := range groupIdsStr {
+				groupIDsStr := ctl.GetStrings("group")
+				var groupIDs []int64
+				for _, el := range groupIDsStr {
 					if idInt64, err := strconv.ParseInt(el, 10, 64); err == nil {
-						groupIds = append(groupIds, idInt64)
+						groupIDs = append(groupIDs, idInt64)
 					}
 				}
-				if len(groupIds) > 0 {
+				if len(groupIDs) > 0 {
 					var groups []*md.Group
-					for _, groupId := range groupIds {
-						if group, err := md.GetGroupById(groupId); err == nil {
+					for _, groupID := range groupIDs {
+						if group, err := md.GetGroupByID(groupID); err == nil {
 							groups = append(groups, group)
 						}
 					}
 					user.Groups = groups
 					upateField = append(upateField, "Groups")
 				}
-				if positionId, err := ctl.GetInt64("position"); err == nil {
-					if position, err := md.GetPositionById(positionId); err == nil {
+				if positionID, err := ctl.GetInt64("position"); err == nil {
+					if position, err := md.GetPositionByID(positionID); err == nil {
 						user.Position = position
 						upateField = append(upateField, "Position")
 					}
 				}
-				if err := md.UpdateUserById(user); err == nil {
+				if err := md.UpdateUserByID(user); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -55,6 +62,8 @@ func (ctl *UserController) Put() {
 	}
 	ctl.Redirect(ctl.URL+id+"?action=edit", 302)
 }
+
+// Get request
 func (ctl *UserController) Get() {
 	ctl.PageName = "用户管理"
 	ctl.URL = "/user/"
@@ -76,6 +85,8 @@ func (ctl *UserController) Get() {
 	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
 
 }
+
+// Post request
 func (ctl *UserController) Post() {
 	action := ctl.Input().Get("action")
 	ctl.URL = "/user/"
@@ -90,6 +101,8 @@ func (ctl *UserController) Post() {
 		ctl.PostList()
 	}
 }
+
+// Create get user create page
 func (ctl *UserController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
@@ -98,6 +111,8 @@ func (ctl *UserController) Create() {
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "user/user_form.html"
 }
+
+// Detail display user info
 func (ctl *UserController) Detail() {
 	//获取信息一样，直接调用Edit
 	ctl.Edit()
@@ -105,6 +120,8 @@ func (ctl *UserController) Detail() {
 	ctl.Data["MenuSelfInfoActive"] = "active"
 	ctl.Data["Action"] = "detail"
 }
+
+// GetList display user with list
 func (ctl *UserController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {
@@ -116,6 +133,8 @@ func (ctl *UserController) GetList() {
 	ctl.Layout = "base/base_list_view.html"
 	ctl.TplName = "user/user_list_search.html"
 }
+
+// Validator js valid
 func (ctl *UserController) Validator() {
 	recordID, _ := ctl.GetInt64("recordId")
 	name := strings.TrimSpace(ctl.GetString("Name"))
@@ -125,7 +144,7 @@ func (ctl *UserController) Validator() {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordID == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -139,6 +158,8 @@ func (ctl *UserController) Validator() {
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
+
+// PostList post request json response
 func (ctl *UserController) PostList() {
 	query := make(map[string]string)
 	fields := make([]string, 0, 0)
@@ -187,8 +208,8 @@ func (ctl *UserController) userList(query map[string]string, fields []string, so
 			oneLine["IsAdmin"] = user.IsAdmin
 			oneLine["Active"] = user.Active
 			oneLine["Qq"] = user.Qq
-			oneLine["Id"] = user.Id
-			oneLine["id"] = user.Id
+			oneLine["ID"] = user.ID
+			oneLine["id"] = user.ID
 			oneLine["Wechat"] = user.WeChat
 
 			tableLines = append(tableLines, oneLine)
@@ -203,30 +224,30 @@ func (ctl *UserController) userList(query map[string]string, fields []string, so
 	return result, err
 }
 
+// ChangePwd change password
 func (ctl *UserController) ChangePwd() {
 	ctl.Data["MenuChangePwdActive"] = "active"
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "user/user_change_password_form.html"
 }
 
-func (ctl *UserController) GetCreate() {
-	ctl.Data["Readonly"] = false
-
-	ctl.Layout = "base/base.html"
-	ctl.TplName = "user/user_form.html"
-}
+//PostCreate create user with post params
 func (ctl *UserController) PostCreate() {
 
 	user := new(md.User)
 	if err := ctl.ParseForm(user); err == nil {
-
-		if deparentId, err := ctl.GetInt64("Department"); err == nil {
-			if department, err := md.GetDepartmentById(deparentId); err == nil {
+		fmt.Println(user.DepartmentID)
+		fmt.Println(user.PositionID)
+		fmt.Println(user.GroupIDs)
+		fmt.Println(user.TeamIDs)
+		fmt.Println(ctl.GetStrings("Group"))
+		if deparentID, err := ctl.GetInt64("Department"); err == nil {
+			if department, err := md.GetDepartmentByID(deparentID); err == nil {
 				user.Department = department
 			}
 		}
-		if positionId, err := ctl.GetInt64("Position"); err == nil {
-			if position, err := md.GetPositionById(positionId); err == nil {
+		if positionID, err := ctl.GetInt64("Position"); err == nil {
+			if position, err := md.GetPositionByID(positionID); err == nil {
 				user.Position = position
 			}
 		}
@@ -237,14 +258,16 @@ func (ctl *UserController) PostCreate() {
 	}
 
 }
+
+// Edit edit user info
 func (ctl *UserController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
 	userInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-			if user, err := md.GetUserById(idInt64); err == nil {
+			if user, err := md.GetUserByID(idInt64); err == nil {
 				ctl.PageAction = user.Name + "(" + user.NameZh + ")"
-				userInfo["Id"] = user.Id
+				userInfo["ID"] = user.ID
 				userInfo["Name"] = user.Name
 				userInfo["NameZh"] = user.NameZh
 				userInfo["Email"] = user.Email
@@ -254,14 +277,14 @@ func (ctl *UserController) Edit() {
 				userInfo["Tel"] = user.Tel
 				department := make(map[string]string)
 				if user.Department != nil {
-					department["Id"] = strconv.FormatInt(user.Department.Id, 10)
+					department["ID"] = strconv.FormatInt(user.Department.ID, 10)
 					department["Name"] = user.Department.Name
 					userInfo["Department"] = department
 				}
 				groups := make([]interface{}, 0, 4)
 				for _, group := range user.Groups {
 					oneLine := make(map[string]interface{})
-					oneLine["Id"] = group.Id
+					oneLine["ID"] = group.ID
 					oneLine["Name"] = group.Name
 					oneLine["Description"] = group.Description
 					groups = append(groups, oneLine)
@@ -269,21 +292,16 @@ func (ctl *UserController) Edit() {
 				userInfo["Groups"] = groups
 				position := make(map[string]string)
 				if user.Position != nil {
-					position["Id"] = strconv.FormatInt(user.Position.Id, 10)
+					position["ID"] = strconv.FormatInt(user.Position.ID, 10)
 					position["Name"] = user.Position.Name
 					userInfo["Position"] = position
 				}
 			}
 		}
 	}
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["Action"] = "edit"
 	ctl.Data["User"] = userInfo
-	ctl.Layout = "base/base.html"
-	ctl.TplName = "user/user_form.html"
-}
-func (ctl *UserController) Show() {
-	ctl.Data["MenuSelfInfoActive"] = "active"
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "user/user_form.html"
 }

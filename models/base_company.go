@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 公司
+//Company 公司
 type Company struct {
 	Base
 	Name       string           `orm:"unique" json:"name"`               //公司名称
@@ -28,18 +28,18 @@ func init() {
 }
 
 // AddCompany insert a new Company into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddCompany(obj *Company) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetCompanyById retrieves Company by Id. Returns error if
-// Id doesn't exist
-func GetCompanyById(id int64) (obj *Company, err error) {
+// GetCompanyByID retrieves Company by ID. Returns error if
+// ID doesn't exist
+func GetCompanyByID(id int64) (obj *Company, err error) {
 	o := orm.NewOrm()
-	obj = &Company{Base: Base{Id: id}}
+	obj = &Company{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -126,11 +126,11 @@ func GetAllCompany(query map[string]string, fields []string, sortby []string, or
 	return paginator, objArrs, err
 }
 
-// UpdateCompany updates Company by Id and returns error if
+// UpdateCompanyByID updates Company by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateCompanyById(m *Company) (err error) {
+func UpdateCompanyByID(m *Company) (err error) {
 	o := orm.NewOrm()
-	v := Company{Base: Base{Id: m.Id}}
+	v := Company{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -141,15 +141,15 @@ func UpdateCompanyById(m *Company) (err error) {
 	return
 }
 
-// DeleteCompany deletes Company by Id and returns error if
+// DeleteCompany deletes Company by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteCompany(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Company{Base: Base{Id: id}}
+	v := Company{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Company{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&Company{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

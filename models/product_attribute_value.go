@@ -10,7 +10,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 产品属性值
+//ProductAttributeValue 产品属性值
 type ProductAttributeValue struct {
 	Base
 	Name       string            `orm:"unique" form:"name"` //产品属性名称
@@ -26,18 +26,18 @@ func init() {
 }
 
 // AddProductAttributeValue insert a new ProductAttributeValue into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddProductAttributeValue(obj *ProductAttributeValue) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetProductAttributeValueById retrieves ProductAttributeValue by Id. Returns error if
-// Id doesn't exist
-func GetProductAttributeValueById(id int64) (obj *ProductAttributeValue, err error) {
+// GetProductAttributeValueByID retrieves ProductAttributeValue by ID. Returns error if
+// ID doesn't exist
+func GetProductAttributeValueByID(id int64) (obj *ProductAttributeValue, err error) {
 	o := orm.NewOrm()
-	obj = &ProductAttributeValue{Base: Base{Id: id}}
+	obj = &ProductAttributeValue{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -123,11 +123,11 @@ func GetAllProductAttributeValue(query map[string]string, fields []string, sortb
 	return paginator, objArrs, err
 }
 
-// UpdateProductAttributeValue updates ProductAttributeValue by Id and returns error if
+// UpdateProductAttributeValueByID updates ProductAttributeValue by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductAttributeValueById(m *ProductAttributeValue) (err error) {
+func UpdateProductAttributeValueByID(m *ProductAttributeValue) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttributeValue{Base: Base{Id: m.Id}}
+	v := ProductAttributeValue{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -138,15 +138,15 @@ func UpdateProductAttributeValueById(m *ProductAttributeValue) (err error) {
 	return
 }
 
-// DeleteProductAttributeValue deletes ProductAttributeValue by Id and returns error if
+// DeleteProductAttributeValue deletes ProductAttributeValue by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteProductAttributeValue(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttributeValue{Base: Base{Id: id}}
+	v := ProductAttributeValue{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductAttributeValue{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&ProductAttributeValue{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

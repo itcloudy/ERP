@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 产品属性明细
+// ProductAttributeLine 产品属性明细
 type ProductAttributeLine struct {
 	Base
 	Name            string                   `orm:"unique"`   //产品属性名称
@@ -24,18 +24,18 @@ func init() {
 }
 
 // AddProductAttributeLine insert a new ProductAttributeLine into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddProductAttributeLine(obj *ProductAttributeLine) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetProductAttributeLineById retrieves ProductAttributeLine by Id. Returns error if
-// Id doesn't exist
-func GetProductAttributeLineById(id int64) (obj *ProductAttributeLine, err error) {
+// GetProductAttributeLineByID retrieves ProductAttributeLine by ID. Returns error if
+// ID doesn't exist
+func GetProductAttributeLineByID(id int64) (obj *ProductAttributeLine, err error) {
 	o := orm.NewOrm()
-	obj = &ProductAttributeLine{Base: Base{Id: id}}
+	obj = &ProductAttributeLine{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -121,11 +121,11 @@ func GetAllProductAttributeLine(query map[string]string, fields []string, sortby
 	return paginator, objArrs, err
 }
 
-// UpdateProductAttributeLine updates ProductAttributeLine by Id and returns error if
+// UpdateProductAttributeLineByID updates ProductAttributeLine by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductAttributeLineById(m *ProductAttributeLine) (err error) {
+func UpdateProductAttributeLineByID(m *ProductAttributeLine) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttributeLine{Base: Base{Id: m.Id}}
+	v := ProductAttributeLine{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -136,15 +136,15 @@ func UpdateProductAttributeLineById(m *ProductAttributeLine) (err error) {
 	return
 }
 
-// DeleteProductAttributeLine deletes ProductAttributeLine by Id and returns error if
+// DeleteProductAttributeLine deletes ProductAttributeLine by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteProductAttributeLine(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttributeLine{Base: Base{Id: id}}
+	v := ProductAttributeLine{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductAttributeLine{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&ProductAttributeLine{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

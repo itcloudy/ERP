@@ -51,10 +51,10 @@ func (ctl *ProductProductController) Put() {
 	ctl.URL = "/product/product/"
 	//需要判断文件上传时页面不用跳转的情况
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if product, err := md.GetProductProductById(idInt64); err == nil {
+		if product, err := md.GetProductProductByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&product); err == nil {
 
-				if err := md.UpdateProductProductById(product); err == nil {
+				if err := md.UpdateProductProductByID(product); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -74,7 +74,7 @@ func (ctl *ProductProductController) Edit() {
 	productInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-			if product, err := md.GetProductProductById(idInt64); err == nil {
+			if product, err := md.GetProductProductByID(idInt64); err == nil {
 				ctl.PageAction = product.Name
 				productInfo["name"] = product.Name
 				productInfo["defaultCode"] = product.DefaultCode
@@ -84,7 +84,7 @@ func (ctl *ProductProductController) Edit() {
 				categ := product.Categ
 				categValues := make(map[string]string)
 				if categ != nil {
-					categValues["id"] = strconv.FormatInt(categ.Id, 10)
+					categValues["id"] = strconv.FormatInt(categ.ID, 10)
 					categValues["name"] = categ.Name
 				}
 				productInfo["category"] = categValues
@@ -92,7 +92,7 @@ func (ctl *ProductProductController) Edit() {
 				firstSaleUom := product.FirstSaleUom
 				firstSaleUomValues := make(map[string]string)
 				if firstSaleUom != nil {
-					firstSaleUomValues["id"] = strconv.FormatInt(firstSaleUom.Id, 10)
+					firstSaleUomValues["id"] = strconv.FormatInt(firstSaleUom.ID, 10)
 					firstSaleUomValues["name"] = firstSaleUom.Name
 				}
 				productInfo["firstSaleUom"] = firstSaleUomValues
@@ -100,7 +100,7 @@ func (ctl *ProductProductController) Edit() {
 				secondSaleUom := product.SecondSaleUom
 				secondSaleUomValues := make(map[string]string)
 				if secondSaleUom != nil {
-					secondSaleUomValues["id"] = strconv.FormatInt(secondSaleUom.Id, 10)
+					secondSaleUomValues["id"] = strconv.FormatInt(secondSaleUom.ID, 10)
 					secondSaleUomValues["name"] = secondSaleUom.Name
 				}
 				productInfo["secondSaleUom"] = secondSaleUomValues
@@ -108,7 +108,7 @@ func (ctl *ProductProductController) Edit() {
 				firstPurchaseUom := product.FirstPurchaseUom
 				firstPurchaseUomValues := make(map[string]string)
 				if firstPurchaseUom != nil {
-					firstPurchaseUomValues["id"] = strconv.FormatInt(firstPurchaseUom.Id, 10)
+					firstPurchaseUomValues["id"] = strconv.FormatInt(firstPurchaseUom.ID, 10)
 					firstPurchaseUomValues["name"] = firstPurchaseUom.Name
 				}
 				productInfo["firstPurchaseUom"] = firstSaleUomValues
@@ -116,7 +116,7 @@ func (ctl *ProductProductController) Edit() {
 				secondPurchaseUom := product.SecondPurchaseUom
 				secondPurchaseUomValues := make(map[string]string)
 				if secondSaleUom != nil {
-					secondPurchaseUomValues["id"] = strconv.FormatInt(secondPurchaseUom.Id, 10)
+					secondPurchaseUomValues["id"] = strconv.FormatInt(secondPurchaseUom.ID, 10)
 					secondPurchaseUomValues["name"] = secondPurchaseUom.Name
 				}
 				productInfo["secondPurchaseUom"] = secondPurchaseUomValues
@@ -124,7 +124,7 @@ func (ctl *ProductProductController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["Product"] = productInfo
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_product_form.html"
@@ -137,14 +137,14 @@ func (ctl *ProductProductController) Detail() {
 func (ctl *ProductProductController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	result := make(map[string]bool)
 	obj, err := md.GetProductProductByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -172,7 +172,7 @@ func (ctl *ProductProductController) productProductList(query map[string]string,
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
 			oneLine["name"] = line.Name
-			oneLine["Id"] = line.Id
+			oneLine["ID"] = line.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

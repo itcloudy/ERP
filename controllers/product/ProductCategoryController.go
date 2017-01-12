@@ -29,14 +29,14 @@ func (ctl *ProductCategoryController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
 	ctl.URL = "/product/category/"
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if category, err := md.GetProductCategoryById(idInt64); err == nil {
+		if category, err := md.GetProductCategoryByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&category); err == nil {
-				if parentId, err := ctl.GetInt64("parent"); err == nil {
-					if parent, err := md.GetProductCategoryById(parentId); err == nil {
+				if parentID, err := ctl.GetInt64("parent"); err == nil {
+					if parent, err := md.GetProductCategoryByID(parentID); err == nil {
 						category.Parent = parent
 					}
 				}
-				if err := md.UpdateProductCategoryById(category); err == nil {
+				if err := md.UpdateProductCategoryByID(category); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -69,12 +69,12 @@ func (ctl *ProductCategoryController) Edit() {
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
-			if category, err := md.GetProductCategoryById(idInt64); err == nil {
+			if category, err := md.GetProductCategoryByID(idInt64); err == nil {
 				ctl.PageAction = category.Name
 				categoryInfo["name"] = category.Name
 				parent := make(map[string]interface{})
 				if category.Parent != nil {
-					parent["id"] = category.Parent.Id
+					parent["id"] = category.Parent.ID
 					parent["name"] = category.Parent.Name
 				}
 				categoryInfo["parent"] = parent
@@ -82,7 +82,7 @@ func (ctl *ProductCategoryController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["Category"] = categoryInfo
 	ctl.Layout = "base/base.html"
 
@@ -101,7 +101,7 @@ func (ctl *ProductCategoryController) PostCreate() {
 	category := new(md.ProductCategory)
 	if err := ctl.ParseForm(category); err == nil {
 		if parentID, err := ctl.GetInt64("parent"); err == nil {
-			if parent, err := md.GetProductCategoryById(parentID); err == nil {
+			if parent, err := md.GetProductCategoryByID(parentID); err == nil {
 				category.Parent = parent
 			}
 		}
@@ -123,7 +123,7 @@ func (ctl *ProductCategoryController) Create() {
 }
 func (ctl *ProductCategoryController) Validator() {
 	name := ctl.GetString("name")
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	name = strings.TrimSpace(name)
 	result := make(map[string]bool)
 	obj, err := md.GetProductCategoryByName(name)
@@ -131,7 +131,7 @@ func (ctl *ProductCategoryController) Validator() {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -165,8 +165,8 @@ func (ctl *ProductCategoryController) productCategoryList(query map[string]strin
 				oneLine["parent"] = "-"
 			}
 			oneLine["path"] = line.ParentFullPath
-			oneLine["Id"] = line.Id
-			oneLine["id"] = line.Id
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

@@ -7,10 +7,12 @@ import (
 	"strings"
 )
 
+// CompanyController 公司
 type CompanyController struct {
 	BaseController
 }
 
+// Post 请求 公司
 func (ctl *CompanyController) Post() {
 	action := ctl.Input().Get("action")
 	switch action {
@@ -24,18 +26,20 @@ func (ctl *CompanyController) Post() {
 		ctl.PostList()
 	}
 }
+
+// Put request
 func (ctl *CompanyController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
 	ctl.URL = "/company/"
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if company, err := md.GetCompanyById(idInt64); err == nil {
+		if company, err := md.GetCompanyByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&company); err == nil {
-				if parentId, err := ctl.GetInt64("parent"); err == nil {
-					if parent, err := md.GetCompanyById(parentId); err == nil {
+				if parentID, err := ctl.GetInt64("parent"); err == nil {
+					if parent, err := md.GetCompanyByID(parentID); err == nil {
 						company.Parent = parent
 					}
 				}
-				if err := md.UpdateCompanyById(company); err == nil {
+				if err := md.UpdateCompanyByID(company); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -44,6 +48,8 @@ func (ctl *CompanyController) Put() {
 	ctl.Redirect(ctl.URL+id+"?action=edit", 302)
 
 }
+
+// Get request
 func (ctl *CompanyController) Get() {
 	ctl.PageName = "公司管理管理"
 	action := ctl.Input().Get("action")
@@ -62,33 +68,35 @@ func (ctl *CompanyController) Get() {
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuCompanyActive"] = "active"
 }
+
+// Edit company
 func (ctl *CompanyController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
 	companyInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
-			if company, err := md.GetCompanyById(idInt64); err == nil {
+			if company, err := md.GetCompanyByID(idInt64); err == nil {
 
 				companyInfo["name"] = company.Name
 				parent := make(map[string]interface{})
 				if company.Parent != nil {
-					parent["id"] = company.Parent.Id
+					parent["id"] = company.Parent.ID
 					parent["name"] = company.Parent.Name
 				}
 				companyInfo["parent"] = parent
 			}
 		}
 	}
-	ctl.PageName = ctl.PageName
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["Category"] = companyInfo
 	ctl.Layout = "base/base.html"
 	ctl.PageAction = "编辑"
 	ctl.TplName = "user/company_form.html"
 }
 
+// Detail display company info
 func (ctl *CompanyController) Detail() {
 	//获取信息一样，直接调用Edit
 	ctl.Edit()
@@ -97,12 +105,12 @@ func (ctl *CompanyController) Detail() {
 	ctl.Data["Action"] = "detail"
 }
 
-//post请求创建产品分类
+//PostCreate 请求创建产品分类
 func (ctl *CompanyController) PostCreate() {
 	company := new(md.Company)
 	if err := ctl.ParseForm(company); err == nil {
 		if parentID, err := ctl.GetInt64("parent"); err == nil {
-			if parent, err := md.GetCompanyById(parentID); err == nil {
+			if parent, err := md.GetCompanyByID(parentID); err == nil {
 				company.Parent = parent
 			}
 		}
@@ -115,6 +123,8 @@ func (ctl *CompanyController) PostCreate() {
 		ctl.Get()
 	}
 }
+
+// Create page
 func (ctl *CompanyController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
@@ -122,6 +132,8 @@ func (ctl *CompanyController) Create() {
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "user/company_form.html"
 }
+
+// Validator js validator
 func (ctl *CompanyController) Validator() {
 	name := ctl.GetString("name")
 	recordID, _ := ctl.GetInt64("recordId")
@@ -132,7 +144,7 @@ func (ctl *CompanyController) Validator() {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordID == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -165,8 +177,8 @@ func (ctl *CompanyController) companyList(query map[string]string, fields []stri
 			} else {
 				oneLine["parent"] = "-"
 			}
-			oneLine["Id"] = line.Id
-			oneLine["id"] = line.Id
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -177,6 +189,8 @@ func (ctl *CompanyController) companyList(query map[string]string, fields []stri
 	}
 	return result, err
 }
+
+// PostList post request  json response
 func (ctl *CompanyController) PostList() {
 	query := make(map[string]string)
 	fields := make([]string, 0, 0)
@@ -191,6 +205,7 @@ func (ctl *CompanyController) PostList() {
 
 }
 
+// GetList display company table
 func (ctl *CompanyController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {

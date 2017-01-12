@@ -10,7 +10,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 产品单位类别
+//ProductUomCateg 产品单位类别
 type ProductUomCateg struct {
 	Base
 	Name string        `orm:"unique" form:"name"` //计量单位分类
@@ -22,7 +22,7 @@ func init() {
 }
 
 // AddProductUomCateg insert a new ProductUomCateg into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddProductUomCateg(obj *ProductUomCateg) (id int64, err error) {
 	o := orm.NewOrm()
 
@@ -30,11 +30,11 @@ func AddProductUomCateg(obj *ProductUomCateg) (id int64, err error) {
 	return id, err
 }
 
-// GetProductUomCategById retrieves ProductUomCateg by Id. Returns error if
-// Id doesn't exist
-func GetProductUomCategById(id int64) (obj *ProductUomCateg, err error) {
+// GetProductUomCategByID retrieves ProductUomCateg by ID. Returns error if
+// ID doesn't exist
+func GetProductUomCategByID(id int64) (obj *ProductUomCateg, err error) {
 	o := orm.NewOrm()
-	obj = &ProductUomCateg{Base: Base{Id: id}}
+	obj = &ProductUomCateg{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -124,11 +124,11 @@ func GetAllProductUomCateg(query map[string]string, fields []string, sortby []st
 	return paginator, objArrs, err
 }
 
-// UpdateProductUomCateg updates ProductUomCateg by Id and returns error if
+// UpdateProductUomCategByID updates ProductUomCateg by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductUomCategById(m *ProductUomCateg) (err error) {
+func UpdateProductUomCategByID(m *ProductUomCateg) (err error) {
 	o := orm.NewOrm()
-	v := ProductUomCateg{Base: Base{Id: m.Id}}
+	v := ProductUomCateg{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -139,15 +139,15 @@ func UpdateProductUomCategById(m *ProductUomCateg) (err error) {
 	return
 }
 
-// DeleteProductUomCateg deletes ProductUomCateg by Id and returns error if
+// DeleteProductUomCateg deletes ProductUomCateg by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteProductUomCateg(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductUomCateg{Base: Base{Id: id}}
+	v := ProductUomCateg{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductUomCateg{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&ProductUomCateg{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

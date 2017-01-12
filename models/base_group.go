@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-//权限组
+//Group 权限组
 type Group struct {
 	Base
 	Name          string  `orm:"unique" xml:"name"` //组名称
@@ -24,18 +24,18 @@ func init() {
 }
 
 // AddGroup insert a new Group into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddGroup(obj *Group) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetGroupById retrieves Group by Id. Returns error if
-// Id doesn't exist
-func GetGroupById(id int64) (obj *Group, err error) {
+// GetGroupByID retrieves Group by ID. Returns error if
+// ID doesn't exist
+func GetGroupByID(id int64) (obj *Group, err error) {
 	o := orm.NewOrm()
-	obj = &Group{Base: Base{Id: id}}
+	obj = &Group{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -122,11 +122,11 @@ func GetAllGroup(query map[string]string, fields []string, sortby []string, orde
 	return paginator, objArrs, err
 }
 
-// UpdateGroup updates Group by Id and returns error if
+// UpdateGroupByID updates Group by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateGroupById(m *Group) (err error) {
+func UpdateGroupByID(m *Group) (err error) {
 	o := orm.NewOrm()
-	v := Group{Base: Base{Id: m.Id}}
+	v := Group{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -137,15 +137,15 @@ func UpdateGroupById(m *Group) (err error) {
 	return
 }
 
-// DeleteGroup deletes Group by Id and returns error if
+// DeleteGroup deletes Group by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteGroup(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Group{Base: Base{Id: id}}
+	v := Group{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Group{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&Group{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

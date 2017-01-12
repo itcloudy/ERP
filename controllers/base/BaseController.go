@@ -13,10 +13,13 @@ import (
 )
 
 var (
+	//AppVer 版本
 	AppVer string
-	IsPro  bool
+	//IsPro 生产还是开发环境
+	IsPro bool
 )
 
+// BaseController 基础controller
 type BaseController struct {
 	beego.Controller
 	IsAdmin   bool

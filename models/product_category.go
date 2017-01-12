@@ -10,7 +10,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 产品分类
+// ProductCategory 产品分类
 type ProductCategory struct {
 	Base
 	Name           string             `orm:"unique" form:"name" json:"name"` //产品属性名称
@@ -25,7 +25,7 @@ func init() {
 }
 
 // AddProductCategory insert a new ProductCategory into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddProductCategory(obj *ProductCategory) (id int64, err error) {
 	o := orm.NewOrm()
 
@@ -33,11 +33,11 @@ func AddProductCategory(obj *ProductCategory) (id int64, err error) {
 	return id, err
 }
 
-// GetProductCategoryById retrieves ProductCategory by Id. Returns error if
-// Id doesn't exist
-func GetProductCategoryById(id int64) (obj *ProductCategory, err error) {
+// GetProductCategoryByID retrieves ProductCategory by ID. Returns error if
+// ID doesn't exist
+func GetProductCategoryByID(id int64) (obj *ProductCategory, err error) {
 	o := orm.NewOrm()
-	obj = &ProductCategory{Base: Base{Id: id}}
+	obj = &ProductCategory{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		o.Read(obj.Parent)
 		return obj, nil
@@ -114,11 +114,11 @@ func GetAllProductCategory(query map[string]string, fields []string, sortby []st
 	return paginator, objArrs, err
 }
 
-// UpdateProductCategory updates ProductCategory by Id and returns error if
+// UpdateProductCategoryByID updates ProductCategory by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductCategoryById(m *ProductCategory) (err error) {
+func UpdateProductCategoryByID(m *ProductCategory) (err error) {
 	o := orm.NewOrm()
-	v := ProductCategory{Base: Base{Id: m.Id}}
+	v := ProductCategory{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -140,15 +140,15 @@ func GetProductCategoryByName(name string) (obj *ProductCategory, err error) {
 	return nil, err
 }
 
-// DeleteProductCategory deletes ProductCategory by Id and returns error if
+// DeleteProductCategory deletes ProductCategory by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteProductCategory(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductCategory{Base: Base{Id: id}}
+	v := ProductCategory{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductCategory{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&ProductCategory{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

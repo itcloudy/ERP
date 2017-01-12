@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 产品打包方式
+// ProductPackaging 产品打包方式
 type ProductPackaging struct {
 	Base
 	Name            string
@@ -26,18 +26,18 @@ func init() {
 }
 
 // AddProductPackaging insert a new ProductPackaging into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddProductPackaging(obj *ProductPackaging) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetProductPackagingById retrieves ProductPackaging by Id. Returns error if
-// Id doesn't exist
-func GetProductPackagingById(id int64) (obj *ProductPackaging, err error) {
+// GetProductPackagingByID retrieves ProductPackaging by ID. Returns error if
+// ID doesn't exist
+func GetProductPackagingByID(id int64) (obj *ProductPackaging, err error) {
 	o := orm.NewOrm()
-	obj = &ProductPackaging{Base: Base{Id: id}}
+	obj = &ProductPackaging{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -123,11 +123,11 @@ func GetAllProductPackaging(query map[string]string, fields []string, sortby []s
 	return paginator, objArrs, err
 }
 
-// UpdateProductPackaging updates ProductPackaging by Id and returns error if
+// UpdateProductPackagingByID updates ProductPackaging by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductPackagingById(m *ProductPackaging) (err error) {
+func UpdateProductPackagingByID(m *ProductPackaging) (err error) {
 	o := orm.NewOrm()
-	v := ProductPackaging{Base: Base{Id: m.Id}}
+	v := ProductPackaging{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -138,15 +138,15 @@ func UpdateProductPackagingById(m *ProductPackaging) (err error) {
 	return
 }
 
-// DeleteProductPackaging deletes ProductPackaging by Id and returns error if
+// DeleteProductPackaging deletes ProductPackaging by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteProductPackaging(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductPackaging{Base: Base{Id: id}}
+	v := ProductPackaging{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductPackaging{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&ProductPackaging{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

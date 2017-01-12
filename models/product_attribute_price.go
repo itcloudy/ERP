@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 产品属性价格
+//ProductAttributePrice  产品属性价格
 type ProductAttributePrice struct {
 	Base
 	ProductTemplate *ProductTemplate       `orm:"rel(fk)"`    //产品款式
@@ -22,18 +22,18 @@ func init() {
 }
 
 // AddProductAttributePrice insert a new ProductAttributePrice into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddProductAttributePrice(obj *ProductAttributePrice) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetProductAttributePriceById retrieves ProductAttributePrice by Id. Returns error if
-// Id doesn't exist
-func GetProductAttributePriceById(id int64) (obj *ProductAttributePrice, err error) {
+// GetProductAttributePriceByID retrieves ProductAttributePrice by ID. Returns error if
+// ID doesn't exist
+func GetProductAttributePriceByID(id int64) (obj *ProductAttributePrice, err error) {
 	o := orm.NewOrm()
-	obj = &ProductAttributePrice{Base: Base{Id: id}}
+	obj = &ProductAttributePrice{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -108,11 +108,11 @@ func GetAllProductAttributePrice(query map[string]string, fields []string, sortb
 	return paginator, objArrs, err
 }
 
-// UpdateProductAttributePrice updates ProductAttributePrice by Id and returns error if
+// UpdateProductAttributePriceByID updates ProductAttributePrice by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductAttributePriceById(m *ProductAttributePrice) (err error) {
+func UpdateProductAttributePriceByID(m *ProductAttributePrice) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttributePrice{Base: Base{Id: m.Id}}
+	v := ProductAttributePrice{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -123,15 +123,15 @@ func UpdateProductAttributePriceById(m *ProductAttributePrice) (err error) {
 	return
 }
 
-// DeleteProductAttributePrice deletes ProductAttributePrice by Id and returns error if
+// DeleteProductAttributePrice deletes ProductAttributePrice by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteProductAttributePrice(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttributePrice{Base: Base{Id: id}}
+	v := ProductAttributePrice{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductAttributePrice{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&ProductAttributePrice{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

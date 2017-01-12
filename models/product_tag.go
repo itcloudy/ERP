@@ -10,7 +10,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 产品标签
+//ProductTag  产品标签
 type ProductTag struct {
 	Base
 	Name     string            `orm:"size(20);unique"`        //产品标签名称
@@ -23,7 +23,7 @@ func init() {
 }
 
 // AddProductTag insert a new ProductTag into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddProductTag(obj *ProductTag) (id int64, err error) {
 	o := orm.NewOrm()
 
@@ -31,11 +31,11 @@ func AddProductTag(obj *ProductTag) (id int64, err error) {
 	return id, err
 }
 
-// GetProductTagById retrieves ProductTag by Id. Returns error if
-// Id doesn't exist
-func GetProductTagById(id int64) (obj *ProductTag, err error) {
+// GetProductTagByID retrieves ProductTag by ID. Returns error if
+// ID doesn't exist
+func GetProductTagByID(id int64) (obj *ProductTag, err error) {
 	o := orm.NewOrm()
-	obj = &ProductTag{Base: Base{Id: id}}
+	obj = &ProductTag{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -111,11 +111,11 @@ func GetAllProductTag(query map[string]string, fields []string, sortby []string,
 	return paginator, objArrs, err
 }
 
-// UpdateProductTag updates ProductTag by Id and returns error if
+// UpdateProductTagByID updates ProductTag by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductTagById(m *ProductTag) (err error) {
+func UpdateProductTagByID(m *ProductTag) (err error) {
 	o := orm.NewOrm()
-	v := ProductTag{Base: Base{Id: m.Id}}
+	v := ProductTag{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -137,15 +137,15 @@ func GetProductTagByName(name string) (obj *ProductTag, err error) {
 	return nil, err
 }
 
-// DeleteProductTag deletes ProductTag by Id and returns error if
+// DeleteProductTag deletes ProductTag by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteProductTag(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductTag{Base: Base{Id: id}}
+	v := ProductTag{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductTag{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&ProductTag{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

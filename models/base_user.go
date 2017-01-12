@@ -9,24 +9,29 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// User table
 // 用户表
 type User struct {
 	Base
 	Name            string      `orm:"size(20)" xml:"name" form:"Name" json:"name"`                           //用户名
 	NameZh          string      `orm:"size(20)"  form:"NameZh" json:"namezh"`                                 //中文用户名
-	Department      *Department `orm:"rel(fk);null;" form:"Department" json:"department"`                     //部门
+	Department      *Department `orm:"rel(fk);null;"  json:"department"`                                      //部门
+	DepartmentID    int64       `orm:"-" form:"Department"`                                                   //部门，用于form表单
 	Email           string      `orm:"size(20)" xml:"email" form:"Email" json:"email"`                        //邮箱
 	Mobile          string      `orm:"size(20);default(\"\")" xml:"Mobile" form:"mobile" json:"mobile"`       //手机号码
 	Tel             string      `orm:"size(20);default(\"\")" form:"Tel" json:"tel"`                          //固定号码
 	Password        string      `xml:"password" form:"Password" json:"password"`                              //密码
 	ConfirmPassword string      `orm:"-" xml:"ConfirmPassword" form:"confirmpassword" json:"confirmpassword"` //确认密码,数据库中不保存
 	Groups          []*Group    `orm:"rel(m2m);rel_table(user_groups)"`                                       //权限组
-	Teams           []*Team     `orm:"rel(m2m);rel_table(user_teams)"`                                        //权限组
+	GroupIDs        []string    `orm:"-" form:"Group"`                                                        //权限组，用于form表单
+	Teams           []*Team     `orm:"rel(m2m);rel_table(user_teams)"`                                        //团队
+	TeamIDs         []string    `orm:"-" form:"Team"`                                                         //团队，用于form表单
 	IsAdmin         bool        `orm:"default(false)" xml:"isAdmin" form:"IsAdmin" json:"isadmin"`            //是否为超级用户
 	Active          bool        `orm:"default(true)" xml:"active" form:"Active" json:"active"`                //有效
 	Qq              string      `orm:"default(\"\")" xml:"qq" form:"Qq" json:"qq"`                            //QQ
 	WeChat          string      `orm:"default(\"\")" xml:"wechat" form:"WeChat" json:"wechat"`                //微信
 	Position        *Position   `orm:"rel(fk);null;" form:"Position" json:"position"`                         //职位
+	PositionID      int64       `orm:"-" form:"Position"`                                                     //职位，用于form表单
 }
 
 func init() {
@@ -34,7 +39,7 @@ func init() {
 }
 
 // AddUser insert a new User into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddUser(obj *User) (id int64, err error) {
 	o := orm.NewOrm()
 	password := utils.PasswordMD5(obj.Password, obj.Mobile)
@@ -43,11 +48,11 @@ func AddUser(obj *User) (id int64, err error) {
 	return id, err
 }
 
-// GetUserById retrieves User by Id. Returns error if
-// Id doesn't exist
-func GetUserById(id int64) (obj *User, err error) {
+// GetUserByID retrieves User by ID. Returns error if
+// ID doesn't exist
+func GetUserByID(id int64) (obj *User, err error) {
 	o := orm.NewOrm()
-	obj = &User{Base: Base{Id: id}}
+	obj = &User{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		if obj.Department != nil {
 			o.Read(obj.Department)
@@ -62,6 +67,8 @@ func GetUserById(id int64) (obj *User, err error) {
 	}
 	return nil, err
 }
+
+// GetUserByName get user
 func GetUserByName(name string) (User, error) {
 	o := orm.NewOrm()
 	var user User
@@ -145,11 +152,11 @@ func GetAllUser(query map[string]string, fields []string, sortby []string, order
 	return paginator, objArrs, err
 }
 
-// UpdateUser updates User by Id and returns error if
+// UpdateUserByID updates User by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateUserById(m *User) (err error) {
+func UpdateUserByID(m *User) (err error) {
 	o := orm.NewOrm()
-	v := User{Base: Base{Id: m.Id}}
+	v := User{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -160,21 +167,23 @@ func UpdateUserById(m *User) (err error) {
 	return
 }
 
-// DeleteUser deletes User by Id and returns error if
+// DeleteUser deletes User by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteUser(id int64) (err error) {
 	o := orm.NewOrm()
-	v := User{Base: Base{Id: id}}
+	v := User{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&User{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&User{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}
 	return
 }
-func CheckUserByName(name, password string) (User, error, bool) {
+
+// CheckUserByName  check
+func CheckUserByName(name, password string) (User, bool, error) {
 	o := orm.NewOrm()
 	var (
 		user User
@@ -193,5 +202,5 @@ func CheckUserByName(name, password string) (User, error, bool) {
 			ok = true
 		}
 	}
-	return user, err, ok
+	return user, ok, err
 }

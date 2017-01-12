@@ -48,10 +48,10 @@ func (ctl *ProductUomController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
 	ctl.URL = "/product/uom/"
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if uom, err := md.GetProductUomById(idInt64); err == nil {
+		if uom, err := md.GetProductUomByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&uom); err == nil {
 
-				if err := md.UpdateProductUomById(uom); err == nil {
+				if err := md.UpdateProductUomByID(uom); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -62,7 +62,7 @@ func (ctl *ProductUomController) Put() {
 
 func (ctl *ProductUomController) Validator() {
 	name := ctl.GetString("name")
-	recordID, _ := ctl.GetInt64("recordId")
+	recordId, _ := ctl.GetInt64("recordId")
 	name = strings.TrimSpace(name)
 	result := make(map[string]bool)
 	obj, err := md.GetProductUomByName(name)
@@ -70,7 +70,7 @@ func (ctl *ProductUomController) Validator() {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordId == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -88,7 +88,7 @@ func (ctl *ProductUomController) PostCreate() {
 	uom := new(md.ProductUom)
 	if err := ctl.ParseForm(uom); err == nil {
 		if uomCategID, err := ctl.GetInt64("category"); err == nil {
-			if category, err := md.GetProductUomCategById(uomCategID); err == nil {
+			if category, err := md.GetProductUomCategByID(uomCategID); err == nil {
 				uom.Category = category
 				if id, err := md.AddProductUom(uom); err == nil {
 					ctl.Redirect("/product/uom/"+strconv.FormatInt(id, 10)+"?action=detail", 302)
@@ -111,8 +111,8 @@ func (ctl *ProductUomController) productUomList(query map[string]string, fields 
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
 			oneLine["name"] = line.Name
-			oneLine["Id"] = line.Id
-			oneLine["id"] = line.Id
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
 			oneLine["active"] = line.Active
 			oneLine["rounding"] = line.Rounding
 			oneLine["symbol"] = line.Symbol
@@ -158,7 +158,7 @@ func (ctl *ProductUomController) Edit() {
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
-			if uom, err := md.GetProductUomById(idInt64); err == nil {
+			if uom, err := md.GetProductUomByID(idInt64); err == nil {
 				ctl.PageAction = uom.Name
 				uomInfo["name"] = uom.Name
 				uomInfo["factor"] = uom.Factor
@@ -183,7 +183,7 @@ func (ctl *ProductUomController) Edit() {
 				}
 				uomInfo["type"] = typeUom
 				category := make(map[string]interface{})
-				category["id"] = uom.Category.Id
+				category["id"] = uom.Category.ID
 				category["name"] = uom.Category.Name
 				uomInfo["category"] = category
 			}
@@ -191,7 +191,7 @@ func (ctl *ProductUomController) Edit() {
 	}
 	fmt.Println(uomInfo)
 	ctl.Data["Action"] = "edit"
-	ctl.Data["RecordId"] = id
+	ctl.Data["RecordID"] = id
 	ctl.Data["Uom"] = uomInfo
 	ctl.Layout = "base/base.html"
 

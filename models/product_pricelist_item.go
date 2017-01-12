@@ -9,7 +9,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 产品价格
+//ProductPricelistItem  产品价格
 type ProductPricelistItem struct {
 	Base
 }
@@ -19,18 +19,18 @@ func init() {
 }
 
 // AddProductPricelistItem insert a new ProductPricelistItem into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddProductPricelistItem(obj *ProductPricelistItem) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(obj)
 	return id, err
 }
 
-// GetProductPricelistItemById retrieves ProductPricelistItem by Id. Returns error if
-// Id doesn't exist
-func GetProductPricelistItemById(id int64) (obj *ProductPricelistItem, err error) {
+// GetProductPricelistItemByID retrieves ProductPricelistItem by ID. Returns error if
+// ID doesn't exist
+func GetProductPricelistItemByID(id int64) (obj *ProductPricelistItem, err error) {
 	o := orm.NewOrm()
-	obj = &ProductPricelistItem{Base: Base{Id: id}}
+	obj = &ProductPricelistItem{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -105,11 +105,11 @@ func GetAllProductPricelistItem(query map[string]string, fields []string, sortby
 	return paginator, objArrs, err
 }
 
-// UpdateProductPricelistItem updates ProductPricelistItem by Id and returns error if
+// UpdateProductPricelistItemByID updates ProductPricelistItem by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductPricelistItemById(m *ProductPricelistItem) (err error) {
+func UpdateProductPricelistItemByID(m *ProductPricelistItem) (err error) {
 	o := orm.NewOrm()
-	v := ProductPricelistItem{Base: Base{Id: m.Id}}
+	v := ProductPricelistItem{Base: Base{ID: m.ID}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -120,15 +120,15 @@ func UpdateProductPricelistItemById(m *ProductPricelistItem) (err error) {
 	return
 }
 
-// DeleteProductPricelistItem deletes ProductPricelistItem by Id and returns error if
+// DeleteProductPricelistItem deletes ProductPricelistItem by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteProductPricelistItem(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductPricelistItem{Base: Base{Id: id}}
+	v := ProductPricelistItem{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductPricelistItem{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&ProductPricelistItem{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

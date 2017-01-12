@@ -10,12 +10,13 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+//Record 登录记录
 type Record struct {
 	Base
 	User      *User     `orm:"rel(fk)"`
 	Logout    time.Time `orm:"type(datetime);null"` //登出时间
 	UserAgent string    `orm:"null"`                //用户代理
-	Ip        string    //上次登录IP
+	IP        string    `orm:"column(ip) "`         //上次登录IP
 }
 
 // 用户登录记录
@@ -24,7 +25,7 @@ func init() {
 }
 
 // AddRecord insert a new Record into database and returns
-// last inserted Id on success.
+// last inserted ID on success.
 func AddRecord(obj *Record) (id int64, err error) {
 	o := orm.NewOrm()
 
@@ -32,17 +33,19 @@ func AddRecord(obj *Record) (id int64, err error) {
 	return id, err
 }
 
-// GetRecordById retrieves Record by Id. Returns error if
-// Id doesn't exist
-func GetRecordById(id int64) (obj *Record, err error) {
+// GetRecordByID retrieves Record by ID. Returns error if
+// ID doesn't exist
+func GetRecordByID(id int64) (obj *Record, err error) {
 	o := orm.NewOrm()
-	obj = &Record{Base: Base{Id: id}}
+	obj = &Record{Base: Base{ID: id}}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
 	return nil, err
 }
-func GetLastRecordByUserID(userId int64) (Record, error) {
+
+// GetLastRecordByUserID recoed
+func GetLastRecordByUserID(userID int64) (Record, error) {
 	o := orm.NewOrm()
 	var (
 		record Record
@@ -50,7 +53,7 @@ func GetLastRecordByUserID(userId int64) (Record, error) {
 	)
 
 	o.Using("default")
-	err = o.QueryTable(&record).Filter("User", userId).RelatedSel().OrderBy("-id").Limit(1).One(&record)
+	err = o.QueryTable(&record).Filter("User", userID).RelatedSel().OrderBy("-id").Limit(1).One(&record)
 	return record, err
 }
 
@@ -122,11 +125,11 @@ func GetAllRecord(query map[string]string, fields []string, sortby []string, ord
 	return paginator, objArrs, err
 }
 
-// UpdateRecord updates Record by Id and returns error if
+// UpdateRecordByID updates Record by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateRecordById(m *Record) error {
+func UpdateRecordByID(m *Record) error {
 	o := orm.NewOrm()
-	v := Record{Base: Base{Id: m.Id}}
+	v := Record{Base: Base{ID: m.ID}}
 	var err error
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
@@ -135,15 +138,15 @@ func UpdateRecordById(m *Record) error {
 	return err
 }
 
-// DeleteRecord deletes Record by Id and returns error if
+// DeleteRecord deletes Record by ID and returns error if
 // the record to be deleted doesn't exist
 func DeleteRecord(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Record{Base: Base{Id: id}}
+	v := Record{Base: Base{ID: id}}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Record{Base: Base{Id: id}}); err == nil {
+		if num, err = o.Delete(&Record{Base: Base{ID: id}}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

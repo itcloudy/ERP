@@ -6,10 +6,12 @@ import (
 	"strings"
 )
 
+// TemplateFileController template file
 type TemplateFileController struct {
 	BaseController
 }
 
+//Post request
 func (ctl *TemplateFileController) Post() {
 
 	action := ctl.Input().Get("action")
@@ -25,6 +27,7 @@ func (ctl *TemplateFileController) Post() {
 	}
 }
 
+// Get request
 func (ctl *TemplateFileController) Get() {
 	ctl.PageName = "模版管理"
 	ctl.GetList()
@@ -35,6 +38,7 @@ func (ctl *TemplateFileController) Get() {
 	ctl.Data["MenuTemplateFileActive"] = "active"
 }
 
+// Validator js valid
 func (ctl *TemplateFileController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
@@ -45,7 +49,7 @@ func (ctl *TemplateFileController) Validator() {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordID == obj.Id {
+			if recordID == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -74,8 +78,8 @@ func (ctl *TemplateFileController) templatefileList(query map[string]string, fie
 		for _, templatefile := range templatefiles {
 			oneLine := make(map[string]interface{})
 
-			oneLine["Id"] = templatefile.Id
-			oneLine["id"] = templatefile.Id
+			oneLine["ID"] = templatefile.ID
+			oneLine["id"] = templatefile.ID
 			oneLine["name"] = templatefile.Name
 
 			tableLines = append(tableLines, oneLine)
@@ -89,6 +93,8 @@ func (ctl *TemplateFileController) templatefileList(query map[string]string, fie
 	}
 	return result, err
 }
+
+// PostList post request json response
 func (ctl *TemplateFileController) PostList() {
 	query := make(map[string]string)
 	fields := make([]string, 0, 0)
@@ -107,6 +113,7 @@ func (ctl *TemplateFileController) PostList() {
 
 }
 
+// GetList display template with list
 func (ctl *TemplateFileController) GetList() {
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-templatefile"
