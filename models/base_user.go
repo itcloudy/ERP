@@ -49,6 +49,15 @@ func GetUserById(id int64) (obj *User, err error) {
 	o := orm.NewOrm()
 	obj = &User{Base: Base{Id: id}}
 	if err = o.Read(obj); err == nil {
+		if obj.Department != nil {
+			o.Read(obj.Department)
+		}
+		if obj.Groups != nil {
+			o.LoadRelated(obj, "Groups")
+		}
+		if obj.Position != nil {
+			o.Read(obj.Position)
+		}
 		return obj, nil
 	}
 	return nil, err
@@ -62,16 +71,8 @@ func GetUserByName(name string) (User, error) {
 	cond = cond.And("mobile", name).Or("email", name).Or("name", name)
 	qs := o.QueryTable(&user)
 	qs = qs.SetCond(cond)
+	qs = qs.RelatedSel()
 	err := qs.One(&user)
-	if user.Department != nil {
-		o.Read(user.Department)
-	}
-	if user.Groups != nil {
-		o.LoadRelated(user, "Groups")
-	}
-	if user.Position != nil {
-		o.Read(user.Position)
-	}
 	return user, err
 }
 

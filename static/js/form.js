@@ -4,8 +4,8 @@ $(".post-from").on("change", function(e) {
 });
 // 保存事件处理
 $(".form-save-btn").on("click", function(e) {
-    console.log(e);
-    // e.preventDefault();
+    console.log(e.currentTarget.form);
+    e.preventDefault();
 });
 //文件导入
 $('#import-file-excel').fileinput({

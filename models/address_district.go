@@ -107,7 +107,6 @@ func GetAllAddressDistrict(query map[string]string, fields []string, sortby []st
 			return paginator, nil, errors.New("Error: unused 'order' fields")
 		}
 	}
-
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
 		paginator = utils.GenPaginator(limit, offset, cnt)

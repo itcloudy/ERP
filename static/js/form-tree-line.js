@@ -46,31 +46,63 @@ $("#one-product-template-attribute").bootstrapTable({
             sortable: true,
             order: "desc",
             formatter: function cellStyle(value, row, index) {
-                var attribute = row.Attribute;
-                var html = "<p class='p-form-tree-disabled'>" + attribute.name + "</p>";
-                html += '<select name="productAttributeID" id="productAttributeID" class="form-control select-product-attribute">' +
+                var Attribute = row.Attribute;
+                var html = "<p class='p-form-tree-disabled'>" + Attribute.name + "</p>";
+                html += '<select name="productAttribute" id="productAttributeID-' + index + '" data-action="' + row.action + '"class="form-control select-product-attribute">' +
                     '</select>';
-
                 return html;
             }
         },
         {
             title: "属性值",
-            field: 'attributes',
+            field: 'AttributeValues',
             sortable: true,
             formatter: function cellStyle(value, row, index) {
-                var html = "";
-
                 var attributeValues = row.AttributeValues;
+                var html = "";
+                html += "<p class='p-form-tree-disabled'>";
                 for (line in attributeValues) {
-
+                    html += "<a class='display-block label label-primary'>" + line.name + "</a>";
                 }
+                html += "</p>";
+                html += '<select name="productAttributeValue" id="productAttributeValueID-' + index + '"data-action="' + row.action + '" class="form-control select-product-attribute-value" multiple="multiple" >'
+                for (line in attributeValues) {
+                    html += "<a class='display-block label label-primary'>" + line.name + "</a>";
+                }
+                for (line in attributeValues) {
+                    html += '<option value="' + line.id + '" selected="selected">' + line.name + '</option>';
+                }
+                html += '</select>';
                 return html;
             }
         },
+        {
+            title: "操作",
+            align: "center",
+            field: 'action',
+            formatter: function cellStyle(value, row, index) {
+                var html = "";
+                var url = "/product/template/";
+                html += "<a href='" + url + row.Id + "?action=edit' class='table-action btn btn-xs btn-danger'>删除&nbsp<i class='fa  fa-trash'></i></a>";
+                return html;
+            }
+        }
     ],
 });
 //x-editable
 $(".form-table-add-line").on("click", function(e) {
     var formId = e.currentTarget.dataset["formid"];
+    $("#one-product-template-attribute").bootstrapTable("append", randomData());
+    select2AjaxData(".select-product-attribute", '/product/attribute/?action=search'); // 选择属性
+    select2AjaxData(".select-product-attribute-value", '/product/attributevalue/?action=search'); // 选择属性值
+    function randomData(e) {
+        rows = [];
+        rows.push({
+            action: "create",
+            id: 0,
+            Attribute: "",
+            AttributeValues: []
+        });
+        return rows;
+    }
 });

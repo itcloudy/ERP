@@ -118,6 +118,9 @@ func GetAllProductUomCateg(query map[string]string, fields []string, sortby []st
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
+	for i, _ := range objArrs {
+		o.LoadRelated(&objArrs[i], "Uoms")
+	}
 	return paginator, objArrs, err
 }
 

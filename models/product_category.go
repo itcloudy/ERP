@@ -39,6 +39,7 @@ func GetProductCategoryById(id int64) (obj *ProductCategory, err error) {
 	o := orm.NewOrm()
 	obj = &ProductCategory{Base: Base{Id: id}}
 	if err = o.Read(obj); err == nil {
+		o.Read(obj.Parent)
 		return obj, nil
 	}
 	return nil, err

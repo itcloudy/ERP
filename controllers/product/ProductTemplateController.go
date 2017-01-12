@@ -2,6 +2,7 @@ package product
 
 import (
 	"encoding/json"
+	"fmt"
 	"goERP/controllers/base"
 	md "goERP/models"
 
@@ -123,6 +124,7 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 
 }
 func (ctl *ProductTemplateController) PostCreate() {
+	fmt.Println(ctl.GetStrings("productAttribute[]"))
 	template := new(md.ProductTemplate)
 	if err := ctl.ParseForm(template); err == nil {
 

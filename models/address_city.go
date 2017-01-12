@@ -12,9 +12,10 @@ import (
 // 城市
 type AddressCity struct {
 	Base
-	Name      string             `orm:"size(50)" json:"name"`           //城市名称
-	Province  *AddressProvince   `orm:"rel(fk)" json:"province"`        //国家
-	Districts []*AddressDistrict `orm:"reverse(many)" json:"districts"` //城市
+	Name       string             `orm:"size(50)" json:"name"`    //城市名称
+	Province   *AddressProvince   `orm:"rel(fk)" json:"province"` //国家
+	ProvinceID int64              `orm:"-" form:"province"`
+	Districts  []*AddressDistrict `orm:"reverse(many)" json:"districts"` //城市
 }
 
 func init() {

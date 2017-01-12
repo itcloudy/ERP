@@ -2,6 +2,7 @@ package product
 
 import (
 	"encoding/json"
+	"fmt"
 	"goERP/controllers/base"
 	md "goERP/models"
 	"strconv"
@@ -177,7 +178,7 @@ func (ctl *ProductUomController) Edit() {
 					typeUom["id"] = 3
 					typeUom["name"] = "大于参考计量单位"
 				default:
-					typeUom["id"] = 1
+					typeUom["id"] = 2
 					typeUom["name"] = "参考计量单位"
 				}
 				uomInfo["type"] = typeUom
@@ -188,6 +189,7 @@ func (ctl *ProductUomController) Edit() {
 			}
 		}
 	}
+	fmt.Println(uomInfo)
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordId"] = id
 	ctl.Data["Uom"] = uomInfo

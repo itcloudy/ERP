@@ -12,6 +12,7 @@ $(document).ready(function() {
         e.preventDefault();
         $(".input-radio").iCheck("enable");
         $(".form-disabled").addClass("form-edit").removeClass("form-disabled");
+
     });
     $(".form-cancel-btn").on("click", function(e) {
         e.preventDefault();

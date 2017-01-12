@@ -42,6 +42,7 @@ func GetProductUomById(id int64) (obj *ProductUom, err error) {
 	o := orm.NewOrm()
 	obj = &ProductUom{Base: Base{Id: id}}
 	if err = o.Read(obj); err == nil {
+		o.Read(obj.Category)
 		return obj, nil
 	}
 	return nil, err
