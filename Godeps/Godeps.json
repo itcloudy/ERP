@@ -1,0 +1,80 @@
+{
+	"ImportPath": "goERP",
+	"GoVersion": "go1.7",
+	"GodepVersion": "v76",
+	"Deps": [
+		{
+			"ImportPath": "github.com/Unknwon/goconfig",
+			"Rev": "5aa4f8cd5a472c2411c778b4680f59f2223f1966"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego",
+			"Comment": "v1.7.2",
+			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/config",
+			"Comment": "v1.7.2",
+			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/context",
+			"Comment": "v1.7.2",
+			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/grace",
+			"Comment": "v1.7.2",
+			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/logs",
+			"Comment": "v1.7.2",
+			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/orm",
+			"Comment": "v1.7.2",
+			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/session",
+			"Comment": "v1.7.2",
+			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/toolbox",
+			"Comment": "v1.7.2",
+			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/utils",
+			"Comment": "v1.7.2",
+			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+		},
+		{
+			"ImportPath": "github.com/beego/i18n",
+			"Rev": "e87155e8f0c05bf323d0b13470e1b97af0cb5652"
+		},
+		{
+			"ImportPath": "github.com/go-sql-driver/mysql",
+			"Comment": "v1.3-2-g2e00b5c",
+			"Rev": "2e00b5cd70399450106cec6431c2e2ce3cae5034"
+		},
+		{
+			"ImportPath": "github.com/howeyc/fsnotify",
+			"Comment": "v0.9.0-16-gf0c08ee",
+			"Rev": "f0c08ee9c60704c1879025f2ae0ff3e000082c13"
+		},
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Comment": "go1.0-cutoff-136-g5bf1611",
+			"Rev": "5bf161122cd640c2a5a2c1d7fa49ea9befff31dd"
+		},
+		{
+			"ImportPath": "github.com/lib/pq/oid",
+			"Comment": "go1.0-cutoff-136-g5bf1611",
+			"Rev": "5bf161122cd640c2a5a2c1d7fa49ea9befff31dd"
+		}
+	]
+}
