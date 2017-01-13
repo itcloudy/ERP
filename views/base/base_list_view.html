@@ -23,7 +23,7 @@
             {{.xsrf}}
             <div class="row text-center">
                 <a href="{{.URL}}?action=create" type="buttom" class="btn btn-success fa fa-plus pull-left">&nbsp新建</a>
-                <a type="button" data-toggle="modal" data-target="#myModal" class="btn btn-warning fa fa-mail-reply pull-left">&nbsp导入</a>
+                <a type="button" data-toggle="modal" data-target="#importModal" class="btn btn-warning fa fa-mail-reply pull-left">&nbsp导入</a>
                 <button class="btn btn-info fa fa-search pull-left search-hidden" id='search-enable'>&nbsp开启</button>
                 <div class="btn-group btn-group-sm pull-right">
                     <button class="btn btn-default fa fa-list-ul list-button active" data-view-type="list"></button>
@@ -59,12 +59,12 @@
             </div>
             {{end}} {{end}}
             <!-- Modal -->
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title" id="myModalLabel">数据导入</h4>
+                            <h4 class="modal-title" id="importModalLabel">数据导入</h4>
                         </div>
                         <div class="modal-body">
                             <input id="import-file-excel" name="importFiles" type="file">

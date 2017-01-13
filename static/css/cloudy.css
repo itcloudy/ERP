@@ -3,6 +3,38 @@
 }
 
 
+/*form表单状态*/
+
+.navbar-form-state {
+    margin-top: 2px;
+    background-color: #FFF;
+    min-height: 30px;
+    margin-left: -50px;
+    margin-right: -50px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+
+/*去除状态bar的margin*/
+
+.step-arrow {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.form-button-action>button {
+    margin-top: 5px;
+}
+
+
+/*去除插件原有的步骤基数1,2,3...*/
+
+.step li a:before {
+    content: "";
+}
+
+
 /*页面提示样式*/
 
 #list-title {

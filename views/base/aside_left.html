@@ -53,7 +53,8 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview {{.MenuProductCategoryActive}}{{.MenuProductAttributeActive}}{{.MenuProductAttributeValueActive}}{{.MenuProductTemplateActive}}{{.MenuProductProductActive}}{{.MenuProductUomCategActive}}{{.MenuProductUomActive}}">
+            <li class="treeview {{.MenuProductCategoryActive}}{{.MenuProductAttributeActive}}{{.MenuProductAttributeValueActive}}
+            {{.MenuProductTemplateActive}}{{.MenuProductProductActive}}{{.MenuProductUomCategActive}}{{.MenuProductUomActive}}">
                 <a href="#">
                     <i class="fa fa-newspaper-o" aria-hidden="true"></i><span>产品管理</span>
                 </a>
@@ -68,31 +69,42 @@
 
                 </ul>
             </li>
-            <li class="treeview {{.MenuPurchaseOrderDraftActive}}{{.MenuPurchaseOrderActive}}{{.MenuPurchaseOrderLineActive}}{{.MenuPurchaseSupplierActive}}">
-                <a href="#">
-                    <i class="fa fa-tasks" aria-hidden="true"></i><span>采购管理</span>
-                </a>
-                <ul class="treeview-menu">
-                    <li class="{{.MenuPurchaseSettingActive}}"><a href="/purchase/setting/"><i class="fa fa-gears"></i>设置</a></li>
-                    <li class="{{.MenuPurchaseSupplierActive}}"><a href="/purchase/supplier/"><i class="fa fa-users"></i>供应商管理</a></li>
-                    <li class="{{.MenuPurchaseOrderDraftActive}}"><a href="/purchase/order/?state=draft"><i class="fa fa-bars"></i>询价单</a></li>
-                    <li class="{{.MenuPurchaseOrderActive}}"><a href="/purchase/order/"><i class="fa fa-bars"></i>采购订单</a></li>
-                    <li class="{{.MenuPurchaseOrderLineActive}}"><a href="/purchase/orderline/"><i class="fa fa-bars"></i>订单明细</a></li>
-                    <li class="{{.MenuPurchaseReportActive}}"><a href="/purchase/report/"><i class="fa fa-bar-chart"></i>采购报表</a></li>
-                </ul>
-            </li>
-            <li class="treeview {{.MenuSaleOrderDraftActive}}{{.MenuSaleOrderActive}}{{.MenuSaleOrderLineActive}}{{.MenuSaleCustomerActive}}">
+
+            <li class="treeview {{.MenuSaleConfigActive}}{{.MenuSaleCustomerActive}}{{.MenuSaleOrderDraftActive}}{{.MenuSaleOrderActive}}
+            {{.MenuSaleOrderLineActive}}{{.MenuSaleReportActive}}{{.MenuSaleOrderStateActive}}{{.MenuSaleOrderLineStateActive}}">
                 <a href="#" id="sale-menu">
                     <i class="fa fa-shopping-basket" aria-hidden="true"></i><span>销售管理</span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{.MenuSaleSettingActive}}"><a href="/sale/setting/"><i class="fa fa-gears"></i>设置</a></li>
-                    <li class="{{.MenuSaleCustomerActive}}"><a href="/purchase/supplier/"><i class="fa fa-users"></i>客户管理</a></li>
-                    <li class="{{.MenuSaleOrderDraftActive}}"><a href="/sale/order/?state=draft"><i class="fa fa-bars"></i>询价单</a></li>
+                    <li class="treeview {{.MenuSaleConfigActive}}{{.MenuSaleOrderStateActive}}{{.MenuSaleOrderLineStateActive}}">
+                        <a href="#">
+                            <i class="fa fa-gears" aria-hidden="true"></i><span>销售设置</span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{.MenuSaleConfigActive}}"><a href="/sale/config/"><i class="fa fa-bars"></i>基本设置</a></li>
+                            <li class="{{.MenuSaleOrderStateActive}}"><a href="/sale/order/state/"><i class="fa fa-bars"></i>订单状态</a></li>
+                            <li class="{{.MenuSaleOrderLineStateActive}}"><a href="/sale/order/line/state/"><i class="fa fa-bars"></i>明细状态</a></li>
+                        </ul>
+                    </li>
+                    <li class="{{.MenuSaleCustomerActive}}"><a href="/sale/customer/"><i class="fa fa-users"></i>客户管理</a></li>
+                    <!--<li class="{{.MenuSaleOrderDraftActive}}"><a href="/sale/order/?state=draft"><i class="fa fa-bars"></i>询价单</a></li>-->
                     <li class="{{.MenuSaleOrderActive}}"><a href="/sale/order/"><i class="fa fa-bars"></i>销售订单</a></li>
-                    <li class="{{.MenuSaleOrderLineActive}}"><a href="/sale/orderline/"><i class="fa fa-bars"></i>订单明细</a></li>
+                    <li class="{{.MenuSaleOrderLineActive}}"><a href="/sale/order/line/"><i class="fa fa-bars"></i>订单明细</a></li>
                     <li class="{{.MenuSaleReportActive}}"><a href="/sale/report/"><i class="fa fa-line-chart"></i>销售报表</a></li>
-
+                </ul>
+            </li>
+            <li class="treeview {{.MenuPurchaseConfigActive}}{{.MenuPurchaseSupplierActive}}{{.MenuPurchaseOrderDraftActive}}
+            {{.MenuPurchaseOrderActive}}{{.MenuPurchaseOrderLineActive}}{{.MenuPurchaseReportActive}}">
+                <a href="#">
+                    <i class="fa fa-tasks" aria-hidden="true"></i><span>采购管理</span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{.MenuPurchaseConfigActive}}"><a href="/purchase/config/"><i class="fa fa-gears"></i>设置</a></li>
+                    <li class="{{.MenuPurchaseSupplierActive}}"><a href="/purchase/supplier/"><i class="fa fa-users"></i>供应商管理</a></li>
+                    <!--<li class="{{.MenuPurchaseOrderDraftActive}}"><a href="/purchase/order/?state=draft"><i class="fa fa-bars"></i>询价单</a></li>-->
+                    <li class="{{.MenuPurchaseOrderActive}}"><a href="/purchase/order/"><i class="fa fa-bars"></i>采购订单</a></li>
+                    <li class="{{.MenuPurchaseOrderLineActive}}"><a href="/purchase/order/line/"><i class="fa fa-bars"></i>订单明细</a></li>
+                    <li class="{{.MenuPurchaseReportActive}}"><a href="/purchase/report/"><i class="fa fa-bar-chart"></i>采购报表</a></li>
                 </ul>
             </li>
             <li class="treeview {{.MenuStockSettingActive}}">

@@ -4,6 +4,8 @@ import (
 	"goERP/controllers/address"
 	"goERP/controllers/base"
 	"goERP/controllers/product"
+	"goERP/controllers/purchase"
+	"goERP/controllers/sale"
 
 	"github.com/astaxie/beego"
 )
@@ -63,5 +65,30 @@ func init() {
 	beego.Router("/product/uom/?:id", &product.ProductUomController{})
 	//产品计量单位类别
 	beego.Router("/product/uomcateg/?:id", &product.ProductUomCategController{})
+	//========================================合作伙伴管理===============================
+	//合作伙伴管理
+	beego.Router("/partner/:type/?:id", &base.PartnerController{})
+	//=======================================销售订单管理===========================================
+	//销售设置
+	beego.Router("/sale/config/?:id", &sale.SaleConfigController{})
+	//销售订单
+	beego.Router("/sale/order/?:id", &sale.SaleOrderController{})
+	//销售订单明细
+	beego.Router("/sale/order/line/?:id", &sale.SaleOrderLineController{})
+	//销售订单
+	beego.Router("/sale/order/state/?:id", &sale.SaleOrderStateController{})
+	//销售订单明细
+	beego.Router("/sale/order/line/state/?:id", &sale.SaleOrderLineStateController{})
+	//========================================采购订单管理=====================================
+	//采购设置
+	beego.Router("/purchase/config/?:id", &purchase.PurchaseConfigController{})
+	//采购订单
+	beego.Router("/purchase/order/?:id", &purchase.PurchaseOrderController{})
+	//采购订单明细
+	beego.Router("/purchase/order/line/?:id", &purchase.PurchaseOrderLineController{})
+	//采购订单
+	beego.Router("/purchase/order/state/?:id", &purchase.PurchaseOrderStateController{})
+	//采购订单明细
+	beego.Router("/purchase/order/line/state/?:id", &purchase.PurchaseOrderLineStateController{})
 
 }

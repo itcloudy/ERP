@@ -1,0 +1,341 @@
+/*www.salesuite.cn UIGroup copyright @ 2014 lopo1983 only for *
+ * conect me lopo1983@foxmail.com QQ:64832897\
+ * website:www.h5power.com 
+ * */
+/*loginmodal*/
+
+#myModal .container-fluid {
+	padding: 0 25%;
+}
+#myModal .modal-dialog {
+	margin-top: 6rem;
+}
+#myModal .modal-content
+/*,#myModalNext .modal-content*/
+
+{
+	-webkit-box-shadow: none;
+	box-shadow: none;
+	border: none;
+	border-radius: 0;
+	background-color: transparent;
+}
+#myModal .modal-header>div {
+	position: absolute;
+	top: -50px;
+	left: 50%;
+	margin-left: -51px;
+	width: 102px;
+	height: 102px;
+	padding: 2px;
+	border: 1px solid rgb(216, 216, 219);
+	z-index: 1;
+	background-color: #FFFFFF;
+}
+#myModal .modal-body {
+	background-color: #FFFFFF;
+	padding-top: 5rem;
+	padding-bottom: 4rem;
+}
+#myModal .modal-body .form-group,
+#myModal .modal-body .input-group {
+	margin-bottom: 30px;
+}
+#myModal .modal-body .input-group-addon {
+	background-color: transparent;
+}
+#myModal .modal-body .input-group .glyphicon {
+	top: 0;
+}
+#myModal .modal-footer {
+	margin-top: 2rem;
+	background-color: #fff;
+}
+#myModal .modal-footer p {
+	margin-bottom: 0;
+}
+/*Modalstep*/
+/*step*/
+a {
+	cursor: pointer;
+}
+.step {
+	counter-reset: flag;
+}
+.step li {
+	position: relative;
+}
+.step li a:before {
+	content: counter(flag);
+	counter-increment: flag;
+}
+.step li a:after {
+	content: "";
+}
+/**/
+/*steparrow*/
+.step-arrow{
+	margin: 20px 0;
+}
+.step-arrow li {
+	padding-right: 20px;
+}
+.step-arrow li:last-child {
+	padding-right: 0;
+}
+.step-arrow li:nth-child(n+2) a {
+	margin-left: -20px;
+	border-radius: 0;
+}
+.step-arrow li a {
+	border-radius: 0;
+}
+.step-arrow li a:hover {
+	background-color: #337AB7;
+	color: #FFFFFF;
+}
+.step-arrow li a:before {
+	position: absolute;
+	z-index: 2;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	top: 0;
+	left: 2rem;
+	font-weight: bold;
+	font-size: 2rem;
+	overflow: hidden;
+}
+.step-arrow li:not(:last-child) a:after {
+	position: absolute;
+	top: -1px;
+	right: -20px;
+	width: 40px;
+	height: 40px;
+	transform: scale(0.707) rotate(45deg);
+	z-index: 1;
+	background: #FFF;
+	border-radius: 0 5px 0 50px;
+	border-top: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+	box-sizing: content-box;
+}
+.step-arrow li a:hover:after,
+.step-arrow li.active a:after {
+	background-color: #337AB7;
+}
+/*step -square*/
+.step-square {
+	margin-top: 40px;
+}
+.step-square>li>a {
+	color: #CCCCCC;
+}
+.step-square>li.active>a,
+.step-square>li.active>a:focus,
+.step-square>li.active>a:hover {
+	color: #337AB7;
+	background-color: rgba(0, 0, 0, 0);
+}
+.step-square li a:before {
+	position: absolute;
+	z-index: 2;
+	top: -2rem;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	width: 2rem;
+	height: 2rem;
+	background-color: #FFFFFF;
+	line-height: 20px;
+	border: 1px solid #CCCCCC;
+}
+.step-square li a:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: -35%;
+	background-color: #CCCCCC;
+	z-index: 1;
+	height: 2px;
+	border: solid #FFFFFF;
+	border-width: 0 1px;
+}
+.step-square li a:hover {
+	background-color: rgba(0, 0, 0, 0);
+	color: #337AB7;
+}
+.step-square li:hover a:before,
+.step-square li.active a:before {
+	background-color: #337AB7;
+	color: #FFFFFF;
+	border-color: #337AB7;
+}
+.step-square li:hover a:after,
+.step-square li.active a:after {
+	background-color: #337AB7;
+}
+.step-square li:first-child a:after {
+	left: 50%;
+	border-right: 1px solid #FFFFFF;
+}
+.step-square li:last-child a:after {
+	right: 50%;
+	border-left: 1px solid #FFFFFF;
+}
+/*step-round*/
+.step-round {
+	margin-top: 40px;
+}
+.step-round>li>a {
+	color: #CCCCCC;
+}
+.step-round>li.active>a,
+.step-round>li.active>a:focus,
+.step-round>li.active>a:hover {
+	color: #337AB7;
+	background-color: rgba(0, 0, 0, 0);
+}
+.step-round li a:before {
+	position: absolute;
+	z-index: 2;
+	top: -2rem;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	background-color: #FFFFFF;
+	line-height: 2rem;
+	box-shadow: 0 0 0 5px rgb(204, 204, 204);
+}
+.step-round li a:after {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: -38%;
+	background-color: #CCCCCC;
+	z-index: 1;
+	height: 8px;
+}
+.step-round li a:hover {
+	background-color: rgba(0, 0, 0, 0);
+	color: #337AB7;
+}
+.step-round li:hover a:before,
+.step-round li.active a:before {
+	background-color: #337AB7;
+	color: #FFFFFF;
+	border-color: #337AB7;
+}
+.step-round li:hover a:after,
+.step-round li.active a:after {
+	background-color: #337AB7;
+}
+.step-round li:first-child a:after {
+	left: 30%;
+	border-radius: 5px 0 0 5px;
+}
+.step-round li:last-child a:after {
+	right: 30%;
+	border-radius: 0 5px 5px 0;
+}
+/*step-progress*/
+.step-progress {
+	margin-top: 60px;
+}
+.step-progress>li>a {
+	color: #CCCCCC;
+	padding-top: 1.8rem;
+}
+.step-progress>li>a span.caret {
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	transform: rotate(180deg);
+	top: -4px;
+}
+.step-progress>li.active>a,
+.step-progress>li.active>a:focus,
+.step-progress>li.active>a:hover {
+	color: #337AB7;
+	background-color: rgba(0, 0, 0, 0);
+}
+.step-progress li a:before {
+	position: absolute;
+	z-index: 2;
+	top: -35px;
+	left: 0;
+	right: 0;
+	margin: 0 auto;
+	width: 2rem;
+	height: 2rem;
+	border-radius: 50%;
+	line-height: 2rem;
+	box-shadow: 0 0 0 5px rgb(204, 204, 204)
+}
+.step-progress li a:after {
+	content: "";
+	background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0));
+	background-image: -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+	background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, rgba(0, 0, 0, 0) 25%, rgba(0, 0, 0, 0) 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, rgba(0, 0, 0, 0) 75%, rgba(0, 0, 0, 0));
+	-webkit-background-size: 40px 40px;
+	background-size: 40px 40px;
+	background-color: #CCCCCC;
+	float: left;
+	width: 100%;
+	-webkit-transition: width .6s ease;
+	-o-transition: width .6s ease;
+	transition: width .6s ease;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 10px;
+}
+.step-progress li a:hover {
+	background-color: rgba(0, 0, 0, 0);
+	color: #337AB7;
+}
+.step-progress li:hover a:before,
+.step-progress li.active a:before {
+	background-color: #337AB7;
+	color: #FFFFFF;
+}
+.step-progress li:hover a:after,
+.step-progress li.active a:after {
+	background-color: #337AB7;
+}
+.step-progress li.active a:after {
+	-webkit-animation: progress-bar-stripes 2s linear infinite;
+	-o-animation: progress-bar-stripes 2s linear infinite;
+	animation: progress-bar-stripes 2s linear infinite;
+}
+.step-progress li:first-child a:after {
+	border-radius: 5px 0 0 5px;
+}
+.step-progress li:last-child a:after {
+	border-radius: 0 5px 5px 0;
+}
+@media only screen and (min-width: 768px) {
+	/*loginmodal*/
+	
+	#myModal .modal-content {
+		-webkit-box-shadow: none;
+		box-shadow: none;
+	}
+	#myModal .modal-dialog {
+		margin-top: 6rem;
+	}
+}
+@media only screen and (max-width: 768px) {
+	/*loginmodal*/
+	
+	#myModal .container-fluid {
+		padding: 0 5%;
+	}
+}
