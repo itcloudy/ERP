@@ -1,12 +1,36 @@
 $(function() {
-    // form的change事件保存数据变化内容， 保存事件提交的内容为变化的内容
-    $(".post-from").on("change", function(e) {
-        // console.log(e);
-    });
+
     // 保存事件处理
     $(".form-save-btn").on("click", function(e) {
-        console.log(e.currentTarget.form);
-        // e.preventDefault();
+
+        var formData = {};
+        var form = e.currentTarget.form;
+        // form表单验证
+        $('#' + form.id).bootstrapValidator('validate');
+        //    获得form直接的字段
+        var formFields = $(form).find(".form-create,.form-edit");
+        console.log(formFields);
+        for (var i = 0, len = formFields.length; i < len; i++) {
+            // 处理radio数据
+            var self = formFields[i];
+            if (self.type == "radio") {
+                if ($(self).hasClass("checked")) {
+                    formData[self.name] = $(self).val();
+                }
+            } else if (self.type == "checkbox") {
+                if (self.checked) {
+                    formData[self.name] = true;
+                }
+            } else {
+                var val = $(self).val();
+                if (val != "") {
+                    formData[self.name] = val;
+                }
+            }
+        }
+        // console.log(formData);
+        e.preventDefault();
+
     });
     //文件导入
     $('#import-file-excel').fileinput({

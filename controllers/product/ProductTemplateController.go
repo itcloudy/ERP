@@ -204,6 +204,8 @@ func (ctl *ProductTemplateController) Edit() {
 func (ctl *ProductTemplateController) Detail() {
 	ctl.Edit()
 	ctl.Data["Readonly"] = true
+	ctl.Data["FormField"] = "form-edit"
+	ctl.Data["FormTreeField"] = "form-tree-edit"
 	ctl.Data["Action"] = "detail"
 }
 func (ctl *ProductTemplateController) Create() {
@@ -211,21 +213,22 @@ func (ctl *ProductTemplateController) Create() {
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
 	ctl.Layout = "base/base.html"
-
+	ctl.Data["FormField"] = "form-create"
+	ctl.Data["FormTreeField"] = "form-tree-create"
 	ctl.TplName = "product/product_template_form.html"
 }
 
 func (ctl *ProductTemplateController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
-	recordId, _ := ctl.GetInt64("recordId")
+	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
 	obj, err := md.GetProductTemplateByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordId == obj.ID {
+			if recordID == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false

@@ -5,9 +5,9 @@ $(function() {
 
         var AttributeLineId = "AttributeLineId-" + e.timeStamp;
         var AttributeLineValueId = "AttributeLineValueId-" + e.timeStamp;
-        var appendHTML = "<tr class='product-template-attribute-line form-tree-create'>" +
-            "<td><select  data-name='AttributeLineIds' name='" + AttributeLineId + "' id='" + AttributeLineId + "' class='form-control select-product-attribute'></select></td>" +
-            "<td><select  data-name='AttributeLineValueIds'  name='" + AttributeLineValueId + "' data-attributelineid='" + AttributeLineId + "' id='" + AttributeLineValueId + "' multiple='multiple' class='form-control select-product-attribute-value'></select></td>" +
+        var appendHTML = "<tr data-tree='productAttributes' class='product-template-attribute-line form-tree-create'>" +
+            "<td><select data-name='AttributeLineIds' name='AttributeLineId' id='" + AttributeLineId + "' class='form-tree-create form-control select-product-attribute'></select></td>" +
+            "<td><select data-name='AttributeLineValueIds'  name='AttributeLineValueId' data-attributelineid='" + AttributeLineId + "' id='" + AttributeLineValueId + "' multiple='multiple' class='form-tree-create form-control select-product-attribute-value'></select></td>" +
             "<td class='text-center'><a class='form-tree-delete'><i class='fa fa-trash-o'></i></a></td>" +
             "</tr>";
         $(appendHTML).prependTo("#product-template-attribute-body");

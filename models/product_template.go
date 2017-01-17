@@ -19,7 +19,7 @@ type ProductTemplate struct {
 	DescriptioSale     string                  `orm:"type(text);null"` //销售描述
 	DescriptioPurchase string                  `orm:"type(text);null"` //采购描述
 	Rental             bool                    `orm:"default(false)"`  //代售品
-	Categ              *ProductCategory        `orm:"rel(fk)"`         //产品类别
+	Category           *ProductCategory        `orm:"rel(fk)"`         //产品类别
 	Price              float64                 //模版产品价格
 	StandardPrice      float64                 //成本价格
 	SaleOk             bool                    `orm:"default(true)"` //可销售

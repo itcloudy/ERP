@@ -136,7 +136,7 @@ func (ctl *UserController) GetList() {
 
 // Validator js valid
 func (ctl *UserController) Validator() {
-	recordID, _ := ctl.GetInt64("recordId")
+	recordID, _ := ctl.GetInt64("recordID")
 	name := strings.TrimSpace(ctl.GetString("Name"))
 	result := make(map[string]bool)
 	obj, err := md.GetUserByName(name)

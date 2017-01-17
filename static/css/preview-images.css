@@ -1,0 +1,116 @@
+/*图片预览*/
+
+.preview {
+    width: 400px;
+    height: 465px;
+    margin-left: 50px;
+}
+
+
+/* smallImg */
+
+.smallImg {
+    position: relative;
+    height: 52px;
+    margin-top: 1px;
+    background-color: #F1F0F0;
+    padding: 6px 5px;
+    width: 390px;
+    overflow: hidden;
+    float: left;
+}
+
+.scrollbutton {
+    width: 14px;
+    height: 50px;
+    overflow: hidden;
+    position: relative;
+    float: left;
+    cursor: pointer;
+}
+
+.scrollbutton.smallImgUp,
+.scrollbutton.smallImgUp.disabled {
+    background: url(/static/images/d_08.png) no-repeat;
+}
+
+.scrollbutton.smallImgDown,
+.scrollbutton.smallImgDown.disabled {
+    background: url(/static/images/d_09.png) no-repeat;
+    margin-left: 375px;
+    margin-top: -50px;
+}
+
+#imageMenu {
+    height: 50px;
+    width: 360px;
+    overflow: hidden;
+    margin-left: 0;
+    float: left;
+}
+
+#imageMenu li {
+    height: 50px;
+    width: 60px;
+    overflow: hidden;
+    float: left;
+    text-align: center;
+}
+
+#imageMenu li img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+}
+
+#imageMenu li#onlickImg img,
+#imageMenu li:hover img {
+    width: 44px;
+    height: 44px;
+    border: 3px solid #959595;
+}
+
+
+/* bigImg */
+
+.bigImg {
+    position: relative;
+    float: left;
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+}
+
+.bigImg #midimg {
+    width: 400px;
+    height: 400px;
+}
+
+.bigImg #winSelector {
+    width: 235px;
+    height: 210px;
+}
+
+#winSelector {
+    position: absolute;
+    cursor: crosshair;
+    filter: alpha(opacity=15);
+    -moz-opacity: 0.15;
+    opacity: 0.15;
+    background-color: #000;
+    border: 1px solid #fff;
+}
+
+
+/* bigView */
+
+#bigView {
+    position: absolute;
+    border: 1px solid #959595;
+    overflow: hidden;
+    z-index: 999;
+}
+
+#bigView img {
+    position: absolute;
+}

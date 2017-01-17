@@ -80,14 +80,14 @@ func (ctl *DistrictController) districtList(query map[string]string, fields []st
 func (ctl *DistrictController) Validator() {
 
 	name := strings.TrimSpace(ctl.GetString("Name"))
-	recordId, _ := ctl.GetInt64("recordId")
+	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
 	obj, err := md.GetAddressDistrictByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
 		if obj.Name == name {
-			if recordId == obj.ID {
+			if recordID == obj.ID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false

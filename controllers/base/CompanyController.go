@@ -136,7 +136,7 @@ func (ctl *CompanyController) Create() {
 // Validator js validator
 func (ctl *CompanyController) Validator() {
 	name := ctl.GetString("name")
-	recordID, _ := ctl.GetInt64("recordId")
+	recordID, _ := ctl.GetInt64("recordID")
 	name = strings.TrimSpace(name)
 	result := make(map[string]bool)
 	obj, err := md.GetCompanyByName(name)

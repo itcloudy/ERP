@@ -91,7 +91,7 @@ func (ctl *TeamController) Create() {
 func (ctl *TeamController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordId")
+	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
 	obj, err := md.GetTeamByName(name)
 	if err != nil {

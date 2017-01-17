@@ -122,7 +122,7 @@ func (ctl *PurchaseOrderLineStateController) PostCreate() {
 func (ctl *PurchaseOrderLineStateController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordId")
+	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
 	obj, err := md.GetPurchaseOrderLineStateByName(name)
 	if err != nil {

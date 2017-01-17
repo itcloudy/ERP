@@ -137,7 +137,7 @@ func (ctl *DepartmentController) Create() {
 // Validator js valid function
 func (ctl *DepartmentController) Validator() {
 	name := ctl.GetString("name")
-	recordID, _ := ctl.GetInt64("recordId")
+	recordID, _ := ctl.GetInt64("recordID")
 	name = strings.TrimSpace(name)
 	result := make(map[string]bool)
 	obj, err := md.GetDepartmentByName(name)
