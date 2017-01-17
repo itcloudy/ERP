@@ -52,7 +52,7 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
             params.filter = JSON.stringify(filter);
             return params;
         },
-        columns: columns,
+        columns: columns
     }
     if (onExpandRow != undefined) {
         options.detailView = true;
@@ -149,7 +149,7 @@ displayTable("#table-user", "/user/", [
 
             html = error;
             $detail.html(html);
-        },
+        }
     });
 });
 //权限

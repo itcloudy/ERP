@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(function() {
     'use strict';
     $('.input-radio').iCheck({
         checkboxClass: 'icheckbox_square-green',
@@ -37,9 +37,9 @@ $(document).ready(function() {
         e.currentTarget.value = e.currentTarget.value.trim();
         var nums = $.grep($("#listViewSearch input"), function(el, index) {
             if (el.value != "") {
-                return true
+                return true;
             } else {
-                return false
+                return false;
             }
         });
         if (nums.length > 0) {
@@ -56,9 +56,9 @@ $(document).ready(function() {
     (function() {
         var nums = $.grep($("#listViewSearch input"), function(el, index) {
             if (el.value != "") {
-                return true
+                return true;
             } else {
-                return false
+                return false;
             }
         });
         if (nums.length < 1) {

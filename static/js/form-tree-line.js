@@ -1,108 +1,128 @@
-$.fn.editable.defaults.mode = 'inline';
-$.fn.editable.defaults.emptytext = '无值';
-
-
-//---------------------------------------款式中的属性列表----------------------------------
-// 判断表单的状态
-var formState = function(formIdSle) {
+$(function() {
     'use strict';
-    var form = $(formIdSle);
-    if (form.hasClass("form-edit")) {
-        return "edit"
-    } else {
-        return "readonly"
-    }
-};
-//bootstrapTable
-$("#one-product-template-attribute").bootstrapTable({
-    method: "post",
-    dataType: "json",
-    locale: "zh-CN",
-    contentType: "application/x-www-form-urlencoded",
-    sidePagination: "server",
-    url: "/product/template",
-    dataField: "data",
-    pagination: true,
-    pageNumber: 1,
-    pageSize: 20,
-    pageList: [10, 25, 50, 100, 500, 1000],
-    queryParams: function(params) {
-        var xsrf = $("input[name ='_xsrf']");
-        if (xsrf.length > 0) {
-            params._xsrf = xsrf[0].value;
-        }
-        var recordId = $("input[name='_recordId']");
-        if (recordId.length > 0) {
-            params.recordId = recordId[0].value;
-        }
-        params.action = 'attribute';
-        return params;
-    },
-    columns: [
-        { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
-        {
-            title: "属性名称",
-            field: 'name',
-            sortable: true,
-            order: "desc",
-            formatter: function cellStyle(value, row, index) {
-                var Attribute = row.Attribute;
-                var html = "<p class='p-form-tree-disabled'>" + Attribute.name + "</p>";
-                html += '<select name="productAttribute" id="productAttributeID-' + index + '" data-action="' + row.action + '"class="form-control select-product-attribute">' +
-                    '</select>';
-                return html;
-            }
-        },
-        {
-            title: "属性值",
-            field: 'AttributeValues',
-            sortable: true,
-            formatter: function cellStyle(value, row, index) {
-                var attributeValues = row.AttributeValues;
-                var html = "";
-                html += "<p class='p-form-tree-disabled'>";
-                for (line in attributeValues) {
-                    html += "<a class='display-block label label-primary'>" + line.name + "</a>";
+    // 产品款式增加属性
+    $("#add-one-product-template-attribute").on('click', function(e) {
+
+        var AttributeLineId = "AttributeLineId-" + e.timeStamp;
+        var AttributeLineValueId = "AttributeLineValueId-" + e.timeStamp;
+        var appendHTML = "<tr class='product-template-attribute-line form-tree-create'>" +
+            "<td><select  data-name='AttributeLineIds' name='" + AttributeLineId + "' id='" + AttributeLineId + "' class='form-control select-product-attribute'></select></td>" +
+            "<td><select  data-name='AttributeLineValueIds'  name='" + AttributeLineValueId + "' data-attributelineid='" + AttributeLineId + "' id='" + AttributeLineValueId + "' multiple='multiple' class='form-control select-product-attribute-value'></select></td>" +
+            "<td class='text-center'><a class='form-tree-delete'><i class='fa fa-trash-o'></i></a></td>" +
+            "</tr>";
+        $(appendHTML).prependTo("#product-template-attribute-body");
+        $("#" + AttributeLineId).select2({
+            width: "off",
+            ajax: {
+                url: '/product/attribute/?action=search',
+                dataType: 'json',
+                delay: 250,
+                type: "POST",
+                data: function(params) {
+                    var selectParams = {
+                        name: params.term || "", // search term
+                        offset: params.page || 0,
+                        limit: 5,
+                    };
+                    var xsrf = $("input[name ='_xsrf']");
+                    if (xsrf.length > 0) {
+                        selectParams._xsrf = xsrf[0].value;
+                    }
+                    // 过滤掉已经添加的属性
+                    var existAttr = $("#product-template-attribute-body .select-product-attribute");
+                    var exclude = [];
+                    for (var i = 0, len = existAttr.length; i < len; i++) {
+                        var val = $(existAttr[i]).val();
+                        if (val != null) {
+                            exclude.push(parseInt(val));
+                        }
+                    }
+                    if (exclude.length > 0) {
+                        selectParams.exclude = exclude;
+                    }
+                    return selectParams
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 0;
+                    var paginator = JSON.parse(data.paginator);
+                    return {
+                        results: data.data,
+                        pagination: {
+                            more: paginator.totalPage > paginator.currentPage
+                        }
+                    };
                 }
-                html += "</p>";
-                html += '<select name="productAttributeValue" id="productAttributeValueID-' + index + '"data-action="' + row.action + '" class="form-control select-product-attribute-value" multiple="multiple" >'
-                for (line in attributeValues) {
-                    html += "<a class='display-block label label-primary'>" + line.name + "</a>";
-                }
-                for (line in attributeValues) {
-                    html += '<option value="' + line.id + '" selected="selected">' + line.name + '</option>';
-                }
-                html += '</select>';
-                return html;
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 0,
+            templateResult: function(repo) {
+                'use strict';
+                if (repo.loading) { return repo.text; }
+                return repo.name;
+            },
+            templateSelection: function(repo) {
+                'use strict';
+                return repo.name || repo.text;
             }
-        },
-        {
-            title: "操作",
-            align: "center",
-            field: 'action',
-            formatter: function cellStyle(value, row, index) {
-                var html = "";
-                var url = "/product/template/";
-                html += "<a href='" + url + row.Id + "?action=edit' class='table-action btn btn-xs btn-danger'>删除&nbsp<i class='fa  fa-trash'></i></a>";
-                return html;
-            }
-        }
-    ],
-});
-//x-editable
-$(".form-table-add-line").on("click", function(e) {
-    var formId = e.currentTarget.dataset["formid"];
-    $("#one-product-template-attribute").bootstrapTable("append", randomData());
-    select2AjaxData(".select-product-attribute", '/product/attribute/?action=search'); // 选择属性
-    select2AjaxData(".select-product-attribute-value", '/product/attributevalue/?action=search'); // 选择属性值
-    function randomData(e) {
-        rows = [];
-        rows.push({
-            action: "create",
-            id: 0,
-            Attribute: "",
-            AttributeValues: []
         });
-        return rows;
-    }
+        $("#" + AttributeLineValueId).select2({
+            width: "off",
+            ajax: {
+                url: '/product/attributevalue/?action=search',
+                dataType: 'json',
+                delay: 250,
+                type: "POST",
+                data: function(params) {
+                    var selectParams = {
+                        name: params.term || "", // search term
+                        offset: params.page || 0,
+                        limit: 5,
+                    };
+                    var xsrf = $("input[name ='_xsrf']");
+                    if (xsrf.length > 0) {
+                        selectParams._xsrf = xsrf[0].value;
+                    }
+                    var attributeLineId = this.data("attributelineid");
+                    if (attributeLineId != undefined) {
+                        var attributeId = $("#" + attributeLineId).val();
+                        if (attributeId == null) {
+                            alert("请先选择属性,再选择属性值");
+                            return;
+                        } else {
+                            selectParams.attributeId = attributeId;
+                        }
+                    }
+                    if ($(this).length > 0 && $(this)[0].nodeName == "SELECT") {
+                        selectParams.exclude = $(this).val();
+                    }
+                    return selectParams
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 0;
+                    var paginator = JSON.parse(data.paginator);
+                    return {
+                        results: data.data,
+                        pagination: {
+                            more: paginator.totalPage > paginator.currentPage
+                        }
+                    };
+                }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 0,
+            templateResult: function(repo) {
+                'use strict';
+                if (repo.loading) { return repo.text; }
+                return repo.name;
+            },
+            templateSelection: function(repo) {
+                'use strict';
+                return repo.name || repo.text;
+            }
+        });
+    });
 });

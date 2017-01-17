@@ -12,7 +12,7 @@ $(function() {
         submitButtons: 'button[type="submit"]',
         trigger: null,
         fields: {
-            name: {
+            Name: {
                 message: "该值无效",
                 validators: {
                     notEmpty: {
@@ -55,15 +55,15 @@ $(function() {
                     }
                 },
             },
-            namezh: {
+            NameZh: {
                 message: "该值无效",
                 validators: {
                     notEmpty: {
                         message: "用户名(中文)不能为空"
-                    },
+                    }
                 },
             },
-            mobile: {
+            Mobile: {
                 message: "该值无效",
                 validators: {
                     notEmpty: {
@@ -95,10 +95,10 @@ $(function() {
                             }
                             return params
                         },
-                    },
+                    }
                 }
             },
-            email: {
+            Email: {
                 message: "该值无效",
                 validators: {
                     notEmpty: {
@@ -136,36 +136,36 @@ $(function() {
                     }
                 }
             },
-            position: {
+            Position: {
                 message: "该值无效",
                 validators: {
                     notEmpty: {
                         message: "职位不能为空"
-                    },
+                    }
                 }
             },
-            department: {
+            Department: {
                 message: "该值无效",
                 validators: {
                     notEmpty: {
                         message: "部门不能为空"
-                    },
+                    }
                 }
             },
-            group: {
+            Group: {
                 message: "该值无效",
                 validators: {
                     notEmpty: {
                         message: "权限组不能为空"
-                    },
+                    }
                 }
             },
-            password: {
+            Password: {
                 message: "该值无效",
                 validators: {
                     notEmpty: {
                         message: "密码不能为空"
-                    },
+                    }
                 }
             },
         },
@@ -208,7 +208,7 @@ $(function() {
                             }
                             return params
                         },
-                    },
+                    }
                 },
             },
         },
@@ -253,7 +253,7 @@ $(function() {
                         },
                     },
                 },
-            },
+            }
         },
     });
     //产品属性值
@@ -302,7 +302,7 @@ $(function() {
                         },
                     },
                 },
-            },
+            }
         },
     });
     //计量单位分类
@@ -345,7 +345,7 @@ $(function() {
                         },
                     },
                 },
-            },
+            }
         },
     });
     //计量单位分类
@@ -396,7 +396,7 @@ $(function() {
                         },
                     },
                 },
-            },
+            }
         },
     });
 });

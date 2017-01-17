@@ -132,10 +132,10 @@ func (ctl *ProductAttributeController) Validator() {
 }
 
 // 获得符合要求的数据
-func (ctl *ProductAttributeController) productAttributeList(query map[string]string, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *ProductAttributeController) productAttributeList(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.ProductAttribute
-	paginator, arrs, err := md.GetAllProductAttribute(query, fields, sortby, order, offset, limit)
+	paginator, arrs, err := md.GetAllProductAttribute(query, exclude, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -165,13 +165,25 @@ func (ctl *ProductAttributeController) productAttributeList(query map[string]str
 	return result, err
 }
 func (ctl *ProductAttributeController) PostList() {
-	query := make(map[string]string)
+	query := make(map[string]interface{})
+	exclude := make(map[string]interface{})
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 0, 0)
 	order := make([]string, 0, 0)
+	excludeIdsStr := ctl.GetStrings("exclude[]")
+	var excludeIds []int64
+	for _, v := range excludeIdsStr {
+		if val, err := strconv.ParseInt(v, 10, 64); err == nil {
+			excludeIds = append(excludeIds, val)
+		}
+	}
+	if len(excludeIds) > 0 {
+		exclude["Id.in"] = excludeIds
+	}
+
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
-	if result, err := ctl.productAttributeList(query, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.productAttributeList(query, exclude, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()

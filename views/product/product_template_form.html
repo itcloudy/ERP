@@ -2,9 +2,9 @@
     <p id="list-title">{{.PageName}}</p>
 </div>
 
-<form enctype="multipart/form-data" id="productTemplateForm" action="{{.URL}}{{.RecordId}}?action={{.Action}}" method="post" class="post-from form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+<form enctype="multipart/form-data" id="productTemplateForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-from form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
     <div class="row">
-        {{if .RecordId}} {{if .Readonly}}
+        {{if .RecordID}} {{if .Readonly}}
         <button type="button" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</button>
         <a href="{{.URL}}?action=create" type="buttom" class="btn btn-success fa fa-plus pull-left form-create-btn">&nbsp新建</a>{{end}}{{end}}
         <button type="submit" form="productTemplateForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button> {{if .Readonly}}
@@ -13,148 +13,152 @@
 
         <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
     </div>
-    {{ .xsrf }} {{if .RecordId}}
-    <input type="hidden" name="_recordId" id="record-id" value="{{.RecordId}}">
+    {{ .xsrf }} {{if .RecordID}}
+    <input type="hidden" name="_recordId" id="record-id" value="{{.RecordID}}">
     <input type="hidden" name="_method" value="PUT"> {{end}}
-    <fieldset>
-        <legend>基本信息</legend>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="name" class="col-md-2 control-label label-start">款式名称<span class="required-input">&nbsp*</span></label>
-                    <div class="col-md-10">
-                        <p class="p-form-control">{{if .Tp}} {{.Tp.name}} {{end}}</p>
-                        <input class="form-control" name="name" type="text" {{if not .Readonly}}autofocus{{end}} {{if .Tp}} value="{{.Tp.name}}" {{end}} />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="active" class="col-md-4 control-label ">有效</label>
-                    <div class="col-md-8 ">
-                        <input name="active" id="active" class="form-control form-checkbox" checked="checked" type="checkbox">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="saleok" class="col-md-4 control-label ">可销售</label>
-                    <div class="col-md-8 ">
-                        <input name="saleok" id="saleok" class="form-control form-checkbox" checked="checked" type="checkbox">
-                    </div>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-md-4 " style="height: 400px;">
         </div>
-        <div class="row">
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="defaultCode" class="col-md-4 control-label label-start">款式编码</label>
-                    <div class="col-md-8">
-                        <p>{{if .Tp}} {{.Tp.defaultCode}} {{end}}</p>
-                        <!--<input class="form-control" name="defaultCode" type="text" {{if .Tp}} value="{{.Tp.defaultCode}}" {{end}} />-->
+        <div class="col-md-8">
+            <fieldset>
+                <legend>基本信息</legend>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="name" class="col-md-2 control-label label-start">款式名称<span class="required-input">&nbsp*</span></label>
+                        <div class="col-md-10">
+                            <p class="p-form-control">{{if .Tp}} {{.Tp.name}} {{end}}</p>
+                            <input class="form-control" name="name" type="text" {{if not .Readonly}}autofocus{{end}} {{if .Tp}} value="{{.Tp.name}}" {{end}} />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="parent" class="col-md-4 control-label label-start">款式类别<span class="required-input">&nbsp*</span></label>
-                    <div class="col-md-8">
-                        <p class="p-form-control">{{if .Tp}} {{.Tp.category.name}} {{end}}</p>
-                        <select name="parent" id="parent" class="form-control select-product-category">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="active" class="col-md-4 control-label ">有效</label>
+                            <div class="col-md-8 ">
+                                <input name="active" id="active" class="form-control form-checkbox" checked="checked" type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="saleok" class="col-md-4 control-label ">可销售</label>
+                            <div class="col-md-8 ">
+                                <input name="saleok" id="saleok" class="form-control form-checkbox" checked="checked" type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="type" class="col-md-4 control-label label-start">产品类型<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <input class="input-radio {{if not .Tp}}checked{{else}}{{if eq .Tp.productType " stock "}}checked{{end}}{{end}}" type="radio" id="stock-radio" value="stock" name="productType">
+                                <label class="input-radio-label" for="stock-radio">库存商品</label>
+                                <input class="input-radio {{if .Tp}}{{if ne  .Tp.productType " consume "}}checked{{end}}{{end}}" type="radio" id="consume-radio" value="consume" name="productType">
+                                <label class="input-radio-label" for="consume-radio">消耗品</label>
+                                <input class="input-radio {{if .Tp}}{{if eq .Tp.productType " service "}}checked{{end}}{{end}}" type="radio" id="service-radio-3" value="service" name="productType">
+                                <label class="input-radio-label" for="service-radio">服务</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="standardPrice" class="col-md-4 control-label label-start">成本价格<span>&nbsp</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Tp}} {{.Tp.standardPrice}} {{end}}</p>
+                                <input class="form-control" name="standardPrice" type="text" {{if .Tp}} value="{{.Tp.standardPrice}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="defaultCode" class="col-md-4 control-label label-start">款式编码</label>
+                            <div class="col-md-8">
+                                <p>{{if .Tp}} {{.Tp.defaultCode}} {{end}}</p>
+                                <!--<input class="form-control" name="defaultCode" type="text" {{if .Tp}} value="{{.Tp.defaultCode}}" {{end}} />-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="parent" class="col-md-4 control-label label-start">款式类别<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Tp}} {{.Tp.category.name}} {{end}}</p>
+                                <select name="parent" id="parent" class="form-control select-product-category">
                             <option value="{{.Tp.category.id}}" selected="selected">{{.Tp.category.name}}</option>
                         </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>销售单位</legend>
+                            <div class="form-group">
+                                <label for="firstSaleUom" class="col-md-4 control-label label-start">销售单位1<span class="required-input">&nbsp*</span></label>
+                                <div class="col-md-8">
+                                    <p class="p-form-control">{{if .Tp}} {{.Tp.firstSaleUom.name}} {{end}}</p>
+                                    <select name="firstSaleUom" id="firstSaleUom" class="form-control select-product-uom">
+                                     <option value="{{.Tp.firstSaleUom.id}}" selected="selected">{{.Tp.firstSaleUom.name}}</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="secondSaleUom" class="col-md-4 control-label label-start">销售单位2<span>&nbsp</span></label>
+                                <div class="col-md-8">
+                                    <p class="p-form-control">{{if .Tp}} {{.Tp.secondSaleUom.name}} {{end}}</p>
+                                    <select name="secondSaleUom" id="secondSaleUom" class="form-control select-product-uom">
+                                     <option value="{{.Tp.secondSaleUom.id}}" selected="selected">{{.Tp.secondSaleUom.name}}</option>
+                                </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-md-6">
+                        <fieldset>
+                            <legend>采购单位</legend>
+                            <div class="form-group">
+                                <label for="firstPurchaseUom" class="col-md-4 control-label label-start">采购单位1<span class="required-input">&nbsp*</span></label>
+                                <div class="col-md-8">
+                                    <p class="p-form-control">{{if .Tp}} {{.Tp.firstPurchaseUom.name}} {{end}}</p>
+                                    <select name="firstPurchaseUom" id="firstPurchaseUom" class="form-control select-product-uom">
+                                     <option value="{{.Tp.firstSaleUom.id}}" selected="selected">{{.Tp.firstSaleUom.name}}</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="secondPurchaseUom" class="col-md-4 control-label label-start">采购单位2<span>&nbsp</span></label>
+                                <div class="col-md-8">
+                                    <p class="p-form-control">{{if .Tp}} {{.Tp.secondPurchaseUom.name}} {{end}}</p>
+                                    <select name="secondPurchaseUom" id="secondPurchaseUom" class="form-control select-product-uom">
+                                     <option value="{{.Tp.secondPurchaseUom.id}}" selected="selected">{{.Tp.secondPurchaseUom.name}}</option>
+                                </select>
+                                </div>
+                            </div>
+                        </fieldset>
+                        </di>
+                    </div>
+                </div>
+            </fieldset>
         </div>
-    </fieldset>
+    </div>
+
     <ul class="nav nav-tabs" role="tablist" id="product-tab">
-        <li role="presentation" class="active"><a data-toggle="tab" href="#generalInfo">基本信息</a></li>
-        <li role="presentation"><a data-toggle="tab" href="#attributeInfo">款式属性</a></li>
+        <li role="presentation" class="active"><a data-toggle="tab" href="#attributeInfo">款式属性</a></li>
         <li role="presentation"><a data-toggle="tab" href="#inventory">库存</a></li>
         <li role="presentation"><a data-toggle="tab" href="#supplier">供应商</a></li>
         <li role="presentation"><a data-toggle="tab" href="#description">描述</a></li>
-        {{if .RecordId}}
+        {{if .RecordID}}
         <li role="presentation"><a data-toggle="tab" href="#productImages">图片</a></li>
         {{end}}
     </ul>
     <div class="tab-content">
-        <div class="tab-pane fade in active" id="generalInfo">
-            <div class="row">
-                <div class="col-md-3">
-                    <fieldset>
-                        <legend>一般信息</legend>
-                        <label for="type" class="col-md-4 control-label label-start">产品类型<span class="required-input">&nbsp*</span></label>
-                        <div class="col-md-8">
-                            <input class="input-radio {{if not .Tp}}checked{{else}}{{if eq .Tp.productType " stock "}}checked{{end}}{{end}}" type="radio" id="stock-radio" value="stock" name="productType">
-                            <label class="input-radio-label" for="stock-radio">库存商品</label>
-                            <input class="input-radio {{if .Tp}}{{if ne  .Tp.productType " consume "}}checked{{end}}{{end}}" type="radio" id="consume-radio" value="consume" name="productType">
-                            <label class="input-radio-label" for="consume-radio">消耗品</label>
-                            <input class="input-radio {{if .Tp}}{{if eq .Tp.productType " service "}}checked{{end}}{{end}}" type="radio" id="service-radio-3" value="service" name="productType">
-                            <label class="input-radio-label" for="service-radio">服务</label>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="col-md-3">
-                    <fieldset>
-                        <legend>销售单位</legend>
-                        <div class="form-group">
-                            <label for="firstSaleUom" class="col-md-4 control-label label-start">销售单位1<span class="required-input">&nbsp*</span></label>
-                            <div class="col-md-8">
-                                <p class="p-form-control">{{if .Tp}} {{.Tp.firstSaleUom.name}} {{end}}</p>
-                                <select name="firstSaleUom" id="firstSaleUom" class="form-control select-product-uom">
-                                     <option value="{{.Tp.firstSaleUom.id}}" selected="selected">{{.Tp.firstSaleUom.name}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="secondSaleUom" class="col-md-4 control-label label-start">销售单位2<span>&nbsp</span></label>
-                            <div class="col-md-8">
-                                <p class="p-form-control">{{if .Tp}} {{.Tp.secondSaleUom.name}} {{end}}</p>
-                                <select name="secondSaleUom" id="secondSaleUom" class="form-control select-product-uom">
-                                     <option value="{{.Tp.secondSaleUom.id}}" selected="selected">{{.Tp.secondSaleUom.name}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="col-md-3">
-                    <fieldset>
-                        <legend>采购单位</legend>
-                        <div class="form-group">
-                            <label for="firstPurchaseUom" class="col-md-4 control-label label-start">采购单位1<span class="required-input">&nbsp*</span></label>
-                            <div class="col-md-8">
-                                <p class="p-form-control">{{if .Tp}} {{.Tp.firstPurchaseUom.name}} {{end}}</p>
-                                <select name="firstPurchaseUom" id="firstPurchaseUom" class="form-control select-product-uom">
-                                     <option value="{{.Tp.firstSaleUom.id}}" selected="selected">{{.Tp.firstSaleUom.name}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="secondPurchaseUom" class="col-md-4 control-label label-start">采购单位2<span>&nbsp</span></label>
-                            <div class="col-md-8">
-                                <p class="p-form-control">{{if .Tp}} {{.Tp.secondPurchaseUom.name}} {{end}}</p>
-                                <select name="secondPurchaseUom" id="secondPurchaseUom" class="form-control select-product-uom">
-                                     <option value="{{.Tp.secondPurchaseUom.id}}" selected="selected">{{.Tp.secondPurchaseUom.name}}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </fieldset>
-                    </di>
-                </div>
-                <div class="col-md-3">
-                    <fieldset>
-                        <legend>价格信息</legend>
-                        <label for="standardPrice" class="col-md-4 control-label label-start">成本价格<span>&nbsp</span></label>
-                        <div class="col-md-8">
-                            <p class="p-form-control">{{if .Tp}} {{.Tp.standardPrice}} {{end}}</p>
-                            <input class="form-control" name="standardPrice" type="text" {{if .Tp}} value="{{.Tp.standardPrice}}" {{end}} />
-                        </div>
-                    </fieldset>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="attributeInfo">
+        <div class="tab-pane fade in active" id="attributeInfo">
             <div class="row">
                 <div class="col-md-3">
                     <label for="type" class="col-md-4 control-label label-start">款式创建方式<span class="required-input">&nbsp*</span></label>
@@ -169,8 +173,16 @@
 
             <div class="row" id="display-table">
                 <div class="col-md-12">
-                    <button type="button" id="add-one-product-template-attribute" data-formid="productTemplateForm" class="btn btn-info fa fa-plus  pull-left form-table-add-line">&nbsp添加一行</button>
-                    <table id="one-product-template-attribute" data-formid="productTemplateForm" class="table-diplay-info table table-bordered table-hover table-condensed table-striped">
+                    <button type="button" id="add-one-product-template-attribute" data-formid="productTemplateForm" class="btn btn-info pull-left form-table-add-line">添加一行</button>
+                    <table id="product-template-attribute" data-formid="productTemplateForm" class="table-diplay-info table table-bordered table-hover table-condensed table-striped">
+                        <thead>
+                            <th>属性</th>
+                            <th>属性值</th>
+                            <th class="text-center">操作</th>
+                        </thead>
+                        <tbody id="product-template-attribute-body">
+
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -202,7 +214,7 @@
                 </div>
             </div>
         </div>
-        {{if .RecordId}}
+        {{if .RecordID}}
         <div class="tab-pane fade" id="productImages">
             <!--显示已经有的图片-->
             {{if .Tp.Images}} {{range .Tp.Images}}
@@ -219,7 +231,7 @@
         {{end}}
     </div>
 </form>
-{{if .RecordId}}
+{{if .RecordID}}
 <div class="file-zoom-dialog modal fade" id="productImagesModal" tabindex="-1" role="dialog" aria-labelledby="productImagesModal" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

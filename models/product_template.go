@@ -30,6 +30,7 @@ type ProductTemplate struct {
 	FirstPurchaseUom   *ProductUom             `orm:"rel(fk)"`       //第一采购单位
 	SecondPurchaseUom  *ProductUom             `orm:"rel(fk)"`       //第二采购单位
 	AttributeLines     []*ProductAttributeLine `orm:"reverse(many)"` //属性明细
+	AttributeLineIds   []int64                 `orm:"-"`
 	ProductVariants    []*ProductProduct       `orm:"reverse(many)"` //产品规格明细
 	TemplatePackagings []*ProductPackaging     `orm:"reverse(many)"` //打包方式
 	VariantCount       int32                   //产品规格数量
