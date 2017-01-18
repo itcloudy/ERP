@@ -1,14 +1,23 @@
 package models
 
-import "github.com/astaxie/beego/orm"
+import (
+	"time"
+
+	"github.com/astaxie/beego/orm"
+)
 
 //Sequrence  表序列号管理，用于销售订单号，采购订单号等
 type Sequrence struct {
-	Base
-	Name    string `orm:"unique" xml:"name"` //表名称组名称
-	Prefix  string //前缀
-	Current int64  //当前序号
-	Padding int64  //序列位数
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string    `orm:"unique" xml:"name"`                    //表名称组名称
+	Prefix     string    //前缀
+	Current    int64     //当前序号
+	Padding    int64     //序列位数
 }
 
 func init() {
@@ -27,7 +36,7 @@ func AddSequrence(obj *Sequrence) (id int64, err error) {
 // ID doesn't exist
 func GetSequrenceByID(id int64) (obj *Sequrence, err error) {
 	o := orm.NewOrm()
-	obj = &Sequrence{Base: Base{ID: id}}
+	obj = &Sequrence{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,9 +13,14 @@ import (
 
 // PurchaseConfig 销售设置
 type PurchaseConfig struct {
-	Base
-	Name    string   `orm:"unique"`
-	Company *Company `orm:"rel(fk)"` //公司
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string    `orm:"unique"`
+	Company    *Company  `orm:"rel(fk)"` //公司
 }
 
 func init() {
@@ -34,7 +40,7 @@ func AddPurchaseConfig(obj *PurchaseConfig) (id int64, err error) {
 // ID doesn't exist
 func GetPurchaseConfigByID(id int64) (obj *PurchaseConfig, err error) {
 	o := orm.NewOrm()
-	obj = &PurchaseConfig{Base: Base{ID: id}}
+	obj = &PurchaseConfig{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -125,7 +131,7 @@ func GetAllPurchaseConfig(query map[string]string, fields []string, sortby []str
 // the record to be updated doesn't exist
 func UpdatePurchaseConfigByID(m *PurchaseConfig) (err error) {
 	o := orm.NewOrm()
-	v := PurchaseConfig{Base: Base{ID: m.ID}}
+	v := PurchaseConfig{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -140,11 +146,11 @@ func UpdatePurchaseConfigByID(m *PurchaseConfig) (err error) {
 // the record to be deleted doesn't exist
 func DeletePurchaseConfig(id int64) (err error) {
 	o := orm.NewOrm()
-	v := PurchaseConfig{Base: Base{ID: id}}
+	v := PurchaseConfig{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&PurchaseConfig{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&PurchaseConfig{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

@@ -5,13 +5,19 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 //ProductPricelistItem  产品价格
 type ProductPricelistItem struct {
-	Base
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 }
 
 func init() {
@@ -30,7 +36,7 @@ func AddProductPricelistItem(obj *ProductPricelistItem) (id int64, err error) {
 // ID doesn't exist
 func GetProductPricelistItemByID(id int64) (obj *ProductPricelistItem, err error) {
 	o := orm.NewOrm()
-	obj = &ProductPricelistItem{Base: Base{ID: id}}
+	obj = &ProductPricelistItem{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -109,7 +115,7 @@ func GetAllProductPricelistItem(query map[string]string, fields []string, sortby
 // the record to be updated doesn't exist
 func UpdateProductPricelistItemByID(m *ProductPricelistItem) (err error) {
 	o := orm.NewOrm()
-	v := ProductPricelistItem{Base: Base{ID: m.ID}}
+	v := ProductPricelistItem{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -124,11 +130,11 @@ func UpdateProductPricelistItemByID(m *ProductPricelistItem) (err error) {
 // the record to be deleted doesn't exist
 func DeleteProductPricelistItem(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductPricelistItem{Base: Base{ID: id}}
+	v := ProductPricelistItem{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductPricelistItem{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductPricelistItem{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

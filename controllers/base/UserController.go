@@ -262,46 +262,16 @@ func (ctl *UserController) PostCreate() {
 // Edit edit user info
 func (ctl *UserController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	userInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if user, err := md.GetUserByID(idInt64); err == nil {
+				ctl.Data["User"] = user
 				ctl.PageAction = user.Name + "(" + user.NameZh + ")"
-				userInfo["ID"] = user.ID
-				userInfo["Name"] = user.Name
-				userInfo["NameZh"] = user.NameZh
-				userInfo["Email"] = user.Email
-				userInfo["Mobile"] = user.Mobile
-				userInfo["Qq"] = user.Qq
-				userInfo["Wechat"] = user.WeChat
-				userInfo["Tel"] = user.Tel
-				department := make(map[string]string)
-				if user.Department != nil {
-					department["ID"] = strconv.FormatInt(user.Department.ID, 10)
-					department["Name"] = user.Department.Name
-					userInfo["Department"] = department
-				}
-				groups := make([]interface{}, 0, 4)
-				for _, group := range user.Groups {
-					oneLine := make(map[string]interface{})
-					oneLine["ID"] = group.ID
-					oneLine["Name"] = group.Name
-					oneLine["Description"] = group.Description
-					groups = append(groups, oneLine)
-				}
-				userInfo["Groups"] = groups
-				position := make(map[string]string)
-				if user.Position != nil {
-					position["ID"] = strconv.FormatInt(user.Position.ID, 10)
-					position["Name"] = user.Position.Name
-					userInfo["Position"] = position
-				}
 			}
 		}
 	}
 	ctl.Data["RecordID"] = id
 	ctl.Data["Action"] = "edit"
-	ctl.Data["User"] = userInfo
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "user/user_form.html"
 }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,8 +13,13 @@ import (
 
 // SaleOrderState 订单状态
 type SaleOrderState struct {
-	Base
-	Name string `orm:"default(\"\")" json:"name"` //状态名称
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string    `orm:"default(\"\")" json:"name"`            //状态名称
 
 }
 
@@ -34,7 +40,7 @@ func AddSaleOrderState(obj *SaleOrderState) (id int64, err error) {
 // ID doesn't exist
 func GetSaleOrderStateByID(id int64) (obj *SaleOrderState, err error) {
 	o := orm.NewOrm()
-	obj = &SaleOrderState{Base: Base{ID: id}}
+	obj = &SaleOrderState{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -114,7 +120,7 @@ func GetAllSaleOrderState(query map[string]string, fields []string, sortby []str
 // the record to be updated doesn't exist
 func UpdateSaleOrderStateByID(m *SaleOrderState) (err error) {
 	o := orm.NewOrm()
-	v := SaleOrderState{Base: Base{ID: m.ID}}
+	v := SaleOrderState{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -140,11 +146,11 @@ func GetSaleOrderStateByName(name string) (obj *SaleOrderState, err error) {
 // the record to be deleted doesn't exist
 func DeleteSaleOrderState(id int64) (err error) {
 	o := orm.NewOrm()
-	v := SaleOrderState{Base: Base{ID: id}}
+	v := SaleOrderState{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&SaleOrderState{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&SaleOrderState{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

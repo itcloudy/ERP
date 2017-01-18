@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,17 +13,22 @@ import (
 
 // SaleOrderLine 订单明细
 type SaleOrderLine struct {
-	Base
-	Name          string              `orm:"default(\"\")" json:"name"` //订单明细号
-	Company       *Company            `orm:"rel(fk)"`                   //公司
-	SaleOrder     *SaleOrder          `orm:"rel(fk);null" `             //销售订单
-	Partner       *Partner            `orm:"rel(fk)"`                   //客户
-	Product       *ProductProduct     `orm:"rel(fk)"`                   //产品
-	FirstSaleUom  *ProductUom         `orm:"rel(fk)"`                   //第一销售单位
-	SecondSaleUom *ProductUom         `orm:"rel(fk)"`                   //第二销售单位
-	FirstSaleQty  float32             `orm:"default(1)"`                //第一销售单位
-	SecondSaleQty float32             `orm:"default(0)"`                //第二销售单位
-	State         *SaleOrderLineState `orm:"rel(fk)"`                   //订单明细状态
+	ID            int64               `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser    *User               `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser    *User               `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate    time.Time           `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate    time.Time           `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction    string              `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name          string              `orm:"default(\"\")" json:"name"`            //订单明细号
+	Company       *Company            `orm:"rel(fk)"`                              //公司
+	SaleOrder     *SaleOrder          `orm:"rel(fk);null" `                        //销售订单
+	Partner       *Partner            `orm:"rel(fk)"`                              //客户
+	Product       *ProductProduct     `orm:"rel(fk)"`                              //产品
+	FirstSaleUom  *ProductUom         `orm:"rel(fk)"`                              //第一销售单位
+	SecondSaleUom *ProductUom         `orm:"rel(fk)"`                              //第二销售单位
+	FirstSaleQty  float32             `orm:"default(1)"`                           //第一销售单位
+	SecondSaleQty float32             `orm:"default(0)"`                           //第二销售单位
+	State         *SaleOrderLineState `orm:"rel(fk)"`                              //订单明细状态
 }
 
 func init() {
@@ -41,7 +47,7 @@ func AddSaleOrderLine(obj *SaleOrderLine) (id int64, err error) {
 // ID doesn't exist
 func GetSaleOrderLineByID(id int64) (obj *SaleOrderLine, err error) {
 	o := orm.NewOrm()
-	obj = &SaleOrderLine{Base: Base{ID: id}}
+	obj = &SaleOrderLine{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -121,7 +127,7 @@ func GetAllSaleOrderLine(query map[string]string, fields []string, sortby []stri
 // the record to be updated doesn't exist
 func UpdateSaleOrderLineByID(m *SaleOrderLine) (err error) {
 	o := orm.NewOrm()
-	v := SaleOrderLine{Base: Base{ID: m.ID}}
+	v := SaleOrderLine{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -147,11 +153,11 @@ func GetSaleOrderLineByName(name string) (obj *SaleOrderLine, err error) {
 // the record to be deleted doesn't exist
 func DeleteSaleOrderLine(id int64) (err error) {
 	o := orm.NewOrm()
-	v := SaleOrderLine{Base: Base{ID: id}}
+	v := SaleOrderLine{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&SaleOrderLine{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&SaleOrderLine{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

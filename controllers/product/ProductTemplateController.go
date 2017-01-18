@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"goERP/controllers/base"
 	md "goERP/models"
+	"reflect"
 
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -14,6 +16,8 @@ type ProductTemplateController struct {
 }
 
 func (ctl *ProductTemplateController) Post() {
+	ctl.URL = "/product/template/"
+	ctl.Data["URL"] = ctl.URL
 	action := ctl.Input().Get("action")
 	switch action {
 	case "validator":
@@ -29,6 +33,7 @@ func (ctl *ProductTemplateController) Post() {
 	}
 }
 func (ctl *ProductTemplateController) Get() {
+	ctl.URL = "/product/template/"
 	ctl.PageName = "产品款式管理"
 	action := ctl.Input().Get("action")
 	switch action {
@@ -42,7 +47,6 @@ func (ctl *ProductTemplateController) Get() {
 		ctl.GetList()
 	}
 	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
-	ctl.URL = "/product/template/"
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuProductTemplateActive"] = "active"
 }
@@ -123,43 +127,68 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 
 }
 func (ctl *ProductTemplateController) PostCreate() {
-
+	result := make(map[string]interface{})
 	template := new(md.ProductTemplate)
 	if err := ctl.ParseForm(template); err == nil {
+		// 获得struct表名
+		structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
+		fmt.Println(structName)
 
+		if template.CategoryID != 0 {
+			template.Category, _ = md.GetProductCategoryByID(template.CategoryID)
+		}
+		if template.FirstSaleUomID != 0 {
+			template.FirstSaleUom, _ = md.GetProductUomByID(template.FirstSaleUomID)
+		}
+		if template.SecondSaleUomID != 0 {
+			template.SecondSaleUom, _ = md.GetProductUomByID(template.SecondSaleUomID)
+		}
+		if template.FirstPurchaseUomID != 0 {
+			template.FirstPurchaseUom, _ = md.GetProductUomByID(template.FirstPurchaseUomID)
+		}
+		if template.SecondPurchaseUomID != 0 {
+			template.SecondPurchaseUom, _ = md.GetProductUomByID(template.SecondPurchaseUomID)
+		}
 		if id, err := md.AddProductTemplate(template); err == nil {
-			ctl.Redirect("/product/tempalte/"+strconv.FormatInt(id, 10)+"?action=detail", 302)
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+
 		} else {
-			ctl.Get()
+			result["code"] = "failed"
+			result["debug"] = err.Error()
 		}
 	} else {
-		ctl.Get()
+		result["code"] = "failed"
+		result["debug"] = err.Error()
 	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 }
 func (ctl *ProductTemplateController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
+	fmt.Println(id)
 	templateInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if template, err := md.GetProductTemplateByID(idInt64); err == nil {
 				ctl.PageAction = template.Name
-				templateInfo["name"] = template.Name
-				templateInfo["defaultCode"] = template.DefaultCode
-				templateInfo["standardPrice"] = template.DefaultCode
-				templateInfo["sequence"] = template.Sequence
-				templateInfo["description"] = template.Description
-				templateInfo["descriptioPurchase"] = template.DescriptioPurchase
-				templateInfo["descriptioSale"] = template.DescriptioSale
-				templateInfo["productType"] = template.ProductType
-				templateInfo["productMethod"] = template.ProductMethod
+				templateInfo["Name"] = template.Name
+				templateInfo["DefaultCode"] = template.DefaultCode
+				templateInfo["StandardPrice"] = template.StandardPrice
+				templateInfo["Sequence"] = template.Sequence
+				templateInfo["Description"] = template.Description
+				templateInfo["DescriptioPurchase"] = template.DescriptioPurchase
+				templateInfo["DescriptioSale"] = template.DescriptioSale
+				templateInfo["ProductType"] = template.ProductType
+				templateInfo["ProductMethod"] = template.ProductMethod
 				// 款式类别
-				categ := template.Categ
+				categ := template.Category
 				categValues := make(map[string]string)
 				if categ != nil {
 					categValues["id"] = strconv.FormatInt(categ.ID, 10)
 					categValues["name"] = categ.Name
 				}
-				templateInfo["category"] = categValues
+				templateInfo["Category"] = categValues
 				// 销售第一单位
 				firstSaleUom := template.FirstSaleUom
 				firstSaleUomValues := make(map[string]string)
@@ -167,7 +196,7 @@ func (ctl *ProductTemplateController) Edit() {
 					firstSaleUomValues["id"] = strconv.FormatInt(firstSaleUom.ID, 10)
 					firstSaleUomValues["name"] = firstSaleUom.Name
 				}
-				templateInfo["firstSaleUom"] = firstSaleUomValues
+				templateInfo["FirstSaleUom"] = firstSaleUomValues
 				// 销售第二单位
 				secondSaleUom := template.SecondSaleUom
 				secondSaleUomValues := make(map[string]string)
@@ -175,7 +204,7 @@ func (ctl *ProductTemplateController) Edit() {
 					secondSaleUomValues["id"] = strconv.FormatInt(secondSaleUom.ID, 10)
 					secondSaleUomValues["name"] = secondSaleUom.Name
 				}
-				templateInfo["secondSaleUom"] = secondSaleUomValues
+				templateInfo["SecondSaleUom"] = secondSaleUomValues
 				// 采购第一单位
 				firstPurchaseUom := template.FirstPurchaseUom
 				firstPurchaseUomValues := make(map[string]string)
@@ -183,7 +212,7 @@ func (ctl *ProductTemplateController) Edit() {
 					firstPurchaseUomValues["id"] = strconv.FormatInt(firstPurchaseUom.ID, 10)
 					firstPurchaseUomValues["name"] = firstPurchaseUom.Name
 				}
-				templateInfo["firstPurchaseUom"] = firstSaleUomValues
+				templateInfo["FirstPurchaseUom"] = firstSaleUomValues
 				// 采购第二单位
 				secondPurchaseUom := template.SecondPurchaseUom
 				secondPurchaseUomValues := make(map[string]string)
@@ -191,7 +220,7 @@ func (ctl *ProductTemplateController) Edit() {
 					secondPurchaseUomValues["id"] = strconv.FormatInt(secondPurchaseUom.ID, 10)
 					secondPurchaseUomValues["name"] = secondPurchaseUom.Name
 				}
-				templateInfo["secondPurchaseUom"] = secondPurchaseUomValues
+				templateInfo["SecondPurchaseUom"] = secondPurchaseUomValues
 			}
 		}
 	}
@@ -219,8 +248,7 @@ func (ctl *ProductTemplateController) Create() {
 }
 
 func (ctl *ProductTemplateController) Validator() {
-	name := ctl.GetString("name")
-	name = strings.TrimSpace(name)
+	name := strings.TrimSpace(ctl.GetString("Name"))
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
 	obj, err := md.GetProductTemplateByName(name)
@@ -229,12 +257,15 @@ func (ctl *ProductTemplateController) Validator() {
 	} else {
 		if obj.Name == name {
 			if recordID == obj.ID {
+				fmt.Println("enter2")
+
 				result["valid"] = true
 			} else {
 				result["valid"] = false
 			}
 
 		} else {
+			fmt.Println("enter3")
 			result["valid"] = true
 		}
 
@@ -259,6 +290,12 @@ func (ctl *ProductTemplateController) productTemplateList(query map[string]strin
 			oneLine["sequence"] = line.Sequence
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			oneLine["defaultCode"] = line.DefaultCode
+			category := line.Category
+			if category != nil {
+				oneLine["category"] = category.Name
+			}
+			oneLine["variantCount"] = line.VariantCount
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

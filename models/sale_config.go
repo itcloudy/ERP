@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,9 +13,14 @@ import (
 
 // SaleConfig 销售设置
 type SaleConfig struct {
-	Base
-	Name    string   `orm:"unique"`
-	Company *Company `orm:"rel(fk)"` //公司
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string    `orm:"unique"`
+	Company    *Company  `orm:"rel(fk)"` //公司
 }
 
 func init() {
@@ -34,7 +40,7 @@ func AddSaleConfig(obj *SaleConfig) (id int64, err error) {
 // ID doesn't exist
 func GetSaleConfigByID(id int64) (obj *SaleConfig, err error) {
 	o := orm.NewOrm()
-	obj = &SaleConfig{Base: Base{ID: id}}
+	obj = &SaleConfig{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -125,7 +131,7 @@ func GetAllSaleConfig(query map[string]string, fields []string, sortby []string,
 // the record to be updated doesn't exist
 func UpdateSaleConfigByID(m *SaleConfig) (err error) {
 	o := orm.NewOrm()
-	v := SaleConfig{Base: Base{ID: m.ID}}
+	v := SaleConfig{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -140,11 +146,11 @@ func UpdateSaleConfigByID(m *SaleConfig) (err error) {
 // the record to be deleted doesn't exist
 func DeleteSaleConfig(id int64) (err error) {
 	o := orm.NewOrm()
-	v := SaleConfig{Base: Base{ID: id}}
+	v := SaleConfig{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&SaleConfig{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&SaleConfig{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

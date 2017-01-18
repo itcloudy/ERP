@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,11 +13,16 @@ import (
 
 //ProductAttribute 产品属性
 type ProductAttribute struct {
-	Base
-	Name           string                   `orm:"unique" form:"name"`        //产品属性名称
-	Code           string                   `orm:"default(\"\")" form:"code"` //产品属性编码
-	Sequence       int32                    `form:"sequence"`                 //序列
-	ValueIDs       []*ProductAttributeValue `orm:"reverse(many)"`             //属性值
+	ID             int64                    `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser     *User                    `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser     *User                    `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate     time.Time                `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate     time.Time                `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction     string                   `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name           string                   `orm:"unique" form:"name"`                   //产品属性名称
+	Code           string                   `orm:"default(\"\")" form:"code"`            //产品属性编码
+	Sequence       int32                    `form:"sequence"`                            //序列
+	ValueIDs       []*ProductAttributeValue `orm:"reverse(many)"`                        //属性值
 	AttributeLines []*ProductAttributeLine  `orm:"reverse(many)"`
 }
 
@@ -36,7 +42,7 @@ func AddProductAttribute(obj *ProductAttribute) (id int64, err error) {
 // ID doesn't exist
 func GetProductAttributeByID(id int64) (obj *ProductAttribute, err error) {
 	o := orm.NewOrm()
-	obj = &ProductAttribute{Base: Base{ID: id}}
+	obj = &ProductAttribute{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -136,7 +142,7 @@ func GetAllProductAttribute(query map[string]interface{}, exclude map[string]int
 // the record to be updated doesn't exist
 func UpdateProductAttributeByID(m *ProductAttribute) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttribute{Base: Base{ID: m.ID}}
+	v := ProductAttribute{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -151,11 +157,11 @@ func UpdateProductAttributeByID(m *ProductAttribute) (err error) {
 // the record to be deleted doesn't exist
 func DeleteProductAttribute(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttribute{Base: Base{ID: id}}
+	v := ProductAttribute{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductAttribute{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductAttribute{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

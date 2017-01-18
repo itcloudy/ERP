@@ -5,15 +5,21 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // AddressCountry 国家
 type AddressCountry struct {
-	Base
-	Name      string             `orm:"size(50)" xml:"name"` //国家名称
-	Provinces []*AddressProvince `orm:"reverse(many)"`       //省份
+	ID         int64              `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User              `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User              `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time          `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time          `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string             `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string             `orm:"size(50)" xml:"name"`                  //国家名称
+	Provinces  []*AddressProvince `orm:"reverse(many)"`                        //省份
 }
 
 func init() {
@@ -32,7 +38,7 @@ func AddAddressCountry(obj *AddressCountry) (id int64, err error) {
 // ID doesn't exist
 func GetAddressCountryByID(id int64) (obj *AddressCountry, err error) {
 	o := orm.NewOrm()
-	obj = &AddressCountry{Base: Base{ID: id}}
+	obj = &AddressCountry{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -121,7 +127,7 @@ func GetAllAddressCountry(query map[string]string, fields []string, sortby []str
 // the record to be updated doesn't exist
 func UpdateAddressCountryByID(m *AddressCountry) (err error) {
 	o := orm.NewOrm()
-	v := AddressCountry{Base: Base{ID: m.ID}}
+	v := AddressCountry{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -136,11 +142,11 @@ func UpdateAddressCountryByID(m *AddressCountry) (err error) {
 // the record to be deleted doesn't exist
 func DeleteAddressCountry(id int64) (err error) {
 	o := orm.NewOrm()
-	v := AddressCountry{Base: Base{ID: id}}
+	v := AddressCountry{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&AddressCountry{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&AddressCountry{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,9 +13,14 @@ import (
 
 //ProductUomCateg 产品单位类别
 type ProductUomCateg struct {
-	Base
-	Name string        `orm:"unique" form:"name"` //计量单位分类
-	Uoms []*ProductUom `orm:"reverse(many)"`      //计量单位
+	ID         int64         `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User         `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User         `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time     `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time     `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string        `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string        `orm:"unique" form:"name"`                   //计量单位分类
+	Uoms       []*ProductUom `orm:"reverse(many)"`                        //计量单位
 }
 
 func init() {
@@ -34,7 +40,7 @@ func AddProductUomCateg(obj *ProductUomCateg) (id int64, err error) {
 // ID doesn't exist
 func GetProductUomCategByID(id int64) (obj *ProductUomCateg, err error) {
 	o := orm.NewOrm()
-	obj = &ProductUomCateg{Base: Base{ID: id}}
+	obj = &ProductUomCateg{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -128,7 +134,7 @@ func GetAllProductUomCateg(query map[string]string, fields []string, sortby []st
 // the record to be updated doesn't exist
 func UpdateProductUomCategByID(m *ProductUomCateg) (err error) {
 	o := orm.NewOrm()
-	v := ProductUomCateg{Base: Base{ID: m.ID}}
+	v := ProductUomCateg{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -143,11 +149,11 @@ func UpdateProductUomCategByID(m *ProductUomCateg) (err error) {
 // the record to be deleted doesn't exist
 func DeleteProductUomCateg(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductUomCateg{Base: Base{ID: id}}
+	v := ProductUomCateg{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductUomCateg{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductUomCateg{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

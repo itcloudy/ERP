@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,10 +13,15 @@ import (
 
 // ProductCategory 产品分类
 type ProductCategory struct {
-	Base
-	Name           string             `orm:"unique" form:"name" json:"name"` //产品属性名称
-	Parent         *ProductCategory   `orm:"rel(fk);null"`                   //上级分类
-	Childs         []*ProductCategory `orm:"reverse(many)"`                  //下级分类
+	ID             int64              `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser     *User              `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser     *User              `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate     time.Time          `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate     time.Time          `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction     string             `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name           string             `orm:"unique" form:"name" json:"name"`       //产品属性名称
+	Parent         *ProductCategory   `orm:"rel(fk);null"`                         //上级分类
+	Childs         []*ProductCategory `orm:"reverse(many)"`                        //下级分类
 	Sequence       int64              //序列
 	ParentFullPath string             //上级全路径
 }
@@ -37,9 +43,11 @@ func AddProductCategory(obj *ProductCategory) (id int64, err error) {
 // ID doesn't exist
 func GetProductCategoryByID(id int64) (obj *ProductCategory, err error) {
 	o := orm.NewOrm()
-	obj = &ProductCategory{Base: Base{ID: id}}
+	obj = &ProductCategory{ID: id}
 	if err = o.Read(obj); err == nil {
-		o.Read(obj.Parent)
+		if obj.Parent != nil {
+			o.Read(obj.Parent)
+		}
 		return obj, nil
 	}
 	return nil, err
@@ -118,7 +126,7 @@ func GetAllProductCategory(query map[string]string, fields []string, sortby []st
 // the record to be updated doesn't exist
 func UpdateProductCategoryByID(m *ProductCategory) (err error) {
 	o := orm.NewOrm()
-	v := ProductCategory{Base: Base{ID: m.ID}}
+	v := ProductCategory{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -144,11 +152,11 @@ func GetProductCategoryByName(name string) (obj *ProductCategory, err error) {
 // the record to be deleted doesn't exist
 func DeleteProductCategory(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductCategory{Base: Base{ID: id}}
+	v := ProductCategory{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductCategory{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductCategory{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

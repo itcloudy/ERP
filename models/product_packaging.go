@@ -5,13 +5,19 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // ProductPackaging 产品打包方式
 type ProductPackaging struct {
-	Base
+	ID              int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser      *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser      *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate      time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate      time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction      string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 	Name            string
 	sequence        int32            //序列号
 	ProductTemplate *ProductTemplate `orm:"rel(fk);null"` //产品款式
@@ -37,7 +43,7 @@ func AddProductPackaging(obj *ProductPackaging) (id int64, err error) {
 // ID doesn't exist
 func GetProductPackagingByID(id int64) (obj *ProductPackaging, err error) {
 	o := orm.NewOrm()
-	obj = &ProductPackaging{Base: Base{ID: id}}
+	obj = &ProductPackaging{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -127,7 +133,7 @@ func GetAllProductPackaging(query map[string]string, fields []string, sortby []s
 // the record to be updated doesn't exist
 func UpdateProductPackagingByID(m *ProductPackaging) (err error) {
 	o := orm.NewOrm()
-	v := ProductPackaging{Base: Base{ID: m.ID}}
+	v := ProductPackaging{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -142,11 +148,11 @@ func UpdateProductPackagingByID(m *ProductPackaging) (err error) {
 // the record to be deleted doesn't exist
 func DeleteProductPackaging(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductPackaging{Base: Base{ID: id}}
+	v := ProductPackaging{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductPackaging{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductPackaging{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

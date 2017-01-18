@@ -5,22 +5,28 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 //Company 公司
 type Company struct {
-	Base
-	Name       string           `orm:"unique" json:"name"`               //公司名称
-	Children   []*Company       `orm:"reverse(many)" json:"childs"`      //子公司
-	Parent     *Company         `orm:"rel(fk);null" json:"parent"`       //上级公司
-	Department []*Department    `orm:"reverse(many)" json:"departments"` //部门
-	Country    *AddressCountry  `orm:"rel(fk);null" json:"country"`      //国家
-	Province   *AddressProvince `orm:"rel(fk);null" json:"province"`     //身份
-	City       *AddressCity     `orm:"rel(fk);null" json:"city"`         //城市
-	District   *AddressDistrict `orm:"rel(fk);null" json:"district"`     //区县
-	Street     string           `orm:"default(\"\")" json:"street"`      //街道
+	ID         int64            `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User            `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string           `orm:"unique" json:"name"`                   //公司名称
+	Children   []*Company       `orm:"reverse(many)" json:"childs"`          //子公司
+	Parent     *Company         `orm:"rel(fk);null" json:"parent"`           //上级公司
+	Department []*Department    `orm:"reverse(many)" json:"departments"`     //部门
+	Country    *AddressCountry  `orm:"rel(fk);null" json:"country"`          //国家
+	Province   *AddressProvince `orm:"rel(fk);null" json:"province"`         //身份
+	City       *AddressCity     `orm:"rel(fk);null" json:"city"`             //城市
+	District   *AddressDistrict `orm:"rel(fk);null" json:"district"`         //区县
+	Street     string           `orm:"default(\"\")" json:"street"`          //街道
 }
 
 func init() {
@@ -39,7 +45,7 @@ func AddCompany(obj *Company) (id int64, err error) {
 // ID doesn't exist
 func GetCompanyByID(id int64) (obj *Company, err error) {
 	o := orm.NewOrm()
-	obj = &Company{Base: Base{ID: id}}
+	obj = &Company{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -130,7 +136,7 @@ func GetAllCompany(query map[string]string, fields []string, sortby []string, or
 // the record to be updated doesn't exist
 func UpdateCompanyByID(m *Company) (err error) {
 	o := orm.NewOrm()
-	v := Company{Base: Base{ID: m.ID}}
+	v := Company{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -145,11 +151,11 @@ func UpdateCompanyByID(m *Company) (err error) {
 // the record to be deleted doesn't exist
 func DeleteCompany(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Company{Base: Base{ID: id}}
+	v := Company{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Company{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&Company{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

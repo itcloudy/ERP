@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -12,7 +13,12 @@ import (
 // User table
 // 用户表
 type User struct {
-	Base
+	ID              int64       `orm:"column(id);pk;auto" json:"id"`                                               //主键
+	CreateUser      *User       `orm:"rel(fk);null" json:"-"`                                                 //创建者
+	UpdateUser      *User       `orm:"rel(fk);null" json:"-"`                                                 //最后更新者
+	CreateDate      time.Time   `orm:"auto_now_add;type(datetime)" json:"-"`                                  //创建时间
+	UpdateDate      time.Time   `orm:"auto_now;type(datetime)" json:"-"`                                      //最后更新时间
+	FormAction      string      `orm:"-" form:"FormAction"`                                                   //非数据库字段，用于表示记录的增加，修改
 	Name            string      `orm:"size(20)" xml:"name" form:"Name" json:"name"`                           //用户名
 	NameZh          string      `orm:"size(20)"  form:"NameZh" json:"namezh"`                                 //中文用户名
 	Department      *Department `orm:"rel(fk);null;"  json:"department"`                                      //部门
@@ -52,7 +58,7 @@ func AddUser(obj *User) (id int64, err error) {
 // ID doesn't exist
 func GetUserByID(id int64) (obj *User, err error) {
 	o := orm.NewOrm()
-	obj = &User{Base: Base{ID: id}}
+	obj = &User{ID: id}
 	if err = o.Read(obj); err == nil {
 		if obj.Department != nil {
 			o.Read(obj.Department)
@@ -156,7 +162,7 @@ func GetAllUser(query map[string]string, fields []string, sortby []string, order
 // the record to be updated doesn't exist
 func UpdateUserByID(m *User) (err error) {
 	o := orm.NewOrm()
-	v := User{Base: Base{ID: m.ID}}
+	v := User{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -171,11 +177,11 @@ func UpdateUserByID(m *User) (err error) {
 // the record to be deleted doesn't exist
 func DeleteUser(id int64) (err error) {
 	o := orm.NewOrm()
-	v := User{Base: Base{ID: id}}
+	v := User{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&User{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&User{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

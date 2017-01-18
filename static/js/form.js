@@ -1,18 +1,33 @@
 $(function() {
-
     // 保存事件处理
     $(".form-save-btn").on("click", function(e) {
-
-        var formData = {};
         var form = e.currentTarget.form;
+        var formNode = $('#' + form.id);
+        var formData = {
+            FormAction: "create"
+        };
+        var xsrf = $("input[name ='_xsrf']");
+        if (xsrf.length > 0) {
+            formData._xsrf = xsrf[0].value;
+        }
         // form表单验证
-        $('#' + form.id).bootstrapValidator('validate');
+        var bootstrapValidator = formNode.data('bootstrapValidator');
+        //手动触发验证
+        bootstrapValidator.validate();
+        // 验证结果
+        var formValid = bootstrapValidator.isValid();
+        if (!formValid) {
+            toastr.error("数据验证失败，请检查数据", "错误");
+            return;
+        }
         //    获得form直接的字段
         var formFields = $(form).find(".form-create,.form-edit");
-        console.log(formFields);
+        if ($(form).find("input[name='recordID']").length > 0) {
+            form.FormAction = "update";
+        }
         for (var i = 0, len = formFields.length; i < len; i++) {
-            // 处理radio数据
             var self = formFields[i];
+            // 处理radio数据
             if (self.type == "radio") {
                 if ($(self).hasClass("checked")) {
                     formData[self.name] = $(self).val();
@@ -28,9 +43,47 @@ $(function() {
                 }
             }
         }
-        // console.log(formData);
+        //获得form-tree-create信息
+        var formTreeFields = $(form).find(".form-tree-line-create");
+        for (var i = 0, lineLen = formTreeFields.length; i < lineLen; i++) {
+            console.log(lineLen);
+            var self = formTreeFields[i];
+            var treeName = $(self).data("treename");
+            console.log(formData[treeName]);
+            if (formData[treeName] == undefined); {
+                formData[treeName] = [];
+            }
+            var treeArray = [];
+            var cellFields = $(self).find(".form-tree-create");
+            var cellData = {
+                FormAction: "create"
+            };
+            var hasProp = false;
+            for (var j = 0, cellLen = cellFields.length; j < cellLen; j++) {
+                var cell = cellFields[j];
+                var cellName = cell.name;
+                var cellValue = $(cell).val();
+                if (cellValue != null) {
+                    cellData[cellName] = cellValue;
+                    hasProp = true;
+                }
+            }
+            if (hasProp) {
+                console.log(cellData);
+                treeArray = treeArray.push(cellData);
+            }
+        }
+        console.log(formData);
+        $.post(form.action, formData).success(function(response) {
+            if (response.code == 'failed') {
+                toastr.error("创建失败", "错误");
+                return;
+            } else {
+                toastr.success("创建成功");
+                // window.location = response.location;
+            }
+        });
         e.preventDefault();
-
     });
     //文件导入
     $('#import-file-excel').fileinput({

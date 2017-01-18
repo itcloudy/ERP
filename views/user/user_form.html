@@ -13,7 +13,7 @@
         <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
     </div>
     {{ .xsrf }} {{if .RecordID}}
-    <input type="hidden" name="_recordID" id="record-id" value="{{.RecordID}}">
+    <input type="hidden" name="recordID" id="record-id" value="{{.RecordID}}">
     <input type="hidden" name="_method" value="PUT"> {{end}}
     <fieldset>
         <legend>基本信息</legend>
@@ -87,8 +87,8 @@
                 <div class="form-group">
                     <label for="Wechat" class="col-md-4 control-label">微信</label>
                     <div class="col-md-8">
-                        <p class="p-form-control"> {{.User.Wechat}} </p>
-                        <input class="form-control" name="Wechat" id="wechat" data-oldValue="{{.User.Wechat}}" type="text" value="{{.User.Wechat}}" />
+                        <p class="p-form-control"> {{.User.WeChat}} </p>
+                        <input class="form-control" name="WeChat" id="wechat" data-oldValue="{{.User.WeChat}}" type="text" value="{{.User.WeChat}}" />
                     </div>
                 </div>
 
@@ -103,9 +103,9 @@
                     <label for="Department" class="col-md-4 control-label label-start">部门<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{if .User}} {{if .User.Department}} {{.User.Department.Name}}{{end}} {{end}}</p>
-                        <select aria-hidden="true" name="Department" id="department" class="form-control select-department " {{if .User}} {{if .User.Department}} data-default-id="{{.User.Department.Id}}" data-default-name="{{.User.Department.Name}}" {{end}} {{end}}>
+                        <select aria-hidden="true" name="Department" id="department" class="form-control select-department " {{if .User}} {{if .User.Department}} data-default-id="{{.User.Department.ID}}" data-default-name="{{.User.Department.Name}}" {{end}} {{end}}>
                             <!--option不能删除用于bootstrapValidator验证-->
-                            <option value="{{.User.Department.Id}}" selected="selected">{{.User.Department.Name}}</option>
+                            <option value="{{if .User.Department}}{{.User.Department.ID}}{{end}}" selected="selected">{{if .User.Department}}{{.User.Department.Name}}{{end}}</option>
                         </select>
                     </div>
                 </div>
@@ -117,9 +117,9 @@
                     <label for="position" class="col-md-4 control-label label-start">职位<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{if .User}} {{if .User.Position}} {{.User.Position.Name}}{{end}} {{end}}</p>
-                        <select name="Position" id="position" class="form-control select-position" {{if .User}} {{if .User.Position}} data-default-id="{{.User.Position.Id}}" data-default-name="{{.User.Position.Name}}" {{end}} {{end}}>
+                        <select name="Position" id="position" class="form-control select-position" {{if .User}} {{if .User.Position}} data-default-id="{{.User.Position.ID}}" data-default-name="{{.User.Position.Name}}" {{end}} {{end}}>
                             <!--option不能删除用于bootstrapValidator验证-->
-                            <option value="{{.User.Position.Id}}" selected="selected">{{.User.Position.Name}}</option>
+                            <option value="{{if .User.Position}}{{.User.Position.ID}}{{end}}" selected="selected">{{if .User.Position}}{{.User.Position.Name}}{{end}}</option>
                         </select>
                     </div>
                 </div>

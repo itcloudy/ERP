@@ -5,18 +5,24 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 //Group 权限组
 type Group struct {
-	Base
-	Name          string  `orm:"unique" xml:"name"` //组名称
-	Members       []*User `orm:"reverse(many)"`     //组员
-	GlobalLoation string  `orm:"unique" `           //全局定位
-	Active        bool    `orm:"default(true)"`     //是否有效
-	Description   string  `orm:"default(\"\")"`     //描述
+	ID            int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser    *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser    *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate    time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate    time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction    string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name          string    `orm:"unique" xml:"name"`                    //组名称
+	Members       []*User   `orm:"reverse(many)"`                        //组员
+	GlobalLoation string    `orm:"unique" `                              //全局定位
+	Active        bool      `orm:"default(true)"`                        //是否有效
+	Description   string    `orm:"default(\"\")"`                        //描述
 }
 
 func init() {
@@ -35,7 +41,7 @@ func AddGroup(obj *Group) (id int64, err error) {
 // ID doesn't exist
 func GetGroupByID(id int64) (obj *Group, err error) {
 	o := orm.NewOrm()
-	obj = &Group{Base: Base{ID: id}}
+	obj = &Group{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -126,7 +132,7 @@ func GetAllGroup(query map[string]string, fields []string, sortby []string, orde
 // the record to be updated doesn't exist
 func UpdateGroupByID(m *Group) (err error) {
 	o := orm.NewOrm()
-	v := Group{Base: Base{ID: m.ID}}
+	v := Group{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -141,11 +147,11 @@ func UpdateGroupByID(m *Group) (err error) {
 // the record to be deleted doesn't exist
 func DeleteGroup(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Group{Base: Base{ID: id}}
+	v := Group{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Group{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&Group{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

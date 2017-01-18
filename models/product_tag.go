@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,10 +13,15 @@ import (
 
 //ProductTag  产品标签
 type ProductTag struct {
-	Base
-	Name     string            `orm:"size(20);unique"`        //产品标签名称
-	Type     string            `orm:"size(20);default(\"\")"` //标签类型，前端显示采用select
-	Products []*ProductProduct `orm:"rel(m2m)"`               //产品规格
+	ID         int64             `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User             `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User             `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time         `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time         `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string            `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string            `orm:"size(20);unique"`                      //产品标签名称
+	Type       string            `orm:"size(20);default(\"\")"`               //标签类型，前端显示采用select
+	Products   []*ProductProduct `orm:"rel(m2m)"`                             //产品规格
 }
 
 func init() {
@@ -35,7 +41,7 @@ func AddProductTag(obj *ProductTag) (id int64, err error) {
 // ID doesn't exist
 func GetProductTagByID(id int64) (obj *ProductTag, err error) {
 	o := orm.NewOrm()
-	obj = &ProductTag{Base: Base{ID: id}}
+	obj = &ProductTag{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -115,7 +121,7 @@ func GetAllProductTag(query map[string]string, fields []string, sortby []string,
 // the record to be updated doesn't exist
 func UpdateProductTagByID(m *ProductTag) (err error) {
 	o := orm.NewOrm()
-	v := ProductTag{Base: Base{ID: m.ID}}
+	v := ProductTag{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -141,11 +147,11 @@ func GetProductTagByName(name string) (obj *ProductTag, err error) {
 // the record to be deleted doesn't exist
 func DeleteProductTag(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductTag{Base: Base{ID: id}}
+	v := ProductTag{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductTag{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductTag{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

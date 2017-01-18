@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,35 +13,46 @@ import (
 
 //ProductTemplate 产品款式
 type ProductTemplate struct {
-	Base
-	Name               string                  `orm:"unique"` //产品属性名称
-	Sequence           int32                   //序列号
-	Description        string                  `orm:"type(text);null"` //描述
-	DescriptioSale     string                  `orm:"type(text);null"` //销售描述
-	DescriptioPurchase string                  `orm:"type(text);null"` //采购描述
-	Rental             bool                    `orm:"default(false)"`  //代售品
-	Category           *ProductCategory        `orm:"rel(fk)"`         //产品类别
-	Price              float64                 //模版产品价格
-	StandardPrice      float64                 //成本价格
-	SaleOk             bool                    `orm:"default(true)"` //可销售
-	Active             bool                    `orm:"default(true)"` //有效
-	IsProductVariant   bool                    `orm:"default(true)"` //是变形产品
-	FirstSaleUom       *ProductUom             `orm:"rel(fk)"`       //第一销售单位
-	SecondSaleUom      *ProductUom             `orm:"rel(fk)"`       //第二销售单位
-	FirstPurchaseUom   *ProductUom             `orm:"rel(fk)"`       //第一采购单位
-	SecondPurchaseUom  *ProductUom             `orm:"rel(fk)"`       //第二采购单位
-	AttributeLines     []*ProductAttributeLine `orm:"reverse(many)"` //属性明细
-	AttributeLineIds   []int64                 `orm:"-"`
-	ProductVariants    []*ProductProduct       `orm:"reverse(many)"` //产品规格明细
-	TemplatePackagings []*ProductPackaging     `orm:"reverse(many)"` //打包方式
-	VariantCount       int32                   //产品规格数量
-	Barcode            string                  //条码,如ean13
-	DefaultCode        string                  //产品编码
-	ProductType        string                  `orm:"default(\"stock\")"` //产品类型
-	ProductMethod      string                  `orm:"default(\"hand\")"`  //产品规格创建方式
-	// ProductPricelistItems []*ProductPricelistItem `orm:"reverse(many)"`
-	PackagingDependTemp bool `orm:"default(true)"` //根据款式打包
-	PurchaseDependTemp  bool `orm:"default(true)"` //根据款式采购，ture一个供应商可以供应所有的款式
+	ID                  int64                   `orm:"column(id);pk;auto" json:"id" form:"-"` //主键
+	CreateUser          *User                   `orm:"rel(fk);null" json:"-"`                 //创建者
+	UpdateUser          *User                   `orm:"rel(fk);null" json:"-"`                 //最后更新者
+	CreateDate          time.Time               `orm:"auto_now_add;type(datetime)" json:"-"`  //创建时间
+	UpdateDate          time.Time               `orm:"auto_now;type(datetime)" json:"-"`      //最后更新时间
+	Name                string                  `orm:"unique"`                                //产品属性名称
+	Sequence            int32                   `form:"Sequence"`                             //序列号
+	Description         string                  `orm:"type(text);null"`                       //描述
+	DescriptioSale      string                  `orm:"type(text);null"`                       //销售描述
+	DescriptioPurchase  string                  `orm:"type(text);null"`                       //采购描述
+	Rental              bool                    `orm:"default(false)"`                        //代售品
+	Category            *ProductCategory        `orm:"rel(fk)"`                               //产品类别
+	Price               float64                 `form:"Price"`                                //模版产品价格
+	StandardPrice       float64                 `form:"StandardPrice"`                        //成本价格
+	SaleOk              bool                    `orm:"default(true)"`                         //可销售
+	Active              bool                    `orm:"default(true)"`                         //有效
+	IsProductVariant    bool                    `orm:"default(true)"`                         //是变形产品
+	FirstSaleUom        *ProductUom             `orm:"rel(fk)"`                               //第一销售单位
+	SecondSaleUom       *ProductUom             `orm:"rel(fk);null"`                          //第二销售单位
+	FirstPurchaseUom    *ProductUom             `orm:"rel(fk)"`                               //第一采购单位
+	SecondPurchaseUom   *ProductUom             `orm:"rel(fk);null"`                          //第二采购单位
+	AttributeLines      []*ProductAttributeLine `orm:"reverse(many)"`                         //属性明细
+	ProductVariants     []*ProductProduct       `orm:"reverse(many)"`                         //产品规格明细
+	TemplatePackagings  []*ProductPackaging     `orm:"reverse(many)"`                         //打包方式
+	VariantCount        int32                   `form:"VariantCount"`                         //产品规格数量
+	Barcode             string                  `form:"Barcode"`                              //条码,如ean13
+	DefaultCode         string                  `form:"DefaultCode"`                          //产品编码
+	ProductType         string                  `orm:"default(\"stock\")"`                    //产品类型
+	ProductMethod       string                  `orm:"default(\"hand\")"`                     //产品规格创建方式
+	PackagingDependTemp bool                    `orm:"default(true)"`                         //根据款式打包
+	PurchaseDependTemp  bool                    `orm:"default(true)"`                         //根据款式采购，ture一个供应商可以供应所有的款式
+
+	// form表单使用字段
+	FormAction            string                  `orm:"-" form:"FormAction"`        //表单动作
+	CategoryID            int64                   `orm:"-" form:"Category"`          //产品类别
+	FirstSaleUomID        int64                   `orm:"-" form:"FirstSaleUom"`      //第一销售单位form
+	SecondSaleUomID       int64                   `orm:"-" form:"SecondSaleUom"`     //第二销售单位form
+	FirstPurchaseUomID    int64                   `orm:"-" form:"FirstPurchaseUom"`  //第一采购单位form
+	SecondPurchaseUomID   int64                   `orm:"-" form:"SecondPurchaseUom"` //第二采购单位form
+	ProductAttributeLines []*ProductAttributeLine `orm:"-" form:"ProductAttributes"`
 }
 
 func init() {
@@ -59,8 +71,23 @@ func AddProductTemplate(obj *ProductTemplate) (id int64, err error) {
 // ID doesn't exist
 func GetProductTemplateByID(id int64) (obj *ProductTemplate, err error) {
 	o := orm.NewOrm()
-	obj = &ProductTemplate{Base: Base{ID: id}}
+	obj = &ProductTemplate{ID: id}
 	if err = o.Read(obj); err == nil {
+		if obj.Category != nil {
+			o.Read(obj.Category)
+		}
+		if obj.FirstSaleUom != nil {
+			o.Read(obj.FirstSaleUom)
+		}
+		if obj.FirstPurchaseUom != nil {
+			o.Read(obj.FirstPurchaseUom)
+		}
+		if obj.SecondSaleUom != nil {
+			o.Read(obj.SecondSaleUom)
+		}
+		if obj.SecondPurchaseUom != nil {
+			o.Read(obj.SecondPurchaseUom)
+		}
 		return obj, nil
 	}
 	return nil, err
@@ -68,13 +95,15 @@ func GetProductTemplateByID(id int64) (obj *ProductTemplate, err error) {
 
 // GetProductTemplateByName retrieves ProductTemplate by Name. Returns error if
 // Name doesn't exist
-func GetProductTemplateByName(name string) (obj *ProductTemplate, err error) {
+func GetProductTemplateByName(name string) (*ProductTemplate, error) {
 	o := orm.NewOrm()
-	obj = &ProductTemplate{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
+	var obj ProductTemplate
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }
 
 // GetAllProductTemplate retrieves all ProductTemplate matches certain condition. Returns empty list if
@@ -142,6 +171,12 @@ func GetAllProductTemplate(query map[string]string, fields []string, sortby []st
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
+	for i, _ := range objArrs {
+		o.LoadRelated(&objArrs[i], "Category")
+		o.LoadRelated(&objArrs[i], "FirstSaleUom")
+		// o.LoadRelated(&objArrs[i], "FirstPurchaseUom")
+
+	}
 	return paginator, objArrs, err
 }
 
@@ -149,7 +184,7 @@ func GetAllProductTemplate(query map[string]string, fields []string, sortby []st
 // the record to be updated doesn't exist
 func UpdateProductTemplateByID(m *ProductTemplate) (err error) {
 	o := orm.NewOrm()
-	v := ProductTemplate{Base: Base{ID: m.ID}}
+	v := ProductTemplate{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -164,11 +199,11 @@ func UpdateProductTemplateByID(m *ProductTemplate) (err error) {
 // the record to be deleted doesn't exist
 func DeleteProductTemplate(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductTemplate{Base: Base{ID: id}}
+	v := ProductTemplate{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductTemplate{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductTemplate{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,18 +13,23 @@ import (
 
 // PurchaseOrder 产品分类
 type PurchaseOrder struct {
-	Base
-	Name      string           `orm:"unique" json:"name"`           //订单号
-	Partner   *Partner         `orm:"rel(fk)"`                      //客户
-	PurchasesMan  *User            `orm:"rel(fk)"`                      //业务员
-	Company   *Company         `orm:"rel(fk)"`                      //公司
-	Country   *AddressCountry  `orm:"rel(fk);null" json:"country"`  //国家
-	Province  *AddressProvince `orm:"rel(fk);null" json:"province"` //身份
-	City      *AddressCity     `orm:"rel(fk);null" json:"city"`     //城市
-	District  *AddressDistrict `orm:"rel(fk);null" json:"district"` //区县
-	Street    string           `orm:"default(\"\")" json:"street"`  //街道
-	OrderLine []*PurchaseOrderLine `orm:"reverse(many)"`                //订单明细
-	State     *PurchaseOrderState  `orm:"rel(fk)"`                      //订单状态
+	ID           int64                `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser   *User                `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser   *User                `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate   time.Time            `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate   time.Time            `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction   string               `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name         string               `orm:"unique" json:"name"`                   //订单号
+	Partner      *Partner             `orm:"rel(fk)"`                              //客户
+	PurchasesMan *User                `orm:"rel(fk)"`                              //业务员
+	Company      *Company             `orm:"rel(fk)"`                              //公司
+	Country      *AddressCountry      `orm:"rel(fk);null" json:"country"`          //国家
+	Province     *AddressProvince     `orm:"rel(fk);null" json:"province"`         //身份
+	City         *AddressCity         `orm:"rel(fk);null" json:"city"`             //城市
+	District     *AddressDistrict     `orm:"rel(fk);null" json:"district"`         //区县
+	Street       string               `orm:"default(\"\")" json:"street"`          //街道
+	OrderLine    []*PurchaseOrderLine `orm:"reverse(many)"`                        //订单明细
+	State        *PurchaseOrderState  `orm:"rel(fk)"`                              //订单状态
 }
 
 func init() {
@@ -43,7 +49,7 @@ func AddPurchaseOrder(obj *PurchaseOrder) (id int64, err error) {
 // ID doesn't exist
 func GetPurchaseOrderByID(id int64) (obj *PurchaseOrder, err error) {
 	o := orm.NewOrm()
-	obj = &PurchaseOrder{Base: Base{ID: id}}
+	obj = &PurchaseOrder{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -123,7 +129,7 @@ func GetAllPurchaseOrder(query map[string]string, fields []string, sortby []stri
 // the record to be updated doesn't exist
 func UpdatePurchaseOrderByID(m *PurchaseOrder) (err error) {
 	o := orm.NewOrm()
-	v := PurchaseOrder{Base: Base{ID: m.ID}}
+	v := PurchaseOrder{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -149,11 +155,11 @@ func GetPurchaseOrderByName(name string) (obj *PurchaseOrder, err error) {
 // the record to be deleted doesn't exist
 func DeletePurchaseOrder(id int64) (err error) {
 	o := orm.NewOrm()
-	v := PurchaseOrder{Base: Base{ID: id}}
+	v := PurchaseOrder{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&PurchaseOrder{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&PurchaseOrder{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

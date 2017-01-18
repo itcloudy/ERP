@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,8 +13,13 @@ import (
 
 // PurchaseOrderState 订单状态
 type PurchaseOrderState struct {
-	Base
-	Name string `orm:"default(\"\")" json:"name"` //状态名称
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string    `orm:"default(\"\")" json:"name"`            //状态名称
 
 }
 
@@ -34,7 +40,7 @@ func AddPurchaseOrderState(obj *PurchaseOrderState) (id int64, err error) {
 // ID doesn't exist
 func GetPurchaseOrderStateByID(id int64) (obj *PurchaseOrderState, err error) {
 	o := orm.NewOrm()
-	obj = &PurchaseOrderState{Base: Base{ID: id}}
+	obj = &PurchaseOrderState{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -114,7 +120,7 @@ func GetAllPurchaseOrderState(query map[string]string, fields []string, sortby [
 // the record to be updated doesn't exist
 func UpdatePurchaseOrderStateByID(m *PurchaseOrderState) (err error) {
 	o := orm.NewOrm()
-	v := PurchaseOrderState{Base: Base{ID: m.ID}}
+	v := PurchaseOrderState{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -140,11 +146,11 @@ func GetPurchaseOrderStateByName(name string) (obj *PurchaseOrderState, err erro
 // the record to be deleted doesn't exist
 func DeletePurchaseOrderState(id int64) (err error) {
 	o := orm.NewOrm()
-	v := PurchaseOrderState{Base: Base{ID: id}}
+	v := PurchaseOrderState{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&PurchaseOrderState{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&PurchaseOrderState{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

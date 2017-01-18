@@ -5,18 +5,24 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 //Department 部门
 type Department struct {
-	Base
-	Name    string      `orm:"unique"`        //团队名称
-	Leader  *User       `orm:"rel(fk);null"`  //团队领导者
-	Parent  *Department `orm:"rel(fk);null"`  //上级分类
-	Members []*User     `orm:"reverse(many)"` //组员
-	Company *Company    `orm:"rel(fk);null"`  //公司
+	ID         int64       `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User       `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User       `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time   `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time   `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string      `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string      `orm:"unique"`                               //团队名称
+	Leader     *User       `orm:"rel(fk);null"`                         //团队领导者
+	Parent     *Department `orm:"rel(fk);null"`                         //上级分类
+	Members    []*User     `orm:"reverse(many)"`                        //组员
+	Company    *Company    `orm:"rel(fk);null"`                         //公司
 }
 
 func init() {
@@ -35,7 +41,7 @@ func AddDepartment(obj *Department) (id int64, err error) {
 // ID doesn't exist
 func GetDepartmentByID(id int64) (obj *Department, err error) {
 	o := orm.NewOrm()
-	obj = &Department{Base: Base{ID: id}}
+	obj = &Department{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -126,7 +132,7 @@ func GetAllDepartment(query map[string]string, fields []string, sortby []string,
 // the record to be updated doesn't exist
 func UpdateDepartmentByID(m *Department) (err error) {
 	o := orm.NewOrm()
-	v := Department{Base: Base{ID: m.ID}}
+	v := Department{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -141,11 +147,11 @@ func UpdateDepartmentByID(m *Department) (err error) {
 // the record to be deleted doesn't exist
 func DeleteDepartment(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Department{Base: Base{ID: id}}
+	v := Department{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Department{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&Department{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

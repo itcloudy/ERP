@@ -5,15 +5,21 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 //TemplateFile 模版文件
 type TemplateFile struct {
-	Base
-	Name string //模版名称
-	Desc string //描述
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string    //模版名称
+	Desc       string    //描述
 }
 
 func init() {
@@ -33,7 +39,7 @@ func AddTemplateFile(obj *TemplateFile) (id int64, err error) {
 // ID doesn't exist
 func GetTemplateFileByID(id int64) (obj *TemplateFile, err error) {
 	o := orm.NewOrm()
-	obj = &TemplateFile{Base: Base{ID: id}}
+	obj = &TemplateFile{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -136,7 +142,7 @@ func GetAllTemplateFile(query map[string]string, fields []string, sortby []strin
 // the record to be updated doesn't exist
 func UpdateTemplateFileByID(m *TemplateFile) error {
 	o := orm.NewOrm()
-	v := TemplateFile{Base: Base{ID: m.ID}}
+	v := TemplateFile{ID: m.ID}
 	var err error
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
@@ -149,11 +155,11 @@ func UpdateTemplateFileByID(m *TemplateFile) error {
 // the record to be deleted doesn't exist
 func DeleteTemplateFile(id int64) (err error) {
 	o := orm.NewOrm()
-	v := TemplateFile{Base: Base{ID: id}}
+	v := TemplateFile{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&TemplateFile{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&TemplateFile{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

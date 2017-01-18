@@ -3,15 +3,15 @@ $(function() {
     // 产品款式增加属性
     $("#add-one-product-template-attribute").on('click', function(e) {
 
-        var AttributeLineId = "AttributeLineId-" + e.timeStamp;
-        var AttributeLineValueId = "AttributeLineValueId-" + e.timeStamp;
-        var appendHTML = "<tr data-tree='productAttributes' class='product-template-attribute-line form-tree-create'>" +
-            "<td><select data-name='AttributeLineIds' name='AttributeLineId' id='" + AttributeLineId + "' class='form-tree-create form-control select-product-attribute'></select></td>" +
-            "<td><select data-name='AttributeLineValueIds'  name='AttributeLineValueId' data-attributelineid='" + AttributeLineId + "' id='" + AttributeLineValueId + "' multiple='multiple' class='form-tree-create form-control select-product-attribute-value'></select></td>" +
+        var AttributeId = "AttributeId-" + e.timeStamp;
+        var AttributeValueId = "AttributeValueIds-" + e.timeStamp;
+        var appendHTML = "<tr data-treename='ProductAttributes' class='product-template-attribute-line form-tree-line-create'>" +
+            "<td><select data-bv-notempty-message='属性不能为空' data-name='AttributeId' name='AttributeId' id='" + AttributeId + "' class='form-tree-create form-control select-product-attribute'></select></td>" +
+            "<td><select data-name='AttributeValueIds'  name='AttributeValueId' data-attributeid='" + AttributeId + "' id='" + AttributeValueId + "' multiple='multiple' class='form-tree-create form-control select-product-attribute-value'></select></td>" +
             "<td class='text-center'><a class='form-tree-delete'><i class='fa fa-trash-o'></i></a></td>" +
             "</tr>";
         $(appendHTML).prependTo("#product-template-attribute-body");
-        $("#" + AttributeLineId).select2({
+        $("#" + AttributeId).select2({
             width: "off",
             ajax: {
                 url: '/product/attribute/?action=search',
@@ -67,7 +67,7 @@ $(function() {
                 return repo.name || repo.text;
             }
         });
-        $("#" + AttributeLineValueId).select2({
+        $("#" + AttributeValueId).select2({
             width: "off",
             ajax: {
                 url: '/product/attributevalue/?action=search',
@@ -84,11 +84,12 @@ $(function() {
                     if (xsrf.length > 0) {
                         selectParams._xsrf = xsrf[0].value;
                     }
-                    var attributeLineId = this.data("attributelineid");
-                    if (attributeLineId != undefined) {
-                        var attributeId = $("#" + attributeLineId).val();
+                    var attributeid = this.data("attributeid");
+                    if (attributeid != undefined) {
+                        var attributeId = $("#" + attributeid).val();
                         if (attributeId == null) {
-                            alert("请先选择属性,再选择属性值");
+                            // 弹框提示
+                            toastr.error("请先选择属性", "错误");
                             return;
                         } else {
                             selectParams.attributeId = attributeId;

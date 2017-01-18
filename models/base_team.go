@@ -5,18 +5,24 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 //Team 团队
 type Team struct {
-	Base
-	Name          string  `orm:"unique" xml:"name"` //组名称
-	Members       []*User `orm:"reverse(many)"`     //组员
-	GlobalLoation string  `orm:"unique" `           //全局定位
-	Active        bool    `orm:"default(true)"`     //是否有效
-	Description   string  `orm:"default(\"\")"`     //描述
+	ID            int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser    *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser    *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate    time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate    time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction    string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name          string    `orm:"unique" xml:"name"`                    //组名称
+	Members       []*User   `orm:"reverse(many)"`                        //组员
+	GlobalLoation string    `orm:"unique" `                              //全局定位
+	Active        bool      `orm:"default(true)"`                        //是否有效
+	Description   string    `orm:"default(\"\")"`                        //描述
 }
 
 func init() {
@@ -35,7 +41,7 @@ func AddTeam(obj *Team) (id int64, err error) {
 // ID doesn't exist
 func GetTeamByID(id int64) (obj *Team, err error) {
 	o := orm.NewOrm()
-	obj = &Team{Base: Base{ID: id}}
+	obj = &Team{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -126,7 +132,7 @@ func GetAllTeam(query map[string]string, fields []string, sortby []string, order
 // the record to be updated doesn't exist
 func UpdateTeamByID(m *Team) (err error) {
 	o := orm.NewOrm()
-	v := Team{Base: Base{ID: m.ID}}
+	v := Team{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -141,11 +147,11 @@ func UpdateTeamByID(m *Team) (err error) {
 // the record to be deleted doesn't exist
 func DeleteTeam(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Team{Base: Base{ID: id}}
+	v := Team{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Team{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&Team{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

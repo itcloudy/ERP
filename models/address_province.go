@@ -5,16 +5,22 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // AddressProvince 省份
 type AddressProvince struct {
-	Base
-	Name    string          `xml:"ProvinceName,attr"` //省份名称
-	Country *AddressCountry `orm:"rel(fk)"`           //国家
-	Citys   []*AddressCity  `orm:"reverse(many)"`     //城市
+	ID         int64           `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User           `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User           `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time       `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time       `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string          `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string          `xml:"ProvinceName,attr"`                    //省份名称
+	Country    *AddressCountry `orm:"rel(fk)"`                              //国家
+	Citys      []*AddressCity  `orm:"reverse(many)"`                        //城市
 
 }
 
@@ -34,7 +40,7 @@ func AddAddressProvince(obj *AddressProvince) (id int64, err error) {
 // ID doesn't exist
 func GetAddressProvinceByID(id int64) (obj *AddressProvince, err error) {
 	o := orm.NewOrm()
-	obj = &AddressProvince{Base: Base{ID: id}}
+	obj = &AddressProvince{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -124,7 +130,7 @@ func GetAllAddressProvince(query map[string]string, fields []string, sortby []st
 // the record to be updated doesn't exist
 func UpdateAddressProvinceByID(m *AddressProvince) (err error) {
 	o := orm.NewOrm()
-	v := AddressProvince{Base: Base{ID: m.ID}}
+	v := AddressProvince{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -139,11 +145,11 @@ func UpdateAddressProvinceByID(m *AddressProvince) (err error) {
 // the record to be deleted doesn't exist
 func DeleteAddressProvince(id int64) (err error) {
 	o := orm.NewOrm()
-	v := AddressProvince{Base: Base{ID: id}}
+	v := AddressProvince{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&AddressProvince{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&AddressProvince{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

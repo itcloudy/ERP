@@ -5,15 +5,21 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // ProductPriceList 产品价格表
 type ProductPriceList struct {
-	Base
-	Name   string //价格表名称
-	Active bool   `orm:"default(true)"` //有效
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string    //价格表名称
+	Active     bool      `orm:"default(true)"` //有效
 	// Items  []*ProductPricelistItem `orm:"reverse(many)"`
 }
 
@@ -33,7 +39,7 @@ func AddProductPriceList(obj *ProductPriceList) (id int64, err error) {
 // ID doesn't exist
 func GetProductPriceListByID(id int64) (obj *ProductPriceList, err error) {
 	o := orm.NewOrm()
-	obj = &ProductPriceList{Base: Base{ID: id}}
+	obj = &ProductPriceList{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -123,7 +129,7 @@ func GetAllProductPriceList(query map[string]string, fields []string, sortby []s
 // the record to be updated doesn't exist
 func UpdateProductPriceListByID(m *ProductPriceList) (err error) {
 	o := orm.NewOrm()
-	v := ProductPriceList{Base: Base{ID: m.ID}}
+	v := ProductPriceList{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -138,11 +144,11 @@ func UpdateProductPriceListByID(m *ProductPriceList) (err error) {
 // the record to be deleted doesn't exist
 func DeleteProductPriceList(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductPriceList{Base: Base{ID: id}}
+	v := ProductPriceList{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductPriceList{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductPriceList{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

@@ -5,16 +5,21 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 //ProductAttributePrice  产品属性价格
 type ProductAttributePrice struct {
-	Base
-	ProductTemplate *ProductTemplate       `orm:"rel(fk)"`    //产品款式
-	AttributeValue  *ProductAttributeValue `orm:"rel(fk)"`    //属性值
-	PriceExtra      float64                `orm:"default(0)"` //属性价格
+	ID              int64                  `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser      *User                  `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser      *User                  `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate      time.Time              `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate      time.Time              `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	ProductTemplate *ProductTemplate       `orm:"rel(fk)"`                              //产品款式
+	AttributeValue  *ProductAttributeValue `orm:"rel(fk)"`                              //属性值
+	PriceExtra      float64                `orm:"default(0)"`                           //属性价格
 }
 
 func init() {
@@ -33,7 +38,7 @@ func AddProductAttributePrice(obj *ProductAttributePrice) (id int64, err error) 
 // ID doesn't exist
 func GetProductAttributePriceByID(id int64) (obj *ProductAttributePrice, err error) {
 	o := orm.NewOrm()
-	obj = &ProductAttributePrice{Base: Base{ID: id}}
+	obj = &ProductAttributePrice{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -112,7 +117,7 @@ func GetAllProductAttributePrice(query map[string]string, fields []string, sortb
 // the record to be updated doesn't exist
 func UpdateProductAttributePriceByID(m *ProductAttributePrice) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttributePrice{Base: Base{ID: m.ID}}
+	v := ProductAttributePrice{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -127,11 +132,11 @@ func UpdateProductAttributePriceByID(m *ProductAttributePrice) (err error) {
 // the record to be deleted doesn't exist
 func DeleteProductAttributePrice(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductAttributePrice{Base: Base{ID: id}}
+	v := ProductAttributePrice{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductAttributePrice{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductAttributePrice{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

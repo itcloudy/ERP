@@ -5,13 +5,19 @@ import (
 	"fmt"
 	"goERP/utils"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // Partner 合作伙伴，包括客户和供应商，后期会为每个合作伙伴自动创建一个登录帐号
 type Partner struct {
-	Base
+	ID         int64            `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser *User            `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 	Name       string           //合作伙伴名称
 	IsCompany  bool             `orm:"default(true)"`              //是公司
 	IsSupplier bool             `orm:"default(false)"`             //是供应商
@@ -49,7 +55,7 @@ func AddPartner(obj *Partner) (id int64, err error) {
 // ID doesn't exist
 func GetPartnerByID(id int64) (obj *Partner, err error) {
 	o := orm.NewOrm()
-	obj = &Partner{Base: Base{ID: id}}
+	obj = &Partner{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -129,7 +135,7 @@ func GetAllPartner(query map[string]string, fields []string, sortby []string, or
 // the record to be updated doesn't exist
 func UpdatePartnerByID(m *Partner) (err error) {
 	o := orm.NewOrm()
-	v := Partner{Base: Base{ID: m.ID}}
+	v := Partner{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -155,11 +161,11 @@ func GetPartnerByName(name string) (obj *Partner, err error) {
 // the record to be deleted doesn't exist
 func DeletePartner(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Partner{Base: Base{ID: id}}
+	v := Partner{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Partner{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&Partner{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

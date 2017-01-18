@@ -12,11 +12,16 @@ import (
 
 //Record 登录记录
 type Record struct {
-	Base
-	User      *User     `orm:"rel(fk)"`
-	Logout    time.Time `orm:"type(datetime);null"` //登出时间
-	UserAgent string    `orm:"null"`                //用户代理
-	IP        string    `orm:"column(ip) "`         //上次登录IP
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	User       *User     `orm:"rel(fk)"`
+	Logout     time.Time `orm:"type(datetime);null"` //登出时间
+	UserAgent  string    `orm:"null"`                //用户代理
+	IP         string    `orm:"column(ip) "`         //上次登录IP
 }
 
 // 用户登录记录
@@ -37,7 +42,7 @@ func AddRecord(obj *Record) (id int64, err error) {
 // ID doesn't exist
 func GetRecordByID(id int64) (obj *Record, err error) {
 	o := orm.NewOrm()
-	obj = &Record{Base: Base{ID: id}}
+	obj = &Record{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -129,7 +134,7 @@ func GetAllRecord(query map[string]string, fields []string, sortby []string, ord
 // the record to be updated doesn't exist
 func UpdateRecordByID(m *Record) error {
 	o := orm.NewOrm()
-	v := Record{Base: Base{ID: m.ID}}
+	v := Record{ID: m.ID}
 	var err error
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
@@ -142,11 +147,11 @@ func UpdateRecordByID(m *Record) error {
 // the record to be deleted doesn't exist
 func DeleteRecord(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Record{Base: Base{ID: id}}
+	v := Record{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Record{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&Record{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

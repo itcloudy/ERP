@@ -42,7 +42,7 @@ $("#userForm").bootstrapValidator({
                         if (name.length > 0) {
                             params.name = name[0].value;
                         }
-                        var recordID = $("input[name ='_recordID']");
+                        var recordID = $("input[name ='recordID']");
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
@@ -89,7 +89,7 @@ $("#userForm").bootstrapValidator({
                             //用户名，手机号码，邮箱都必须唯一
                             params.name = mobile[0].value;
                         }
-                        var recordID = $("input[name ='_recordID']");
+                        var recordID = $("input[name ='recordID']");
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
@@ -123,7 +123,7 @@ $("#userForm").bootstrapValidator({
                             //用户名，手机号码，邮箱都必须唯一
                             params.name = email[0].value;
                         }
-                        var recordID = $("input[name ='_recordID']");
+                        var recordID = $("input[name ='recordID']");
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
@@ -202,7 +202,7 @@ $("#productCategoryForm").bootstrapValidator({
                         if (xsrf.length > 0) {
                             params._xsrf = xsrf[0].value;
                         }
-                        var recordID = $("input[name ='_recordID']");
+                        var recordID = $("input[name ='recordID']");
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
@@ -245,7 +245,7 @@ $("#productAttributeForm").bootstrapValidator({
                         if (xsrf.length > 0) {
                             params._xsrf = xsrf[0].value;
                         }
-                        var recordID = $("input[name ='_recordID']");
+                        var recordID = $("input[name ='recordID']");
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
@@ -284,7 +284,7 @@ $("#productAttributeValueForm").bootstrapValidator({
                         var params = {
                             action: "validator",
                         }
-                        var recordID = $("input[name ='_recordID']");
+                        var recordID = $("input[name ='recordID']");
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
@@ -337,7 +337,7 @@ $("#productUomCategForm").bootstrapValidator({
                         if (xsrf.length > 0) {
                             params._xsrf = xsrf[0].value;
                         }
-                        var recordID = $("input[name ='_recordID']");
+                        var recordID = $("input[name ='recordID']");
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
@@ -388,7 +388,7 @@ $("#productUomForm").bootstrapValidator({
                         if (xsrf.length > 0) {
                             params._xsrf = xsrf[0].value;
                         }
-                        var recordID = $("input[name ='_recordID']");
+                        var recordID = $("input[name ='recordID']");
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
@@ -431,7 +431,7 @@ $("#productTemplateForm").bootstrapValidator({
                         if (xsrf.length > 0) {
                             params._xsrf = xsrf[0].value;
                         }
-                        var recordID = $("input[name ='_recordID']");
+                        var recordID = $("input[name ='recordID']");
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
@@ -439,6 +439,13 @@ $("#productTemplateForm").bootstrapValidator({
                     },
                 },
             },
+        },
+        StandardPrice: {
+            validators: {
+                numeric: {
+                    message: "成本价格必须为数字"
+                }
+            }
         },
         Category: {
             validators: {

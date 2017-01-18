@@ -12,12 +12,17 @@ import (
 
 //ProductSupplier  产品供应商
 type ProductSupplier struct {
-	Base
-	Sequence    int32    //序列号
-	Supplier    *Partner `orm:"rel(fk)"` //供应商
-	ProductName string   //供应商产品名称
-	ProductCode string   //供应商产品编码
-	FirstMinQty float32  //第一单位采购最小数量
+	ID          int64     `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser  *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser  *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate  time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate  time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction  string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Sequence    int32     //序列号
+	Supplier    *Partner  `orm:"rel(fk)"` //供应商
+	ProductName string    //供应商产品名称
+	ProductCode string    //供应商产品编码
+	FirstMinQty float32   //第一单位采购最小数量
 	// SecondMinQty    float32          `orm:"default(0)"` //第二单位采购最小数量
 	FirstPrice float64 //第一单位采购价格
 	// SecondPrice     float64          `orm:"default(0)"`     //第二单位采购价格
@@ -44,7 +49,7 @@ func AddProductSupplier(obj *ProductSupplier) (id int64, err error) {
 // ID doesn't exist
 func GetProductSupplierByID(id int64) (obj *ProductSupplier, err error) {
 	o := orm.NewOrm()
-	obj = &ProductSupplier{Base: Base{ID: id}}
+	obj = &ProductSupplier{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
@@ -123,7 +128,7 @@ func GetAllProductSupplier(query map[string]string, fields []string, sortby []st
 // the record to be updated doesn't exist
 func UpdateProductSupplierByID(m *ProductSupplier) (err error) {
 	o := orm.NewOrm()
-	v := ProductSupplier{Base: Base{ID: m.ID}}
+	v := ProductSupplier{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -138,11 +143,11 @@ func UpdateProductSupplierByID(m *ProductSupplier) (err error) {
 // the record to be deleted doesn't exist
 func DeleteProductSupplier(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductSupplier{Base: Base{ID: id}}
+	v := ProductSupplier{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductSupplier{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductSupplier{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

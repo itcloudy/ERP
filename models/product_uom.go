@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"goERP/utils"
 
@@ -12,15 +13,20 @@ import (
 
 //ProductUom 产品单位
 type ProductUom struct {
-	Base
-	Name      string           `orm:"unique" form:"name"`          //计量单位名称
-	Active    bool             `orm:"default(true)" form:"active"` //有效
-	Category  *ProductUomCateg `orm:"rel(fk)"`                     //计量单位类别
-	Factor    float64          `form:"factor"`                     //比率
-	FactorInv float64          `form:"factorInv"`                  //更大比率
-	Rounding  float64          `form:"rounding"`                   //舍入精度
-	Type      int64            `form:"type"`                       //类型
-	Symbol    string           `form:"symbol"`                     //符号，后置
+	ID         int64            `orm:"column(id);pk;auto" json:"id"`              //主键
+	CreateUser *User            `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name       string           `orm:"unique" form:"name"`                   //计量单位名称
+	Active     bool             `orm:"default(true)" form:"active"`          //有效
+	Category   *ProductUomCateg `orm:"rel(fk)"`                              //计量单位类别
+	Factor     float64          `form:"factor"`                              //比率
+	FactorInv  float64          `form:"factorInv"`                           //更大比率
+	Rounding   float64          `form:"rounding"`                            //舍入精度
+	Type       int64            `form:"type"`                                //类型
+	Symbol     string           `form:"symbol"`                              //符号，后置
 }
 
 func init() {
@@ -40,7 +46,7 @@ func AddProductUom(obj *ProductUom) (id int64, err error) {
 // ID doesn't exist
 func GetProductUomByID(id int64) (obj *ProductUom, err error) {
 	o := orm.NewOrm()
-	obj = &ProductUom{Base: Base{ID: id}}
+	obj = &ProductUom{ID: id}
 	if err = o.Read(obj); err == nil {
 		o.Read(obj.Category)
 		return obj, nil
@@ -132,7 +138,7 @@ func GetAllProductUom(query map[string]string, fields []string, sortby []string,
 // the record to be updated doesn't exist
 func UpdateProductUomByID(m *ProductUom) (err error) {
 	o := orm.NewOrm()
-	v := ProductUom{Base: Base{ID: m.ID}}
+	v := ProductUom{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -147,11 +153,11 @@ func UpdateProductUomByID(m *ProductUom) (err error) {
 // the record to be deleted doesn't exist
 func DeleteProductUom(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductUom{Base: Base{ID: id}}
+	v := ProductUom{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductUom{Base: Base{ID: id}}); err == nil {
+		if num, err = o.Delete(&ProductUom{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}
