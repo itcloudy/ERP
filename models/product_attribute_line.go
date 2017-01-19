@@ -17,14 +17,14 @@ type ProductAttributeLine struct {
 	UpdateUser      *User                    `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate      time.Time                `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate      time.Time                `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name            string                   `orm:"unique"`                               //产品属性名称
 	Attribute       *ProductAttribute        `orm:"rel(fk)"`                              //属性
 	ProductTemplate *ProductTemplate         `orm:"rel(fk)"`                              //产品模版
 	AttributeValues []*ProductAttributeValue `orm:"rel(m2m)"`                             //属性值
 
 	// form表单使用字段
-	FormAction string `orm:"-" form:"FormAction"` //表单动作
-
+	FormAction        string   `orm:"-" json:"FormAction"`        //表单动作
+	AttributeID       string   `orm:"-" json:"AttributeId"`       //表单属性
+	AttributeValueIds []string `orm:"-" json:"AttributeValueIds"` //表单属性值
 }
 
 func init() {
@@ -44,17 +44,6 @@ func AddProductAttributeLine(obj *ProductAttributeLine) (id int64, err error) {
 func GetProductAttributeLineByID(id int64) (obj *ProductAttributeLine, err error) {
 	o := orm.NewOrm()
 	obj = &ProductAttributeLine{ID: id}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
-}
-
-// GetProductAttributeLineByName retrieves ProductAttributeLine by Name. Returns error if
-// Name doesn't exist
-func GetProductAttributeLineByName(name string) (obj *ProductAttributeLine, err error) {
-	o := orm.NewOrm()
-	obj = &ProductAttributeLine{Name: name}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}

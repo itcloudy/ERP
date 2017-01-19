@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"goERP/controllers/base"
 	md "goERP/models"
-	"reflect"
 
 	"fmt"
 	"strconv"
@@ -90,7 +89,6 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 		tableLines := make([]interface{}, 0, 4)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["name"] = line.Name
 			attributes := make(map[string]string)
 			if line.Attribute != nil {
 				attributes["id"] = strconv.FormatInt(line.Attribute.ID, 10)
@@ -128,36 +126,24 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 }
 func (ctl *ProductTemplateController) PostCreate() {
 	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
 	template := new(md.ProductTemplate)
-	if err := ctl.ParseForm(template); err == nil {
+	var (
+		err error
+		id  int64
+	)
+	if err = json.Unmarshal([]byte(postData), template); err == nil {
 		// 获得struct表名
-		structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
-		fmt.Println(structName)
-
-		if template.CategoryID != 0 {
-			template.Category, _ = md.GetProductCategoryByID(template.CategoryID)
-		}
-		if template.FirstSaleUomID != 0 {
-			template.FirstSaleUom, _ = md.GetProductUomByID(template.FirstSaleUomID)
-		}
-		if template.SecondSaleUomID != 0 {
-			template.SecondSaleUom, _ = md.GetProductUomByID(template.SecondSaleUomID)
-		}
-		if template.FirstPurchaseUomID != 0 {
-			template.FirstPurchaseUom, _ = md.GetProductUomByID(template.FirstPurchaseUomID)
-		}
-		if template.SecondPurchaseUomID != 0 {
-			template.SecondPurchaseUom, _ = md.GetProductUomByID(template.SecondPurchaseUomID)
-		}
-		if id, err := md.AddProductTemplate(template); err == nil {
+		// structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
+		
+		
+		if id, err = md.AddProductTemplate(template, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 
-		} else {
-			result["code"] = "failed"
-			result["debug"] = err.Error()
 		}
-	} else {
+	}
+	if err != nil {
 		result["code"] = "failed"
 		result["debug"] = err.Error()
 	}

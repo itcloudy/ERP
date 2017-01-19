@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -18,15 +19,15 @@ type ProductTemplate struct {
 	UpdateUser          *User                   `orm:"rel(fk);null" json:"-"`                 //最后更新者
 	CreateDate          time.Time               `orm:"auto_now_add;type(datetime)" json:"-"`  //创建时间
 	UpdateDate          time.Time               `orm:"auto_now;type(datetime)" json:"-"`      //最后更新时间
-	Name                string                  `orm:"unique"`                                //产品属性名称
-	Sequence            int32                   `form:"Sequence"`                             //序列号
+	Name                string                  `orm:"unique" json:"Name"`                    //产品属性名称
+	Sequence            int32                   `json:"Sequence"`                             //序列号
 	Description         string                  `orm:"type(text);null"`                       //描述
 	DescriptioSale      string                  `orm:"type(text);null"`                       //销售描述
 	DescriptioPurchase  string                  `orm:"type(text);null"`                       //采购描述
 	Rental              bool                    `orm:"default(false)"`                        //代售品
 	Category            *ProductCategory        `orm:"rel(fk)"`                               //产品类别
-	Price               float64                 `form:"Price"`                                //模版产品价格
-	StandardPrice       float64                 `form:"StandardPrice"`                        //成本价格
+	Price               float64                 `json:"Price"`                                //模版产品价格
+	StandardPrice       float64                 `json:"StandardPrice"`                        //成本价格
 	SaleOk              bool                    `orm:"default(true)"`                         //可销售
 	Active              bool                    `orm:"default(true)"`                         //有效
 	IsProductVariant    bool                    `orm:"default(true)"`                         //是变形产品
@@ -37,22 +38,22 @@ type ProductTemplate struct {
 	AttributeLines      []*ProductAttributeLine `orm:"reverse(many)"`                         //属性明细
 	ProductVariants     []*ProductProduct       `orm:"reverse(many)"`                         //产品规格明细
 	TemplatePackagings  []*ProductPackaging     `orm:"reverse(many)"`                         //打包方式
-	VariantCount        int32                   `form:"VariantCount"`                         //产品规格数量
-	Barcode             string                  `form:"Barcode"`                              //条码,如ean13
-	DefaultCode         string                  `form:"DefaultCode"`                          //产品编码
+	VariantCount        int32                   `json:"VariantCount"`                         //产品规格数量
+	Barcode             string                  `json:"Barcode"`                              //条码,如ean13
+	DefaultCode         string                  `json:"DefaultCode"`                          //产品编码
 	ProductType         string                  `orm:"default(\"stock\")"`                    //产品类型
 	ProductMethod       string                  `orm:"default(\"hand\")"`                     //产品规格创建方式
 	PackagingDependTemp bool                    `orm:"default(true)"`                         //根据款式打包
 	PurchaseDependTemp  bool                    `orm:"default(true)"`                         //根据款式采购，ture一个供应商可以供应所有的款式
 
 	// form表单使用字段
-	FormAction            string                  `orm:"-" form:"FormAction"`        //表单动作
-	CategoryID            int64                   `orm:"-" form:"Category"`          //产品类别
-	FirstSaleUomID        int64                   `orm:"-" form:"FirstSaleUom"`      //第一销售单位form
-	SecondSaleUomID       int64                   `orm:"-" form:"SecondSaleUom"`     //第二销售单位form
-	FirstPurchaseUomID    int64                   `orm:"-" form:"FirstPurchaseUom"`  //第一采购单位form
-	SecondPurchaseUomID   int64                   `orm:"-" form:"SecondPurchaseUom"` //第二采购单位form
-	ProductAttributeLines []*ProductAttributeLine `orm:"-" form:"ProductAttributes"`
+	FormAction            string                 `orm:"-" json:"FormAction"`        //表单动作
+	CategoryID            string                 `orm:"-" json:"Category"`          //产品类别
+	FirstSaleUomID        string                 `orm:"-" json:"FirstSaleUom"`      //第一销售单位form
+	SecondSaleUomID       string                 `orm:"-" json:"SecondSaleUom"`     //第二销售单位form
+	FirstPurchaseUomID    string                 `orm:"-" json:"FirstPurchaseUom"`  //第一采购单位form
+	SecondPurchaseUomID   string                 `orm:"-" json:"SecondPurchaseUom"` //第二采购单位form
+	ProductAttributeLines []ProductAttributeLine `orm:"-" json:"ProductAttributes"`
 }
 
 func init() {
@@ -61,9 +62,87 @@ func init() {
 
 // AddProductTemplate insert a new ProductTemplate into database and returns
 // last inserted ID on success.
-func AddProductTemplate(obj *ProductTemplate) (id int64, err error) {
+func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	id, err = o.Insert(obj)
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	err = o.Begin()
+	if obj.CategoryID != "" {
+		if CategoryID, err := strconv.ParseInt(obj.CategoryID, 10, 64); err == nil {
+			obj.Category, _ = GetProductCategoryByID(CategoryID)
+		}
+	}
+	if obj.FirstSaleUomID != "" {
+		if FirstSaleUomID, err := strconv.ParseInt(obj.FirstSaleUomID, 10, 64); err == nil {
+			obj.FirstSaleUom, _ = GetProductUomByID(FirstSaleUomID)
+		}
+	}
+	if obj.SecondSaleUomID != "" {
+		if SecondSaleUomID, err := strconv.ParseInt(obj.SecondSaleUomID, 10, 64); err == nil {
+			obj.SecondSaleUom, _ = GetProductUomByID(SecondSaleUomID)
+		}
+	}
+	if obj.FirstPurchaseUomID != "" {
+		if FirstPurchaseUomID, err := strconv.ParseInt(obj.FirstPurchaseUomID, 10, 64); err == nil {
+			obj.FirstPurchaseUom, _ = GetProductUomByID(FirstPurchaseUomID)
+		}
+	}
+	if obj.SecondPurchaseUomID != "" {
+		if SecondPurchaseUomID, err := strconv.ParseInt(obj.SecondPurchaseUomID, 10, 64); err == nil {
+			obj.SecondPurchaseUom, _ = GetProductUomByID(SecondPurchaseUomID)
+		}
+	}
+	if id, err = o.Insert(obj); err == nil {
+		obj.ID = id
+		if len(obj.ProductAttributeLines) > 0 {
+			for _, item := range obj.ProductAttributeLines {
+				if AttributeID, err := strconv.ParseInt(item.AttributeID, 10, 64); err == nil {
+					if Attribute, err := GetProductAttributeByID(AttributeID); err == nil {
+						productAttributeLine := new(ProductAttributeLine)
+						productAttributeLine.Attribute = Attribute
+						productAttributeLine.CreateUser = addUser
+						productAttributeLine.UpdateUser = addUser
+						productAttributeLine.ProductTemplate = obj
+						if lineID, err := o.Insert(productAttributeLine); err == nil {
+							productAttributeLine.ID = lineID
+							m2m := o.QueryM2M(productAttributeLine, "AttributeValues")
+							attributeValueIDArr := item.AttributeValueIds
+							for _, attrValueIDStr := range attributeValueIDArr {
+								if attrValueID, err := strconv.ParseInt(attrValueIDStr, 10, 64); err == nil {
+									if valueObj, err := GetProductAttributeValueByID(attrValueID); err == nil {
+										productAttributeLine.AttributeValues = append(productAttributeLine.AttributeValues, valueObj)
+									} else {
+										fmt.Println("valueObj: ", err)
+									}
+								} else {
+									fmt.Println("attrValueID: ", err)
+								}
+							}
+							for _, attrVal := range productAttributeLine.AttributeValues {
+								if !m2m.Exist(attrVal) {
+									m2m.Add(attrVal)
+								}
+							}
+							obj.AttributeLines = append(obj.AttributeLines, productAttributeLine)
+						} else {
+							fmt.Println("productAttributeLine: ", err)
+						}
+
+					} else {
+						fmt.Println("Attribute: ", err)
+					}
+
+				} else {
+					fmt.Println("AttributeID: ", err)
+				}
+			}
+		}
+	}
+	if err != nil {
+		err = o.Rollback()
+	} else {
+		err = o.Commit()
+	}
 	return id, err
 }
 

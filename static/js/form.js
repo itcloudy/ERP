@@ -8,7 +8,8 @@ $(function() {
         };
         var xsrf = $("input[name ='_xsrf']");
         if (xsrf.length > 0) {
-            formData._xsrf = xsrf[0].value;
+            xsrf = xsrf[0].value;
+            // formData._xsrf = xsrf[0].value;
         }
         // form表单验证
         var bootstrapValidator = formNode.data('bootstrapValidator');
@@ -46,14 +47,11 @@ $(function() {
         //获得form-tree-create信息
         var formTreeFields = $(form).find(".form-tree-line-create");
         for (var i = 0, lineLen = formTreeFields.length; i < lineLen; i++) {
-            console.log(lineLen);
             var self = formTreeFields[i];
             var treeName = $(self).data("treename");
-            console.log(formData[treeName]);
-            if (formData[treeName] == undefined); {
+            if (formData[treeName] == undefined) {
                 formData[treeName] = [];
             }
-            var treeArray = [];
             var cellFields = $(self).find(".form-tree-create");
             var cellData = {
                 FormAction: "create"
@@ -65,16 +63,17 @@ $(function() {
                 var cellValue = $(cell).val();
                 if (cellValue != null) {
                     cellData[cellName] = cellValue;
+                    console.log(cellData);
                     hasProp = true;
                 }
             }
             if (hasProp) {
-                console.log(cellData);
-                treeArray = treeArray.push(cellData);
+                formData[treeName].push(cellData);
+
             }
         }
         console.log(formData);
-        $.post(form.action, formData).success(function(response) {
+        $.post(form.action, { postData: JSON.stringify(formData), _xsrf: xsrf }).success(function(response) {
             if (response.code == 'failed') {
                 toastr.error("创建失败", "错误");
                 return;
