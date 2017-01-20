@@ -2,7 +2,6 @@ package base
 
 import (
 	"encoding/json"
-	"fmt"
 	md "goERP/models"
 	"strconv"
 	"strings"
@@ -20,10 +19,6 @@ func (ctl *UserController) Put() {
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 		if user, err := md.GetUserByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&user); err == nil {
-				fmt.Println(user.DepartmentID)
-				fmt.Println(user.PositionID)
-				fmt.Println(user.GroupIDs)
-				fmt.Println(user.TeamIDs)
 				var upateField []string
 				if departmentID, err := ctl.GetInt64("department"); err == nil {
 					if department, err := md.GetDepartmentByID(departmentID); err == nil {
@@ -107,7 +102,7 @@ func (ctl *UserController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
-
+	ctl.Data["FormField"] = "form-create"
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "user/user_form.html"
 }
@@ -236,11 +231,6 @@ func (ctl *UserController) PostCreate() {
 
 	user := new(md.User)
 	if err := ctl.ParseForm(user); err == nil {
-		fmt.Println(user.DepartmentID)
-		fmt.Println(user.PositionID)
-		fmt.Println(user.GroupIDs)
-		fmt.Println(user.TeamIDs)
-		fmt.Println(ctl.GetStrings("Group"))
 		if deparentID, err := ctl.GetInt64("Department"); err == nil {
 			if department, err := md.GetDepartmentByID(deparentID); err == nil {
 				user.Department = department
@@ -270,6 +260,7 @@ func (ctl *UserController) Edit() {
 			}
 		}
 	}
+	ctl.Data["FormField"] = "form-edit"
 	ctl.Data["RecordID"] = id
 	ctl.Data["Action"] = "edit"
 	ctl.Layout = "base/base.html"

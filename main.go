@@ -7,11 +7,14 @@ import (
 	_ "goERP/models"
 	_ "goERP/routers"
 
+	"fmt"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/beego/i18n"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 const (
@@ -29,6 +32,9 @@ func init() {
 	dbPort := beego.AppConfig.String(dbType + "::db_port")
 	dbHost := beego.AppConfig.String(dbType + "::db_host")
 	orm.RegisterDriver(dbType, orm.DRPostgres)
+	fmt.Println(dbAlias)
+	fmt.Println(dbName)
+	fmt.Println(dbType)
 
 	switch dbType {
 	//数据库类型和数据库驱动名一致
@@ -41,6 +47,8 @@ func init() {
 		dbCharset := beego.AppConfig.String(dbType + "db_charset")
 		dataSource := dbUser + ":" + dbPwd + "@/" + dbName + "?charset=" + dbCharset
 		orm.RegisterDataBase(dbAlias, dbType, dataSource)
+	case "sqlite3":
+		orm.RegisterDataBase(dbAlias, "sqlite3", dbName)
 
 	}
 	//重新运行时是否覆盖原表创建,false:不会删除原表,修改表信息时将会在原来的基础上修改，true删除原表重新创建

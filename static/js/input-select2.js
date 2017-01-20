@@ -93,6 +93,7 @@ $(function() {
     select2AjaxData(".select-group", "/group/?action=search", true); // 选择分组
     select2AjaxData(".select-product-category", "/product/category/?action=search"); // 选择产品类别;
     select2AjaxData(".select-product-attribute", '/product/attribute/?action=search'); // 选择属性
+    select2AjaxData(".select-product-attribute-value", '/product/attributevalue/?action=search'); // 选择属性值
     // selectStaticData(".select-product-type", [{ id: 1, name: '库存商品' }, { id: 2, name: '消耗品' }, { id: 3, name: '服务' }]); // 产品类型
     select2AjaxData(".select-product-uom", "/product/uom/?action=search"); // 选择产品单位
     select2AjaxData(".select-product-uom-category", "/product/uomcateg/?action=search"); //计量单位类别

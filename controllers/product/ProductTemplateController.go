@@ -2,10 +2,10 @@ package product
 
 import (
 	"encoding/json"
+	"fmt"
 	"goERP/controllers/base"
 	md "goERP/models"
 
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -18,6 +18,7 @@ func (ctl *ProductTemplateController) Post() {
 	ctl.URL = "/product/template/"
 	ctl.Data["URL"] = ctl.URL
 	action := ctl.Input().Get("action")
+	fmt.Println(action)
 	switch action {
 	case "validator":
 		ctl.Validator()
@@ -49,28 +50,31 @@ func (ctl *ProductTemplateController) Get() {
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuProductTemplateActive"] = "active"
 }
+
+// Put 修改产品款式
 func (ctl *ProductTemplateController) Put() {
-	id := ctl.Ctx.Input.Param(":id")
-	upload := ctl.GetString("upload")
-	ctl.URL = "/product/template/"
-	//判断文件上传时页面不用跳转的情况
-	if upload == "uploadFile" {
-		ctl.Data["json"] = map[string]interface{}{"code": 0, "message": "测试成功"}
-		ctl.ServeJSON()
-	} else {
-		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-			if template, err := md.GetProductTemplateByID(idInt64); err == nil {
-				if err := ctl.ParseForm(&template); err == nil {
-
-					if err := md.UpdateProductTemplateByID(template); err == nil {
-						ctl.Redirect(ctl.URL+id+"?action=detail", 302)
-					}
-				}
-			}
+	fmt.Println("enter put")
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	template := new(md.ProductTemplate)
+	var (
+		err error
+		id  int64
+	)
+	if err = json.Unmarshal([]byte(postData), template); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
+		if id, err = md.AddProductTemplate(template, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		}
-		ctl.Redirect(ctl.URL+id+"?action=edit", 302)
 	}
-
+	if err != nil {
+		result["code"] = "failed"
+		result["debug"] = err.Error()
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 }
 func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 	query := make(map[string]string)
@@ -135,16 +139,17 @@ func (ctl *ProductTemplateController) PostCreate() {
 	if err = json.Unmarshal([]byte(postData), template); err == nil {
 		// 获得struct表名
 		// structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
-		
-		
 		if id, err = md.AddProductTemplate(template, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
-
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			result["debug"] = err.Error()
 		}
-	}
-	if err != nil {
+	} else {
 		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
 		result["debug"] = err.Error()
 	}
 	ctl.Data["json"] = result
@@ -152,74 +157,23 @@ func (ctl *ProductTemplateController) PostCreate() {
 }
 func (ctl *ProductTemplateController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	fmt.Println(id)
-	templateInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if template, err := md.GetProductTemplateByID(idInt64); err == nil {
 				ctl.PageAction = template.Name
-				templateInfo["Name"] = template.Name
-				templateInfo["DefaultCode"] = template.DefaultCode
-				templateInfo["StandardPrice"] = template.StandardPrice
-				templateInfo["Sequence"] = template.Sequence
-				templateInfo["Description"] = template.Description
-				templateInfo["DescriptioPurchase"] = template.DescriptioPurchase
-				templateInfo["DescriptioSale"] = template.DescriptioSale
-				templateInfo["ProductType"] = template.ProductType
-				templateInfo["ProductMethod"] = template.ProductMethod
-				// 款式类别
-				categ := template.Category
-				categValues := make(map[string]string)
-				if categ != nil {
-					categValues["id"] = strconv.FormatInt(categ.ID, 10)
-					categValues["name"] = categ.Name
-				}
-				templateInfo["Category"] = categValues
-				// 销售第一单位
-				firstSaleUom := template.FirstSaleUom
-				firstSaleUomValues := make(map[string]string)
-				if firstSaleUom != nil {
-					firstSaleUomValues["id"] = strconv.FormatInt(firstSaleUom.ID, 10)
-					firstSaleUomValues["name"] = firstSaleUom.Name
-				}
-				templateInfo["FirstSaleUom"] = firstSaleUomValues
-				// 销售第二单位
-				secondSaleUom := template.SecondSaleUom
-				secondSaleUomValues := make(map[string]string)
-				if secondSaleUom != nil {
-					secondSaleUomValues["id"] = strconv.FormatInt(secondSaleUom.ID, 10)
-					secondSaleUomValues["name"] = secondSaleUom.Name
-				}
-				templateInfo["SecondSaleUom"] = secondSaleUomValues
-				// 采购第一单位
-				firstPurchaseUom := template.FirstPurchaseUom
-				firstPurchaseUomValues := make(map[string]string)
-				if firstPurchaseUom != nil {
-					firstPurchaseUomValues["id"] = strconv.FormatInt(firstPurchaseUom.ID, 10)
-					firstPurchaseUomValues["name"] = firstPurchaseUom.Name
-				}
-				templateInfo["FirstPurchaseUom"] = firstSaleUomValues
-				// 采购第二单位
-				secondPurchaseUom := template.SecondPurchaseUom
-				secondPurchaseUomValues := make(map[string]string)
-				if secondSaleUom != nil {
-					secondPurchaseUomValues["id"] = strconv.FormatInt(secondPurchaseUom.ID, 10)
-					secondPurchaseUomValues["name"] = secondPurchaseUom.Name
-				}
-				templateInfo["SecondPurchaseUom"] = secondPurchaseUomValues
+				ctl.Data["Tp"] = template
 			}
 		}
 	}
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["Tp"] = templateInfo
+	ctl.Data["FormField"] = "form-edit"
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_template_form.html"
 }
 func (ctl *ProductTemplateController) Detail() {
 	ctl.Edit()
 	ctl.Data["Readonly"] = true
-	ctl.Data["FormField"] = "form-edit"
 	ctl.Data["FormTreeField"] = "form-tree-edit"
 	ctl.Data["Action"] = "detail"
 }
@@ -243,7 +197,6 @@ func (ctl *ProductTemplateController) Validator() {
 	} else {
 		if obj.Name == name {
 			if recordID == obj.ID {
-				fmt.Println("enter2")
 
 				result["valid"] = true
 			} else {
@@ -251,7 +204,6 @@ func (ctl *ProductTemplateController) Validator() {
 			}
 
 		} else {
-			fmt.Println("enter3")
 			result["valid"] = true
 		}
 

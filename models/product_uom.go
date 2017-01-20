@@ -13,7 +13,7 @@ import (
 
 //ProductUom 产品单位
 type ProductUom struct {
-	ID         int64            `orm:"column(id);pk;auto" json:"id"`              //主键
+	ID         int64            `orm:"column(id);pk;auto" json:"id"`         //主键
 	CreateUser *User            `orm:"rel(fk);null" json:"-"`                //创建者
 	UpdateUser *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
@@ -27,6 +27,7 @@ type ProductUom struct {
 	Rounding   float64          `form:"rounding"`                            //舍入精度
 	Type       int64            `form:"type"`                                //类型
 	Symbol     string           `form:"symbol"`                              //符号，后置
+	TypeName   string           `orm:"-"`                                    //仅用于前端显示
 }
 
 func init() {
@@ -75,6 +76,9 @@ func GetAllProductUom(query map[string]string, fields []string, sortby []string,
 		num       int64
 		err       error
 	)
+	if limit == 0 {
+		limit = 20
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(ProductUom))
 	qs = qs.RelatedSel()

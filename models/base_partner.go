@@ -72,6 +72,9 @@ func GetAllPartner(query map[string]string, fields []string, sortby []string, or
 		num       int64
 		err       error
 	)
+	if limit == 0 {
+		limit = 20
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Partner))
 	qs = qs.RelatedSel()

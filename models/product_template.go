@@ -3,7 +3,6 @@ package models
 import (
 	"errors"
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 
@@ -41,6 +40,7 @@ type ProductTemplate struct {
 	VariantCount        int32                   `json:"VariantCount"`                         //产品规格数量
 	Barcode             string                  `json:"Barcode"`                              //条码,如ean13
 	DefaultCode         string                  `json:"DefaultCode"`                          //产品编码
+	Images              []*ProductImage         `orm:"reverse(many)"`                         //产品款式图片
 	ProductType         string                  `orm:"default(\"stock\")"`                    //产品类型
 	ProductMethod       string                  `orm:"default(\"hand\")"`                     //产品规格创建方式
 	PackagingDependTemp bool                    `orm:"default(true)"`                         //根据款式打包
@@ -48,11 +48,11 @@ type ProductTemplate struct {
 
 	// form表单使用字段
 	FormAction            string                 `orm:"-" json:"FormAction"`        //表单动作
-	CategoryID            string                 `orm:"-" json:"Category"`          //产品类别
-	FirstSaleUomID        string                 `orm:"-" json:"FirstSaleUom"`      //第一销售单位form
-	SecondSaleUomID       string                 `orm:"-" json:"SecondSaleUom"`     //第二销售单位form
-	FirstPurchaseUomID    string                 `orm:"-" json:"FirstPurchaseUom"`  //第一采购单位form
-	SecondPurchaseUomID   string                 `orm:"-" json:"SecondPurchaseUom"` //第二采购单位form
+	CategoryID            int64                  `orm:"-" json:"Category"`          //产品类别
+	FirstSaleUomID        int64                  `orm:"-" json:"FirstSaleUom"`      //第一销售单位form
+	SecondSaleUomID       int64                  `orm:"-" json:"SecondSaleUom"`     //第二销售单位form
+	FirstPurchaseUomID    int64                  `orm:"-" json:"FirstPurchaseUom"`  //第一采购单位form
+	SecondPurchaseUomID   int64                  `orm:"-" json:"SecondPurchaseUom"` //第二采购单位form
 	ProductAttributeLines []ProductAttributeLine `orm:"-" json:"ProductAttributes"`
 }
 
@@ -67,73 +67,55 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 	obj.CreateUser = addUser
 	obj.UpdateUser = addUser
 	err = o.Begin()
-	if obj.CategoryID != "" {
-		if CategoryID, err := strconv.ParseInt(obj.CategoryID, 10, 64); err == nil {
-			obj.Category, _ = GetProductCategoryByID(CategoryID)
-		}
+	fmt.Println(obj.SecondSaleUomID)
+	if obj.CategoryID != 0 {
+		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)
 	}
-	if obj.FirstSaleUomID != "" {
-		if FirstSaleUomID, err := strconv.ParseInt(obj.FirstSaleUomID, 10, 64); err == nil {
-			obj.FirstSaleUom, _ = GetProductUomByID(FirstSaleUomID)
-		}
+	if obj.FirstSaleUomID != 0 {
+		obj.FirstSaleUom, _ = GetProductUomByID(obj.FirstSaleUomID)
 	}
-	if obj.SecondSaleUomID != "" {
-		if SecondSaleUomID, err := strconv.ParseInt(obj.SecondSaleUomID, 10, 64); err == nil {
-			obj.SecondSaleUom, _ = GetProductUomByID(SecondSaleUomID)
-		}
+	if obj.SecondSaleUomID != 0 {
+		obj.SecondSaleUom, _ = GetProductUomByID(obj.SecondSaleUomID)
 	}
-	if obj.FirstPurchaseUomID != "" {
-		if FirstPurchaseUomID, err := strconv.ParseInt(obj.FirstPurchaseUomID, 10, 64); err == nil {
-			obj.FirstPurchaseUom, _ = GetProductUomByID(FirstPurchaseUomID)
-		}
+	if obj.FirstPurchaseUomID != 0 {
+		obj.FirstPurchaseUom, _ = GetProductUomByID(obj.FirstPurchaseUomID)
 	}
-	if obj.SecondPurchaseUomID != "" {
-		if SecondPurchaseUomID, err := strconv.ParseInt(obj.SecondPurchaseUomID, 10, 64); err == nil {
-			obj.SecondPurchaseUom, _ = GetProductUomByID(SecondPurchaseUomID)
-		}
+	if obj.SecondPurchaseUomID != 0 {
+		obj.SecondPurchaseUom, _ = GetProductUomByID(obj.SecondPurchaseUomID)
 	}
 	if id, err = o.Insert(obj); err == nil {
 		obj.ID = id
 		if len(obj.ProductAttributeLines) > 0 {
 			for _, item := range obj.ProductAttributeLines {
-				if AttributeID, err := strconv.ParseInt(item.AttributeID, 10, 64); err == nil {
-					if Attribute, err := GetProductAttributeByID(AttributeID); err == nil {
-						productAttributeLine := new(ProductAttributeLine)
-						productAttributeLine.Attribute = Attribute
-						productAttributeLine.CreateUser = addUser
-						productAttributeLine.UpdateUser = addUser
-						productAttributeLine.ProductTemplate = obj
-						if lineID, err := o.Insert(productAttributeLine); err == nil {
-							productAttributeLine.ID = lineID
-							m2m := o.QueryM2M(productAttributeLine, "AttributeValues")
-							attributeValueIDArr := item.AttributeValueIds
-							for _, attrValueIDStr := range attributeValueIDArr {
-								if attrValueID, err := strconv.ParseInt(attrValueIDStr, 10, 64); err == nil {
-									if valueObj, err := GetProductAttributeValueByID(attrValueID); err == nil {
-										productAttributeLine.AttributeValues = append(productAttributeLine.AttributeValues, valueObj)
-									} else {
-										fmt.Println("valueObj: ", err)
-									}
-								} else {
-									fmt.Println("attrValueID: ", err)
-								}
+				if Attribute, err := GetProductAttributeByID(item.AttributeID); err == nil {
+					productAttributeLine := new(ProductAttributeLine)
+					productAttributeLine.Attribute = Attribute
+					productAttributeLine.CreateUser = addUser
+					productAttributeLine.UpdateUser = addUser
+					productAttributeLine.ProductTemplate = obj
+					if lineID, err := o.Insert(productAttributeLine); err == nil {
+						productAttributeLine.ID = lineID
+						m2m := o.QueryM2M(productAttributeLine, "AttributeValues")
+						attributeValueIDArr := item.AttributeValueIds
+						for _, attrValueID := range attributeValueIDArr {
+							if valueObj, err := GetProductAttributeValueByID(attrValueID); err == nil {
+								productAttributeLine.AttributeValues = append(productAttributeLine.AttributeValues, valueObj)
+							} else {
+								fmt.Println("valueObj: ", err)
 							}
-							for _, attrVal := range productAttributeLine.AttributeValues {
-								if !m2m.Exist(attrVal) {
-									m2m.Add(attrVal)
-								}
-							}
-							obj.AttributeLines = append(obj.AttributeLines, productAttributeLine)
-						} else {
-							fmt.Println("productAttributeLine: ", err)
 						}
-
+						for _, attrVal := range productAttributeLine.AttributeValues {
+							if !m2m.Exist(attrVal) {
+								m2m.Add(attrVal)
+							}
+						}
+						obj.AttributeLines = append(obj.AttributeLines, productAttributeLine)
 					} else {
-						fmt.Println("Attribute: ", err)
+						fmt.Println("productAttributeLine: ", err)
 					}
 
 				} else {
-					fmt.Println("AttributeID: ", err)
+					fmt.Println("Attribute: ", err)
 				}
 			}
 		}
@@ -152,6 +134,13 @@ func GetProductTemplateByID(id int64) (obj *ProductTemplate, err error) {
 	o := orm.NewOrm()
 	obj = &ProductTemplate{ID: id}
 	if err = o.Read(obj); err == nil {
+		if _, err := o.LoadRelated(obj, "AttributeLines"); err == nil {
+			for index, _ := range obj.AttributeLines {
+				o.LoadRelated(obj.AttributeLines[index], "Attribute")
+				o.LoadRelated(obj.AttributeLines[index], "AttributeValues")
+			}
+		}
+		fmt.Println(err)
 		if obj.Category != nil {
 			o.Read(obj.Category)
 		}
@@ -195,6 +184,9 @@ func GetAllProductTemplate(query map[string]string, fields []string, sortby []st
 		num       int64
 		err       error
 	)
+	if limit == 0 {
+		limit = 20
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(ProductTemplate))
 	qs = qs.RelatedSel()
@@ -259,19 +251,16 @@ func GetAllProductTemplate(query map[string]string, fields []string, sortby []st
 	return paginator, objArrs, err
 }
 
-// UpdateProductTemplateByID updates ProductTemplate by ID and returns error if
+// UpdateProductTemplate updates ProductTemplate by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductTemplateByID(m *ProductTemplate) (err error) {
+func UpdateProductTemplate(obj *ProductTemplate, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := ProductTemplate{ID: m.ID}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return
+	return obj.ID, err
 }
 
 // DeleteProductTemplate deletes ProductTemplate by ID and returns error if

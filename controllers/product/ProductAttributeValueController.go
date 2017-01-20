@@ -72,25 +72,17 @@ func (ctl *ProductAttributeValueController) Create() {
 }
 func (ctl *ProductAttributeValueController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	mapInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
 			if attributeValue, err := md.GetProductAttributeValueByID(idInt64); err == nil {
 				ctl.PageAction = attributeValue.Name
-				mapInfo["name"] = attributeValue.Name
-				attribute := make(map[string]interface{})
-				if attributeValue.Attribute != nil {
-					attribute["id"] = attributeValue.Attribute.ID
-					attribute["name"] = attributeValue.Attribute.Name
-				}
-				mapInfo["attribute"] = attribute
+				ctl.Data["ProductAttValue"] = attributeValue
 			}
 		}
 	}
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["ProductAttValue"] = mapInfo
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_attribute_value_form.html"
 }

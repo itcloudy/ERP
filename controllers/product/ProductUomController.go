@@ -154,47 +154,29 @@ func (ctl *ProductUomController) PostList() {
 }
 func (ctl *ProductUomController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	uomInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
 			if uom, err := md.GetProductUomByID(idInt64); err == nil {
 				ctl.PageAction = uom.Name
-				uomInfo["name"] = uom.Name
-				uomInfo["factor"] = uom.Factor
-				uomInfo["active"] = uom.Active
-				uomInfo["factorInv"] = uom.FactorInv
-				uomInfo["rounding"] = uom.Rounding
-				uomInfo["symbol"] = uom.Symbol
-				typeUom := make(map[string]interface{})
 				switch uom.Type {
 				case 1:
-					typeUom["id"] = 1
-					typeUom["name"] = "小于参考计量单位"
+					uom.TypeName = "小于参考计量单位"
 				case 2:
-					typeUom["id"] = 2
-					typeUom["name"] = "参考计量单位"
+					uom.TypeName = "参考计量单位"
 				case 3:
-					typeUom["id"] = 3
-					typeUom["name"] = "大于参考计量单位"
+					uom.TypeName = "大于参考计量单位"
 				default:
-					typeUom["id"] = 2
-					typeUom["name"] = "参考计量单位"
+					uom.TypeName = "参考计量单位"
 				}
-				uomInfo["type"] = typeUom
-				category := make(map[string]interface{})
-				category["id"] = uom.Category.ID
-				category["name"] = uom.Category.Name
-				uomInfo["category"] = category
+				ctl.Data["Uom"] = uom
+				fmt.Printf("%+v", uom)
 			}
 		}
 	}
-	fmt.Println(uomInfo)
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["Uom"] = uomInfo
 	ctl.Layout = "base/base.html"
-
 	ctl.TplName = "product/product_uom_form.html"
 }
 func (ctl *ProductUomController) Detail() {

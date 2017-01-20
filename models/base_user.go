@@ -13,7 +13,7 @@ import (
 // User table
 // 用户表
 type User struct {
-	ID              int64       `orm:"column(id);pk;auto" json:"id"`                                               //主键
+	ID              int64       `orm:"column(id);pk;auto" json:"id"`                                          //主键
 	CreateUser      *User       `orm:"rel(fk);null" json:"-"`                                                 //创建者
 	UpdateUser      *User       `orm:"rel(fk);null" json:"-"`                                                 //最后更新者
 	CreateDate      time.Time   `orm:"auto_now_add;type(datetime)" json:"-"`                                  //创建时间
@@ -24,7 +24,7 @@ type User struct {
 	Department      *Department `orm:"rel(fk);null;"  json:"department"`                                      //部门
 	DepartmentID    int64       `orm:"-" form:"Department"`                                                   //部门，用于form表单
 	Email           string      `orm:"size(20)" xml:"email" form:"Email" json:"email"`                        //邮箱
-	Mobile          string      `orm:"size(20);default(\"\")" xml:"Mobile" form:"mobile" json:"mobile"`       //手机号码
+	Mobile          string      `orm:"size(20);default(\"\")" xml:"mobile" form:"mobile" json:"mobile"`       //手机号码
 	Tel             string      `orm:"size(20);default(\"\")" form:"Tel" json:"tel"`                          //固定号码
 	Password        string      `xml:"password" form:"Password" json:"password"`                              //密码
 	ConfirmPassword string      `orm:"-" xml:"ConfirmPassword" form:"confirmpassword" json:"confirmpassword"` //确认密码,数据库中不保存
@@ -99,6 +99,9 @@ func GetAllUser(query map[string]string, fields []string, sortby []string, order
 		num       int64
 		err       error
 	)
+	if limit == 0 {
+		limit = 20
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(User))
 	qs = qs.RelatedSel()

@@ -13,7 +13,7 @@ import (
 
 //ProductAttributeValue 产品属性值
 type ProductAttributeValue struct {
-	ID         int64             `orm:"column(id);pk;auto" json:"id"`              //主键
+	ID         int64             `orm:"column(id);pk;auto" json:"id"`         //主键
 	CreateUser *User             `orm:"rel(fk);null" json:"-"`                //创建者
 	UpdateUser *User             `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time         `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
@@ -45,6 +45,9 @@ func GetProductAttributeValueByID(id int64) (obj *ProductAttributeValue, err err
 	o := orm.NewOrm()
 	obj = &ProductAttributeValue{ID: id}
 	if err = o.Read(obj); err == nil {
+		if obj.Attribute != nil {
+			o.Read(obj.Attribute)
+		}
 		return obj, nil
 	}
 	return nil, err
@@ -71,6 +74,9 @@ func GetAllProductAttributeValue(query map[string]interface{}, exclude map[strin
 		num       int64
 		err       error
 	)
+	if limit == 0 {
+		limit = 20
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(ProductAttributeValue))
 	qs = qs.RelatedSel()

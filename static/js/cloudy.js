@@ -7,18 +7,18 @@ $(function() {
     });
     //有checked的radio默认选中
     $("input.checked").iCheck("check");
-    //编辑删除readonly属性，输入框变成可编辑状态
-    $(".form-edit-btn").on("click", function(e) {
-        e.preventDefault();
-        $(".input-radio").iCheck("enable");
-        $(".form-disabled").addClass("form-edit").removeClass("form-disabled");
+    // //编辑删除readonly属性，输入框变成可编辑状态
+    // $(".form-edit-btn").on("click", function(e) {
+    //     e.preventDefault();
+    //     $(".input-radio").iCheck("enable");
+    //     $(".form-disabled").addClass("form-edit").removeClass("form-disabled");
 
-    });
-    $(".form-cancel-btn").on("click", function(e) {
-        e.preventDefault();
-        $(".input-radio").iCheck("disable");
-        $(".form-edit").addClass("form-disabled").removeClass("form-edit");
-    });
+    // });
+    // $(".form-cancel-btn").on("click", function(e) {
+    //     e.preventDefault();
+    //     $(".input-radio").iCheck("disable");
+    //     $(".form-edit").addClass("form-disabled").removeClass("form-edit");
+    // });
     $(".select-product-uom-category-type").on("change", function(e) {
         if (e.currentTarget.value == "1") {
             $("#factorInvDisplay").addClass("hidden");

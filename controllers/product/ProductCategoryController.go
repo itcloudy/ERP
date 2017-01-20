@@ -65,25 +65,17 @@ func (ctl *ProductCategoryController) Get() {
 }
 func (ctl *ProductCategoryController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	categoryInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
 			if category, err := md.GetProductCategoryByID(idInt64); err == nil {
 				ctl.PageAction = category.Name
-				categoryInfo["name"] = category.Name
-				parent := make(map[string]interface{})
-				if category.Parent != nil {
-					parent["id"] = category.Parent.ID
-					parent["name"] = category.Parent.Name
-				}
-				categoryInfo["parent"] = parent
+				ctl.Data["Category"] = category
 			}
 		}
 	}
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["Category"] = categoryInfo
 	ctl.Layout = "base/base.html"
 
 	ctl.TplName = "product/product_category_form.html"

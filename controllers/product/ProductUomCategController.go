@@ -137,18 +137,17 @@ func (ctl *ProductUomCategController) PostList() {
 }
 func (ctl *ProductUomCategController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	categInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if categ, err := md.GetProductUomCategByID(idInt64); err == nil {
 				ctl.PageAction = categ.Name
-				categInfo["name"] = categ.Name
+				ctl.Data["UomCateg"] = categ
 			}
 		}
 	}
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["UomCateg"] = categInfo
+
 	ctl.Layout = "base/base.html"
 
 	ctl.TplName = "product/product_uom_categ_form.html"

@@ -5,17 +5,15 @@
 <form id="productAttributeValueForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-from form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
     <div class="row">
         {{if .RecordID}} {{if .Readonly}}
-        <button type="button" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</button>
+        <a href="{{.URL}}{{.RecordID}}?action=edit" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</a>
         <a href="{{.URL}}?action=create" type="buttom" class="btn btn-success fa fa-plus pull-left form-create-btn">&nbsp新建</a>{{end}}{{end}}
-        <button type="submit" form="productAttributeValueForm" id="productAttributeValueForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button> {{if .Readonly}}
+        <button type="submit" form="productAttributeValueForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button> {{if .Readonly}}
         <button type="button" class="btn btn-danger fa fa-remove  pull-left form-cancel-btn">&nbsp取消</button> {{else}}
         <a href="{{.URL}}" class="btn btn-danger fa fa-remove  pull-left">&nbsp取消</a> {{end}}
-
         <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
     </div>
     {{ .xsrf }} {{if .RecordID}}
-    <input type="hidden" name="recordID" id="record-id" value="{{.RecordID}}">
-    <input type="hidden" name="_method" value="PUT"> {{end}}
+    <input type="hidden" name="recordID" id="record-id" value="{{.RecordID}}"> {{end}}
     <fieldset>
         <legend>基本信息</legend>
         <div class="row">
@@ -23,11 +21,11 @@
                 <div class="form-group">
                     <label for="productAttributeID" class="col-md-4 control-label label-start">属性<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
-                        <p class="p-form-control">{{if .ProductAttValue}} {{.ProductAttValue.attribute.name}} {{end}}</p>
+                        <p class="p-form-control">{{if .ProductAttValue}} {{.ProductAttValue.Attribute.Name}} {{end}}</p>
 
                         <select name="productAttributeID" id="productAttributeID" autofocus class="form-control select-product-attribute">
                             {{if .ProductAttValue}}
-                            <option value="{{.ProductAttValue.attribute.id}}" selected="selected">{{.ProductAttValue.attribute.name}}</option> 
+                            <option value="{{.ProductAttValue.Attribute.ID}}" selected="selected">{{.ProductAttValue.Attribute.Name}}</option> 
                             {{end}}
                         </select>
                     </div>
@@ -37,8 +35,8 @@
                 <div class="form-group">
                     <label for="name" class="col-md-4 control-label label-start">属性值<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
-                        <p class="p-form-control">{{if .ProductAttValue}} {{.ProductAttValue.name}} {{end}}</p>
-                        <input class="form-control" name="name" type="text" {{if .ProductAttValue}} value="{{.ProductAttValue.name}}" {{end}} />
+                        <p class="p-form-control">{{if .ProductAttValue}} {{.ProductAttValue.Name}} {{end}}</p>
+                        <input class="form-control" name="Name" type="text" {{if .ProductAttValue}} value="{{.ProductAttValue.Name}}" {{end}} />
                     </div>
                 </div>
             </div>

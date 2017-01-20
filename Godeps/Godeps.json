@@ -75,6 +75,15 @@
 			"ImportPath": "github.com/lib/pq/oid",
 			"Comment": "go1.0-cutoff-136-g5bf1611",
 			"Rev": "5bf161122cd640c2a5a2c1d7fa49ea9befff31dd"
+		},
+		{
+			"ImportPath": "github.com/mattn/go-sqlite3",
+			"Comment": "v1.2.0-20-g7ed900a",
+			"Rev": "7ed900a7c4cc22315a007cc49821cce3baa7be0f"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "f2499483f923065a842d38eb4c7f1927e6fc6e6d"
 		}
 	]
 }

@@ -22,9 +22,9 @@ type ProductAttributeLine struct {
 	AttributeValues []*ProductAttributeValue `orm:"rel(m2m)"`                             //属性值
 
 	// form表单使用字段
-	FormAction        string   `orm:"-" json:"FormAction"`        //表单动作
-	AttributeID       string   `orm:"-" json:"AttributeId"`       //表单属性
-	AttributeValueIds []string `orm:"-" json:"AttributeValueIds"` //表单属性值
+	FormAction        string  `orm:"-" json:"FormAction"`        //表单动作
+	AttributeID       int64   `orm:"-" json:"AttributeId"`       //表单属性
+	AttributeValueIds []int64 `orm:"-" json:"AttributeValueIds"` //表单属性值
 }
 
 func init() {
@@ -60,6 +60,9 @@ func GetAllProductAttributeLine(query map[string]string, fields []string, sortby
 		num       int64
 		err       error
 	)
+	if limit == 0 {
+		limit = 20
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(ProductAttributeLine))
 	qs = qs.RelatedSel()

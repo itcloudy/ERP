@@ -13,7 +13,7 @@ import (
 
 // ProductProduct 产品规格
 type ProductProduct struct {
-	ID                  int64                    `orm:"column(id);pk;auto" json:"id"`              //主键
+	ID                  int64                    `orm:"column(id);pk;auto" json:"id"`         //主键
 	CreateUser          *User                    `orm:"rel(fk);null" json:"-"`                //创建者
 	UpdateUser          *User                    `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate          time.Time                `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
@@ -82,6 +82,9 @@ func GetAllProductProduct(query map[string]string, fields []string, sortby []str
 		num       int64
 		err       error
 	)
+	if limit == 0 {
+		limit = 20
+	}
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(ProductProduct))
 	qs = qs.RelatedSel()

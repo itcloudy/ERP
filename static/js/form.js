@@ -4,7 +4,7 @@ $(function() {
         var form = e.currentTarget.form;
         var formNode = $('#' + form.id);
         var formData = {
-            FormAction: "create"
+            FormAction: "create" //默认为创建
         };
         var xsrf = $("input[name ='_xsrf']");
         if (xsrf.length > 0) {
@@ -12,20 +12,47 @@ $(function() {
             // formData._xsrf = xsrf[0].value;
         }
         // form表单验证
-        var bootstrapValidator = formNode.data('bootstrapValidator');
-        //手动触发验证
-        bootstrapValidator.validate();
-        // 验证结果
-        var formValid = bootstrapValidator.isValid();
-        if (!formValid) {
-            toastr.error("数据验证失败，请检查数据", "错误");
-            return;
-        }
+        // var bootstrapValidator = formNode.data('bootstrapValidator');
+        // //手动触发验证
+        // bootstrapValidator.validate();
+        // // 验证结果
+        // var formValid = bootstrapValidator.isValid();
+        // if (!formValid) {
+        //     toastr.error("数据验证失败，请检查数据", "错误");
+        //     return;
+        // }
         //    获得form直接的字段
         var formFields = $(form).find(".form-create,.form-edit");
         if ($(form).find("input[name='recordID']").length > 0) {
-            form.FormAction = "update";
+            formData.FormAction = "update";
         }
+        //根据数据类型获得正确的数据,默认string
+        var getCurrentDataType = function(val, dataType = "string") {
+            switch (dataType) {
+                case "int": // 整形
+                    val = parseInt(val);
+                    break;
+                case "float": // 浮点型
+                    val = parseFloat(val);
+                    break;
+
+                case "array_int": // 整形数组
+                    var a_arr = [];
+                    for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                        a_arr.push(parseInt(val[a_i]));
+                    }
+                    val = a_arr;
+                    break;
+                case "arrar_float": //  浮点型数组
+                    var a_arr = [];
+                    for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                        a_arr.push(parseFloat(val[a_i]));
+                    }
+                    val = a_arr;
+                    break;
+            }
+            return val
+        };
         for (var i = 0, len = formFields.length; i < len; i++) {
             var self = formFields[i];
             // 处理radio数据
@@ -40,10 +67,33 @@ $(function() {
             } else {
                 var val = $(self).val();
                 if (val != "") {
-                    formData[self.name] = val;
+                    // 若为null跳出此次循环
+                    if (val === null) {
+                        continue;
+                    }
+                    formData[self.name] = getCurrentDataType(val, $(self).data("type"))
                 }
             }
         }
+        var getTreeLineData = function(cellFields, action = "create") {
+            var funCellData = {
+                FormAction: action
+            };
+            for (var j = 0, cellLen = cellFields.length; j < cellLen; j++) {
+                var funHasProp = false;
+                var cell = cellFields[j];
+                var cellName = cell.name;
+                var cellValue = $(cell).val();
+                if (cellValue != "") {
+                    if (cellValue === null) {
+                        continue;
+                    }
+                    funCellData[cellName] = getCurrentDataType(cellValue, $(cell).data("type"));
+                    funHasProp = true;
+                }
+            }
+            return { cellData: funCellData, hasProp: funHasProp };
+        };
         //获得form-tree-create信息
         var formTreeFields = $(form).find(".form-tree-line-create");
         for (var i = 0, lineLen = formTreeFields.length; i < lineLen; i++) {
@@ -52,34 +102,59 @@ $(function() {
             if (formData[treeName] == undefined) {
                 formData[treeName] = [];
             }
-            var cellFields = $(self).find(".form-tree-create");
-            var cellData = {
-                FormAction: "create"
-            };
-            var hasProp = false;
-            for (var j = 0, cellLen = cellFields.length; j < cellLen; j++) {
-                var cell = cellFields[j];
-                var cellName = cell.name;
-                var cellValue = $(cell).val();
-                if (cellValue != null) {
-                    cellData[cellName] = cellValue;
-                    console.log(cellData);
-                    hasProp = true;
+            var cellFields = $(self).find(".form-line-cell-create");
+            var resultCreate = getTreeLineData(cellFields, "create");
+            if (resultCreate.hasProp) {
+                formData[treeName].push(resultCreate.cellData);
+            }
+        }
+        //获得form-tree-edit信息
+        var formTreeFields = $(form).find(".form-tree-line-edit");
+        for (var i = 0, lineLen = formTreeFields.length; i < lineLen; i++) {
+            var self = formTreeFields[i];
+            var treeName = $(self).data("treename");
+            if (formData[treeName] == undefined) {
+                formData[treeName] = [];
+            }
+            var createCellFields = $(self).find(".form-line-cell-create");
+            if (createCellFields.length > 0) {
+                var resultCreate = getTreeLineData(createCellFields, "create");
+                if (resultCreate.hasProp) {
+                    formData[treeName].push(resultCreate.cellData);
                 }
             }
-            if (hasProp) {
-                formData[treeName].push(cellData);
-
+            var editCellFields = $(self).find(".form-line-cell-edit");
+            if (editCellFields.length > 0) {
+                var resultCreate = getTreeLineData(editCellFields, "update");
+                if (resultCreate.hasProp) {
+                    formData[treeName].push(resultCreate.cellData);
+                }
             }
         }
         console.log(formData);
-        $.post(form.action, { postData: JSON.stringify(formData), _xsrf: xsrf }).success(function(response) {
+        var postParams = {
+            postData: JSON.stringify(formData),
+            _xsrf: xsrf
+        };
+        var method = $(form).find("input[name='_method']");
+        if (method.length > 0) {
+            postParams._method = method.val();
+        }
+        $.post(form.action, postParams).success(function(response) {
             if (response.code == 'failed') {
-                toastr.error("创建失败", "错误");
+                if (formData.FormAction == "update") {
+                    toastr.error("修改失败", "错误");
+                } else {
+                    toastr.error("创建失败", "错误");
+                }
                 return;
             } else {
-                toastr.success("创建成功");
-                // window.location = response.location;
+                if (formData.FormAction == "update") {
+                    toastr.success("<h3>修改成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
+                } else {
+                    toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
+                }
+                setTimeout(function() { window.location = response.location; }, 2000);
             }
         });
         e.preventDefault();
@@ -144,7 +219,6 @@ $(function() {
                 carouselInnerHtml += '<div class="item "> <img src="' + images[i].src + '" alt=""> </div>';
             }
         }
-        console.log(indicatorsHtml);
         $("#productImagesCarousel .carousel-indicators").append(indicatorsHtml);
         $("#productImagesCarousel .carousel-inner").append(carouselInnerHtml);
         $('#productImagesModal').modal('show');
