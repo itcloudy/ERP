@@ -23,8 +23,53 @@
     margin-bottom: 0px;
 }
 
+
+/*form页面状态控制*/
+
 .form-button-action>button {
-    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+.step-arrow li a::before {
+    position: absolute;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    top: -2px;
+    left: 2rem;
+    font-weight: bold;
+    font-size: 2rem;
+    overflow: hidden;
+}
+
+.nav-pills>li>a {
+    border-top-width: 0px;
+}
+
+.step-arrow li:not(:last-child) a::after {
+    position: absolute;
+    top: -2px;
+    right: -20px;
+    width: 38px;
+    height: 38px;
+    transform: scale(0.65) rotate(45deg);
+    z-index: 1;
+    background: #FFF;
+    border-radius: 0 4px 0 50px;
+    border-top: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+    box-sizing: content-box;
+}
+
+.step-arrow li.active:not(:last-child) a::after {
+    background-color: #337ab7;
+}
+
+.step-arrow>li>a {
+    position: relative;
+    display: block;
+    padding: 8px 15px;
 }
 
 

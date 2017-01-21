@@ -23,7 +23,7 @@
                     <div class="col-md-8">
                         <p class="p-form-control">{{if .ProductAttValue}} {{.ProductAttValue.Attribute.Name}} {{end}}</p>
 
-                        <select name="productAttributeID" id="productAttributeID" autofocus class="form-control select-product-attribute">
+                        <select name="AttributeID" id="productAttributeID" autofocus class="form-control select-product-attribute">
                             {{if .ProductAttValue}}
                             <option value="{{.ProductAttValue.Attribute.ID}}" selected="selected">{{.ProductAttValue.Attribute.Name}}</option> 
                             {{end}}

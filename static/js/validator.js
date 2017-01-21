@@ -268,7 +268,7 @@ $("#productAttributeValueForm").bootstrapValidator({
     submitButtons: 'button[type="submit"]',
     trigger: null,
     fields: {
-        name: {
+        Name: {
             message: "该值无效",
             validators: {
                 notEmpty: {
@@ -302,6 +302,14 @@ $("#productAttributeValueForm").bootstrapValidator({
                     },
                 },
             },
+        },
+        AttributeID: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "属性不能为空"
+                }
+            }
         }
     }
 });

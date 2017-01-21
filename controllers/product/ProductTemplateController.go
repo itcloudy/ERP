@@ -72,7 +72,6 @@ func (ctl *ProductTemplateController) Put() {
 		} else {
 			result["code"] = "failed"
 			result["message"] = "数据创建失败"
-
 			for _, item := range errs {
 				debugs = append(debugs, item.Error())
 			}

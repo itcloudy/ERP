@@ -11,6 +11,13 @@
         <a href="{{.URL}}{{if .RecordID}}}{{.RecordID}}?action=detail{{end}}" class="btn btn-danger fa fa-remove  pull-left form-cancel-btn">&nbsp取消</a>
         <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
     </div>
+    <div class="row">
+        <nav class="navbar navbar-default navbar-form-state" role="navigation">
+            <div class="form-button-action pull-left">
+                <button class="btn btn-primary" id="generate_product_variants">生成规格</button>
+            </div>
+        </nav>
+    </div>
     {{ .xsrf }} {{if .RecordID}}
     <input type="hidden" name="recordID" id="record-id" class="{{.FormField}}" value="{{.RecordID}}">
     <input type="hidden" name="_method" class="{{.FormField}}" value="PUT"> {{end}}
