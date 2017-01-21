@@ -5,7 +5,7 @@
 
 /*form表单状态*/
 
-.navbar-form-state {
+.navbar-form-top {
     margin-top: 2px;
     background-color: #FFF;
     min-height: 30px;
@@ -28,6 +28,13 @@
 
 .form-button-action>button {
     margin-bottom: 0px;
+}
+
+
+/*form表单按钮显示控制，非权限*/
+
+.form-edit .form-button-action button {
+    display: none;
 }
 
 .step-arrow li a::before {
