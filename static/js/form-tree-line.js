@@ -89,8 +89,6 @@ $(function() {
                         selectParams._xsrf = xsrf[0].value;
                     }
                     var attributeid = this.data("attributeid");
-                    console.log(attributeid);
-                    console.log($(this));
                     if (attributeid != undefined) {
                         var attributeId = $("#" + attributeid).val();
                         if (attributeId == null) {
@@ -104,7 +102,6 @@ $(function() {
                     if ($(this).length > 0 && $(this)[0].nodeName == "SELECT") {
                         selectParams.exclude = $(this).val();
                     }
-                    console.log(selectParams);
                     return selectParams;
                 },
                 processResults: function(data, params) {

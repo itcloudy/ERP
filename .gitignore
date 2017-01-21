@@ -5,7 +5,8 @@
 *.exe
 *.exe~
 .vscode/
+ goERP.*
 debug
 debug~
 .idea
-log/*
+log/*.log

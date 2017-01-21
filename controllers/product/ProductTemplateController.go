@@ -58,20 +58,31 @@ func (ctl *ProductTemplateController) Put() {
 	postData := ctl.GetString("postData")
 	template := new(md.ProductTemplate)
 	var (
-		err error
-		id  int64
+		err    error
+		id     int64
+		errs   []error
+		debugs []string
 	)
 	if err = json.Unmarshal([]byte(postData), template); err == nil {
 		// 获得struct表名
 		// structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
-		if id, err = md.AddProductTemplate(template, &ctl.User); err == nil {
+		if id, errs = md.AddProductTemplate(template, &ctl.User); len(errs) == 0 {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
+			}
+			result["debug"] = debugs
 		}
 	}
 	if err != nil {
 		result["code"] = "failed"
-		result["debug"] = err.Error()
+		debugs = append(debugs, err.Error())
+		result["debug"] = debugs
 	}
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
@@ -133,19 +144,24 @@ func (ctl *ProductTemplateController) PostCreate() {
 	postData := ctl.GetString("postData")
 	template := new(md.ProductTemplate)
 	var (
-		err error
-		id  int64
+		err  error
+		id   int64
+		errs []error
 	)
 	if err = json.Unmarshal([]byte(postData), template); err == nil {
 		// 获得struct表名
 		// structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
-		if id, err = md.AddProductTemplate(template, &ctl.User); err == nil {
+		if id, errs = md.AddProductTemplate(template, &ctl.User); len(errs) == 0 {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
 			result["code"] = "failed"
 			result["message"] = "数据创建失败"
-			result["debug"] = err.Error()
+			var debugs []string
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
+			}
+			result["debug"] = debugs
 		}
 	} else {
 		result["code"] = "failed"

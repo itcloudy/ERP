@@ -12,22 +12,25 @@ $(function() {
             // formData._xsrf = xsrf[0].value;
         }
         // form表单验证
-        // var bootstrapValidator = formNode.data('bootstrapValidator');
+        var bootstrapValidator = formNode.data('bootstrapValidator');
         // //手动触发验证
-        // bootstrapValidator.validate();
+        bootstrapValidator.validate();
         // // 验证结果
-        // var formValid = bootstrapValidator.isValid();
-        // if (!formValid) {
-        //     toastr.error("数据验证失败，请检查数据", "错误");
-        //     return;
-        // }
+        var formValid = bootstrapValidator.isValid();
+        if (!formValid) {
+            toastr.error("数据验证失败，请检查数据", "错误");
+            return;
+        }
         //    获得form直接的字段
         var formFields = $(form).find(".form-create,.form-edit");
         if ($(form).find("input[name='recordID']").length > 0) {
             formData.FormAction = "update";
         }
         //根据数据类型获得正确的数据,默认string
-        var getCurrentDataType = function(val, dataType = "string") {
+        var getCurrentDataType = function(val, dataType) {
+            if (dataType == "" || dataType === undefined || dataType === null) {
+                dataType = "string";
+            }
             switch (dataType) {
                 case "int": // 整形
                     val = parseInt(val);

@@ -26,11 +26,11 @@ var fileLogs *logs.BeeLogger
 var runmode string
 
 func init() {
-	consoleLogs = logs.NewLogger(1000)
+	consoleLogs = logs.NewLogger(1)
 	consoleLogs.SetLogger(logs.AdapterConsole)
-	fileLogs = logs.NewLogger(1000)
+	fileLogs = logs.NewLogger(1)
 	fileLogs.SetLogger(logs.AdapterMultiFile, `{"filename":"logs/goERP.log","separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"],"level":7,"daily":true,"maxdays":10}`)
-	runmode := strings.TrimSpace(strings.ToLower(beego.AppConfig.String("runmode")))
+	runmode = strings.TrimSpace(strings.ToLower(beego.AppConfig.String("runmode")))
 	if runmode == "" {
 		runmode = "dev"
 	}
@@ -39,12 +39,12 @@ func init() {
 //LogOut 输出日志
 // @Title LogOut
 // @Param	body		body 	models.AccountAccountTag	true		"body for AccountAccountTag content"
-func LogOut(level, format string, v ...interface{}) {
-	level = strings.TrimSpace(strings.ToLower(level))
+func LogOut(level, format string, v interface{}) {
+
 	if level == "" {
 		level = "debug"
 	}
-	if runmode == "prod" {
+	if runmode == "dev" {
 		switch level {
 		case "emergency":
 			fileLogs.Emergency(format, v)

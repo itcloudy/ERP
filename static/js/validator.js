@@ -182,7 +182,7 @@ $("#productCategoryForm").bootstrapValidator({
     submitButtons: 'button[type="submit"]',
     trigger: null,
     fields: {
-        name: {
+        Name: {
             message: "该值无效",
             validators: {
                 notEmpty: {

@@ -62,12 +62,15 @@ func init() {
 
 // AddProductTemplate insert a new ProductTemplate into database and returns
 // last inserted ID on success.
-func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err error) {
+func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, errs []error) {
 	o := orm.NewOrm()
 	obj.CreateUser = addUser
 	obj.UpdateUser = addUser
+	var err error
 	err = o.Begin()
-	fmt.Println(obj.SecondSaleUomID)
+	if err != nil {
+		errs = append(errs, err)
+	}
 	if obj.CategoryID != 0 {
 		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)
 	}
@@ -101,6 +104,7 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 							if valueObj, err := GetProductAttributeValueByID(attrValueID); err == nil {
 								productAttributeLine.AttributeValues = append(productAttributeLine.AttributeValues, valueObj)
 							} else {
+								errs = append(errs, err)
 								fmt.Println("valueObj: ", err)
 							}
 						}
@@ -111,21 +115,30 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 						}
 						obj.AttributeLines = append(obj.AttributeLines, productAttributeLine)
 					} else {
+						errs = append(errs, err)
 						fmt.Println("productAttributeLine: ", err)
 					}
 
 				} else {
+					errs = append(errs, err)
 					fmt.Println("Attribute: ", err)
 				}
 			}
 		}
 	}
 	if err != nil {
+		errs = append(errs, err)
 		err = o.Rollback()
+		if err != nil {
+			errs = append(errs, err)
+		}
 	} else {
 		err = o.Commit()
+		if err != nil {
+			errs = append(errs, err)
+		}
 	}
-	return id, err
+	return id, errs
 }
 
 // GetProductTemplateByID retrieves ProductTemplate by ID. Returns error if

@@ -7,14 +7,14 @@ import (
 	_ "goERP/models"
 	_ "goERP/routers"
 
-	"fmt"
+	"goERP/utils"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/beego/i18n"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/mattn/go-sqlite3"
 )
 
 const (
@@ -32,13 +32,10 @@ func init() {
 	dbPort := beego.AppConfig.String(dbType + "::db_port")
 	dbHost := beego.AppConfig.String(dbType + "::db_host")
 	orm.RegisterDriver(dbType, orm.DRPostgres)
-	fmt.Println(dbAlias)
-	fmt.Println(dbName)
-	fmt.Println(dbType)
-
 	switch dbType {
 	//数据库类型和数据库驱动名一致
 	case "postgres":
+
 		dbSslmode := beego.AppConfig.String(dbType + "::db_sslmode")
 		dataSource := "user=" + dbUser + " password=" + dbPwd + " dbname=" + dbName + " host=" + dbHost + " port=" + dbPort + " sslmode=" + dbSslmode
 		orm.RegisterDataBase(dbAlias, dbType, dataSource)
@@ -51,6 +48,7 @@ func init() {
 		orm.RegisterDataBase(dbAlias, "sqlite3", dbName)
 
 	}
+	utils.LogOut("prod", "%s", "使用数据库为:"+dbType)
 	//重新运行时是否覆盖原表创建,false:不会删除原表,修改表信息时将会在原来的基础上修改，true删除原表重新创建
 	coverDb, _ := beego.AppConfig.Bool("cover_db")
 
@@ -62,5 +60,6 @@ func init() {
 
 }
 func main() {
+	utils.LogOut("prod", "%s", "start server")
 	beego.Run()
 }
