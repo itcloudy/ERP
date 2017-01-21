@@ -181,7 +181,6 @@ func (ctl *ProductAttributeValueController) PostList() {
 	if len(excludeIds) > 0 {
 		exclude["Id.in"] = excludeIds
 	}
-
 	if result, err := ctl.productAttributeValueList(query, exclude, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}

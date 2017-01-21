@@ -40,11 +40,11 @@ $(function() {
         $(selectClass).each(function(index, el) {
             if (el.id != undefined && el.id != "") {
                 var $selectNode = $("#" + el.id);
-                Nodeselect2(el.id, ajaxUrl, tags);
+                nodeSelect2(el.id, ajaxUrl, tags);
             }
         });
     };
-    var Nodeselect2 = function(nodeId, ajaxUrl, tags) {
+    var nodeSelect2 = function(nodeId, ajaxUrl, tags) {
         'use strict';
         $("#" + nodeId).select2({
             width: "off",

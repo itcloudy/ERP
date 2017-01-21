@@ -115,7 +115,7 @@
                             <label for="standardPrice" class="col-md-4 control-label label-start">成本价格<span>&nbsp</span></label>
                             <div class="col-md-8">
                                 <p class="p-form-control">{{if .Tp}} {{.Tp.StandardPrice}} {{end}}</p>
-                                <input data-type="float" class="form-control {{.FormField}}" name="StandardPrice" type="text" {{if .Tp}} value="{{.Tp.StandardPrice}}" {{end}} />
+                                <input data-type="float" data-oldvalue="{{.Tp.StandardPrice}}" class="form-control {{.FormField}}" name="StandardPrice" type="text" {{if .Tp}} value="{{.Tp.StandardPrice}}" {{end}} />
                             </div>
                         </div>
                     </div>
@@ -134,7 +134,7 @@
                             <label for="category" class="col-md-4 control-label label-start">款式类别<span class="required-input">&nbsp*</span></label>
                             <div class="col-md-8">
                                 <p class="p-form-control">{{if and .Tp .Tp.Category}} {{.Tp.Category.Name}} {{end}}</p>
-                                <select data-type="int" name="Category" id="category" class="{{.FormField}} form-control select-product-category">
+                                <select data-type="int" {{if and .Tp .Tp.Category}} data-oldvalue="{{.Tp.Category.ID}}" {{end}} name="Category" id="category" class="{{.FormField}} form-control select-product-category">
                                     {{if and .Tp .Tp.Category}}
                                     <option value="{{.Tp.Category.ID}}" selected="selected">{{.Tp.Category.Name}}</option>
                                     {{end}}
@@ -151,7 +151,7 @@
                                 <label for="firstSaleUom" class="col-md-4 control-label label-start">销售单位1<span class="required-input">&nbsp*</span></label>
                                 <div class="col-md-8">
                                     <p class="p-form-control">{{if and .Tp .Tp.FirstSaleUom}} {{.Tp.FirstSaleUom.Name}} {{end}}</p>
-                                    <select data-type="int" name="FirstSaleUom" id="firstSaleUom" class="{{.FormField}} form-control select-product-uom">
+                                    <select data-type="int" {{if and .Tp .Tp.FirstSaleUom}} data-oldvalue="{{.Tp.FirstSaleUom.ID}}" {{end}} name="FirstSaleUom" id="firstSaleUom" class="{{.FormField}} form-control select-product-uom">
                                         {{if and .Tp .Tp.FirstSaleUom}} 
                                         <option value="{{.Tp.FirstSaleUom.ID}}" selected="selected">{{.Tp.FirstSaleUom.Name}}</option>
                                         {{end}}
@@ -162,7 +162,7 @@
                                 <label for="secondSaleUom" class="col-md-4 control-label label-start">销售单位2<span>&nbsp</span></label>
                                 <div class="col-md-8">
                                     <p class="p-form-control">{{if and .Tp .Tp.SecondSaleUom}} {{.Tp.SecondSaleUom.Name}} {{end}}</p>
-                                    <select data-type="int" name="SecondSaleUom" id="secondSaleUom" class="{{.FormField}} form-control select-product-uom">
+                                    <select data-type="int" {{if and .Tp .Tp.SecondSaleUom}} data-oldvalue="{{.Tp.SecondSaleUom.ID}}" {{end}} name="SecondSaleUom" id="secondSaleUom" class="{{.FormField}} form-control select-product-uom">
                                         {{if and .Tp .Tp.SecondSaleUom}}
                                             <option value="{{.Tp.SecondSaleUom.ID}}" selected="selected">{{.Tp.SecondSaleUom.Name}}</option>
                                         {{end}}
@@ -178,7 +178,7 @@
                                 <label for="firstPurchaseUom" class="col-md-4 control-label label-start">采购单位1<span class="required-input">&nbsp*</span></label>
                                 <div class="col-md-8">
                                     <p class="p-form-control">{{if and .Tp .Tp.FirstPurchaseUom}} {{.Tp.FirstPurchaseUom.Name}} {{end}}</p>
-                                    <select data-type="int" name="FirstPurchaseUom" id="firstPurchaseUom" class="{{.FormField}} form-control select-product-uom">
+                                    <select data-type="int" {{if and .Tp .Tp.FirstPurchaseUom}} data-oldvalue="{{.Tp.FirstPurchaseUom.ID}}" {{end}} name="FirstPurchaseUom" id="firstPurchaseUom" class="{{.FormField}} form-control select-product-uom">
                                         {{if and .Tp .Tp.FirstPurchaseUom}} 
                                             <option value="{{.Tp.FirstPurchaseUom.ID}}" selected="selected">{{.Tp.FirstPurchaseUom.Name}}</option>
                                         {{end}}
@@ -189,7 +189,7 @@
                                 <label for="secondPurchaseUom" class="col-md-4 control-label label-start">采购单位2<span>&nbsp</span></label>
                                 <div class="col-md-8">
                                     <p class="p-form-control">{{if and .Tp .Tp.SecondPurchaseUom}} {{.Tp.SecondPurchaseUom.Name}} {{end}}</p>
-                                    <select data-type="int" name="SecondPurchaseUom" id="secondPurchaseUom" class="{{.FormField}} form-control select-product-uom">
+                                    <select data-type="int" {{if and .Tp .Tp.SecondPurchaseUom}} data-oldvalue="{{.Tp.SecondPurchaseUom.ID}}" {{end}} name="SecondPurchaseUom" id="secondPurchaseUom" class="{{.FormField}} form-control select-product-uom">
                                         {{if and .Tp .Tp.SecondPurchaseUom}}
                                             <option value="{{.Tp.SecondPurchaseUom.ID}}" selected="selected">{{.Tp.SecondPurchaseUom.Name}}</option>
                                         {{end}}
@@ -243,13 +243,13 @@
 
                                 <td>
                                     <p class="p-form-control">{{$attributeLine.Attribute.Name}}</p>
-                                    <select data-type='int' data-name='AttributeId' name='AttributeId' id='AttributeId-{{$lineId}}' class='form-line-cell-edit form-control select-product-attribute'>
+                                    <select data-type='int' {{if and $attributeLine $attributeLine.Attribute}} data-oldvalue="{{$attributeLine.Attribute.ID}}" {{end}} data-name='AttributeId' name='AttributeId' id='AttributeId-{{$lineId}}' class='form-line-cell-edit form-control form-tree-select-product-attribute'>
                                         <option value="{{$attributeLine.Attribute.ID}}" selected="selected">{{$attributeLine.Attribute.Name}}</option>
                                     </select>
                                 </td>
                                 <td>
                                     <p class="p-form-control"> {{range $j,$attrVal := $attributeLine.AttributeValues}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}</p>
-                                    <select data-type='array_int' data-name='AttributeValueIds' name='AttributeValueIds' data-attributeid='AttributeId-{{$AttrId}}' id='AttributeValueIds-{{$lineId}}' multiple='multiple' class='form-line-cell-edit form-control select-product-attribute-value'>
+                                    <select data-type='array_int' data-name='AttributeValueIds' name='AttributeValueIds' data-attributeid='AttributeId-{{$lineId}}' id='AttributeValueIds-{{$lineId}}' multiple='multiple' class='form-line-cell-edit form-control form-tree-select-product-attribute-value'>
 	                                    {{range $j,$attrVal :=  $attributeLine.AttributeValues}}
                                             <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>
                                         {{end}}
