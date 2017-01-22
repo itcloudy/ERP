@@ -30,11 +30,11 @@
                 <div class="form-group">
                     <label for="parent" class="col-md-4 control-label label-start">上级类别</label>
                     <div class="col-md-8">
-                        <p class="p-form-control">{{if .Category}} {{.Category.Parent.Name}}{{else}} - {{end}}</p>
+                        <p class="p-form-control">{{if and .Category .Category.Parent}} {{.Category.Parent.Name}}{{else}} - {{end}}</p>
                         <select name="Parent" id="parent" class="form-control select-product-category">
-                            {{if .Category}}{{if .Category.Parent}}
+                            {{if and .Category .Category.Parent}} 
                             <option value="{{.Category.Parent.ID}}}" selected="selected">{{.Category.Parent.Name}}</option>
-                            {{end}}{{end}}
+                            {{end}} 
                         </select>
                     </div>
                 </div>

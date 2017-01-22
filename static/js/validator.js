@@ -249,7 +249,8 @@ $("#productAttributeForm").bootstrapValidator({
                         if (recordID.length > 0) {
                             params.recordID = recordID[0].value;
                         }
-                        return params
+                        console.log(params);
+                        return params;
                     },
                 },
             },

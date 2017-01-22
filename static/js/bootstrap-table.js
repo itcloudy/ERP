@@ -349,10 +349,42 @@ displayTable("#table-product-category", "/product/category/", [
 //产品款式
 displayTable("#table-product-template", "/product/template/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
-    { title: "款式编码", field: 'defaultCode', sortable: true, order: "desc" },
-    { title: "款式名称", field: 'name', sortable: true, order: "desc" },
-    { title: "款式类别", field: 'category', sortable: true, order: "desc" },
-    { title: "规格数量", field: 'variantCount', sortable: true, order: "desc" },
+    { title: "款式编码", field: 'DefaultCode', sortable: true, order: "desc" },
+    { title: "款式名称", field: 'Name', sortable: true, order: "desc" },
+    { title: "款式类别", field: 'Category', sortable: true, order: "desc" },
+    { title: "规格数量", field: 'VariantCount', sortable: true, order: "desc" },
+    {
+        title: "有效",
+        field: 'Active',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.Active) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "可销售",
+        field: 'SaleOk',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.Active) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
     {
         title: "操作",
         align: "center",
@@ -365,6 +397,7 @@ displayTable("#table-product-template", "/product/template/", [
             return html;
         }
     }
+
 ]);
 
 //产品规格

@@ -18,7 +18,6 @@ func (ctl *ProductTemplateController) Post() {
 	ctl.URL = "/product/template/"
 	ctl.Data["URL"] = ctl.URL
 	action := ctl.Input().Get("action")
-	fmt.Println(action)
 	switch action {
 	case "validator":
 		ctl.Validator()
@@ -56,6 +55,7 @@ func (ctl *ProductTemplateController) Put() {
 	fmt.Println("enter put")
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
+	fmt.Println(postData)
 	template := new(md.ProductTemplate)
 	var (
 		err    error
@@ -212,7 +212,6 @@ func (ctl *ProductTemplateController) Validator() {
 	} else {
 		if obj.Name == name {
 			if recordID == obj.ID {
-
 				result["valid"] = true
 			} else {
 				result["valid"] = false
@@ -239,16 +238,18 @@ func (ctl *ProductTemplateController) productTemplateList(query map[string]strin
 		tableLines := make([]interface{}, 0, 4)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["name"] = line.Name
-			oneLine["sequence"] = line.Sequence
+			oneLine["Name"] = line.Name
+			oneLine["Sequence"] = line.Sequence
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
-			oneLine["defaultCode"] = line.DefaultCode
+			oneLine["SaleOk"] = line.SaleOk
+			oneLine["Active"] = line.Active
+			oneLine["DefaultCode"] = line.DefaultCode
 			category := line.Category
 			if category != nil {
-				oneLine["category"] = category.Name
+				oneLine["Category"] = category.Name
 			}
-			oneLine["variantCount"] = line.VariantCount
+			oneLine["VariantCount"] = line.VariantCount
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

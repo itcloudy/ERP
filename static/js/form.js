@@ -14,13 +14,16 @@ $(function() {
         // form表单验证
         var bootstrapValidator = formNode.data('bootstrapValidator');
         // //手动触发验证
-        bootstrapValidator.validate();
+        bootstrapValidator.validate("validate");
         // // 验证结果
         var formValid = bootstrapValidator.isValid();
+        console.log(formValid);
+        console.log(bootstrapValidator);
         if (!formValid) {
             toastr.error("数据验证失败，请检查数据", "错误");
-            return;
+            return false;
         }
+
         //    获得form直接的字段
         var formFields = $(form).find(".form-create,.form-edit");
         if ($(form).find("input[name='recordID']").length > 0) {
@@ -86,6 +89,8 @@ $(function() {
                 var funHasProp = false;
                 var cell = cellFields[j];
                 var cellName = cell.name;
+                var oldValue = $(cell).data("oldvalue");
+                console.log(oldValue);
                 var cellValue = $(cell).val();
                 if (cellValue != "") {
                     if (cellValue === null) {
@@ -143,6 +148,7 @@ $(function() {
         if (method.length > 0) {
             postParams._method = method.val();
         }
+        console.log(postParams);
         $.post(form.action, postParams).success(function(response) {
             if (response.code == 'failed') {
                 if (formData.FormAction == "update") {
@@ -157,7 +163,7 @@ $(function() {
                 } else {
                     toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
                 }
-                setTimeout(function() { window.location = response.location; }, 2000);
+                // setTimeout(function() { window.location = response.location; }, 1000);
             }
         });
         e.preventDefault();
