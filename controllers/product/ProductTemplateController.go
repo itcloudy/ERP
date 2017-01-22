@@ -141,6 +141,7 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 func (ctl *ProductTemplateController) PostCreate() {
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
+	fmt.Printf("%+v", postData)
 	template := new(md.ProductTemplate)
 	var (
 		err  error
