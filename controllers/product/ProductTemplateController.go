@@ -52,7 +52,6 @@ func (ctl *ProductTemplateController) Get() {
 
 // Put 修改产品款式
 func (ctl *ProductTemplateController) Put() {
-	fmt.Println("enter put")
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
 	fmt.Println(postData)
@@ -141,7 +140,6 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 func (ctl *ProductTemplateController) PostCreate() {
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
-	fmt.Printf("%+v", postData)
 	template := new(md.ProductTemplate)
 	var (
 		err  error
@@ -246,6 +244,8 @@ func (ctl *ProductTemplateController) productTemplateList(query map[string]strin
 			oneLine["SaleOk"] = line.SaleOk
 			oneLine["Active"] = line.Active
 			oneLine["DefaultCode"] = line.DefaultCode
+			oneLine["ProductMethod"] = line.ProductMethod
+			oneLine["ProductType"] = line.ProductType
 			category := line.Category
 			if category != nil {
 				oneLine["Category"] = category.Name

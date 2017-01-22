@@ -377,10 +377,48 @@ displayTable("#table-product-template", "/product/template/", [
         align: "center",
         formatter: function cellStyle(value, row, index) {
             var html = "";
-            if (row.Active) {
+            if (row.SaleOk) {
                 html = '<i class="fa fa-check"></i>';
             } else {
                 html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "规格创建方式",
+        field: 'ProductMethod',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.ProductMethod == "auto") {
+                html = '自动';
+            } else if (row.ProductMethod == "hand") {
+                html = '手动';
+            } else {
+                html = '-';
+            }
+            return html;
+        }
+    },
+    {
+        title: "款式类型",
+        field: 'ProductType',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.ProductType == "stock") {
+                html = '库存商品';
+            } else if (row.ProductType == "consume") {
+                html = '消耗品';
+            } else if (row.ProductType == "service") {
+                html = '服务';
+            } else {
+                html = '-';
             }
             return html;
         }
