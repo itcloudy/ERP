@@ -35,7 +35,19 @@ func InitDb() {
 	}
 
 }
-
+func initSequence(filename string) {
+	if file, err := os.Open(filename); err == nil {
+		defer file.Close()
+		if data, err := ioutil.ReadAll(file); err == nil {
+			var initSequences InitSequences
+			if xml.Unmarshal(data, &initSequences) == nil {
+				for _, k := range initSequences.Sequence {
+					md.AddSequence(&k)
+				}
+			}
+		}
+	}
+}
 func initUser(filename string) {
 	if file, err := os.Open(filename); err == nil {
 		defer file.Close()

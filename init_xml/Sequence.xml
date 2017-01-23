@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Sequences version="1">
+	<Sequence>
+		<Name>产品款式</Name>	
+        <StructName>ProductTemplate</StructName>   
+        <Prefix>G</Prefix>
+        <Current>0</Current>
+        <Padding>8</Padding>
+	</Sequence>
+    <Sequence>
+		<Name>销售订单</Name>	
+        <StructName>SaleOrder</StructName>   
+        <Prefix>S</Prefix>
+        <Current>0</Current>
+        <Padding>8</Padding>
+	</Sequence>
+    <Sequence>
+		<Name>采购订单</Name>	
+        <StructName>PurchaseOrder</StructName>   
+        <Prefix>P</Prefix>
+        <Current>0</Current>
+        <Padding>8</Padding>
+	</Sequence>
+</Sequences>

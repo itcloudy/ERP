@@ -47,3 +47,7 @@ type InitDistricts struct {
 	XMLName   xml.Name       `xml:"Districts"`
 	Districts []InitDistrict `xml:"District"`
 }
+type InitSequences struct {
+	XMLName  xml.Name      `xml:"Sequences"`
+	Sequence []md.Sequence `xml:"Sequence"`
+}

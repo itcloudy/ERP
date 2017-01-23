@@ -164,7 +164,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 } else {
                     toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
                 }
-                // setTimeout(function() { window.location = response.location; }, 1000);
+                setTimeout(function() { window.location = response.location; }, 1000);
             }
         });
         // Use Ajax to submit form data
