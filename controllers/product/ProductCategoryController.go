@@ -74,6 +74,7 @@ func (ctl *ProductCategoryController) Edit() {
 			}
 		}
 	}
+	ctl.Data["FormField"] = "form-edit"
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
 	ctl.Layout = "base/base.html"
@@ -90,26 +91,42 @@ func (ctl *ProductCategoryController) Detail() {
 
 //post请求创建产品分类
 func (ctl *ProductCategoryController) PostCreate() {
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
 	category := new(md.ProductCategory)
-	if err := ctl.ParseForm(category); err == nil {
-		if parentID, err := ctl.GetInt64("parent"); err == nil {
-			if parent, err := md.GetProductCategoryByID(parentID); err == nil {
-				category.Parent = parent
-			}
-		}
-		if id, err := md.AddProductCategory(category); err == nil {
-			ctl.Redirect("/product/category/"+strconv.FormatInt(id, 10)+"?action=detail", 302)
+	var (
+		err  error
+		id   int64
+		errs []error
+	)
+	if err = json.Unmarshal([]byte(postData), category); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(category)).Type().Name()
+		if id, errs = md.AddProductCategory(category, &ctl.User); len(errs) == 0 {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
-			ctl.Get()
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			var debugs []string
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
+			}
+			result["debug"] = debugs
 		}
 	} else {
-		ctl.Get()
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
 	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 }
 func (ctl *ProductCategoryController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
+	ctl.Data["FormField"] = "form-create"
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_category_form.html"
 }

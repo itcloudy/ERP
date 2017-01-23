@@ -18,12 +18,14 @@ type ProductAttribute struct {
 	UpdateUser     *User                    `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate     time.Time                `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate     time.Time                `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction     string                   `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 	Name           string                   `orm:"unique" form:"name"`                   //产品属性名称
-	Code           string                   `orm:"default(\"\")" form:"code"`            //产品属性编码
-	Sequence       int32                    `form:"sequence"`                            //序列
+	Code           string                   `orm:"default(\"\")" json:"Code"`            //产品属性编码
+	Sequence       int32                    `json:"Sequence"`                            //序列
 	ValueIDs       []*ProductAttributeValue `orm:"reverse(many)"`                        //属性值
 	AttributeLines []*ProductAttributeLine  `orm:"reverse(many)"`
+	// form表单字段
+	FormAction string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+
 }
 
 func init() {
@@ -32,10 +34,29 @@ func init() {
 
 // AddProductAttribute insert a new ProductAttribute into database and returns
 // last inserted ID on success.
-func AddProductAttribute(obj *ProductAttribute) (id int64, err error) {
+func AddProductAttribute(obj *ProductAttribute, addUser *User) (id int64, errs []error) {
 	o := orm.NewOrm()
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	var err error
+	err = o.Begin()
+	if err != nil {
+		errs = append(errs, err)
+	}
 	id, err = o.Insert(obj)
-	return id, err
+	if err != nil {
+		errs = append(errs, err)
+		err = o.Rollback()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	} else {
+		err = o.Commit()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return id, errs
 }
 
 // GetProductAttributeByID retrieves ProductAttribute by ID. Returns error if

@@ -13,7 +13,7 @@
         <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
     </div>
     {{ .xsrf }} {{if .RecordID}}
-    <input type="hidden" name="recordID" id="record-id" value="{{.RecordID}}"> {{end}}
+    <input type="hidden" data-type="int" name="recordID" id="record-id" value="{{.RecordID}}"> {{end}}
     <fieldset>
         <legend>基本信息</legend>
         <div class="row">

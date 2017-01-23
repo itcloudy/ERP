@@ -65,6 +65,7 @@ func (ctl *ProductAttributeValueController) Get() {
 }
 func (ctl *ProductAttributeValueController) Create() {
 	ctl.Data["Action"] = "create"
+	ctl.Data["FormField"] = "form-create"
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
 	ctl.Layout = "base/base.html"
@@ -82,6 +83,7 @@ func (ctl *ProductAttributeValueController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
+	ctl.Data["FormField"] = "form-create"
 	ctl.Data["RecordID"] = id
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_attribute_value_form.html"
@@ -93,21 +95,37 @@ func (ctl *ProductAttributeValueController) Detail() {
 	ctl.Data["Action"] = "detail"
 }
 func (ctl *ProductAttributeValueController) PostCreate() {
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
 	attrValue := new(md.ProductAttributeValue)
-	if err := ctl.ParseForm(attrValue); err == nil {
-		if attributeID, err := ctl.GetInt64("productAttributeID"); err == nil {
-			if attribute, err := md.GetProductAttributeByID(attributeID); err == nil {
-				attrValue.Attribute = attribute
-			}
-		}
-		if id, err := md.AddProductAttributeValue(attrValue); err == nil {
-			ctl.Redirect("/product/attributevalue/"+strconv.FormatInt(id, 10)+"?action=detail", 302)
+
+	var (
+		err  error
+		id   int64
+		errs []error
+	)
+	if err = json.Unmarshal([]byte(postData), attrValue); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(attrValue)).Type().Name()
+		if id, errs = md.AddProductAttributeValue(attrValue, &ctl.User); len(errs) == 0 {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
-			ctl.Get()
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			var debugs []string
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
+			}
+			result["debug"] = debugs
 		}
 	} else {
-		ctl.Get()
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
 	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 }
 func (ctl *ProductAttributeValueController) Validator() {
 	name := ctl.GetString("name")

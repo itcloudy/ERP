@@ -19,8 +19,8 @@
         </nav>
     </div>
     {{ .xsrf }} {{if .RecordID}}
-    <input type="hidden" name="recordID" id="record-id" class="{{.FormField}}" value="{{.RecordID}}">
-    <input type="hidden" name="_method" class="{{.FormField}}" value="PUT"> {{end}}
+    <input type="hidden" data-type="int" name="recordID" id="record-id" class="{{.FormField}}" value="{{.RecordID}}">
+    <input type="hidden" data-type="string" name="_method" class="{{.FormField}}" value="PUT"> {{end}}
     <div class="row">
         <div class="col-md-4 text-center">
             <div class="preview ">

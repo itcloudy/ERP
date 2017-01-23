@@ -335,9 +335,6 @@ displayTable("#table-product-category", "/product/category/", [
         field: 'action',
         formatter: function cellStyle(value, row, index) {
             var html = "";
-            console.log(row);
-            console.log(value);
-
             var url = "/product/category/";
             html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
             html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";

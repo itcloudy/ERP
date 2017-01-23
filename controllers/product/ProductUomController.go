@@ -85,12 +85,43 @@ func (ctl *ProductUomController) Validator() {
 	ctl.ServeJSON()
 }
 func (ctl *ProductUomController) PostCreate() {
+
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
 	uom := new(md.ProductUom)
+	var (
+		err  error
+		id   int64
+		errs []error
+	)
+	if err = json.Unmarshal([]byte(postData), uom); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(uom)).Type().Name()
+		if id, errs = md.AddProductUom(uom, &ctl.User); len(errs) == 0 {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			var debugs []string
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
+			}
+			result["debug"] = debugs
+		}
+	} else {
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
+
 	if err := ctl.ParseForm(uom); err == nil {
 		if uomCategID, err := ctl.GetInt64("category"); err == nil {
 			if category, err := md.GetProductUomCategByID(uomCategID); err == nil {
 				uom.Category = category
-				if id, err := md.AddProductUom(uom); err == nil {
+				if id, err := md.AddProductUom(uom, &ctl.User); err == nil {
 					ctl.Redirect("/product/uom/"+strconv.FormatInt(id, 10)+"?action=detail", 302)
 				}
 			}
@@ -175,6 +206,7 @@ func (ctl *ProductUomController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
+	ctl.Data["FormField"] = "form-edit"
 	ctl.Data["RecordID"] = id
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_uom_form.html"
@@ -197,6 +229,7 @@ func (ctl *ProductUomController) GetList() {
 }
 func (ctl *ProductUomController) Create() {
 	ctl.Data["Action"] = "create"
+	ctl.Data["FormField"] = "form-create"
 	ctl.Data["Readonly"] = false
 	ctl.Layout = "base/base.html"
 	ctl.PageAction = "创建"

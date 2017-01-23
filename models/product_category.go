@@ -18,12 +18,15 @@ type ProductCategory struct {
 	UpdateUser     *User              `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate     time.Time          `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate     time.Time          `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction     string             `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name           string             `orm:"unique" form:"name" json:"name"`       //产品属性名称
+	Name           string             `orm:"unique"  json:"Name"`                  //产品属性名称
 	Parent         *ProductCategory   `orm:"rel(fk);null"`                         //上级分类
 	Childs         []*ProductCategory `orm:"reverse(many)"`                        //下级分类
 	Sequence       int64              //序列
 	ParentFullPath string             //上级全路径
+	// form表单使用字段
+	ParentID   int64  `orm:"-" json:"Parent"`     //上级类别
+	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+
 }
 
 func init() {
@@ -32,11 +35,32 @@ func init() {
 
 // AddProductCategory insert a new ProductCategory into database and returns
 // last inserted ID on success.
-func AddProductCategory(obj *ProductCategory) (id int64, err error) {
+func AddProductCategory(obj *ProductCategory, addUser *User) (id int64, errs []error) {
 	o := orm.NewOrm()
-
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	var err error
+	err = o.Begin()
+	if err != nil {
+		errs = append(errs, err)
+	}
+	if obj.ParentID != 0 {
+		obj.Parent, _ = GetProductCategoryByID(obj.ParentID)
+	}
 	id, err = o.Insert(obj)
-	return id, err
+	if err != nil {
+		errs = append(errs, err)
+		err = o.Rollback()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	} else {
+		err = o.Commit()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return id, errs
 }
 
 // GetProductCategoryByID retrieves ProductCategory by ID. Returns error if

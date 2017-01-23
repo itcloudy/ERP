@@ -12,7 +12,7 @@
         <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
     </div>
     {{ .xsrf }} {{if .RecordID}}
-    <input type="hidden" name="recordID" id="record-id" class="{{.FormField}}" value="{{.RecordID}}"> {{end}}
+    <input type="hidden" data-type="int" name="recordID" id="record-id" class="{{.FormField}}" value="{{.RecordID}}"> {{end}}
     <fieldset>
         <legend>基本信息</legend>
         <div class="row">
@@ -21,7 +21,7 @@
                     <label for="name" class="col-md-4 control-label label-start">用户名<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{.User.Name}} </p>
-                        <input class="form-control {{.FormField}}" id="name" name="Name" {{if not .Readonly}}autofocus{{end}} type="text" data-oldValue="{{.User.Name}}" value="{{.User.Name}}" />
+                        <input data-type="string" class="form-control {{.FormField}}" id="name" name="Name" {{if not .Readonly}}autofocus{{end}} type="text" data-oldValue="{{.User.Name}}" value="{{.User.Name}}" />
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                     <label for="namezh" class="col-md-4 control-label">用户名(中文)<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{.User.NameZh}} </p>
-                        <input class="form-control {{.FormField}}" id="namezh" name="NameZh" type="text" data-oldValue="{{.User.NameZh}}" value="{{.User.NameZh}}" />
+                        <input data-type="string" class="form-control {{.FormField}}" id="namezh" name="NameZh" type="text" data-oldValue="{{.User.NameZh}}" value="{{.User.NameZh}}" />
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                     <label for="mobile" class="col-md-4 control-label label-start">手机号码<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{.User.Mobile}} </p>
-                        <input class="form-control {{.FormField}}" name="Mobile" id="mobile" type="text" data-oldValue="{{.User.Mobile}}" value="{{.User.Mobile}}" />
+                        <input data-type="string" class="form-control {{.FormField}}" name="Mobile" id="mobile" type="text" data-oldValue="{{.User.Mobile}}" value="{{.User.Mobile}}" />
                         </select>
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                     <label for="tel" class="col-md-4 control-label">座机</label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{.User.Tel}} </p>
-                        <input class="form-control {{.FormField}}" name="Tel" id="tel" type="text" data-oldValue="{{.User.Tel}}" value="{{.User.Tel}}" />
+                        <input data-type="string" class="form-control {{.FormField}}" name="Tel" id="tel" type="text" data-oldValue="{{.User.Tel}}" value="{{.User.Tel}}" />
                     </div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
                     <label for="email" class="col-md-4 control-label label-start">邮箱<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{.User.Email}} </p>
-                        <input class="form-control {{.FormField}}" name="Email" id="email" type="email" data-oldValue="{{.User.Email}}" value="{{.User.Email}}" />
+                        <input data-type="string" class="form-control {{.FormField}}" name="Email" id="email" type="email" data-oldValue="{{.User.Email}}" value="{{.User.Email}}" />
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                     <label for="qq" class="col-md-4 control-label ">QQ</label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{.User.Qq}} </p>
-                        <input class="form-control {{.FormField}}" name="Qq" id="qq" type="text" data-oldValue="{{.User.Qq}}" value="{{.User.Qq}}" />
+                        <input data-type="string" class="form-control {{.FormField}}" name="Qq" id="qq" type="text" data-oldValue="{{.User.Qq}}" value="{{.User.Qq}}" />
                     </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                     <label for="Wechat" class="col-md-4 control-label">微信</label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{.User.WeChat}} </p>
-                        <input class="form-control {{.FormField}}" name="WeChat" id="wechat" data-oldValue="{{.User.WeChat}}" type="text" value="{{.User.WeChat}}" />
+                        <input data-type="string" class="form-control {{.FormField}}" name="WeChat" id="wechat" data-oldValue="{{.User.WeChat}}" type="text" value="{{.User.WeChat}}" />
                     </div>
                 </div>
 
@@ -101,7 +101,8 @@
                     <label for="Department" class="col-md-4 control-label label-start">部门<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{if .User}} {{if .User.Department}} {{.User.Department.Name}}{{end}} {{end}}</p>
-                        <select aria-hidden="true" name="Department" id="department" class="form-control select-department {{.FormField}}" {{if .User}} {{if .User.Department}} data-default-id="{{.User.Department.ID}}" data-default-name="{{.User.Department.Name}}" {{end}} {{end}}>
+                        <select data-type="int" aria-hidden="true" name="Department" id="department" class="form-control select-department {{.FormField}}" {{if .User}} {{if .User.Department}} data-default-id="{{.User.Department.ID}}" data-default-name="{{.User.Department.Name}}"
+                            {{end}} {{end}}>
                             <!--option不能删除用于bootstrapValidator验证-->
                             <option value="{{if .User.Department}}{{.User.Department.ID}}{{end}}" selected="selected">{{if .User.Department}}{{.User.Department.Name}}{{end}}</option>
                         </select>
@@ -115,7 +116,7 @@
                     <label for="position" class="col-md-4 control-label label-start">职位<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{if .User}} {{if .User.Position}} {{.User.Position.Name}}{{end}} {{end}}</p>
-                        <select name="Position" id="position" class="form-control select-position {{.FormField}}" {{if .User}} {{if .User.Position}} data-default-id="{{.User.Position.ID}}" data-default-name="{{.User.Position.Name}}" {{end}} {{end}}>
+                        <select data-type="int" name="Position" id="position" class="form-control select-position {{.FormField}}" {{if .User}} {{if .User.Position}} data-default-id="{{.User.Position.ID}}" data-default-name="{{.User.Position.Name}}" {{end}} {{end}}>
                             <!--option不能删除用于bootstrapValidator验证-->
                             <option value="{{if .User.Position}}{{.User.Position.ID}}{{end}}" selected="selected">{{if .User.Position}}{{.User.Position.Name}}{{end}}</option>
                         </select>
@@ -148,7 +149,7 @@
                     <label for="usergroup" class="col-md-4 control-label label-start">权限组<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{if .User}} {{if .User.Groups}} {{range .User.Groups}}<a class='display-block label label-primary'>{{.name}}</a>{{end}}{{end}} {{end}}</p>
-                        <select name="Group" id="usergroup" multiple="multiple" class="form-control select-group {{.FormField}}">
+                        <select data-type="array_int" name="Group" id="usergroup" multiple="multiple" class="form-control select-group {{.FormField}}">
                             {{range  .User.Groups}}
                             <option value="{{.id}}" selected="selected">{{.name}}</option>
                             {{end}}

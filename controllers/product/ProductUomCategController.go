@@ -83,16 +83,36 @@ func (ctl *ProductUomCategController) Validator() {
 	ctl.ServeJSON()
 }
 func (ctl *ProductUomCategController) PostCreate() {
-	uom := new(md.ProductUomCateg)
-	if err := ctl.ParseForm(uom); err == nil {
-		if id, err := md.AddProductUomCateg(uom); err == nil {
-			ctl.Redirect("/product/uomcateg/"+strconv.FormatInt(id, 10)+"?action=detail", 302)
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	uomCateg := new(md.ProductUomCateg)
+	var (
+		err  error
+		id   int64
+		errs []error
+	)
+	if err = json.Unmarshal([]byte(postData), uomCateg); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(uuomCategom)).Type().Name()
+		if id, errs = md.AddProductUomCateg(uomCateg, &ctl.User); len(errs) == 0 {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
-			ctl.Get()
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			var debugs []string
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
+			}
+			result["debug"] = debugs
 		}
 	} else {
-		ctl.Get()
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
 	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 }
 func (ctl *ProductUomCategController) productUomCategList(query map[string]string, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 	var arrs []md.ProductUomCateg
@@ -147,7 +167,7 @@ func (ctl *ProductUomCategController) Edit() {
 	}
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-
+	ctl.Data["FormField"] = "form-create"
 	ctl.Layout = "base/base.html"
 
 	ctl.TplName = "product/product_uom_categ_form.html"
@@ -171,6 +191,7 @@ func (ctl *ProductUomCategController) GetList() {
 func (ctl *ProductUomCategController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
+	ctl.Data["FormField"] = "form-create"
 	ctl.Layout = "base/base.html"
 	ctl.PageAction = "创建"
 	ctl.TplName = "product/product_uom_categ_form.html"

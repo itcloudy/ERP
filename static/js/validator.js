@@ -16,8 +16,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         e.preventDefault();
 
 
-        var $form = $(e.target);
-
+        var $form = $(e.currentTarget);
         var formData = {
             FormAction: "create" //默认为创建
         };
@@ -150,6 +149,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         if (method.length > 0) {
             postParams._method = method.val();
         }
+        console.log(postParams);
         $.post($form.action, postParams).success(function(response) {
             if (response.code == 'failed') {
                 if (formData.FormAction == "update") {
@@ -164,7 +164,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 } else {
                     toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
                 }
-                setTimeout(function() { window.location = response.location; }, 1000);
+                // setTimeout(function() { window.location = response.location; }, 1000);
             }
         });
         // Use Ajax to submit form data
@@ -371,7 +371,7 @@ $(function() {
     });
     //产品属性form
     BootstrapValidator("#productAttributeForm", {
-        name: {
+        Name: {
             message: "该值无效",
             validators: {
                 notEmpty: {
@@ -449,7 +449,7 @@ $(function() {
     });
     //计量单位分类
     BootstrapValidator("#productUomCategForm", {
-        name: {
+        Name: {
             message: "该值无效",
             validators: {
                 notEmpty: {
@@ -479,9 +479,9 @@ $(function() {
             },
         }
     });
-    //计量单位分类
+    //计量单位
     BootstrapValidator("#productUomForm", {
-        category: {
+        Category: {
             message: "该值无效",
             validators: {
                 notEmpty: {
@@ -489,7 +489,7 @@ $(function() {
                 },
             }
         },
-        name: {
+        Name: {
             message: "该值无效",
             validators: {
                 notEmpty: {
@@ -517,7 +517,32 @@ $(function() {
                     },
                 },
             },
+        },
+        Rounding: {
+            message: "该值无效",
+            validators: {
+                numeric: {
+                    message: "舍入精度应为数字"
+                },
+            }
+        },
+        FactorInv: {
+            message: "该值无效",
+            validators: {
+                numeric: {
+                    message: "更大比率应为数字"
+                },
+            }
+        },
+        Factor: {
+            message: "该值无效",
+            validators: {
+                numeric: {
+                    message: "比率应为数字"
+                },
+            }
         }
+
     });
 
     //产品款式

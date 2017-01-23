@@ -13,7 +13,7 @@
         <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
     </div>
     {{ .xsrf }} {{if .RecordID}}
-    <input type="hidden" name="recordID" id="record-id" value="{{.RecordID}}"> {{end}}
+    <input type="hidden" data-type="int" class="{{.FormField}}" name="recordID" id="record-id" value="{{.RecordID}}"> {{end}}
     <fieldset>
         <legend>基本信息</legend>
         <div class="row">
@@ -22,7 +22,7 @@
                     <label for="category" class="col-md-4 control-label label-start">计量单位类别<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control">{{if .Uom}} {{.Uom.Category.Name}} {{end}}</p>
-                        <select name="Category" id="category" autofocus class="form-control select-product-uom-category">
+                        <select data-type="int" name="Category" id="category" autofocus class="{{.FormField}} form-control select-product-uom-category">
                             {{if .Uom}} {{if .Uom.Category}} 
                             <option value="{{.Uom.Category.ID}}}" selected="selected">{{.Uom.Category.Name}}</option> 
                              {{end}} {{end}}
@@ -35,7 +35,7 @@
                     <label for="name" class="col-md-4 control-label label-start">计量单位名称<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control">{{if .Uom}} {{.Uom.Name}} {{end}}</p>
-                        <input class="form-control" name="Name" type="text" {{if .Uom}} value="{{.Uom.Name}}" {{end}} />
+                        <input data-type="string" class="{{.FormField}} form-control" name="Name" type="text" {{if .Uom}} value="{{.Uom.Name}}" {{end}} />
                     </div>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <label for="active" class="col-md-4 control-label ">有效</label>
                     <div class="col-md-8 ">
-                        <input name="Active" id="active" class="form-control form-checkbox" checked="checked" type="checkbox">
+                        <input name="Active" id="active" class="{{.FormField}} form-control form-checkbox" checked="checked" type="checkbox">
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                     <label for="rounding" class="col-md-4 control-label label-start">舍入精度<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control">{{if .Uom}} {{.Uom.Rounding}} {{end}}</p>
-                        <input class="form-control" name="Rounding" type="text" {{if .Uom}} value="{{.Uom.Rounding}}" {{else}}value="0.01" {{end}} />
+                        <input data-type="float" class="{{.FormField}} form-control" name="Rounding" type="text" {{if .Uom}} value="{{.Uom.Rounding}}" {{else}}value="0.01" {{end}} />
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                     <label for="type" class="col-md-4 control-label label-start">类型<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{if .Uom}} {{.Uom.TypeName}}{{end}}</p>
-                        <select name="Type" id="type" class="form-control select-product-uom-category-type">
+                        <select data-type="int" name="Type" id="type" class="{{.FormField}} form-control select-product-uom-category-type">
                              {{if .Uom}} 
                             <option value="{{.Uom.Type}}" selected="selected">{{.Uom.TypeName}}</option>
                             {{else}}<option value="2" selected="selected">参考计量单位</option>{{end}} 
@@ -75,7 +75,7 @@
                 <div class="form-group">
                     <label for="factor" class="col-md-4 control-label ">比率</label>
                     <div class="col-md-8 ">
-                        <input name="Factor" id="factor" type="number" step="0.01" {{if .Uom}}value="{{.Uom.Factor}}" {{else}} value="10" {{end}} class="form-control" />
+                        <input data-type="float" name="Factor" id="factor" type="text" step="0.01" {{if .Uom}}value="{{.Uom.Factor}}" {{else}} value="10" {{end}} class="{{.FormField}} form-control" />
                     </div>
                 </div>
             </div>
@@ -83,7 +83,7 @@
                 <div class="form-group">
                     <label for="factorInv" class="col-md-4 control-label ">更大比率</label>
                     <div class="col-md-8 ">
-                        <input name="FactorInv" id="factorInv" type="number" step="0.01" {{if .Uom}}value="{{.Uom.FactorInv}}" {{else}} value="10" {{end}} class="form-control" />
+                        <input data-type="float" name="FactorInv" id="factorInv" type="text" step="0.01" {{if .Uom}}value="{{.Uom.FactorInv}}" {{else}} value="10" {{end}} class="{{.FormField}} form-control" />
                     </div>
                 </div>
             </div>
@@ -92,11 +92,10 @@
                     <label for="symbol" class="col-md-4 control-label ">符号</label>
                     <div class="col-md-8 ">
                         <p class="p-form-control">{{if .Uom}} {{.Uom.Symbol}} {{end}}</p>
-                        <input name="Symbol" id="symbol" type="text" step="0.01" {{if .Uom}}value="{{.Uom.Symbol}}" {{else}} value="10" {{end}} class="form-control" />
+                        <input data-type="string" name="Symbol" id="symbol" type="text" {{if .Uom}}value="{{.Uom.Symbol}}" {{end}} class="{{.FormField}} form-control" />
                     </div>
                 </div>
             </div>
         </div>
     </fieldset>
-
 </form>

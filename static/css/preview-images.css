@@ -1,10 +1,13 @@
 /*图片预览*/
 
-.preview {
-    width: 400px;
-    height: 465px;
+
+/*.preview {
+    min-width: 200px;
+    min-height: 465px;
+    max-width: 400px;
+    max-height: 465px;
     margin-left: 50px;
-}
+}*/
 
 
 /* smallImg */

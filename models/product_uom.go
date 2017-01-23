@@ -18,16 +18,18 @@ type ProductUom struct {
 	UpdateUser *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name       string           `orm:"unique" form:"name"`                   //计量单位名称
-	Active     bool             `orm:"default(true)" form:"active"`          //有效
+	Name       string           `orm:"unique" json:"name"`                   //计量单位名称
+	Active     bool             `orm:"default(true)" json:"active"`          //有效
 	Category   *ProductUomCateg `orm:"rel(fk)"`                              //计量单位类别
-	Factor     float64          `form:"factor"`                              //比率
-	FactorInv  float64          `form:"factorInv"`                           //更大比率
-	Rounding   float64          `form:"rounding"`                            //舍入精度
-	Type       int64            `form:"type"`                                //类型
-	Symbol     string           `form:"symbol"`                              //符号，后置
+	Factor     float64          `json:"Factor"`                              //比率
+	FactorInv  float64          `json:"FactorInv"`                           //更大比率
+	Rounding   float64          `json:"Rounding"`                            //舍入精度
+	Type       int64            `json:"Type"`                                //类型
+	Symbol     string           `json:"Symbol"`                              //符号，后置
 	TypeName   string           `orm:"-"`                                    //仅用于前端显示
+	// form表单字段
+	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+	CategoryID int64  `orm:"-" json:"Category"`
 }
 
 func init() {
@@ -36,11 +38,32 @@ func init() {
 
 // AddProductUom insert a new ProductUom into database and returns
 // last inserted ID on success.
-func AddProductUom(obj *ProductUom) (id int64, err error) {
+func AddProductUom(obj *ProductUom, addUser *User) (id int64, errs []error) {
 	o := orm.NewOrm()
-
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	var err error
+	err = o.Begin()
+	if err != nil {
+		errs = append(errs, err)
+	}
+	if obj.CategoryID != 0 {
+		obj.Category, _ = GetProductUomCategByID(obj.CategoryID)
+	}
 	id, err = o.Insert(obj)
-	return id, err
+	if err != nil {
+		errs = append(errs, err)
+		err = o.Rollback()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	} else {
+		err = o.Commit()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return id, errs
 }
 
 // GetProductUomByID retrieves ProductUom by ID. Returns error if

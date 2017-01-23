@@ -18,9 +18,10 @@ type ProductUomCateg struct {
 	UpdateUser *User         `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time     `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time     `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction string        `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name       string        `orm:"unique" form:"name"`                   //计量单位分类
+	Name       string        `orm:"unique" json:"Name"`                   //计量单位分类
 	Uoms       []*ProductUom `orm:"reverse(many)"`                        //计量单位
+	// form表单字段
+	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
 }
 
 func init() {
@@ -29,11 +30,29 @@ func init() {
 
 // AddProductUomCateg insert a new ProductUomCateg into database and returns
 // last inserted ID on success.
-func AddProductUomCateg(obj *ProductUomCateg) (id int64, err error) {
+func AddProductUomCateg(obj *ProductUomCateg, addUser *User) (id int64, errs []error) {
 	o := orm.NewOrm()
-
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	var err error
+	err = o.Begin()
+	if err != nil {
+		errs = append(errs, err)
+	}
 	id, err = o.Insert(obj)
-	return id, err
+	if err != nil {
+		errs = append(errs, err)
+		err = o.Rollback()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	} else {
+		err = o.Commit()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return id, errs
 }
 
 // GetProductUomCategByID retrieves ProductUomCateg by ID. Returns error if
