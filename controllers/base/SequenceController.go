@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// SequenceController 登录日志
 type SequenceController struct {
 	BaseController
 }
@@ -20,10 +21,20 @@ func (ctl *SequenceController) Post() {
 		ctl.PostList()
 	case "create":
 		ctl.PostCreate()
-	default:
-		ctl.PostList()
 	}
 }
+
+// Get 请求
+func (ctl *SequenceController) Get() {
+	ctl.PageName = "登陆记录管理"
+	ctl.URL = "/sequence/"
+	ctl.Data["URL"] = ctl.URL
+	ctl.Data["MenuRecordActive"] = "active"
+	ctl.GetList()
+	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
+
+}
+
 func (ctl *SequenceController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
 	ctl.URL = "/sequence/"
@@ -39,26 +50,6 @@ func (ctl *SequenceController) Put() {
 	}
 	ctl.Redirect(ctl.URL+id+"?action=edit", 302)
 
-}
-func (ctl *SequenceController) Get() {
-	ctl.PageName = "序号管理"
-	action := ctl.Input().Get("action")
-	switch action {
-	case "create":
-		ctl.Create()
-	case "edit":
-		ctl.Edit()
-	case "detail":
-		ctl.Detail()
-	default:
-		ctl.GetList()
-
-	}
-	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
-	ctl.URL = "/sequence/"
-	ctl.Data["URL"] = ctl.URL
-
-	ctl.Data["MenuSequenceActive"] = "active"
 }
 func (ctl *SequenceController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
@@ -174,6 +165,7 @@ func (ctl *SequenceController) sequenceList(query map[string]interface{}, exclud
 			result["paginator"] = string(jsonResult)
 			result["total"] = paginator.TotalCount
 		}
+
 	}
 	return result, err
 }
@@ -197,6 +189,7 @@ func (ctl *SequenceController) PostList() {
 
 }
 
+// GetList 显示table数据
 func (ctl *SequenceController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {
