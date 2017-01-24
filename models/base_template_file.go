@@ -28,11 +28,29 @@ func init() {
 
 // AddTemplateFile insert a new TemplateFile into database and returns
 // last inserted ID on success.
-func AddTemplateFile(obj *TemplateFile) (id int64, err error) {
+func AddTemplateFile(obj *TemplateFile, addUser *User) (id int64, errs []error) {
 	o := orm.NewOrm()
-
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	var err error
+	err = o.Begin()
+	if err != nil {
+		errs = append(errs, err)
+	}
 	id, err = o.Insert(obj)
-	return id, err
+	if err != nil {
+		errs = append(errs, err)
+		err = o.Rollback()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	} else {
+		err = o.Commit()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return id, errs
 }
 
 // GetTemplateFileByID retrieves TemplateFile by ID. Returns error if
@@ -72,7 +90,7 @@ func GetLastTemplateFileByUserID(userID int64) (TemplateFile, error) {
 
 // GetAllTemplateFile retrieves all TemplateFile matches certain condition. Returns empty list if
 // no records exist
-func GetAllTemplateFile(query map[string]string, fields []string, sortby []string, order []string,
+func GetAllTemplateFile(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []TemplateFile, error) {
 	var (
 		objArrs   []TemplateFile

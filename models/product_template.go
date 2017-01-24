@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 	"time"
 
@@ -86,6 +87,8 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, errs []e
 	if obj.SecondPurchaseUomID != 0 {
 		obj.SecondPurchaseUom, _ = GetProductUomByID(obj.SecondPurchaseUomID)
 	}
+	// 获得款式产品编码
+	obj.DefaultCode, _ = GetNextSequece(reflect.Indirect(reflect.ValueOf(obj)).Type().Name())
 	if id, err = o.Insert(obj); err == nil {
 		obj.ID = id
 		if len(obj.ProductAttributeLines) > 0 {

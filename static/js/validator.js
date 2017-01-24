@@ -164,7 +164,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 } else {
                     toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
                 }
-                // setTimeout(function() { window.location = response.location; }, 1000);
+                setTimeout(function() { window.location = response.location; }, 1000);
             }
         });
         // Use Ajax to submit form data
@@ -336,6 +336,94 @@ $(function() {
                 }
             }
         },
+    });
+    // 序列号
+    BootstrapValidator("#sequenceForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: { message: "名称不能为空" },
+                remote: {
+                    url: "/sequence/",
+                    message: "该序列名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    }
+                }
+            }
+        },
+        Prefix: {
+            message: "该值无效",
+            validators: {
+                notEmpty: { message: "前缀不能为空" },
+                remote: {
+                    url: "/sequence/",
+                    message: "该前缀已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    }
+                },
+                regexp: { /* 只需加此键值对，包含正则表达式，和提示 */
+                    regexp: /[A-Z]+$/,
+                    message: '只能是A-Z的大写字母'
+                }
+            }
+        },
+        StructName: {
+            message: "该值无效",
+            validators: {
+                notEmpty: { message: "表struct名称不能为空" },
+                remote: {
+                    url: "/sequence/",
+                    message: "该表struct名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    }
+                }
+            }
+        }
     });
     //产品分类form
     BootstrapValidator("#productCategoryForm", {

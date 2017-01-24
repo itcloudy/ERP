@@ -156,6 +156,7 @@ func (ctl *ProductTemplateController) PostCreate() {
 			result["code"] = "failed"
 			result["message"] = "数据创建失败"
 			var debugs []string
+			fmt.Printf("%+v", errs)
 			for _, item := range errs {
 				debugs = append(debugs, item.Error())
 			}

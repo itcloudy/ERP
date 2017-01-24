@@ -30,6 +30,8 @@ func init() {
 	beego.Router("/team/?:id", &base.TeamController{})
 	//登录日志
 	beego.Router("/record/", &base.RecordController{})
+	//序号生成器
+	beego.Router("/sequence/?:id", &base.SequenceController{})
 	//文件模版
 	beego.Router("/templatefile/?:id", &base.TemplateFileController{})
 	// ===============================地址===========================================

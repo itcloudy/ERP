@@ -20,13 +20,13 @@
             <!--<li class="header text-center">菜单</li>-->
             <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}
             {{.MenuCountryActive}}{{.MenuProvinceActive}}{{.MenuCityActive}}{{.MenuDistrictActive}}{{.MenuUserActive}}
-            {{.MenuGroupActive}}{{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}">
+            {{.MenuGroupActive}}{{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}{{.MenuSequenceActive}}">
                 <a href="#">
                     <i class="fa fa-gears"></i>
                     <span>设置</span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}"><a href="#"><i class="fa fa-list-alt" aria-hidden="true"></i></i>个人资料</a>
+                    <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}"><a href="#"><i class="fa fa-child" aria-hidden="true"></i></i>个人资料</a>
                         <ul class="treeview-menu">
                             <li class="{{.MenuSelfInfoActive}}"><a href="/user/{{.user.ID}}?action=detail"><i class="fa fa-user-secret" aria-hidden="true"></i>个人信息</a></li>
                             <li class="{{.MenuChangePwdActive}}"><a href="/user/{{.user.ID}}?action=changepasswd"><i class="fa fa-unlock"></i>密码修改</a></li>
@@ -50,6 +50,11 @@
                             <li class="{{.MenuCityActive}}"><a href="/address/city/"><i class="fa fa-arrow-circle-right"></i>城市管理</a></li>
                             <li class="{{.MenuDistrictActive}}"><a href="/address/district/"><i class="fa fa-arrow-circle-right"></i>区县管理</a></li>
                         </ul>
+                    </li>
+                    <li class="treeview {{.MenuSequenceActive}}">
+                        <a href="/sequence">
+                            <i class="fa fa-list-ol" aria-hidden="true"></i><span>序号管理</span>
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -121,6 +126,7 @@
                     <i class="fa fa-folder-o" aria-hidden="true"></i><span>模版管理</span>
                 </a>
             </li>
+
         </ul>
     </section>
     <!-- /.sidebar -->

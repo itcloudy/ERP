@@ -213,6 +213,58 @@ displayTable("#table-record", "/record/", [
     { title: "用户代理", field: "UserAgent" }
 
 ]);
+displayTable("#table-sequence", "/sequence", [
+    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "序号名称", field: 'Name', sortable: true, order: "desc" },
+    { title: "表名称", field: "StructName", sortable: true, order: "desc" },
+    { title: "前缀", field: "Prefix", sortable: true, order: "desc" },
+    { title: "数字位数", field: "Padding", sortable: true, order: "desc" },
+    { title: "当前序号", field: "Current", sortable: true, order: "desc" },
+    {
+        title: "有效",
+        field: 'Active',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.Active) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    }, {
+        title: "为默认",
+        field: 'IsDefault',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.IsDefault) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/sequence/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
 //国家表
 displayTable("#table-country", "/address/country/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
