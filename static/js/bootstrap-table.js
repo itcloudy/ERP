@@ -400,7 +400,15 @@ displayTable("#table-product-template", "/product/template/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
     { title: "款式编码", field: 'DefaultCode', sortable: true, order: "desc" },
     { title: "款式名称", field: 'Name', sortable: true, order: "desc" },
-    { title: "款式类别", field: 'Category', sortable: true, order: "desc" },
+    {
+        title: "款式类别",
+        field: 'Category',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            return row.Category.name;
+        }
+    },
     { title: "规格数量", field: 'VariantCount', sortable: true, order: "desc" },
     {
         title: "有效",

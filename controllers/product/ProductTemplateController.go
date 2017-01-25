@@ -227,7 +227,7 @@ func (ctl *ProductTemplateController) Validator() {
 }
 
 // 获得符合要求的款式数据
-func (ctl *ProductTemplateController) productTemplateList(query map[string]string, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *ProductTemplateController) productTemplateList(query map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.ProductTemplate
 	paginator, arrs, err := md.GetAllProductTemplate(query, fields, sortby, order, offset, limit)
@@ -247,9 +247,35 @@ func (ctl *ProductTemplateController) productTemplateList(query map[string]strin
 			oneLine["DefaultCode"] = line.DefaultCode
 			oneLine["ProductMethod"] = line.ProductMethod
 			oneLine["ProductType"] = line.ProductType
-			category := line.Category
-			if category != nil {
-				oneLine["Category"] = category.Name
+			if line.Category != nil {
+				category := make(map[string]interface{})
+				category["id"] = line.Category.ID
+				category["name"] = line.Category.Name
+				oneLine["Category"] = category
+			}
+			if line.FirstSaleUom != nil {
+				firstSaleUom := make(map[string]interface{})
+				firstSaleUom["id"] = line.FirstSaleUom.ID
+				firstSaleUom["name"] = line.FirstSaleUom.Name
+				oneLine["FirstSaleUom"] = firstSaleUom
+			}
+			if line.SecondSaleUom != nil {
+				secondSaleUom := make(map[string]interface{})
+				secondSaleUom["id"] = line.SecondSaleUom.ID
+				secondSaleUom["name"] = line.SecondSaleUom.Name
+				oneLine["SecondSaleUom"] = secondSaleUom
+			}
+			if line.FirstPurchaseUom != nil {
+				firstPurchaseUom := make(map[string]interface{})
+				firstPurchaseUom["id"] = line.FirstPurchaseUom.ID
+				firstPurchaseUom["name"] = line.FirstPurchaseUom.Name
+				oneLine["FirstPurchaseUom"] = firstPurchaseUom
+			}
+			if line.SecondPurchaseUom != nil {
+				secondPurchaseUom := make(map[string]interface{})
+				secondPurchaseUom["id"] = line.SecondPurchaseUom.ID
+				secondPurchaseUom["name"] = line.SecondPurchaseUom.Name
+				oneLine["SecondPurchaseUom"] = secondPurchaseUom
 			}
 			oneLine["VariantCount"] = line.VariantCount
 			tableLines = append(tableLines, oneLine)
@@ -263,10 +289,13 @@ func (ctl *ProductTemplateController) productTemplateList(query map[string]strin
 	return result, err
 }
 func (ctl *ProductTemplateController) PostList() {
-	query := make(map[string]string)
+	query := make(map[string]interface{})
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 0, 0)
 	order := make([]string, 0, 0)
+	if ID, err := ctl.GetInt64("Id"); err == nil {
+		query["Id"] = ID
+	}
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
 	if result, err := ctl.productTemplateList(query, fields, sortby, order, offset, limit); err == nil {

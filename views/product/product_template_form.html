@@ -27,7 +27,7 @@
 
                 <div id="vertical" class="bigImg">
 
-                    <img src="/static/images/test/mid/05.jpg" width="400" height="400" alt="" id="midimg" />
+                    <img src="/static/images/test/mid/05.jpg" alt="" id="midimg" />
 
                     <div style="display:none;" id="winSelector"></div>
 
@@ -42,19 +42,19 @@
 
                         <ul>
 
-                            <li id="onlickImg"><img src="/static/images/test/small/05.jpg" width="68" height="68" alt="洋妞" /></li>
+                            <li id="onlickImg"><img src="/static/images/test/small/05.jpg" alt="洋妞" /></li>
 
-                            <li><img src="/static/images/test/small/02.jpg" width="68" height="68" alt="洋妞" /></li>
+                            <li><img src="/static/images/test/small/02.jpg" alt="洋妞" /></li>
 
-                            <li><img src="/static/images/test/small/03.jpg" width="68" height="68" alt="洋妞" /></li>
+                            <li><img src="/static/images/test/small/03.jpg" alt="洋妞" /></li>
 
-                            <li><img src="/static/images/test/small/04.jpg" width="68" height="68" alt="洋妞" /></li>
+                            <li><img src="/static/images/test/small/04.jpg" alt="洋妞" /></li>
 
-                            <li><img src="/static/images/test/small/01.jpg" width="68" height="68" alt="洋妞" /></li>
+                            <li><img src="/static/images/test/small/01.jpg" alt="洋妞" /></li>
 
-                            <li><img src="/static/images/test/small/06.jpg" width="68" height="68" alt="洋妞" /></li>
+                            <li><img src="/static/images/test/small/06.jpg" alt="洋妞" /></li>
 
-                            <li><img src="/static/images/test/small/04.jpg" width="68" height="68" alt="洋妞" /></li>
+                            <li><img src="/static/images/test/small/04.jpg" alt="洋妞" /></li>
 
                         </ul>
 
@@ -248,13 +248,13 @@
 
                                 <td>
                                     <p class="p-form-control">{{$attributeLine.Attribute.Name}}</p>
-                                    <select data-type='int' {{if and $attributeLine $attributeLine.Attribute}} data-oldvalue="{{$attributeLine.Attribute.ID}}" {{end}} data-name='AttributeId' name='AttributeId' id='AttributeId-{{$lineId}}' class='form-line-cell-edit form-control form-tree-select-product-attribute'>
+                                    <select data-type='int' {{if and $attributeLine $attributeLine.Attribute}} data-oldvalue="{{$attributeLine.Attribute.ID}}" {{end}} data-name='AttributeId' name='AttributeId' id='AttributeId-{{$lineId}}' class='form-line-cell-edit form-control form-tree-select-product-template-attribute'>
                                         <option value="{{$attributeLine.Attribute.ID}}" selected="selected">{{$attributeLine.Attribute.Name}}</option>
                                     </select>
                                 </td>
                                 <td>
                                     <p class="p-form-control"> {{range $j,$attrVal := $attributeLine.AttributeValues}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}</p>
-                                    <select data-type='array_int' data-name='AttributeValueIds' name='AttributeValueIds' data-attributeid='AttributeId-{{$lineId}}' id='AttributeValueIds-{{$lineId}}' multiple='multiple' class='form-line-cell-edit form-control form-tree-select-product-attribute-value'>
+                                    <select data-type='array_int' data-name='AttributeValueIds' name='AttributeValueIds' data-attributeid='AttributeId-{{$lineId}}' id='AttributeValueIds-{{$lineId}}' multiple='multiple' class='form-line-cell-edit form-control form-tree-select-product-template-attribute-value'>
 	                                    {{range $j,$attrVal :=  $attributeLine.AttributeValues}}
                                             <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>
                                         {{end}}

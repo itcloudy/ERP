@@ -76,18 +76,20 @@
 
 /* bigImg */
 
+
+/*
 .bigImg {
     position: relative;
     float: left;
-    width: 400px;
-    height: 400px;
+    width: 30%;
+    height: 30%;
     overflow: hidden;
 }
 
 .bigImg #midimg {
     width: 400px;
     height: 400px;
-}
+}*/
 
 .bigImg #winSelector {
     width: 235px;

@@ -12,25 +12,27 @@ import (
 
 //ProductSupplier  产品供应商
 type ProductSupplier struct {
-	ID          int64     `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser  *User     `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser  *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate  time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate  time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction  string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Sequence    int32     //序列号
-	Supplier    *Partner  `orm:"rel(fk)"` //供应商
-	ProductName string    //供应商产品名称
-	ProductCode string    //供应商产品编码
-	FirstMinQty float32   //第一单位采购最小数量
-	// SecondMinQty    float32          `orm:"default(0)"` //第二单位采购最小数量
-	FirstPrice float64 //第一单位采购价格
-	// SecondPrice     float64          `orm:"default(0)"`     //第二单位采购价格
-	DateStart       time.Time        `orm:"type(datetime)"` //价格有效开始时间
-	DateEnd         time.Time        `orm:"type(datetime)"` //价格有效截止时间
-	DelayHour       int32            //下单到交货所需时间(小时)
-	ProductTemplate *ProductTemplate `orm:"rel(fk);null"` //产品款式
-	ProductProduct  *ProductProduct  `orm:"rel(fk);null"` //产品规格
+	ID              int64            `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser      *User            `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser      *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate      time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate      time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Sequence        int32            `json:"Sequence"`                            //序列号
+	Company         *Company         `orm:"rel(fk);null"`                         //公司
+	Supplier        *Partner         `orm:"rel(fk)"`                              //供应商
+	ProductName     string           `json:"ProductName"`                         //供应商产品名称
+	ProductCode     string           `json:"ProductCode"`                         //供应商产品编码
+	FirstMinQty     float32          `orm:"default(1)"`                           //第一单位采购最小数量
+	SecondMinQty    float32          `orm:"default(1)"`                           //第二单位采购最小数量
+	FirstPrice      float64          `orm:"default(0)"`                           //第一单位采购价格
+	SecondPrice     float64          `orm:"default(0)"`                           //第二单位采购价格
+	DateStart       time.Time        `orm:"type(datetime)"`                       //价格有效开始时间
+	DateEnd         time.Time        `orm:"type(datetime)"`                       //价格有效截止时间
+	DelayHour       int32            `json:"DelayHour"`                           //下单到交货所需时间(小时)
+	ProductTemplate *ProductTemplate `orm:"rel(fk);null"`                         //产品款式
+	ProductProduct  *ProductProduct  `orm:"rel(fk);null"`                         //产品规格
+	FormAction      string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+
 }
 
 func init() {
@@ -39,10 +41,29 @@ func init() {
 
 // AddProductSupplier insert a new ProductSupplier into database and returns
 // last inserted ID on success.
-func AddProductSupplier(obj *ProductSupplier) (id int64, err error) {
+func AddProductSupplier(obj *ProductSupplier, addUser *User) (id int64, errs []error) {
 	o := orm.NewOrm()
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	var err error
+	err = o.Begin()
+	if err != nil {
+		errs = append(errs, err)
+	}
 	id, err = o.Insert(obj)
-	return id, err
+	if err != nil {
+		errs = append(errs, err)
+		err = o.Rollback()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	} else {
+		err = o.Commit()
+		if err != nil {
+			errs = append(errs, err)
+		}
+	}
+	return id, errs
 }
 
 // GetProductSupplierByID retrieves ProductSupplier by ID. Returns error if

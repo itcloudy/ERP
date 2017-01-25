@@ -13,31 +13,33 @@ import (
 // User table
 // 用户表
 type User struct {
-	ID              int64       `orm:"column(id);pk;auto" json:"id"`                                          //主键
-	CreateUser      *User       `orm:"rel(fk);null" json:"-"`                                                 //创建者
-	UpdateUser      *User       `orm:"rel(fk);null" json:"-"`                                                 //最后更新者
-	CreateDate      time.Time   `orm:"auto_now_add;type(datetime)" json:"-"`                                  //创建时间
-	UpdateDate      time.Time   `orm:"auto_now;type(datetime)" json:"-"`                                      //最后更新时间
-	FormAction      string      `orm:"-" form:"FormAction"`                                                   //非数据库字段，用于表示记录的增加，修改
-	Name            string      `orm:"size(20)" xml:"name" form:"Name" json:"name"`                           //用户名
-	NameZh          string      `orm:"size(20)"  form:"NameZh" json:"namezh"`                                 //中文用户名
-	Department      *Department `orm:"rel(fk);null;"  json:"department"`                                      //部门
-	DepartmentID    int64       `orm:"-" form:"Department"`                                                   //部门，用于form表单
-	Email           string      `orm:"size(20)" xml:"email" form:"Email" json:"email"`                        //邮箱
-	Mobile          string      `orm:"size(20);default(\"\")" xml:"mobile" form:"mobile" json:"mobile"`       //手机号码
-	Tel             string      `orm:"size(20);default(\"\")" form:"Tel" json:"tel"`                          //固定号码
-	Password        string      `xml:"password" form:"Password" json:"password"`                              //密码
-	ConfirmPassword string      `orm:"-" xml:"ConfirmPassword" form:"confirmpassword" json:"confirmpassword"` //确认密码,数据库中不保存
-	Groups          []*Group    `orm:"rel(m2m);rel_table(user_groups)"`                                       //权限组
-	GroupIDs        []string    `orm:"-" form:"Group"`                                                        //权限组，用于form表单
-	Teams           []*Team     `orm:"rel(m2m);rel_table(user_teams)"`                                        //团队
-	TeamIDs         []string    `orm:"-" form:"Team"`                                                         //团队，用于form表单
-	IsAdmin         bool        `orm:"default(false)" xml:"isAdmin" form:"IsAdmin" json:"isadmin"`            //是否为超级用户
-	Active          bool        `orm:"default(true)" xml:"active" form:"Active" json:"active"`                //有效
-	Qq              string      `orm:"default(\"\")" xml:"qq" form:"Qq" json:"qq"`                            //QQ
-	WeChat          string      `orm:"default(\"\")" xml:"wechat" form:"WeChat" json:"wechat"`                //微信
-	Position        *Position   `orm:"rel(fk);null;" form:"Position" json:"position"`                         //职位
-	PositionID      int64       `orm:"-" form:"Position"`                                                     //职位，用于form表单
+	ID              int64       `orm:"column(id);pk;auto" json:"id"`                      //主键
+	CreateUser      *User       `orm:"rel(fk);null" json:"-"`                             //创建者
+	UpdateUser      *User       `orm:"rel(fk);null" json:"-"`                             //最后更新者
+	CreateDate      time.Time   `orm:"auto_now_add;type(datetime)" json:"-"`              //创建时间
+	UpdateDate      time.Time   `orm:"auto_now;type(datetime)" json:"-"`                  //最后更新时间
+	Name            string      `orm:"size(20)" xml:"name" json:"Name"`                   //用户名
+	Company         *Company    `orm:"rel(fk);null"`                                      //公司
+	NameZh          string      `orm:"size(20)"  json:"NameZh"`                           //中文用户名
+	Department      *Department `orm:"rel(fk);null;"  json:"department"`                  //部门
+	DepartmentID    int64       `orm:"-" json:"Department"`                               //部门，用于form表单
+	Email           string      `orm:"size(20)" xml:"email" json:"Email" json:"email"`    //邮箱
+	Mobile          string      `orm:"size(20);default(\"\")" xml:"mobile" json:"Mobile"` //手机号码
+	Tel             string      `orm:"size(20);default(\"\")" json:"Tel" json:"tel"`      //固定号码
+	Password        string      `xml:"password" json:"Password" json:"password"`          //密码
+	ConfirmPassword string      `orm:"-" xml:"ConfirmPassword" json:"ConfirmPassword"`    //确认密码,数据库中不保存
+	Groups          []*Group    `orm:"rel(m2m);rel_table(user_groups)"`                   //权限组
+	GroupIDs        []string    `orm:"-" json:"Group"`                                    //权限组，用于form表单
+	Teams           []*Team     `orm:"rel(m2m);rel_table(user_teams)"`                    //团队
+	TeamIDs         []string    `orm:"-" json:"Team"`                                     //团队，用于form表单
+	IsAdmin         bool        `orm:"default(false)" xml:"isAdmin" json:"IsAdmin"`       //是否为超级用户
+	Active          bool        `orm:"default(true)" xml:"active" json:"Active"`          //有效
+	Qq              string      `orm:"default(\"\")" xml:"qq" json:"Qq"`                  //QQ
+	WeChat          string      `orm:"default(\"\")" xml:"wechat" json:"WeChat"`          //微信
+	Position        *Position   `orm:"rel(fk);null;" json:"Position"`                     //职位
+	PositionID      int64       `orm:"-" json:"Position"`                                 //职位，用于form表单
+	FormAction      string      `orm:"-" json:"FormAction"`                               //非数据库字段，用于表示记录的增加，修改
+
 }
 
 func init() {

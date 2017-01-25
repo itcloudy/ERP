@@ -22,7 +22,8 @@ type ProductAttribute struct {
 	Code           string                   `orm:"default(\"\")" json:"Code"`            //产品属性编码
 	Sequence       int32                    `json:"Sequence"`                            //序列
 	ValueIDs       []*ProductAttributeValue `orm:"reverse(many)"`                        //属性值
-	AttributeLines []*ProductAttributeLine  `orm:"reverse(many)"`
+	AttributeLines []*ProductAttributeLine  `orm:"reverse(many)"`                        //产品属性明细行
+	Products       []*ProductProduct        `orm:"rel(m2m)"`                             //拥有该属性的产品
 	// form表单字段
 	FormAction string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
 

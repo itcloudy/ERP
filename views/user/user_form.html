@@ -117,7 +117,6 @@
                     <div class="col-md-8">
                         <p class="p-form-control"> {{if .User}} {{if .User.Position}} {{.User.Position.Name}}{{end}} {{end}}</p>
                         <select data-type="int" name="Position" id="position" class="form-control select-position {{.FormField}}" {{if .User}} {{if .User.Position}} data-default-id="{{.User.Position.ID}}" data-default-name="{{.User.Position.Name}}" {{end}} {{end}}>
-                            <!--option不能删除用于bootstrapValidator验证-->
                             <option value="{{if .User.Position}}{{.User.Position.ID}}{{end}}" selected="selected">{{if .User.Position}}{{.User.Position.Name}}{{end}}</option>
                         </select>
                     </div>

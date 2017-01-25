@@ -19,7 +19,8 @@ type ProductTemplate struct {
 	UpdateUser          *User                   `orm:"rel(fk);null" json:"-"`                  //最后更新者
 	CreateDate          time.Time               `orm:"auto_now_add;type(datetime)" json:"-"`   //创建时间
 	UpdateDate          time.Time               `orm:"auto_now;type(datetime)" json:"-"`       //最后更新时间
-	Name                string                  `orm:"unique" json:"Name"`                     //产品属性名称
+	Name                string                  `orm:"unique" json:"Name"`                     //产品款式名称
+	Company             *Company                `orm:"rel(fk);null"`                           //公司
 	Sequence            int32                   `json:"Sequence"`                              //序列号
 	Description         string                  `orm:"type(text);null"`                        //描述
 	DescriptioSale      string                  `orm:"type(text);null"`                        //销售描述
@@ -192,7 +193,7 @@ func GetProductTemplateByName(name string) (*ProductTemplate, error) {
 
 // GetAllProductTemplate retrieves all ProductTemplate matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductTemplate(query map[string]string, fields []string, sortby []string, order []string,
+func GetAllProductTemplate(query map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []ProductTemplate, error) {
 	var (
 		objArrs   []ProductTemplate

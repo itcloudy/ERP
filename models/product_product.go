@@ -13,20 +13,22 @@ import (
 
 // ProductProduct 产品规格
 type ProductProduct struct {
-	ID                  int64                    `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser          *User                    `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser          *User                    `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate          time.Time                `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate          time.Time                `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction          string                   `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name                string                   `orm:"unique"`                               //产品属性名称
-	IsProductVariant    bool                     `orm:"default(true)"`                        //是变形产品
-	ProductTags         []*ProductTag            `orm:"reverse(many)"`                        //产品标签
-	Categ               *ProductCategory         `orm:"rel(fk)"`                              //产品类别
-	Active              bool                     `orm:"default(true)"`                        //有效
-	Barcode             string                   //条码,如ean13
-	DefaultCode         string                   `orm:"unique"`        //产品编码
-	ProductTemplate     *ProductTemplate         `orm:"rel(fk)"`       //产品款式
+	ID               int64            `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser       *User            `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser       *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate       time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate       time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	FormAction       string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	Name             string           `orm:"unique"`                               //产品属性名称
+	Company          *Company         `orm:"rel(fk);null"`                         //公司
+	IsProductVariant bool             `orm:"default(true)"`                        //是多规格产品
+	ProductTags      []*ProductTag    `orm:"reverse(many)"`                        //产品标签
+	Categ            *ProductCategory `orm:"rel(fk)"`                              //产品类别
+	Active           bool             `orm:"default(true)"`                        //有效
+	Barcode          string           `json:"Barcode"`                             //条码,如ean13
+	DefaultCode      string           `orm:"unique"`                               //产品编码
+	ProductTemplate  *ProductTemplate `orm:"rel(fk)"`                              //产品款式
+	// AttributeLine       *ProductAttributeLine    `orm:"rel(fk)"`                              //产品属性明细行，款式含有，规格删除
 	AttributeValues     []*ProductAttributeValue `orm:"reverse(many)"` //产品属性
 	FirstSaleUom        *ProductUom              `orm:"rel(fk)"`       //第一销售单位
 	SecondSaleUom       *ProductUom              `orm:"rel(fk)"`       //第二销售单位
