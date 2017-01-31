@@ -98,6 +98,7 @@ $(function() {
     select2AjaxData(".select-product-uom", "/product/uom/?action=search"); // 选择产品单位
     select2AjaxData(".select-product-uom-category", "/product/uomcateg/?action=search"); //计量单位类别
     selectStaticData(".select-product-uom-category-type", [{ id: 1, name: '小于参考计量单位' }, { id: 2, name: '参考计量单位' }, { id: 3, name: '大于参考计量单位' }]); // 产品类型
+    // 根据款式创建产品，款式修改后，需要同时更新产品的类别，销售和采购单位
     $(".select-product-template").select2({
         width: "off",
         ajax: {
@@ -154,6 +155,7 @@ $(function() {
                 if (result.data && result.data.length > 0) {
                     var Pdata = result.data[0];
                     $("#name").val(Pdata.Name);
+                    $("#product-attributevalues").empty();
                     $("#category").empty().append("<option value='" + Pdata.Category.id + "' selected='selected'>" + Pdata.Category.name + "</option>");
                     $("#firstSaleUom").empty().append("<option value='" + Pdata.FirstSaleUom.id + "' selected='selected'>" + Pdata.FirstSaleUom.name + "</option>");
                     if (Pdata.SecondSaleUom != undefined) {
@@ -164,9 +166,72 @@ $(function() {
                         $("#secondPurchaseUom").empty().append("<option value='" + Pdata.SecondPurchaseUom.id + "' selected='selected'>" + Pdata.SecondPurchaseUom.name + "</option>");
                     }
 
+
                 }
             },
             dataType: "json"
         });
     });
+    var selectProductProductAttributeValue = function(selector) {
+        $(selector).select2({
+            width: "off",
+            ajax: {
+                url: '/product/attributevalue/?action=search',
+                dataType: 'json',
+                delay: 250,
+                type: "POST",
+                data: function(params) {
+                    var selectParams = {
+                        name: params.term || "", // search term
+                        offset: params.page || 0,
+                        limit: 5,
+                    };
+                    var xsrf = $("input[name ='_xsrf']");
+                    if (xsrf.length > 0) {
+                        selectParams._xsrf = xsrf[0].value;
+                    }
+                    var attributeid = this.data("attributeid");
+                    if (attributeid != undefined) {
+                        var attributeId = $("#" + attributeid).val();
+                        if (attributeId == null) {
+                            // 弹框提示
+                            toastr.error("请先选择属性", "错误");
+                            return;
+                        } else {
+                            selectParams.attributeId = attributeId;
+                        }
+                    }
+                    if ($(this).length > 0 && $(this)[0].nodeName == "SELECT") {
+                        selectParams.exclude = $(this).val();
+                    }
+                    return selectParams;
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 0;
+                    var paginator = JSON.parse(data.paginator);
+                    return {
+                        results: data.data,
+                        pagination: {
+                            more: paginator.totalPage > paginator.currentPage
+                        }
+                    };
+                }
+
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 0,
+            templateResult: function(repo) {
+                'use strict';
+                if (repo.loading) { return repo.text; }
+                return repo.name;
+            },
+            templateSelection: function(repo) {
+                'use strict';
+                return repo.name || repo.text;
+            }
+        });
+    };
+    selectProductProductAttributeValue(".select-product-product-attribute-value");
 });
