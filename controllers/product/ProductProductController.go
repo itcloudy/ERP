@@ -63,8 +63,11 @@ func (ctl *ProductProductController) PostCreate() {
 		err error
 		id  int64
 	)
+	fmt.Printf("%+v\n", postData)
 	if err = json.Unmarshal([]byte(postData), product); err == nil {
 		// 获得struct表名
+		fmt.Printf("%+v\n", product)
+
 		// structName := reflect.Indirect(reflect.ValueOf(product)).Type().Name()
 		if id, err = md.AddProductProduct(product, &ctl.User); err == nil {
 			result["code"] = "success"
@@ -168,7 +171,6 @@ func (ctl *ProductProductController) Validator() {
 			query["ProductTemplate.Id"] = productTemplateID
 			query["AttributeValuesString"] = strings.Join(AttributeValueIds, "-")
 			if _, arrs, err := md.GetAllProductProduct(query, exclude, cond, fields, sortby, order, 0, 2); err == nil {
-				fmt.Println(arrs)
 				if len(arrs) > 0 {
 					result["valid"] = false
 				} else {

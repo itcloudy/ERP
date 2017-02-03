@@ -95,7 +95,7 @@ func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-	
+
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -140,7 +140,6 @@ func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string
 
 		paginator = utils.GenPaginator(limit, offset, cnt)
 	}
-	fmt.Println(err)
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}

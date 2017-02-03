@@ -99,7 +99,7 @@
                             <label for="usergroup" class="col-md-2 control-label label-start">属性值 </label>
                             <div class="col-md-10">
                                 <p class="p-form-control">{{if and .Product .Product.AttributeValues}} {{range $j,$attrVal := .Product.AttributeValues}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
-                                <select data-type='array_int' data-name='AttributeValueIds' name='AttributeValueIds' id='product-attributevalues' multiple='multiple' class='form-line-cell-edit form-control select-product-product-attribute-value'>
+                                <select data-type='array_int' data-name='AttributeValueIds' name='AttributeValueIds' id='product-attributevalues' multiple='multiple' class='{{.FormField}} form-line-cell-edit form-control select-product-product-attribute-value'>
                                     {{if and .Product  .Product.AttributeValues}} 
                                         {{range $j,$attrVal :=  .Product.AttributeValues}}
                                             <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>

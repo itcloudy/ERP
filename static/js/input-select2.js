@@ -177,7 +177,6 @@ $(function() {
             })(),
             success: function(result) {
                 if (result.data && result.data.length > 0) {
-                    console.log(result);
                     var Pdata = result.data[0];
                     $("#name").val(Pdata.Name);
                     $("#product-attributevalues").empty();

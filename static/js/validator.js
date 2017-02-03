@@ -42,7 +42,6 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 case "float": // 浮点型
                     val = parseFloat(val);
                     break;
-
                 case "array_int": // 整形数组
                     var a_arr = [];
                     for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
@@ -726,28 +725,28 @@ $(function() {
             validators: {
                 notEmpty: {
                     message: "产品规格名称不能为空"
-                },
-                remote: {
-                    url: "/product/product/",
-                    message: "该产品规格名称已经存在",
-                    dataType: "json",
-                    delay: 200,
-                    type: "POST",
-                    data: function() {
-                        var params = {
-                            action: "validator",
-                        }
-                        var xsrf = $("input[name ='_xsrf']")
-                        if (xsrf.length > 0) {
-                            params._xsrf = xsrf[0].value;
-                        }
-                        var recordID = $("input[name ='recordID']");
-                        if (recordID.length > 0) {
-                            params.recordID = recordID[0].value;
-                        }
-                        return params
-                    },
-                },
+                }
+                // remote: {
+                //     url: "/product/product/",
+                //     message: "该产品规格名称已经存在",
+                //     dataType: "json",
+                //     delay: 200,
+                //     type: "POST",
+                //     data: function() {
+                //         var params = {
+                //             action: "validator",
+                //         }
+                //         var xsrf = $("input[name ='_xsrf']")
+                //         if (xsrf.length > 0) {
+                //             params._xsrf = xsrf[0].value;
+                //         }
+                //         var recordID = $("input[name ='recordID']");
+                //         if (recordID.length > 0) {
+                //             params.recordID = recordID[0].value;
+                //         }
+                //         return params
+                //     },
+                // }
             },
         },
         AttributeValueIds: {

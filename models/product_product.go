@@ -53,6 +53,7 @@ type ProductProduct struct {
 	SecondPurchaseUomID   int64                    `orm:"-" json:"SecondPurchaseUom"`           //第二采购单位form
 	ProductAttributeLines []ProductAttributeLine   `orm:"-" json:"ProductAttributes"`           //产品属性
 	ProductTemplateID     int64                    `orm:"-" json:"ProductTemplateID"`           //产品款式
+	AttributeValueIDs     []int64                  `orm:"-" json:"AttributeValueIds"`           //产品规格属性值
 }
 
 func init() {
