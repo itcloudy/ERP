@@ -521,6 +521,58 @@ displayTable("#table-product-product", "/product/product/", [
     },
     { title: "规格属性", field: 'attributes', align: "center", sortable: true, order: "desc" },
     {
+        title: "有效",
+        field: 'Active',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.Active) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "可销售",
+        field: 'SaleOk',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.SaleOk) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "规格类型",
+        field: 'ProductType',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.ProductType == "stock") {
+                html = '库存商品';
+            } else if (row.ProductType == "consume") {
+                html = '消耗品';
+            } else if (row.ProductType == "service") {
+                html = '服务';
+            } else {
+                html = '-';
+            }
+            return html;
+        }
+    },
+    {
         title: "操作",
         align: "center",
         field: 'action',

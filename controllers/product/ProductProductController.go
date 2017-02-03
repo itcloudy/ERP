@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"goERP/controllers/base"
 
-	"fmt"
 	md "goERP/models"
 	"strconv"
 	"strings"
@@ -112,7 +111,6 @@ func (ctl *ProductProductController) Edit() {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if product, err := md.GetProductProductByID(idInt64); err == nil {
 				ctl.PageAction = product.Name
-				fmt.Printf("%+v", product)
 				ctl.Data["Product"] = product
 			}
 		}
@@ -168,7 +166,10 @@ func (ctl *ProductProductController) productProductList(query map[string]interfa
 			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			oneLine["SaleOk"] = line.SaleOk
+			oneLine["Active"] = line.Active
 			oneLine["DefaultCode"] = line.DefaultCode
+			oneLine["ProductType"] = line.ProductType
 			if line.Category != nil {
 				category := make(map[string]interface{})
 				category["id"] = line.Category.ID

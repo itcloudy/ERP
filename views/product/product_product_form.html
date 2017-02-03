@@ -76,10 +76,10 @@
                         <div class="form-group">
                             <label for="ProductTemplateID" class="col-md-2 control-label label-start">款式名称<span class="required-input">&nbsp*</span></label>
                             <div class="col-md-10">
-                                <p class="p-form-control">{{if and .Product .Product.ProductTemplate}} {{.Product.ProductTemplate.Name}} {{end}}</p>
+                                <p class="p-form-control">{{if and .Product .Product.ProductTemplate}}<span style="color:#337ab7;">[{{.Product.ProductTemplate.DefaultCode}}]</span> {{.Product.ProductTemplate.Name}} {{end}}</p>
                                 <select data-type="int" name="ProductTemplateID" id="ProductTemplateID" class="form-control select-product-template {{.FormField}}">
                                     {{if and .Product .Product.ProductTemplate}}
-                                    <option value="{{.Product.ProductTemplate.ID}}" selected="selected">{{.Product.ProductTemplate.Name}}</option>
+                                    <option value="{{.Product.ProductTemplate.ID}}" data-defaultcode="{{.Product.ProductTemplate.DefaultCode}}" selected="selected">{{.Product.ProductTemplate.Name}}</option>
                                     {{end}}
                                 </select>
                             </div>
@@ -136,11 +136,11 @@
                         <div class="form-group">
                             <label for="type" class="col-md-4 control-label label-start">产品类型</label>
                             <div class="col-md-8">
-                                <input data-type="string" class="{{.FormField}} input-radio {{if not .Product}}checked{{else}}{{if eq .Product.ProductType " stock "}}checked{{end}}{{end}}" type="radio" id="stock-radio" value="stock" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio" {{if and .Product .Product.ProductType}} data-oldvalue="{{.Product.ProductType}}" {{else}}data-oldvalue="stock" {{end}} type="radio" id="stock-radio" value="stock" name="ProductType">
                                 <label class="input-radio-label" for="stock-radio">库存商品</label>
-                                <input data-type="string" class="{{.FormField}} input-radio {{if .Product}}{{if eq  .Product.ProductType " consume "}}checked{{end}}{{end}}" type="radio" id="consume-radio" value="consume" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio" {{if and .Product .Product.ProductType}} data-oldvalue="{{.Product.ProductType}}" {{else}}data-oldvalue="stock" {{end}} type="radio" id="consume-radio" value="consume" name="ProductType">
                                 <label class="input-radio-label" for="consume-radio">消耗品</label>
-                                <input data-type="string" class="{{.FormField}} input-radio {{if .Product}}{{if eq .Product.ProductType " service "}}checked{{end}}{{end}}" type="radio" id="service-radio-3" value="service" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio" {{if and .Product .Product.ProductType}} data-oldvalue="{{.Product.ProductType}}" {{else}}data-oldvalue="stock" {{end}} type="radio" id="service-radio" value="service" name="ProductType">
                                 <label class="input-radio-label" for="service-radio">服务</label>
                             </div>
                         </div>

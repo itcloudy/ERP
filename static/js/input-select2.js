@@ -145,8 +145,20 @@ $(function() {
             return html;
         },
         templateSelection: function(repo) {
+            'use strict';
             var html = "";
-            html = "[" + repo.DefaultCode + "]" + repo.Name;
+            if (repo.Name != undefined) {
+                html = "<span style='color:#337ab7;'>[" + repo.DefaultCode + "]</span>" + repo.Name;
+            } else {
+                var $option = $(repo.element);
+                var defaultCode = $option.data("defaultcode");
+                if (defaultCode != undefined) {
+                    html = "<span style='color:#337ab7;'>[" + defaultCode + "]</span>" + repo.text;
+                } else {
+                    html = repo.text;
+                }
+
+            }
             return html;
         }
     }).on("change", function(e) {

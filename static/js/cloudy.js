@@ -1,12 +1,43 @@
 $(function() {
     'use strict';
-    $('.input-radio').iCheck({
-        checkboxClass: 'icheckbox_square-green',
-        radioClass: 'iradio_square-green',
-        increaseArea: '20%'
+    // 单选checkbox
+    $('.form-checkbox').each(function(index, el) {
+        $(el).iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+            increaseArea: '20%',
+        });
+        if ($(el).data("oldvalue") == true) {
+            $(el).iCheck("check");
+        } else {
+            $(el).iCheck("uncheck");
+        }
+        var form = $(el)[0].form;
+        if (form != undefined) {
+            if ($(form).hasClass("form-disabled")) {
+                $(el).iCheck("disable");
+            }
+        }
     });
-    //有checked的radio默认选中
-    $("input.checked").iCheck("check");
+    $('.input-radio').each(function(index, el) {
+        $(el).iCheck({
+            checkboxClass: 'icheckbox_square-green',
+            radioClass: 'iradio_square-green',
+            increaseArea: '20%',
+        });
+        if ($(el).data("oldvalue") == $(el).val()) {
+            $(el).iCheck("check");
+        } else {
+            $(el).iCheck("uncheck");
+        }
+        var form = $(el)[0].form;
+        if (form != undefined) {
+            if ($(form).hasClass("form-disabled")) {
+                $(el).iCheck("disable");
+            }
+        }
+    });
+
     // //编辑删除readonly属性，输入框变成可编辑状态
     // $(".form-edit-btn").on("click", function(e) {
     //     e.preventDefault();
