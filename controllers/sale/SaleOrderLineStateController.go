@@ -151,10 +151,10 @@ func (ctl *SaleOrderLineStateController) Validator() {
 }
 
 //SaleOrderLineStateList 获得符合要求的数据
-func (ctl *SaleOrderLineStateController) SaleOrderLineStateList(query map[string]string, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *SaleOrderLineStateController) SaleOrderLineStateList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.SaleOrderLineState
-	paginator, arrs, err := md.GetAllSaleOrderLineState(query, fields, sortby, order, offset, limit)
+	paginator, arrs, err := md.GetAllSaleOrderLineState(query, exclude, condMap, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -179,7 +179,10 @@ func (ctl *SaleOrderLineStateController) SaleOrderLineStateList(query map[string
 
 // PostList post request json response
 func (ctl *SaleOrderLineStateController) PostList() {
-	query := make(map[string]string)
+	query := make(map[string]interface{})
+	exclude := make(map[string]interface{})
+	cond := make(map[string]map[string]interface{})
+
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 1, 1)
 	order := make([]string, 1, 1)
@@ -194,7 +197,7 @@ func (ctl *SaleOrderLineStateController) PostList() {
 		sortby[0] = "Id"
 		order[0] = "desc"
 	}
-	if result, err := ctl.SaleOrderLineStateList(query, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.SaleOrderLineStateList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()

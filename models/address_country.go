@@ -58,8 +58,7 @@ func GetAddressCountryByName(name string) (obj *AddressCountry, err error) {
 
 // GetAllAddressCountry retrieves all AddressCountry matches certain condition. Returns empty list if
 // no records exist
-func GetAllAddressCountry(query map[string]string, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (utils.Paginator, []AddressCountry, error) {
+func GetAllAddressCountry(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []AddressCountry, error) {
 	var (
 		objArrs   []AddressCountry
 		paginator utils.Paginator
@@ -71,12 +70,37 @@ func GetAllAddressCountry(query map[string]string, fields []string, sortby []str
 	}
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(AddressCountry))
+
+	//cond k=v cond必须放到Filter和Exclude前面
+	cond := orm.NewCondition()
+	if _, ok := condMap["and"]; ok {
+		andMap := condMap["and"]
+		for k, v := range andMap {
+			k = strings.Replace(k, ".", "__", -1)
+			cond = cond.And(k, v)
+		}
+	}
+	if _, ok := condMap["or"]; ok {
+		orMap := condMap["or"]
+		for k, v := range orMap {
+			k = strings.Replace(k, ".", "__", -1)
+			cond = cond.Or(k, v)
+		}
+	}
+	qs = qs.SetCond(cond)
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Filter(k, v)
 	}
+	//exclude k=v
+	for k, v := range exclude {
+		// rewrite dot-notation to Object__Attribute
+		k = strings.Replace(k, ".", "__", -1)
+		qs = qs.Exclude(k, v)
+	}
+
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {

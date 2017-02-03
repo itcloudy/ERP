@@ -156,8 +156,7 @@ func GetProductProductByName(name string) (obj *ProductProduct, err error) {
 
 // GetAllProductProduct retrieves all ProductProduct matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductProduct(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (utils.Paginator, []ProductProduct, error) {
+func GetAllProductProduct(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []ProductProduct, error) {
 	var (
 		objArrs   []ProductProduct
 		paginator utils.Paginator
@@ -170,20 +169,8 @@ func GetAllProductProduct(query map[string]interface{}, exclude map[string]inter
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(ProductProduct))
 	qs = qs.RelatedSel()
-	// query k=v
 
-	for k, v := range query {
-		// rewrite dot-notation to Object__Attribute
-		k = strings.Replace(k, ".", "__", -1)
-		qs = qs.Filter(k, v)
-	}
-	//exclude k=v
-	for k, v := range exclude {
-		// rewrite dot-notation to Object__Attribute
-		k = strings.Replace(k, ".", "__", -1)
-		qs = qs.Exclude(k, v)
-	}
-	//cond k=v
+	//cond k=v cond必须放到Filter和Exclude前面
 	cond := orm.NewCondition()
 	if _, ok := condMap["and"]; ok {
 		andMap := condMap["and"]
@@ -200,6 +187,19 @@ func GetAllProductProduct(query map[string]interface{}, exclude map[string]inter
 		}
 	}
 	qs = qs.SetCond(cond)
+	// query k=v
+	for k, v := range query {
+		// rewrite dot-notation to Object__Attribute
+		k = strings.Replace(k, ".", "__", -1)
+		qs = qs.Filter(k, v)
+	}
+	//exclude k=v
+	for k, v := range exclude {
+		// rewrite dot-notation to Object__Attribute
+		k = strings.Replace(k, ".", "__", -1)
+		qs = qs.Exclude(k, v)
+	}
+
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {

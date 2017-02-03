@@ -141,8 +141,8 @@ $(function() {
             'use strict';
             if (repo.loading) { return repo.text; }
             var html = "";
-            html = "<p>款式编码:" + repo.DefaultCode + "</p>";
-            html += "<p>款式名称:" + repo.Name + "</p>";
+            html = "<p><strong>款式编码:&nbsp</strong>" + repo.DefaultCode + "</p>";
+            html += "<p><strong>款式名称:&nbsp</strong>" + repo.Name + "</p>";
             return html;
         },
         templateSelection: function(repo) {
@@ -177,6 +177,7 @@ $(function() {
             })(),
             success: function(result) {
                 if (result.data && result.data.length > 0) {
+                    console.log(result);
                     var Pdata = result.data[0];
                     $("#name").val(Pdata.Name);
                     $("#product-attributevalues").empty();

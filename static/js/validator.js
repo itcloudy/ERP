@@ -750,6 +750,37 @@ $(function() {
                 },
             },
         },
+        AttributeValueIds: {
+            message: "该值无效",
+            validators: {
+                remote: {
+                    url: "/product/product/",
+                    message: "该产品款式属性值组合的产品规格已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var ProductTemplateID = $("#ProductTemplateID").val();
+                        if (ProductTemplateID != undefined) {
+                            params.ProductTemplateID = parseInt(ProductTemplateID);
+                        }
+                        var xsrf = $("input[name ='_xsrf']")
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+
+        },
         FirstSaleUom: {
             validators: {
                 notEmpty: {

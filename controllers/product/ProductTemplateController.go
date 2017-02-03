@@ -98,7 +98,9 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 	order := make([]string, 1, 1)
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
-
+	if ID, err := ctl.GetInt64("Id"); err == nil {
+		query["Id"] = ID
+	}
 	result := make(map[string]interface{})
 	if paginator, arrs, err := md.GetAllProductAttributeLine(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		if jsonResult, er := json.Marshal(&paginator); er == nil {

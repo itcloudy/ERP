@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"goERP/controllers/base"
+	"sort"
 
 	md "goERP/models"
 	"strconv"
@@ -127,26 +128,56 @@ func (ctl *ProductProductController) Detail() {
 	ctl.Data["Action"] = "detail"
 }
 func (ctl *ProductProductController) Validator() {
-	name := ctl.GetString("name")
-	name = strings.TrimSpace(name)
+	name := strings.TrimSpace(ctl.GetString("name"))
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
-	obj, err := md.GetProductProductByName(name)
-	if err != nil {
-		result["valid"] = true
-	} else {
-		if obj.Name == name {
-			if recordID == obj.ID {
+	// 默认验证失败
+	result["valid"] = true
+	AttributeValueIds := ctl.GetStrings("AttributeValueIds[]")
+	if len(AttributeValueIds) > 0 {
+		sort.Strings(AttributeValueIds)
+		strings.Join(AttributeValueIds, "-")
+	}
+	if name != "" {
+		obj, err := md.GetProductProductByName(name)
+		if err != nil {
+			result["valid"] = true
+		} else {
+			if obj.Name == name {
+				if recordID == obj.ID {
+					result["valid"] = true
+				} else {
+					result["valid"] = false
+				}
+
+			} else {
 				result["valid"] = true
+			}
+
+		}
+	} else if len(AttributeValueIds) > 0 {
+		sort.Strings(AttributeValueIds)
+		if productTemplateID, err := ctl.GetInt64("ProductTemplateID"); err == nil {
+			query := make(map[string]interface{})
+			exclude := make(map[string]interface{})
+			cond := make(map[string]map[string]interface{})
+			fields := make([]string, 0, 0)
+			sortby := make([]string, 1, 1)
+			order := make([]string, 1, 1)
+			query["ProductTemplate.Id"] = productTemplateID
+			query["AttributeValuesString"] = strings.Join(AttributeValueIds, "-")
+			if _, arrs, err := md.GetAllProductProduct(query, exclude, cond, fields, sortby, order, 0, 2); err == nil {
+				if len(arrs) > 0 {
+					result["valid"] = true
+				} else {
+					result["valid"] = false
+				}
 			} else {
 				result["valid"] = false
 			}
-
-		} else {
-			result["valid"] = true
 		}
-
 	}
+
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
@@ -196,7 +227,6 @@ func (ctl *ProductProductController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
-
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 1, 1)
 	order := make([]string, 1, 1)

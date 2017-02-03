@@ -52,8 +52,7 @@ func GetProductAttributeLineByID(id int64) (obj *ProductAttributeLine, err error
 
 // GetAllProductAttributeLine retrieves all ProductAttributeLine matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (utils.Paginator, []ProductAttributeLine, error) {
+func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []ProductAttributeLine, error) {
 	var (
 		objArrs   []ProductAttributeLine
 		paginator utils.Paginator
@@ -66,17 +65,37 @@ func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(ProductAttributeLine))
 	qs = qs.RelatedSel()
+
+	//cond k=v cond必须放到Filter和Exclude前面
+	cond := orm.NewCondition()
+	if _, ok := condMap["and"]; ok {
+		andMap := condMap["and"]
+		for k, v := range andMap {
+			k = strings.Replace(k, ".", "__", -1)
+			cond = cond.And(k, v)
+		}
+	}
+	if _, ok := condMap["or"]; ok {
+		orMap := condMap["or"]
+		for k, v := range orMap {
+			k = strings.Replace(k, ".", "__", -1)
+			cond = cond.Or(k, v)
+		}
+	}
+	qs = qs.SetCond(cond)
 	// query k=v
 	for k, v := range query {
 		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Filter(k, v)
 	}
+	//exclude k=v
 	for k, v := range exclude {
 		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
+	
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {

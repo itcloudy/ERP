@@ -143,10 +143,10 @@ func (ctl *PurchaseConfigController) Validator() {
 }
 
 //PurchaseConfigList  post request get config list
-func (ctl *PurchaseConfigController) PurchaseConfigList(query map[string]string, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *PurchaseConfigController) PurchaseConfigList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.PurchaseConfig
-	paginator, arrs, err := md.GetAllPurchaseConfig(query, fields, sortby, order, offset, limit)
+	paginator, arrs, err := md.GetAllPurchaseConfig(query, exclude, condMap, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -170,7 +170,10 @@ func (ctl *PurchaseConfigController) PurchaseConfigList(query map[string]string,
 
 // PostList post request json response
 func (ctl *PurchaseConfigController) PostList() {
-	query := make(map[string]string)
+	query := make(map[string]interface{})
+	exclude := make(map[string]interface{})
+	cond := make(map[string]map[string]interface{})
+
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 1, 1)
 	order := make([]string, 1, 1)
@@ -185,7 +188,7 @@ func (ctl *PurchaseConfigController) PostList() {
 		sortby[0] = "Id"
 		order[0] = "desc"
 	}
-	if result, err := ctl.PurchaseConfigList(query, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.PurchaseConfigList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()
