@@ -180,8 +180,8 @@ func (ctl *SequenceController) PostList() {
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
 	fields := make([]string, 0, 0)
-	sortby := make([]string, 1, 1)
-	order := make([]string, 1, 1)
+	sortby := make([]string, 0, 1)
+	order := make([]string, 0, 1)
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
 	name := strings.TrimSpace(ctl.GetString("Name"))
@@ -191,11 +191,11 @@ func (ctl *SequenceController) PostList() {
 	orderStr := ctl.GetString("order")
 	sortStr := ctl.GetString("sort")
 	if orderStr != "" && sortStr != "" {
-		sortby[0] = sortStr
-		order[0] = orderStr
+		sortby = append(sortby, sortStr)
+		order = append(order, orderStr)
 	} else {
-		sortby[0] = "Id"
-		order[0] = "desc"
+		sortby = append(sortby, "Id")
+		order = append(order, "desc")
 	}
 	if result, err := ctl.sequenceList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result

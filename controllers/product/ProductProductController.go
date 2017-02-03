@@ -6,6 +6,7 @@ import (
 	"goERP/controllers/base"
 	"sort"
 
+	"fmt"
 	md "goERP/models"
 	"strconv"
 	"strings"
@@ -132,7 +133,7 @@ func (ctl *ProductProductController) Validator() {
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
 	// 默认验证失败
-	result["valid"] = true
+	result["valid"] = false
 	AttributeValueIds := ctl.GetStrings("AttributeValueIds[]")
 	if len(AttributeValueIds) > 0 {
 		sort.Strings(AttributeValueIds)
@@ -162,15 +163,16 @@ func (ctl *ProductProductController) Validator() {
 			exclude := make(map[string]interface{})
 			cond := make(map[string]map[string]interface{})
 			fields := make([]string, 0, 0)
-			sortby := make([]string, 1, 1)
-			order := make([]string, 1, 1)
+			sortby := make([]string, 0, 1)
+			order := make([]string, 0, 1)
 			query["ProductTemplate.Id"] = productTemplateID
 			query["AttributeValuesString"] = strings.Join(AttributeValueIds, "-")
 			if _, arrs, err := md.GetAllProductProduct(query, exclude, cond, fields, sortby, order, 0, 2); err == nil {
+				fmt.Println(arrs)
 				if len(arrs) > 0 {
-					result["valid"] = true
-				} else {
 					result["valid"] = false
+				} else {
+					result["valid"] = true
 				}
 			} else {
 				result["valid"] = false
@@ -228,18 +230,18 @@ func (ctl *ProductProductController) PostList() {
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
 	fields := make([]string, 0, 0)
-	sortby := make([]string, 1, 1)
-	order := make([]string, 1, 1)
+	sortby := make([]string, 0, 1)
+	order := make([]string, 0, 1)
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
 	orderStr := ctl.GetString("order")
 	sortStr := ctl.GetString("sort")
 	if orderStr != "" && sortStr != "" {
-		sortby[0] = sortStr
-		order[0] = orderStr
+		sortby = append(sortby, sortStr)
+		order = append(order, orderStr)
 	} else {
-		sortby[0] = "Id"
-		order[0] = "desc"
+		sortby = append(sortby, "Id")
+		order = append(order, "desc")
 	}
 	if result, err := ctl.productProductList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result

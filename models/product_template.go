@@ -68,8 +68,8 @@ func GetVariantCount(obj *ProductTemplate) (count int64) {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	fields := make([]string, 0, 0)
-	sortby := make([]string, 1, 1)
-	order := make([]string, 1, 1)
+	sortby := make([]string, 0, 1)
+	order := make([]string, 0, 1)
 	condMap := make(map[string]map[string]interface{})
 	query["ProductTemplate.id"] = obj.ID
 	if paginaotor, _, err := GetAllProductProduct(query, exclude, condMap, fields, sortby, order, 0, 5); err == nil {

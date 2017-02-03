@@ -32,7 +32,6 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
     var options = {
         url: ajaxUrl,
         queryParams: function(params) {
-            console.log(params);
             var xsrf = $("input[name ='_xsrf']");
             if (xsrf != undefined) {
                 params._xsrf = xsrf[0].value;
@@ -52,7 +51,6 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
             }
 
             params.filter = JSON.stringify(filter);
-            console.log(params);
             return params;
         },
         columns: columns
@@ -518,7 +516,7 @@ displayTable("#table-product-product", "/product/product/", [
         sortable: true,
         order: "desc",
         formatter: function cellStyle(value, row, index) {
-            var html = row.ProductTemplate.name + "<a href='/product/template/" + row.ProductTemplate.id + "?action=detail'>&nbsp&nbsp<i class='fa fa-external-link'></i></a>";
+            var html = row.ProductTemplate.name + "<a class='pull-right' href='/product/template/" + row.ProductTemplate.id + "?action=detail'>&nbsp&nbsp<i class='fa fa-external-link'></i></a>";
             return html;
         }
     },
