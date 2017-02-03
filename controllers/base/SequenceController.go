@@ -1,6 +1,7 @@
 package base
 
 import (
+	"bytes"
 	"encoding/json"
 	md "goERP/models"
 	"strconv"
@@ -26,12 +27,17 @@ func (ctl *SequenceController) Post() {
 
 // Get 请求
 func (ctl *SequenceController) Get() {
-	ctl.PageName = "登陆记录管理"
+	ctl.PageName = "序号管理"
 	ctl.URL = "/sequence/"
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuRecordActive"] = "active"
 	ctl.GetList()
-	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
+	// 标题合成
+	b := bytes.Buffer{}
+	b.WriteString(ctl.PageName)
+	b.WriteString("\\")
+	b.WriteString(ctl.PageAction)
+	ctl.Data["PageName"] = b.String()
 
 }
 
@@ -173,15 +179,23 @@ func (ctl *SequenceController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	fields := make([]string, 0, 0)
-	sortby := make([]string, 0, 0)
-	order := make([]string, 0, 0)
+	sortby := make([]string, 1, 1)
+	order := make([]string, 1, 1)
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
 	name := strings.TrimSpace(ctl.GetString("Name"))
 	if name != "" {
 		query["Name"] = name
 	}
-
+	orderStr := ctl.GetString("order")
+	sortStr := ctl.GetString("sort")
+	if orderStr != "" && sortStr != "" {
+		sortby[0] = sortStr
+		order[0] = orderStr
+	} else {
+		sortby[0] = "Id"
+		order[0] = "desc"
+	}
 	if result, err := ctl.sequenceList(query, exclude, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}

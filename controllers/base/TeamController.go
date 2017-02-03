@@ -1,6 +1,7 @@
 package base
 
 import (
+	"bytes"
 	"encoding/json"
 	md "goERP/models"
 	"strconv"
@@ -42,7 +43,12 @@ func (ctl *TeamController) Get() {
 	default:
 		ctl.GetList()
 	}
-	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
+	// 标题合成
+	b := bytes.Buffer{}
+	b.WriteString(ctl.PageName)
+	b.WriteString("\\")
+	b.WriteString(ctl.PageAction)
+	ctl.Data["PageName"] = b.String()
 	ctl.URL = "/team/"
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuTeamActive"] = "active"
@@ -146,13 +152,22 @@ func (ctl *TeamController) teamList(query map[string]string, fields []string, so
 func (ctl *TeamController) PostList() {
 	query := make(map[string]string)
 	fields := make([]string, 0, 0)
-	sortby := make([]string, 0, 0)
-	order := make([]string, 0, 0)
+	sortby := make([]string, 1, 1)
+	order := make([]string, 1, 1)
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
 	name := strings.TrimSpace(ctl.Input().Get("name"))
 	if name != "" {
 		query["name"] = name
+	}
+	orderStr := ctl.GetString("order")
+	sortStr := ctl.GetString("sort")
+	if orderStr != "" && sortStr != "" {
+		sortby[0] = sortStr
+		order[0] = orderStr
+	} else {
+		sortby[0] = "Id"
+		order[0] = "desc"
 	}
 	if result, err := ctl.teamList(query, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result

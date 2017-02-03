@@ -19,7 +19,7 @@ type ProductTemplate struct {
 	UpdateUser          *User                   `orm:"rel(fk);null" json:"-"`                  //最后更新者
 	CreateDate          time.Time               `orm:"auto_now_add;type(datetime)" json:"-"`   //创建时间
 	UpdateDate          time.Time               `orm:"auto_now;type(datetime)" json:"-"`       //最后更新时间
-	Name                string                  `orm:"unique" json:"Name"`                     //产品款式名称
+	Name                string                  `orm:"unique;index" json:"Name"`               //产品款式名称
 	Company             *Company                `orm:"rel(fk);null"`                           //公司
 	Sequence            int32                   `json:"Sequence"`                              //序列号
 	Description         string                  `orm:"type(text);null"`                        //描述
@@ -42,7 +42,9 @@ type ProductTemplate struct {
 	VariantCount        int32                   `json:"VariantCount"`                          //产品规格数量
 	Barcode             string                  `json:"Barcode"`                               //条码,如ean13
 	DefaultCode         string                  `json:"DefaultCode"`                           //产品编码
-	Images              []*ProductImage         `orm:"reverse(many)"`                          //产品款式图片
+	BigImages           []*ProductImage         `orm:"reverse(many)"`                          //产品款式图片
+	MidImages           []*ProductImage         `orm:"reverse(many)"`                          //产品款式图片
+	SmallImages         []*ProductImage         `orm:"reverse(many)"`                          //产品款式图片
 	ProductType         string                  `orm:"default(\"stock\")"`                     //产品类型
 	ProductMethod       string                  `orm:"default(\"hand\")" json:"ProductMethod"` //产品规格创建方式
 	PackagingDependTemp bool                    `orm:"default(true)"`                          //根据款式打包
@@ -62,16 +64,29 @@ func init() {
 	orm.RegisterModel(new(ProductTemplate))
 }
 
+func GetVariantCount(obj *ProductTemplate) (count int64) {
+	query := make(map[string]interface{})
+	exclude := make(map[string]interface{})
+	fields := make([]string, 0, 0)
+	sortby := make([]string, 1, 1)
+	order := make([]string, 1, 1)
+	query["ProductTemplate.id"] = obj.ID
+	if paginaotor, _, err := GetAllProductProduct(query, exclude, fields, sortby, order, 0, 5); err == nil {
+		return paginaotor.TotalCount
+	} else {
+		return 0
+	}
+}
+
 // AddProductTemplate insert a new ProductTemplate into database and returns
 // last inserted ID on success.
-func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, errs []error) {
+func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
 	obj.CreateUser = addUser
 	obj.UpdateUser = addUser
-	var err error
 	err = o.Begin()
 	if err != nil {
-		errs = append(errs, err)
+		return 0, err
 	}
 	if obj.CategoryID != 0 {
 		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)
@@ -108,8 +123,7 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, errs []e
 							if valueObj, err := GetProductAttributeValueByID(attrValueID); err == nil {
 								productAttributeLine.AttributeValues = append(productAttributeLine.AttributeValues, valueObj)
 							} else {
-								errs = append(errs, err)
-								fmt.Println("valueObj: ", err)
+								return 0, err
 							}
 						}
 						for _, attrVal := range productAttributeLine.AttributeValues {
@@ -119,30 +133,24 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, errs []e
 						}
 						obj.AttributeLines = append(obj.AttributeLines, productAttributeLine)
 					} else {
-						errs = append(errs, err)
-						fmt.Println("productAttributeLine: ", err)
+						return 0, err
 					}
 
 				} else {
-					errs = append(errs, err)
-					fmt.Println("Attribute: ", err)
+					return 0, err
 				}
 			}
 		}
 	}
 	if err != nil {
-		errs = append(errs, err)
-		err = o.Rollback()
-		if err != nil {
-			errs = append(errs, err)
-		}
+		return 0, err
 	} else {
 		err = o.Commit()
 		if err != nil {
-			errs = append(errs, err)
+			return 0, err
 		}
 	}
-	return id, errs
+	return id, err
 }
 
 // GetProductTemplateByID retrieves ProductTemplate by ID. Returns error if
@@ -157,7 +165,6 @@ func GetProductTemplateByID(id int64) (obj *ProductTemplate, err error) {
 				o.LoadRelated(obj.AttributeLines[index], "AttributeValues")
 			}
 		}
-		fmt.Println(err)
 		if obj.Category != nil {
 			o.Read(obj.Category)
 		}
@@ -193,7 +200,7 @@ func GetProductTemplateByName(name string) (*ProductTemplate, error) {
 
 // GetAllProductTemplate retrieves all ProductTemplate matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductTemplate(query map[string]interface{}, fields []string, sortby []string, order []string,
+func GetAllProductTemplate(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []ProductTemplate, error) {
 	var (
 		objArrs   []ProductTemplate
@@ -212,6 +219,12 @@ func GetAllProductTemplate(query map[string]interface{}, fields []string, sortby
 		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Filter(k, v)
+	}
+	//exclude k=v
+	for k, v := range exclude {
+		// rewrite dot-notation to Object__Attribute
+		k = strings.Replace(k, ".", "__", -1)
+		qs = qs.Exclude(k, v)
 	}
 	// order by:
 	var sortFields []string

@@ -16,6 +16,7 @@ type ProductImage struct {
 	FormAction      string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 	Name            string           `orm:"unique" form:"name"`                   //图片名称
 	ProductTemplate *ProductTemplate `orm:"rel(fk);null"`                         //款式图片
+	ProductProduct  *ProductProduct  `orm:"rel(fk);null"`                         //规格图片
 }
 
 func init() {

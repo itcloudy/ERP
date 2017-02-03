@@ -2,7 +2,7 @@
     <p id="list-title">{{.PageName}}</p>
 </div>
 
-<form enctype="multipart/form-data" id="saleOrderForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-from form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+<form enctype="multipart/form-data" id="saleOrderForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
     <div class="row">
         {{if .RecordID}} {{if .Readonly}}
         <a href="{{.URL}}{{.RecordID}}?action=edit" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</a>

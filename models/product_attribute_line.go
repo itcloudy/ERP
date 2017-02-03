@@ -52,7 +52,7 @@ func GetProductAttributeLineByID(id int64) (obj *ProductAttributeLine, err error
 
 // GetAllProductAttributeLine retrieves all ProductAttributeLine matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductAttributeLine(query map[string]string, fields []string, sortby []string, order []string,
+func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []ProductAttributeLine, error) {
 	var (
 		objArrs   []ProductAttributeLine
@@ -71,6 +71,11 @@ func GetAllProductAttributeLine(query map[string]string, fields []string, sortby
 		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Filter(k, v)
+	}
+	for k, v := range exclude {
+		// rewrite dot-notation to Object__Attribute
+		k = strings.Replace(k, ".", "__", -1)
+		qs = qs.Exclude(k, v)
 	}
 	// order by:
 	var sortFields []string
@@ -113,10 +118,15 @@ func GetAllProductAttributeLine(query map[string]string, fields []string, sortby
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
+
 		paginator = utils.GenPaginator(limit, offset, cnt)
 	}
+	fmt.Println(err)
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
+	}
+	for i, _ := range objArrs {
+		o.LoadRelated(&objArrs[i], "AttributeValues")
 	}
 	return paginator, objArrs, err
 }

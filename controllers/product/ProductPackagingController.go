@@ -1,6 +1,9 @@
 package product
 
-import "goERP/controllers/base"
+import (
+	"bytes"
+	"goERP/controllers/base"
+)
 
 type ProductPackagingController struct {
 	base.BaseController
@@ -20,7 +23,12 @@ func (ctl *ProductPackagingController) Get() {
 	default:
 		ctl.List()
 	}
-	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
+	// 标题合成
+	b := bytes.Buffer{}
+	b.WriteString(ctl.PageName)
+	b.WriteString("\\")
+	b.WriteString(ctl.PageAction)
+	ctl.Data["PageName"] = b.String()
 }
 func (ctl *ProductPackagingController) List() {
 

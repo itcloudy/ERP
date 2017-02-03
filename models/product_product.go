@@ -1,6 +1,7 @@
 package models
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"strings"
@@ -8,36 +9,50 @@ import (
 
 	"goERP/utils"
 
+	"strconv"
+
 	"github.com/astaxie/beego/orm"
 )
 
 // ProductProduct 产品规格
 type ProductProduct struct {
-	ID               int64            `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser       *User            `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser       *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate       time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate       time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction       string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name             string           `orm:"unique"`                               //产品属性名称
-	Company          *Company         `orm:"rel(fk);null"`                         //公司
-	IsProductVariant bool             `orm:"default(true)"`                        //是多规格产品
-	ProductTags      []*ProductTag    `orm:"reverse(many)"`                        //产品标签
-	Categ            *ProductCategory `orm:"rel(fk)"`                              //产品类别
-	Active           bool             `orm:"default(true)"`                        //有效
-	Barcode          string           `json:"Barcode"`                             //条码,如ean13
-	DefaultCode      string           `orm:"unique"`                               //产品编码
-	ProductTemplate  *ProductTemplate `orm:"rel(fk)"`                              //产品款式
-	// AttributeLine       *ProductAttributeLine    `orm:"rel(fk)"`                              //产品属性明细行，款式含有，规格删除
-	AttributeValues     []*ProductAttributeValue `orm:"reverse(many)"` //产品属性
-	FirstSaleUom        *ProductUom              `orm:"rel(fk)"`       //第一销售单位
-	SecondSaleUom       *ProductUom              `orm:"rel(fk)"`       //第二销售单位
-	FirstPurchaseUom    *ProductUom              `orm:"rel(fk)"`       //第一采购单位
-	SecondPurchaseUom   *ProductUom              `orm:"rel(fk)"`       //第二采购单位
-	ProductPackagings   []*ProductPackaging      `orm:"reverse(many)"` //打包方式
-	PackagingDependTemp bool                     `orm:"default(true)"` //根据款式打包
-	PurchaseDependTemp  bool                     `orm:"default(true)"` //根据款式采购，ture一个供应商可以供应所有的款式
-
+	ID                    int64                    `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser            *User                    `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser            *User                    `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate            time.Time                `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate            time.Time                `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Name                  string                   `orm:"index"`                                //产品属性名称
+	Company               *Company                 `orm:"rel(fk);null"`                         //公司
+	Category              *ProductCategory         `orm:"rel(fk)"`                              //产品类别
+	IsProductVariant      bool                     `orm:"default(true)"`                        //是多规格产品
+	ProductTags           []*ProductTag            `orm:"reverse(many)"`                        //产品标签
+	SaleOk                bool                     `orm:"default(true)" json:"SaleOk"`          //可销售
+	Active                bool                     `orm:"default(true)"`                        //有效
+	Barcode               string                   `orm:"null" json:"Barcode"`                  //条码,如ean13
+	StandardPrice         float64                  `json:"StandardPrice"`                       //成本价格
+	DefaultCode           string                   `orm:"unique"`                               //产品编码
+	ProductTemplate       *ProductTemplate         `orm:"rel(fk)"`                              //产品款式
+	AttributeValues       []*ProductAttributeValue `orm:"reverse(many)"`                        //产品属性
+	ProductType           string                   `orm:"default(\"stock\")"`                   //产品类型
+	AttributeValuesString string                   `orm:"index;default(\"\")"`                  //产品属性值ID编码，用于修改和增加时对应的产品是否已经存在
+	FirstSaleUom          *ProductUom              `orm:"rel(fk)"`                              //第一销售单位
+	SecondSaleUom         *ProductUom              `orm:"rel(fk);null"`                         //第二销售单位
+	FirstPurchaseUom      *ProductUom              `orm:"rel(fk)"`                              //第一采购单位
+	SecondPurchaseUom     *ProductUom              `orm:"rel(fk);null"`                         //第二采购单位
+	ProductPackagings     []*ProductPackaging      `orm:"reverse(many)"`                        //打包方式
+	PackagingDependTemp   bool                     `orm:"default(true)"`                        //根据款式打包
+	BigImages             []*ProductImage          `orm:"reverse(many)"`                        //产品款式图片
+	MidImages             []*ProductImage          `orm:"reverse(many)"`                        //产品款式图片
+	SmallImages           []*ProductImage          `orm:"reverse(many)"`                        //产品款式图片
+	PurchaseDependTemp    bool                     `orm:"default(true)"`                        //根据款式采购，ture一个供应商可以供应所有的款式
+	FormAction            string                   `orm:"-" json:"FormAction"`                  //表单动作
+	CategoryID            int64                    `orm:"-" json:"Category"`                    //产品类别
+	FirstSaleUomID        int64                    `orm:"-" json:"FirstSaleUom"`                //第一销售单位form
+	SecondSaleUomID       int64                    `orm:"-" json:"SecondSaleUom"`               //第二销售单位form
+	FirstPurchaseUomID    int64                    `orm:"-" json:"FirstPurchaseUom"`            //第一采购单位form
+	SecondPurchaseUomID   int64                    `orm:"-" json:"SecondPurchaseUom"`           //第二采购单位form
+	ProductAttributeLines []ProductAttributeLine   `orm:"-" json:"ProductAttributes"`           //产品属性
+	ProductTemplateID     int64                    `orm:"-" json:"ProductTemplateID"`           //产品款式
 }
 
 func init() {
@@ -46,9 +61,53 @@ func init() {
 
 // AddProductProduct insert a new ProductProduct into database and returns
 // last inserted ID on success.
-func AddProductProduct(obj *ProductProduct) (id int64, err error) {
+func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	id, err = o.Insert(obj)
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	err = o.Begin()
+	if err != nil {
+		return 0, err
+	}
+	if obj.ProductTemplateID != 0 {
+		if template, err := GetProductTemplateByID(obj.ProductTemplateID); err == nil {
+			obj.ProductTemplate = template
+			sequence := GetVariantCount(template)
+			b := bytes.Buffer{}
+			b.WriteString(template.DefaultCode)
+			b.WriteString("-")
+			b.WriteString(strconv.FormatInt(sequence+1, 10))
+			obj.DefaultCode = b.String()
+		} else {
+			return 0, err
+		}
+	}
+	if obj.CategoryID != 0 {
+		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)
+	}
+	if obj.FirstSaleUomID != 0 {
+		obj.FirstSaleUom, _ = GetProductUomByID(obj.FirstSaleUomID)
+	}
+	if obj.SecondSaleUomID != 0 {
+		obj.SecondSaleUom, _ = GetProductUomByID(obj.SecondSaleUomID)
+	}
+	if obj.FirstPurchaseUomID != 0 {
+		obj.FirstPurchaseUom, _ = GetProductUomByID(obj.FirstPurchaseUomID)
+	}
+	if obj.SecondPurchaseUomID != 0 {
+		obj.SecondPurchaseUom, _ = GetProductUomByID(obj.SecondPurchaseUomID)
+	}
+	if id, err = o.Insert(obj); err != nil {
+		return 0, err
+	}
+	if err != nil {
+		return 0, err
+	} else {
+		err = o.Commit()
+		if err != nil {
+			return 0, err
+		}
+	}
 	return id, err
 }
 
@@ -58,6 +117,27 @@ func GetProductProductByID(id int64) (obj *ProductProduct, err error) {
 	o := orm.NewOrm()
 	obj = &ProductProduct{ID: id}
 	if err = o.Read(obj); err == nil {
+		if obj.ProductTemplate != nil {
+			o.Read(obj.ProductTemplate)
+		}
+		if obj.AttributeValues != nil {
+			o.LoadRelated(obj.AttributeValues, "AttributeValues")
+		}
+		if obj.Category != nil {
+			o.Read(obj.Category)
+		}
+		if obj.FirstSaleUom != nil {
+			o.Read(obj.FirstSaleUom)
+		}
+		if obj.FirstPurchaseUom != nil {
+			o.Read(obj.FirstPurchaseUom)
+		}
+		if obj.SecondSaleUom != nil {
+			o.Read(obj.SecondSaleUom)
+		}
+		if obj.SecondPurchaseUom != nil {
+			o.Read(obj.SecondPurchaseUom)
+		}
 		return obj, nil
 	}
 	return nil, err
@@ -76,7 +156,7 @@ func GetProductProductByName(name string) (obj *ProductProduct, err error) {
 
 // GetAllProductProduct retrieves all ProductProduct matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductProduct(query map[string]string, fields []string, sortby []string, order []string,
+func GetAllProductProduct(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []ProductProduct, error) {
 	var (
 		objArrs   []ProductProduct
@@ -96,6 +176,12 @@ func GetAllProductProduct(query map[string]string, fields []string, sortby []str
 		// rewrite dot-notation to Object__Attribute
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Filter(k, v)
+	}
+	//exclude k=v
+	for k, v := range exclude {
+		// rewrite dot-notation to Object__Attribute
+		k = strings.Replace(k, ".", "__", -1)
+		qs = qs.Exclude(k, v)
 	}
 	// order by:
 	var sortFields []string

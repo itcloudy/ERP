@@ -2,7 +2,7 @@
     <p id="list-title">{{.PageName}}</p>
 </div>
 
-<form enctype="multipart/form-data" id="productTemplateForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-from form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+<form enctype="multipart/form-data" id="productTemplateForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
     <div class="row">
         {{if .RecordID}} {{if .Readonly}}
         <a href="{{.URL}}{{.RecordID}}?action=edit" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</a>
@@ -88,7 +88,7 @@
                         <div class="form-group">
                             <label for="active" class="col-md-4 control-label ">有效</label>
                             <div class="col-md-8 ">
-                                <input data-type="bool" name="Active" data-oldvalue="{{.Tp.Active}}" id="active" class="form-control form-checkbox {{.FormField}}" {{if and .Tp .Tp.Active}}{{if eq .Tp.Active true}}checked="checked" {{end}} {{else}}checked="checked" {{end}}type="checkbox">
+                                <input data-type="bool" name="Active" data-oldvalue="{{.Tp.Active}}" id="active" class="form-control form-checkbox {{.FormField}}" {{if and .Tp .Tp.Active}}{{if eq true .Tp.Active }}checked="checked" {{end}} {{else}}checked="checked" {{end}}type="checkbox">
                             </div>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
                         <div class="form-group">
                             <label for="saleok" class="col-md-4 control-label ">可销售</label>
                             <div class="col-md-8 ">
-                                <input data-type="bool" name="SaleOk" data-oldvalue="{{.Tp.SaleOk}}" id="saleok" class="form-control form-checkbox {{.FormField}}" {{if and .Tp .Tp.SaleOk}}{{if eq .Tp.SaleOk true}}checked="checked" {{end}} {{else}}checked="checked" {{end}} type="checkbox">
+                                <input data-type="bool" name="SaleOk" data-oldvalue="{{.Tp.SaleOk}}" id="saleok" class="form-control form-checkbox {{.FormField}}" {{if and .Tp .Tp.SaleOk}}{{if eq true .Tp.SaleOk }}checked="checked" {{end}} {{else}}checked="checked" {{end}} type="checkbox">
                             </div>
                         </div>
                     </div>
@@ -106,11 +106,11 @@
                         <div class="form-group">
                             <label for="type" class="col-md-4 control-label label-start">产品类型</label>
                             <div class="col-md-8">
-                                <input data-type="radio" class="{{.FormField}} input-radio {{if not .Tp}}checked{{else}}{{if eq .Tp.ProductType " stock "}}checked{{end}}{{end}}" type="radio" id="stock-radio" value="stock" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio {{if not .Tp}}checked{{else}}{{if eq .Tp.ProductType " stock "}}checked{{end}}{{end}}" type="radio" id="stock-radio" value="stock" name="ProductType">
                                 <label class="input-radio-label" for="stock-radio">库存商品</label>
-                                <input data-type="radio" class="{{.FormField}} input-radio {{if .Tp}}{{if eq  .Tp.ProductType " consume "}}checked{{end}}{{end}}" type="radio" id="consume-radio" value="consume" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio {{if .Tp}}{{if eq  .Tp.ProductType " consume "}}checked{{end}}{{end}}" type="radio" id="consume-radio" value="consume" name="ProductType">
                                 <label class="input-radio-label" for="consume-radio">消耗品</label>
-                                <input data-type="radio" class="{{.FormField}} input-radio {{if .Tp}}{{if eq .Tp.ProductType " service "}}checked{{end}}{{end}}" type="radio" id="service-radio-3" value="service" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio {{if .Tp}}{{if eq .Tp.ProductType " service "}}checked{{end}}{{end}}" type="radio" id="service-radio-3" value="service" name="ProductType">
                                 <label class="input-radio-label" for="service-radio">服务</label>
                             </div>
                         </div>
@@ -224,9 +224,9 @@
                 <div class="col-md-3">
                     <label for="type" class="col-md-4 control-label label-start">规格创建方式</label>
                     <div class="col-md-8">
-                        <input data-type="raido" class="{{.FormField}} input-radio {{if .Tp}}{{if eq  .Tp.ProductMethod " auto "}}checked{{end}}{{end}}" type="radio" id="productMethod-radio-1" value="auto" name="ProductMethod">
+                        <input data-type="string" class="{{.FormField}} input-radio {{if .Tp}}{{if eq  .Tp.ProductMethod " auto "}}checked{{end}}{{end}}" type="radio" id="productMethod-radio-1" value="auto" name="ProductMethod">
                         <label class="input-radio-label" for="productMethod-radio-1">自动创建</label>
-                        <input data-type="radio" class="{{.FormField}} input-radio {{if not .Tp}}checked{{else}}{{if eq .Tp.ProductMethod " hand "}}checked{{end}}{{end}}" type="radio" id="productMethod-radio-2" value="hand" name="ProductMethod">
+                        <input data-type="string" class="{{.FormField}} input-radio {{if not .Tp}}checked{{else}}{{if eq .Tp.ProductMethod " hand "}}checked{{end}}{{end}}" type="radio" id="productMethod-radio-2" value="hand" name="ProductMethod">
                         <label class="input-radio-label" for="productMethod-radio-2">手动触发</label>
                     </div>
                 </div>
@@ -299,7 +299,7 @@
         {{if .RecordID}}
         <div class="tab-pane fade" id="productImages">
             <!--显示已经有的图片-->
-            {{if and .Tp .Tp.Images}} {{range .Tp.Images}}
+            {{if and .Tp .Tp.BigImages}} {{range .Tp.BigImages}}
             <div class="row">
                 <div class="col-xs-6 col-md-3">
                     <a href="#" class="thumbnail">

@@ -1,9 +1,11 @@
 package product
 
 import (
+	"bytes"
 	"encoding/json"
 	"goERP/controllers/base"
 
+	"fmt"
 	md "goERP/models"
 	"strconv"
 	"strings"
@@ -20,7 +22,8 @@ func (ctl *ProductProductController) Post() {
 		ctl.Validator()
 	case "table": //bootstrap table的post请求
 		ctl.PostList()
-
+	case "create":
+		ctl.PostCreate()
 	default:
 		ctl.PostList()
 	}
@@ -40,11 +43,44 @@ func (ctl *ProductProductController) Get() {
 	default:
 		ctl.GetList()
 	}
-	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
+	// 标题合成
+	b := bytes.Buffer{}
+	b.WriteString(ctl.PageName)
+	b.WriteString("\\")
+	b.WriteString(ctl.PageAction)
+	ctl.Data["PageName"] = b.String()
 	ctl.URL = "/product/product/"
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuProductProductActive"] = "active"
 
+}
+func (ctl *ProductProductController) PostCreate() {
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	product := new(md.ProductProduct)
+	var (
+		err error
+		id  int64
+	)
+	if err = json.Unmarshal([]byte(postData), product); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(product)).Type().Name()
+		if id, err = md.AddProductProduct(product, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			result["debug"] = err.Error()
+
+		}
+	} else {
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 }
 func (ctl *ProductProductController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
@@ -67,66 +103,24 @@ func (ctl *ProductProductController) Create() {
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
 	ctl.Layout = "base/base.html"
+	ctl.Data["FormField"] = "form-create"
 	ctl.TplName = "product/product_product_form.html"
 }
 func (ctl *ProductProductController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	productInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if product, err := md.GetProductProductByID(idInt64); err == nil {
 				ctl.PageAction = product.Name
-				productInfo["name"] = product.Name
-				productInfo["defaultCode"] = product.DefaultCode
-				productInfo["standardPrice"] = product.DefaultCode
-
-				// 款式类别
-				categ := product.Categ
-				categValues := make(map[string]string)
-				if categ != nil {
-					categValues["id"] = strconv.FormatInt(categ.ID, 10)
-					categValues["name"] = categ.Name
-				}
-				productInfo["category"] = categValues
-				// 销售第一单位
-				firstSaleUom := product.FirstSaleUom
-				firstSaleUomValues := make(map[string]string)
-				if firstSaleUom != nil {
-					firstSaleUomValues["id"] = strconv.FormatInt(firstSaleUom.ID, 10)
-					firstSaleUomValues["name"] = firstSaleUom.Name
-				}
-				productInfo["firstSaleUom"] = firstSaleUomValues
-				// 销售第二单位
-				secondSaleUom := product.SecondSaleUom
-				secondSaleUomValues := make(map[string]string)
-				if secondSaleUom != nil {
-					secondSaleUomValues["id"] = strconv.FormatInt(secondSaleUom.ID, 10)
-					secondSaleUomValues["name"] = secondSaleUom.Name
-				}
-				productInfo["secondSaleUom"] = secondSaleUomValues
-				// 采购第一单位
-				firstPurchaseUom := product.FirstPurchaseUom
-				firstPurchaseUomValues := make(map[string]string)
-				if firstPurchaseUom != nil {
-					firstPurchaseUomValues["id"] = strconv.FormatInt(firstPurchaseUom.ID, 10)
-					firstPurchaseUomValues["name"] = firstPurchaseUom.Name
-				}
-				productInfo["firstPurchaseUom"] = firstSaleUomValues
-				// 采购第二单位
-				secondPurchaseUom := product.SecondPurchaseUom
-				secondPurchaseUomValues := make(map[string]string)
-				if secondSaleUom != nil {
-					secondPurchaseUomValues["id"] = strconv.FormatInt(secondPurchaseUom.ID, 10)
-					secondPurchaseUomValues["name"] = secondPurchaseUom.Name
-				}
-				productInfo["secondPurchaseUom"] = secondPurchaseUomValues
+				fmt.Printf("%+v", product)
+				ctl.Data["Product"] = product
 			}
 		}
 	}
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["Product"] = productInfo
 	ctl.Layout = "base/base.html"
+	ctl.Data["FormField"] = "form-edit"
 	ctl.TplName = "product/product_product_form.html"
 }
 func (ctl *ProductProductController) Detail() {
@@ -160,10 +154,10 @@ func (ctl *ProductProductController) Validator() {
 }
 
 // 获得符合要求的城市数据
-func (ctl *ProductProductController) productProductList(query map[string]string, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *ProductProductController) productProductList(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.ProductProduct
-	paginator, arrs, err := md.GetAllProductProduct(query, fields, sortby, order, offset, limit)
+	paginator, arrs, err := md.GetAllProductProduct(query, exclude, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -171,8 +165,22 @@ func (ctl *ProductProductController) productProductList(query map[string]string,
 		tableLines := make([]interface{}, 0, 4)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["name"] = line.Name
+			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
+			oneLine["DefaultCode"] = line.DefaultCode
+			if line.Category != nil {
+				category := make(map[string]interface{})
+				category["id"] = line.Category.ID
+				category["name"] = line.Category.Name
+				oneLine["Category"] = category
+			}
+			if line.ProductTemplate != nil {
+				productTemplate := make(map[string]interface{})
+				productTemplate["id"] = line.ProductTemplate.ID
+				productTemplate["name"] = line.ProductTemplate.Name
+				oneLine["ProductTemplate"] = productTemplate
+			}
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -184,13 +192,23 @@ func (ctl *ProductProductController) productProductList(query map[string]string,
 	return result, err
 }
 func (ctl *ProductProductController) PostList() {
-	query := make(map[string]string)
+	query := make(map[string]interface{})
+	exclude := make(map[string]interface{})
 	fields := make([]string, 0, 0)
-	sortby := make([]string, 0, 0)
-	order := make([]string, 0, 0)
+	sortby := make([]string, 1, 1)
+	order := make([]string, 1, 1)
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
-	if result, err := ctl.productProductList(query, fields, sortby, order, offset, limit); err == nil {
+	orderStr := ctl.GetString("order")
+	sortStr := ctl.GetString("sort")
+	if orderStr != "" && sortStr != "" {
+		sortby[0] = sortStr
+		order[0] = orderStr
+	} else {
+		sortby[0] = "Id"
+		order[0] = "desc"
+	}
+	if result, err := ctl.productProductList(query, exclude, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()

@@ -498,10 +498,27 @@ displayTable("#table-product-template", "/product/template/", [
 //产品规格
 displayTable("#table-product-product", "/product/product/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
-    { title: "规格编码", field: 'defaultCode', sortable: true, order: "desc" },
-    { title: "规格名次", field: 'name', sortable: true, order: "desc" },
-    { title: "规格类别", field: 'category', sortable: true, order: "desc" },
-    { title: "产品款式", field: 'parent', sortable: true, order: "desc" },
+    { title: "规格编码", field: 'DefaultCode', sortable: true, order: "desc" },
+    { title: "规格名称", field: 'Name', sortable: true, order: "desc" },
+    {
+        title: "规格类别",
+        field: 'Category',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            return row.Category.name;
+        }
+    },
+    {
+        title: "产品款式",
+        field: 'ProductTemplate',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = row.ProductTemplate.name + "<a href='/product/template/" + row.ProductTemplate.id + "?action=detail'>&nbsp&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    },
     { title: "规格属性", field: 'attributes', align: "center", sortable: true, order: "desc" },
     {
         title: "操作",

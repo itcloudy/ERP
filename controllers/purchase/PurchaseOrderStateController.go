@@ -1,6 +1,7 @@
 package purchase
 
 import (
+	"bytes"
 	"encoding/json"
 	"goERP/controllers/base"
 	md "goERP/models"
@@ -60,7 +61,12 @@ func (ctl *PurchaseOrderStateController) Get() {
 		ctl.GetList()
 
 	}
-	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
+	// 标题合成
+	b := bytes.Buffer{}
+	b.WriteString(ctl.PageName)
+	b.WriteString("\\")
+	b.WriteString(ctl.PageAction)
+	ctl.Data["PageName"] = b.String()
 	ctl.URL = "/purchase/order/state/"
 	ctl.Data["URL"] = ctl.URL
 
@@ -174,10 +180,19 @@ func (ctl *PurchaseOrderStateController) PurchaseOrderStateList(query map[string
 func (ctl *PurchaseOrderStateController) PostList() {
 	query := make(map[string]string)
 	fields := make([]string, 0, 0)
-	sortby := make([]string, 0, 0)
-	order := make([]string, 0, 0)
+	sortby := make([]string, 1, 1)
+	order := make([]string, 1, 1)
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
+	orderStr := ctl.GetString("order")
+	sortStr := ctl.GetString("sort")
+	if orderStr != "" && sortStr != "" {
+		sortby[0] = sortStr
+		order[0] = orderStr
+	} else {
+		sortby[0] = "Id"
+		order[0] = "desc"
+	}
 	if result, err := ctl.PurchaseOrderStateList(query, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}

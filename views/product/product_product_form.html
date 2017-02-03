@@ -2,7 +2,7 @@
     <p id="list-title">{{.PageName}}</p>
 </div>
 
-<form enctype="multipart/form-data" id="productProductForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-from form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+<form enctype="multipart/form-data" id="productProductForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
     <div class="row">
         {{if .RecordID}} {{if .Readonly}}
         <a href="{{.URL}}{{.RecordID}}?action=edit" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</a>
@@ -96,7 +96,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="usergroup" class="col-md-2 control-label label-start">属性值<span class="required-input">&nbsp*</span></label>
+                            <label for="usergroup" class="col-md-2 control-label label-start">属性值 </label>
                             <div class="col-md-10">
                                 <p class="p-form-control">{{if and .Product .Product.AttributeValues}} {{range $j,$attrVal := .Product.AttributeValues}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
                                 <select data-type='array_int' data-name='AttributeValueIds' name='AttributeValueIds' id='product-attributevalues' multiple='multiple' class='form-line-cell-edit form-control select-product-product-attribute-value'>
@@ -126,6 +126,7 @@
                             <div class="col-md-8 ">
                                 <input data-type="bool" name="SaleOk" data-oldvalue="{{.Product.SaleOk}}" id="saleok" class="form-control form-checkbox {{.FormField}}" {{if and .Product .Product.SaleOk}}{{if eq .Product.SaleOk true}}checked="checked" {{end}} {{else}}checked="checked"
                                     {{end}} type="checkbox">
+
                             </div>
                         </div>
                     </div>
@@ -135,11 +136,11 @@
                         <div class="form-group">
                             <label for="type" class="col-md-4 control-label label-start">产品类型</label>
                             <div class="col-md-8">
-                                <input data-type="radio" class="{{.FormField}} input-radio {{if not .Product}}checked{{else}}{{if eq .Product.ProductType " stock "}}checked{{end}}{{end}}" type="radio" id="stock-radio" value="stock" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio {{if not .Product}}checked{{else}}{{if eq .Product.ProductType " stock "}}checked{{end}}{{end}}" type="radio" id="stock-radio" value="stock" name="ProductType">
                                 <label class="input-radio-label" for="stock-radio">库存商品</label>
-                                <input data-type="radio" class="{{.FormField}} input-radio {{if .Product}}{{if eq  .Product.ProductType " consume "}}checked{{end}}{{end}}" type="radio" id="consume-radio" value="consume" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio {{if .Product}}{{if eq  .Product.ProductType " consume "}}checked{{end}}{{end}}" type="radio" id="consume-radio" value="consume" name="ProductType">
                                 <label class="input-radio-label" for="consume-radio">消耗品</label>
-                                <input data-type="radio" class="{{.FormField}} input-radio {{if .Product}}{{if eq .Product.ProductType " service "}}checked{{end}}{{end}}" type="radio" id="service-radio-3" value="service" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio {{if .Product}}{{if eq .Product.ProductType " service "}}checked{{end}}{{end}}" type="radio" id="service-radio-3" value="service" name="ProductType">
                                 <label class="input-radio-label" for="service-radio">服务</label>
                             </div>
                         </div>
@@ -157,7 +158,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="defaultCode" class="col-md-4 control-label label-start">款式编码</label>
+                            <label for="defaultCode" class="col-md-4 control-label label-start">规格编码</label>
                             <div class="col-md-8">
                                 <p>{{if .Product}} {{.Product.DefaultCode}} {{end}}</p>
                             </div>
@@ -251,7 +252,7 @@
         {{if .RecordID}}
         <div class="tab-pane fade" id="productImages">
             <!--显示已经有的图片-->
-            {{if and .Product .Product.Images}} {{range .Product.Images}}
+            {{if and .Product .Product.BigImages}} {{range .Product.BigImages}}
             <div class="row">
                 <div class="col-xs-6 col-md-3">
                     <a href="#" class="thumbnail">

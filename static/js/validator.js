@@ -62,17 +62,25 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         };
         for (var i = 0, len = formFields.length; i < len; i++) {
             var self = formFields[i];
+            var oldValue = null;
+            // console.log(self.name + ":" + $(self).val());
+            oldValue = $(self).data("oldvalue");
             // 处理radio数据
             if (self.type == "radio") {
-                if ($(self).hasClass("checked")) {
-                    formData[self.name] = $(self).val();
+                if ($(self).data("type") == "string") {
+                    if ($(self).hasClass("checked")) {
+                        formData[self.name] = $(self).val();
+                    }
                 }
             } else if (self.type == "checkbox") {
                 if (self.checked) {
                     formData[self.name] = true;
+                } else {
+                    formData[self.name] = false;
                 }
             } else {
                 var val = $(self).val();
+
                 if (val != "") {
                     // 若为null跳出此次循环
                     if (val === null) {
@@ -91,7 +99,6 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 var cell = cellFields[j];
                 var cellName = cell.name;
                 var oldValue = $(cell).data("oldvalue");
-                console.log(oldValue);
                 var cellValue = $(cell).val();
                 if (cellValue != "") {
                     if (cellValue === null) {
@@ -140,7 +147,6 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 }
             }
         }
-        console.log(formData);
         var postParams = {
             postData: JSON.stringify(formData),
             _xsrf: xsrf
@@ -164,15 +170,13 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 } else {
                     toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
                 }
-                setTimeout(function() { window.location = response.location; }, 1000);
+                // setTimeout(function() { window.location = response.location; }, 1000);
             }
         });
         // Use Ajax to submit form data
         // $.post($form.attr('action'), $form.serialize(), function(result) {
         //     console.log(result);
         // }, 'json');
-    }).on("error.form.bv", function(e) {
-        toastr.error("数据验证失败，请检查数据", "错误");
     });
 };
 
@@ -703,6 +707,60 @@ $(function() {
             validators: {
                 notEmpty: {
                     message: "款式属性值不能为空"
+                }
+            }
+        }
+    });
+    // 产品规格
+    BootstrapValidator("#productProductForm", {
+        ProductTemplateID: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "产品款式名称不能为空"
+                },
+            }
+        },
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "产品规格名称不能为空"
+                },
+                remote: {
+                    url: "/product/product/",
+                    message: "该产品规格名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var xsrf = $("input[name ='_xsrf']")
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                },
+            },
+        },
+        FirstSaleUom: {
+            validators: {
+                notEmpty: {
+                    message: "销售单位1不能为空"
+                }
+            }
+        },
+        FirstPurchaseUom: {
+            validators: {
+                notEmpty: {
+                    message: "采购单位1不能为空"
                 }
             }
         }

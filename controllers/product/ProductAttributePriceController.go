@@ -1,6 +1,9 @@
 package product
 
-import "goERP/controllers/base"
+import (
+	"bytes"
+	"goERP/controllers/base"
+)
 
 type ProductAttributePriceController struct {
 	base.BaseController
@@ -21,7 +24,12 @@ func (ctl *ProductAttributePriceController) Get() {
 		ctl.List()
 	}
 
-	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
+	// 标题合成
+	b := bytes.Buffer{}
+	b.WriteString(ctl.PageName)
+	b.WriteString("\\")
+	b.WriteString(ctl.PageAction)
+	ctl.Data["PageName"] = b.String()
 	ctl.Layout = "base/base.html"
 }
 func (ctl *ProductAttributePriceController) List() {

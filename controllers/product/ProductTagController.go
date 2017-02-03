@@ -1,6 +1,7 @@
 package product
 
 import (
+	"bytes"
 	"goERP/controllers/base"
 	md "goERP/models"
 	"strings"
@@ -25,7 +26,12 @@ func (ctl *ProductTagController) Get() {
 	default:
 		ctl.List()
 	}
-	ctl.Data["PageName"] = ctl.PageName + "\\" + ctl.PageAction
+	// 标题合成
+	b := bytes.Buffer{}
+	b.WriteString(ctl.PageName)
+	b.WriteString("\\")
+	b.WriteString(ctl.PageAction)
+	ctl.Data["PageName"] = b.String()
 }
 func (ctl *ProductTagController) List() {
 	ctl.PageAction = "列表"

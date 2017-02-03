@@ -136,8 +136,19 @@ $(function() {
             return markup;
         }, // let our custom formatter work
         minimumInputLength: 0,
-        templateResult: formatRepo,
-        templateSelection: formatRepoSelection
+        templateResult: function(repo) {
+            'use strict';
+            if (repo.loading) { return repo.text; }
+            var html = "";
+            html = "<p>款式编码:" + repo.DefaultCode + "</p>";
+            html += "<p>款式名称:" + repo.Name + "</p>";
+            return html;
+        },
+        templateSelection: function(repo) {
+            var html = "";
+            html = "[" + repo.DefaultCode + "]" + repo.Name;
+            return html;
+        }
     }).on("change", function(e) {
         var productTempId = parseInt(e.currentTarget.value);
         $.ajax({
@@ -165,8 +176,8 @@ $(function() {
                     if (Pdata.SecondPurchaseUom != undefined) {
                         $("#secondPurchaseUom").empty().append("<option value='" + Pdata.SecondPurchaseUom.id + "' selected='selected'>" + Pdata.SecondPurchaseUom.name + "</option>");
                     }
-
-
+                    // 重置表单验证
+                    $("#productProductForm").data('bootstrapValidator').resetForm();
                 }
             },
             dataType: "json"
@@ -176,7 +187,7 @@ $(function() {
         $(selector).select2({
             width: "off",
             ajax: {
-                url: '/product/attributevalue/?action=search',
+                url: '/product/attributeline/?action=search',
                 dataType: 'json',
                 delay: 250,
                 type: "POST",
@@ -185,7 +196,21 @@ $(function() {
                         name: params.term || "", // search term
                         offset: params.page || 0,
                         limit: 5,
+                        productAttrs: true
                     };
+                    var tmpId = $("#ProductTemplateID");
+                    if (tmpId.length < 1) {
+                        toastr.error("请先选择款式", "错误");
+                        return;
+                    } else {
+                        tmpId = tmpId.val();
+                        if (tmpId == null || tmpId == undefined) {
+                            toastr.error("请先选择款式", "错误");
+                            return;
+                        } else {
+                            selectParams.tmpId = parseInt(tmpId);
+                        }
+                    }
                     var xsrf = $("input[name ='_xsrf']");
                     if (xsrf.length > 0) {
                         selectParams._xsrf = xsrf[0].value;
@@ -209,14 +234,26 @@ $(function() {
                 processResults: function(data, params) {
                     params.page = params.page || 0;
                     var paginator = JSON.parse(data.paginator);
+                    var data = data.data;
+                    var results = [];
+                    if (data && data.length > 0) {
+                        for (var i = 0, len1 = data.length; i < len1; i++) {
+                            var attributeValueArrs = data[i].attributeValueArrs;
+                            for (var j = 0, len2 = attributeValueArrs.length; j < len2; j++) {
+                                results.push({
+                                    id: attributeValueArrs[j].id,
+                                    name: attributeValueArrs[j].name
+                                })
+                            }
+                        }
+                    }
                     return {
-                        results: data.data,
+                        results: results,
                         pagination: {
                             more: paginator.totalPage > paginator.currentPage
                         }
                     };
                 }
-
             },
             escapeMarkup: function(markup) {
                 return markup;
