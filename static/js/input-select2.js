@@ -56,7 +56,7 @@ $(function() {
                 data: function(params) {
                     var selectParams = {
                         name: params.term || "", // search term
-                        offset: params.page || 0,
+                        offset: (params.page || 0) * LIMIT,
                         limit: LIMIT,
                     };
                     var xsrf = $("input[name ='_xsrf']");
@@ -108,8 +108,9 @@ $(function() {
             type: "POST",
             data: function(params) {
                 var selectParams = {
-                    name: params.term || "", // search term
-                    offset: params.page || 0,
+                    Name: params.term || "", // search term
+                    DefaultCode: params.term || "",
+                    offset: (params.page || 0) * LIMIT,
                     limit: LIMIT,
                 };
                 var xsrf = $("input[name ='_xsrf']");
@@ -206,7 +207,7 @@ $(function() {
                 data: function(params) {
                     var selectParams = {
                         name: params.term || "", // search term
-                        offset: params.page || 0,
+                        offset: (params.page || 0) * LIMIT,
                         limit: 5,
                         productAttrs: true
                     };

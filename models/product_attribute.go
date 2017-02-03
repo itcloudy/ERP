@@ -84,7 +84,7 @@ func GetProductAttributeByName(name string) (obj *ProductAttribute, err error) {
 
 // GetAllProductAttribute retrieves all ProductAttribute matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductAttribute(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string,
+func GetAllProductAttribute(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []ProductAttribute, error) {
 	var (
 		objArrs   []ProductAttribute

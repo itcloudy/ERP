@@ -156,7 +156,7 @@ func GetProductProductByName(name string) (obj *ProductProduct, err error) {
 
 // GetAllProductProduct retrieves all ProductProduct matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductProduct(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string,
+func GetAllProductProduct(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []ProductProduct, error) {
 	var (
 		objArrs   []ProductProduct
@@ -183,6 +183,23 @@ func GetAllProductProduct(query map[string]interface{}, exclude map[string]inter
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
+	//cond k=v
+	cond := orm.NewCondition()
+	if _, ok := condMap["and"]; ok {
+		andMap := condMap["and"]
+		for k, v := range andMap {
+			k = strings.Replace(k, ".", "__", -1)
+			cond = cond.And(k, v)
+		}
+	}
+	if _, ok := condMap["or"]; ok {
+		orMap := condMap["or"]
+		for k, v := range orMap {
+			k = strings.Replace(k, ".", "__", -1)
+			cond = cond.Or(k, v)
+		}
+	}
+	qs = qs.SetCond(cond)
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {

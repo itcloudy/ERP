@@ -92,7 +92,7 @@ func (ctl *ProductTemplateController) Put() {
 func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
-
+	cond := make(map[string]map[string]interface{})
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 1, 1)
 	order := make([]string, 1, 1)
@@ -100,7 +100,7 @@ func (ctl *ProductTemplateController) ProductTemplateAttributes() {
 	limit, _ := ctl.GetInt64("limit")
 
 	result := make(map[string]interface{})
-	if paginator, arrs, err := md.GetAllProductAttributeLine(query, exclude, fields, sortby, order, offset, limit); err == nil {
+	if paginator, arrs, err := md.GetAllProductAttributeLine(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		if jsonResult, er := json.Marshal(&paginator); er == nil {
 			result["paginator"] = string(jsonResult)
 			result["total"] = paginator.TotalCount
@@ -227,10 +227,10 @@ func (ctl *ProductTemplateController) Validator() {
 }
 
 // 获得符合要求的款式数据
-func (ctl *ProductTemplateController) productTemplateList(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *ProductTemplateController) productTemplateList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.ProductTemplate
-	paginator, arrs, err := md.GetAllProductTemplate(query, exclude, fields, sortby, order, offset, limit)
+	paginator, arrs, err := md.GetAllProductTemplate(query, exclude, cond, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -291,14 +291,26 @@ func (ctl *ProductTemplateController) productTemplateList(query map[string]inter
 func (ctl *ProductTemplateController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
+	cond := make(map[string]map[string]interface{})
+	condAnd := make(map[string]interface{})
+	condOr := make(map[string]interface{})
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 1, 1)
 	order := make([]string, 1, 1)
 	if ID, err := ctl.GetInt64("Id"); err == nil {
 		query["Id"] = ID
 	}
-	if name := ctl.GetString("name"); name != "" {
-		query["Name.icontains"] = name
+	if name := strings.TrimSpace(ctl.GetString("Name")); name != "" {
+		condAnd["Name.icontains"] = name
+	}
+	if defaultCode := strings.TrimSpace(ctl.GetString("DefaultCode")); defaultCode != "" {
+		condOr["DefaultCode.icontains"] = defaultCode
+	}
+	if len(condAnd) > 0 {
+		cond["and"] = condAnd
+	}
+	if len(condOr) > 0 {
+		cond["or"] = condOr
 	}
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
@@ -311,7 +323,7 @@ func (ctl *ProductTemplateController) PostList() {
 		sortby[0] = "Id"
 		order[0] = "desc"
 	}
-	if result, err := ctl.productTemplateList(query, exclude, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.productTemplateList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()

@@ -90,7 +90,7 @@ func GetLastTemplateFileByUserID(userID int64) (TemplateFile, error) {
 
 // GetAllTemplateFile retrieves all TemplateFile matches certain condition. Returns empty list if
 // no records exist
-func GetAllTemplateFile(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string,
+func GetAllTemplateFile(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []TemplateFile, error) {
 	var (
 		objArrs   []TemplateFile

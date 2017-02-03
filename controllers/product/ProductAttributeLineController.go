@@ -9,10 +9,12 @@ import (
 	"strings"
 )
 
+// ProductAttributeLineController 款式属性明细
 type ProductAttributeLineController struct {
 	base.BaseController
 }
 
+// Post post请求 post
 func (ctl *ProductAttributeLineController) Post() {
 	action := ctl.Input().Get("action")
 	switch action {
@@ -26,6 +28,8 @@ func (ctl *ProductAttributeLineController) Post() {
 		ctl.PostList()
 	}
 }
+
+// Put 修改属性明细
 func (ctl *ProductAttributeLineController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
 	ctl.URL = "/product/category/"
@@ -42,6 +46,8 @@ func (ctl *ProductAttributeLineController) Put() {
 	ctl.Redirect(ctl.URL+id+"?action=edit", 302)
 
 }
+
+// Get 显示产品属性明细 get
 func (ctl *ProductAttributeLineController) Get() {
 	ctl.PageName = "产品类别管理"
 	action := ctl.Input().Get("action")
@@ -65,6 +71,8 @@ func (ctl *ProductAttributeLineController) Get() {
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuProductAttributeLineActive"] = "active"
 }
+
+// Edit 款式属性明细编辑 get
 func (ctl *ProductAttributeLineController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
 	if id != "" {
@@ -84,6 +92,7 @@ func (ctl *ProductAttributeLineController) Edit() {
 	ctl.TplName = "product/product_category_form.html"
 }
 
+// Detail 显示款式属性明细 get
 func (ctl *ProductAttributeLineController) Detail() {
 	//获取信息一样，直接调用Edit
 	ctl.Edit()
@@ -91,7 +100,7 @@ func (ctl *ProductAttributeLineController) Detail() {
 	ctl.Data["Action"] = "detail"
 }
 
-//post请求创建产品分类
+//PostCreate 创建款式属性明细 post
 func (ctl *ProductAttributeLineController) PostCreate() {
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
@@ -111,6 +120,8 @@ func (ctl *ProductAttributeLineController) PostCreate() {
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
+
+// Create 款式属性明细创建页面 get
 func (ctl *ProductAttributeLineController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
@@ -119,6 +130,8 @@ func (ctl *ProductAttributeLineController) Create() {
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "product/product_attribute_line_form.html"
 }
+
+// Validator 款式属性明细验证 post
 func (ctl *ProductAttributeLineController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
@@ -128,10 +141,10 @@ func (ctl *ProductAttributeLineController) Validator() {
 }
 
 // 获得符合要求的款式属性明细数据
-func (ctl *ProductAttributeLineController) productAttributeLineList(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *ProductAttributeLineController) productAttributeLineList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.ProductAttributeLine
-	paginator, arrs, err := md.GetAllProductAttributeLine(query, exclude, fields, sortby, order, offset, limit)
+	paginator, arrs, err := md.GetAllProductAttributeLine(query, exclude, condMap, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -163,23 +176,27 @@ func (ctl *ProductAttributeLineController) productAttributeLineList(query map[st
 	}
 	return result, err
 }
+
+// PostList 获得多条款式属性明细 post
 func (ctl *ProductAttributeLineController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
+	cond := make(map[string]map[string]interface{})
+
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 1, 1)
 	order := make([]string, 1, 1)
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
-	if tmpId, err := ctl.GetInt64("tmpId"); err == nil {
-		query["ProductTemplate.Id"] = tmpId
+	if tmpID, err := ctl.GetInt64("tmpId"); err == nil {
+		query["ProductTemplate.Id"] = tmpID
 	}
 	//排除已经选择的属性
 	excludeIdsStr := ctl.GetStrings("exclude[]")
 	if len(excludeIdsStr) > 0 {
 		attributeIds := make([]int64, 0, 0)
-		for _, attributeValueId := range excludeIdsStr {
-			if idInt64, e := strconv.ParseInt(attributeValueId, 10, 64); e == nil {
+		for _, attributeValueID := range excludeIdsStr {
+			if idInt64, e := strconv.ParseInt(attributeValueID, 10, 64); e == nil {
 				if productAttributeValue, err := md.GetProductAttributeValueByID(idInt64); err == nil {
 					attributeIds = append(attributeIds, productAttributeValue.Attribute.ID)
 				}
@@ -198,12 +215,13 @@ func (ctl *ProductAttributeLineController) PostList() {
 		sortby[0] = "Id"
 		order[0] = "desc"
 	}
-	if result, err := ctl.productAttributeLineList(query, exclude, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.productAttributeLineList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()
 }
 
+// GetList 多条款式属性明细显示 get
 func (ctl *ProductAttributeLineController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {

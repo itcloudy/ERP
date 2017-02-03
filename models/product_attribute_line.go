@@ -52,7 +52,7 @@ func GetProductAttributeLineByID(id int64) (obj *ProductAttributeLine, err error
 
 // GetAllProductAttributeLine retrieves all ProductAttributeLine matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string,
+func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []ProductAttributeLine, error) {
 	var (
 		objArrs   []ProductAttributeLine

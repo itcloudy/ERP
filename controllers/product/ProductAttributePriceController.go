@@ -5,10 +5,12 @@ import (
 	"goERP/controllers/base"
 )
 
+// ProductAttributePriceController 款式属性价格
 type ProductAttributePriceController struct {
 	base.BaseController
 }
 
+// Get get
 func (ctl *ProductAttributePriceController) Get() {
 	action := ctl.GetString(":action")
 	viewType := ctl.Input().Get("view_type")

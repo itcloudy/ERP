@@ -32,6 +32,7 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
     var options = {
         url: ajaxUrl,
         queryParams: function(params) {
+            console.log(params);
             var xsrf = $("input[name ='_xsrf']");
             if (xsrf != undefined) {
                 params._xsrf = xsrf[0].value;
@@ -49,7 +50,9 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
                     }
                 });
             }
+
             params.filter = JSON.stringify(filter);
+            console.log(params);
             return params;
         },
         columns: columns

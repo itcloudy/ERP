@@ -1,6 +1,7 @@
 package models
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"goERP/utils"
@@ -45,7 +46,12 @@ func GetNextSequece(structName string) (stStr string, errs []error) {
 	qs := o.QueryTable(&sequence)
 	qs = qs.SetCond(cond)
 	if err = qs.One(&sequence); err == nil {
-		fmtStr := sequence.Prefix + "%0" + strconv.Itoa(int(sequence.Padding)) + "s"
+		b := bytes.Buffer{}
+		b.WriteString(sequence.Prefix)
+		b.WriteString("%0")
+		b.WriteString(strconv.Itoa(int(sequence.Padding)))
+		b.WriteString("s")
+		fmtStr := b.String()
 		sequence.Current++
 		stStr = fmt.Sprintf(fmtStr, strconv.Itoa(int(sequence.Current)))
 		if _, err = o.Update(&sequence); err != nil {
@@ -97,7 +103,7 @@ func GetSequenceByID(id int64) (obj *Sequence, err error) {
 
 // GetAllSequence retrieves all Sequence matches certain condition. Returns empty list if
 // no records exist
-func GetAllSequence(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string,
+func GetAllSequence(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (utils.Paginator, []Sequence, error) {
 	var (
 		objArrs   []Sequence

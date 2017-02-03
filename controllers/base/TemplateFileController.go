@@ -155,10 +155,10 @@ func (ctl *TemplateFileController) Validator() {
 }
 
 // 获得符合要求的数据
-func (ctl *TemplateFileController) templateList(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *TemplateFileController) templateList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.TemplateFile
-	paginator, arrs, err := md.GetAllTemplateFile(query, exclude, fields, sortby, order, offset, limit)
+	paginator, arrs, err := md.GetAllTemplateFile(query, exclude, condMap, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -185,6 +185,8 @@ func (ctl *TemplateFileController) PostList() {
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 1, 1)
 	order := make([]string, 1, 1)
+	cond := make(map[string]map[string]interface{})
+
 	excludeIdsStr := ctl.GetStrings("exclude[]")
 	var excludeIds []int64
 	for _, v := range excludeIdsStr {
@@ -207,7 +209,7 @@ func (ctl *TemplateFileController) PostList() {
 		sortby[0] = "Id"
 		order[0] = "desc"
 	}
-	if result, err := ctl.templateList(query, exclude, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.templateList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()

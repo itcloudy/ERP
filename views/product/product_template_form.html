@@ -106,11 +106,11 @@
                         <div class="form-group">
                             <label for="type" class="col-md-4 control-label label-start">产品类型</label>
                             <div class="col-md-8">
-                                <input data-type="string" class="{{.FormField}} input-radio" {{if and .Tp .Tp.ProductType}} data-oldvalue="stock" {{else}}data-oldvalue="stock" {{end}} type="radio" id="stock-radio" value="stock" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio" {{if and .Tp .Tp.ProductType}} data-oldvalue="{{.Tp.ProductType}}" {{else}}data-oldvalue="stock" {{end}} type="radio" id="stock-radio" value="stock" name="ProductType">
                                 <label class="input-radio-label" for="stock-radio">库存商品</label>
-                                <input data-type="string" class="{{.FormField}} input-radio" {{if and .Tp .Tp.ProductType}} data-oldvalue="stock" {{else}}data-oldvalue="stock" {{end}} type="radio" id="consume-radio" value="consume" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio" {{if and .Tp .Tp.ProductType}} data-oldvalue="{{.Tp.ProductType}}" {{else}}data-oldvalue="stock" {{end}} type="radio" id="consume-radio" value="consume" name="ProductType">
                                 <label class="input-radio-label" for="consume-radio">消耗品</label>
-                                <input data-type="string" class="{{.FormField}} input-radio" {{if and .Tp .Tp.ProductType}} data-oldvalue="stock" {{else}}data-oldvalue="stock" {{end}} type="radio" id="service-radio" value="service" name="ProductType">
+                                <input data-type="string" class="{{.FormField}} input-radio" {{if and .Tp .Tp.ProductType}} data-oldvalue="{{.Tp.ProductType}}" {{else}}data-oldvalue="stock" {{end}} type="radio" id="service-radio" value="service" name="ProductType">
                                 <label class="input-radio-label" for="service-radio">服务</label>
                             </div>
                         </div>
@@ -224,10 +224,10 @@
                 <div class="col-md-3">
                     <label for="type" class="col-md-4 control-label label-start">规格创建方式</label>
                     <div class="col-md-8">
-                        <input data-type="string" class="{{.FormField}} input-radio {{if .Tp}}{{if eq  .Tp.ProductMethod " auto "}}checked{{end}}{{end}}" type="radio" id="productMethod-radio-1" value="auto" name="ProductMethod">
-                        <label class="input-radio-label" for="productMethod-radio-1">自动创建</label>
-                        <input data-type="string" class="{{.FormField}} input-radio {{if not .Tp}}checked{{else}}{{if eq .Tp.ProductMethod " hand "}}checked{{end}}{{end}}" type="radio" id="productMethod-radio-2" value="hand" name="ProductMethod">
-                        <label class="input-radio-label" for="productMethod-radio-2">手动触发</label>
+                        <input data-type="string" class="{{.FormField}} input-radio" {{if and .Tp .Tp.ProductMethod}} data-oldvalue="{{.Tp.ProductMethod}}" {{else}}data-oldvalue="hand" {{end}} type="radio" id="productMethod-auto" value="auto" name="ProductMethod">
+                        <label class="input-radio-label" for="productMethod-auto">自动创建</label>
+                        <input data-type="string" class="{{.FormField}} input-radio" {{if and .Tp .Tp.ProductMethod}} data-oldvalue="{{.Tp.ProductMethod}}" {{else}}data-oldvalue="hand" {{end}} type="radio" id="productMethod-hand" value="hand" name="ProductMethod">
+                        <label class="input-radio-label" for="productMethod-hand">手动触发</label>
                     </div>
                 </div>
             </div>

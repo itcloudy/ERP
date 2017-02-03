@@ -1,6 +1,6 @@
 $(function() {
     'use strict';
-
+    var LIMIT = 5;
     var formTreeSelect2ProductAttribute = function(selector) {
         $(selector).select2({
             width: "off",
@@ -12,8 +12,8 @@ $(function() {
                 data: function(params) {
                     var selectParams = {
                         name: params.term || "", // search term
-                        offset: params.page || 0,
-                        limit: 5,
+                        offset: (params.page || 0) * LIMIT,
+                        limit: LIMIT,
                     };
                     var xsrf = $("input[name ='_xsrf']");
                     if (xsrf.length > 0) {
@@ -70,8 +70,8 @@ $(function() {
                 data: function(params) {
                     var selectParams = {
                         name: params.term || "", // search term
-                        offset: params.page || 0,
-                        limit: 5,
+                        offset: (params.page || 0) * LIMIT,
+                        limit: LIMIT,
                     };
                     var xsrf = $("input[name ='_xsrf']");
                     if (xsrf.length > 0) {

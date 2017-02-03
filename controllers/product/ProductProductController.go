@@ -152,10 +152,10 @@ func (ctl *ProductProductController) Validator() {
 }
 
 // 获得符合要求的城市数据
-func (ctl *ProductProductController) productProductList(query map[string]interface{}, exclude map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *ProductProductController) productProductList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.ProductProduct
-	paginator, arrs, err := md.GetAllProductProduct(query, exclude, fields, sortby, order, offset, limit)
+	paginator, arrs, err := md.GetAllProductProduct(query, exclude, condMap, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -195,6 +195,8 @@ func (ctl *ProductProductController) productProductList(query map[string]interfa
 func (ctl *ProductProductController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
+	cond := make(map[string]map[string]interface{})
+
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 1, 1)
 	order := make([]string, 1, 1)
@@ -209,7 +211,7 @@ func (ctl *ProductProductController) PostList() {
 		sortby[0] = "Id"
 		order[0] = "desc"
 	}
-	if result, err := ctl.productProductList(query, exclude, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.productProductList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()

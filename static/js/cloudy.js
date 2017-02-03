@@ -7,10 +7,10 @@ $(function() {
             radioClass: 'iradio_square-green',
             increaseArea: '20%',
         });
-        if ($(el).data("oldvalue") == true) {
-            $(el).iCheck("check");
-        } else {
+        if ($(el).data("oldvalue") === false) {
             $(el).iCheck("uncheck");
+        } else {
+            $(el).iCheck("check");
         }
         var form = $(el)[0].form;
         if (form != undefined) {
