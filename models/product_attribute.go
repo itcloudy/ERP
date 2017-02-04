@@ -39,9 +39,9 @@ func UpdateProductAttributeTemplatesCount(obj *ProductAttribute, updateUser *Use
 	o := orm.NewOrm()
 	obj = &ProductAttribute{ID: obj.ID}
 	o.LoadRelated(obj, "AttributeLines")
-	nums := int64(len(obj.AttributeLines))
-	nums++
-	obj.TemplatesCount = nums
+	count := int64(len(obj.AttributeLines))
+	count++
+	obj.TemplatesCount = count
 	obj.UpdateUser = updateUser
 	o.Update(obj, "TemplatesCount", "UpdateUser")
 }
@@ -51,10 +51,10 @@ func UpdateProductAttributeProductsCount(obj *ProductAttribute, updateUser *User
 	o := orm.NewOrm()
 	obj = &ProductAttribute{ID: obj.ID}
 	m2m := o.QueryM2M(obj, "Products")
-	if nums, err := m2m.Count(); err == nil {
-		obj.ProductsCount = nums + 1
+	if count, err := m2m.Count(); err == nil {
+		obj.ProductsCount = count + 1
 		obj.UpdateUser = updateUser
-		o.Update(obj)
+		o.Update(obj, "ProductsCount", "UpdateUser")
 	}
 }
 

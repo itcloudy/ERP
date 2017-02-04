@@ -39,9 +39,9 @@ func UpdateProductAttributeValueProductsCount(obj *ProductAttributeValue, update
 	o := orm.NewOrm()
 	obj = &ProductAttributeValue{ID: obj.ID}
 	o.LoadRelated(obj, "Products")
-	nums := int64(len(obj.Products))
-	nums++
-	obj.ProductsCount = nums
+	count := int64(len(obj.Products))
+	count++
+	obj.ProductsCount = count
 	obj.UpdateUser = updateUser
 	o.Update(obj, "ProductsCount", "UpdateUser")
 }

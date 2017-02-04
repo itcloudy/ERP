@@ -170,6 +170,8 @@ func GetProductProductByID(id int64) (obj *ProductProduct, err error) {
 		if obj.SecondPurchaseUom != nil {
 			o.Read(obj.SecondPurchaseUom)
 		}
+		o.LoadRelated(obj, "AttributeValues")
+
 		return obj, nil
 	}
 	return nil, err

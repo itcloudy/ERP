@@ -530,7 +530,7 @@ displayTable("#table-product-product", "/product/product/", [
         sortable: true,
         order: "desc",
         formatter: function cellStyle(value, row, index) {
-            var html = row.ProductTemplate.name + "<a class='pull-right' href='/product/template/" + row.ProductTemplate.id + "?action=detail'>&nbsp&nbsp<i class='fa fa-external-link'></i></a>";
+            var html = row.ProductTemplate.name + "<a class='pull-right' href='/product/template/" + row.ProductTemplate.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
             return html;
         }
     },
@@ -538,8 +538,6 @@ displayTable("#table-product-product", "/product/product/", [
         title: "规格属性",
         field: 'AttributeValues',
         align: "center",
-        sortable: true,
-        order: "desc",
         formatter: function cellStyle(value, row, index) {
             var datas = row.AttributeValues;
             var html = "";
