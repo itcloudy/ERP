@@ -509,6 +509,11 @@ displayTable("#table-product-template", "/product/template/", [
     }
 
 ]);
+//产品款式
+displayTable("#table-product-attribute-line", "/product/attributeline/", [
+    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+
+]);
 
 //产品规格
 displayTable("#table-product-product", "/product/product/", [

@@ -48,7 +48,7 @@ func init() {
 	beego.Router("/product/category/?:id", &product.ProductCategoryController{})
 	//属性
 	beego.Router("/product/attribute/?:id", &product.ProductAttributeController{})
-	//属性值
+	//产品款式属性明细
 	beego.Router("/product/attributevalue/?:id", &product.ProductAttributeValueController{})
 	//属性值明细
 	beego.Router("/product/attributeline/?:id", &product.ProductAttributeLineController{})
