@@ -280,6 +280,14 @@ func (ctl *ProductTemplateController) productTemplateList(query map[string]inter
 				secondPurchaseUom["name"] = line.SecondPurchaseUom.Name
 				oneLine["SecondPurchaseUom"] = secondPurchaseUom
 			}
+			attributeLines := line.AttributeLines
+			if len(attributeLines) > 0 {
+				attributeMap := make([]string, 0, 0)
+				for _, item := range attributeLines {
+					attributeMap = append(attributeMap, item.Attribute.Name)
+				}
+				oneLine["Attributes"] = attributeMap
+			}
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

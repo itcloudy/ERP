@@ -4,10 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"goERP/controllers/base"
-	"sort"
-
-	"fmt"
 	md "goERP/models"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -63,11 +61,8 @@ func (ctl *ProductProductController) PostCreate() {
 		err error
 		id  int64
 	)
-	fmt.Printf("%+v\n", postData)
 	if err = json.Unmarshal([]byte(postData), product); err == nil {
 		// 获得struct表名
-		fmt.Printf("%+v\n", product)
-
 		// structName := reflect.Indirect(reflect.ValueOf(product)).Type().Name()
 		if id, err = md.AddProductProduct(product, &ctl.User); err == nil {
 			result["code"] = "success"
@@ -135,13 +130,9 @@ func (ctl *ProductProductController) Validator() {
 	name := strings.TrimSpace(ctl.GetString("name"))
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
-	// 默认验证失败
-	result["valid"] = false
+	// 默认验证成功
+	result["valid"] = true
 	AttributeValueIds := ctl.GetStrings("AttributeValueIds[]")
-	if len(AttributeValueIds) > 0 {
-		sort.Strings(AttributeValueIds)
-		strings.Join(AttributeValueIds, "-")
-	}
 	if name != "" {
 		obj, err := md.GetProductProductByName(name)
 		if err != nil {
@@ -217,6 +208,12 @@ func (ctl *ProductProductController) productProductList(query map[string]interfa
 				productTemplate["name"] = line.ProductTemplate.Name
 				oneLine["ProductTemplate"] = productTemplate
 			}
+			mapValues := make(map[int64]string)
+			values := line.AttributeValues
+			for _, line := range values {
+				mapValues[line.ID] = line.Name
+			}
+			oneLine["AttributeValues"] = mapValues
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

@@ -13,15 +13,16 @@ import (
 
 //ProductAttributeValue 产品属性值
 type ProductAttributeValue struct {
-	ID         int64             `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser *User             `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser *User             `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate time.Time         `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate time.Time         `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name       string            `orm:"unique" json:"Name"`                   //产品属性名称
-	Attribute  *ProductAttribute `orm:"rel(fk)"`                              //属性
-	Products   []*ProductProduct `orm:"rel(m2m)"`                             //产品规格
-	PriceExtra float64           `orm:"default(0)"`                           //额外价格
+	ID            int64             `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser    *User             `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser    *User             `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate    time.Time         `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate    time.Time         `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Name          string            `orm:"unique" json:"Name"`                   //产品属性名称
+	Attribute     *ProductAttribute `orm:"rel(fk)"`                              //属性
+	Products      []*ProductProduct `orm:"rel(m2m)"`                             //产品规格
+	ProductsCount int64             `orm:"default(0)"`                           //产品规格数量
+	PriceExtra    float64           `orm:"default(0)"`                           //额外价格
 	// Prices     *ProductAttributePrice `orm:"reverse(many)"`
 	Sequence int32 `json:"Sequence"` //序列
 	// form表单字段
@@ -31,6 +32,18 @@ type ProductAttributeValue struct {
 
 func init() {
 	orm.RegisterModel(new(ProductAttributeValue))
+}
+
+// UpdateProductAttributeValueProductsCount 更新产品规格数量
+func UpdateProductAttributeValueProductsCount(obj *ProductAttributeValue, updateUser *User) {
+	o := orm.NewOrm()
+	obj = &ProductAttributeValue{ID: obj.ID}
+	o.LoadRelated(obj, "Products")
+	nums := int64(len(obj.Products))
+	nums++
+	obj.ProductsCount = nums
+	obj.UpdateUser = updateUser
+	o.Update(obj, "ProductsCount", "UpdateUser")
 }
 
 // AddProductAttributeValue insert a new ProductAttributeValue into database and returns
@@ -133,7 +146,7 @@ func GetAllProductAttributeValue(query map[string]interface{}, exclude map[strin
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-	
+
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {

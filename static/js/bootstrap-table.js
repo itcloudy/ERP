@@ -345,9 +345,9 @@ displayTable("#table-district", "/address/district/", [
 //产品属性
 displayTable("#table-product-attribute", "/product/attribute/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
-    { title: "属性名", field: 'name', sortable: true, order: "desc" },
-    { title: "属性编码", field: 'code', sortable: true, order: "desc" },
-    { title: "属性序号", field: 'sequence', sortable: true, order: "desc" },
+    { title: "属性名", field: 'Name', sortable: true, order: "desc" },
+    { title: "属性编码", field: 'Code', sortable: true, order: "desc" },
+    { title: "属性序号", field: 'Sequence', sortable: true, order: "desc" },
     {
         title: "属性值",
         field: 'childs',
@@ -362,6 +362,8 @@ displayTable("#table-product-attribute", "/product/attribute/", [
             return html;
         }
     },
+    { title: "产品款式数量", field: 'TemplatesCount', align: "center", sortable: true, order: "desc" },
+    { title: "产品规格数量", field: 'ProductsCount', align: "center", sortable: true, order: "desc" },
     {
         title: "操作",
         align: "center",
@@ -462,7 +464,7 @@ displayTable("#table-product-template", "/product/template/", [
         }
     },
     {
-        title: "款式类型",
+        title: "产品款式类型",
         field: 'ProductType',
         sortable: true,
         order: "desc",
@@ -477,6 +479,18 @@ displayTable("#table-product-template", "/product/template/", [
                 html = '服务';
             } else {
                 html = '-';
+            }
+            return html;
+        }
+    },
+    {
+        title: "产品款式属性",
+        field: 'Attributes',
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            for (item in row.Attributes) {
+                html += "<a  class='display-block label label-success' href='#'>" + key + "</a>";
             }
             return html;
         }
@@ -520,7 +534,22 @@ displayTable("#table-product-product", "/product/product/", [
             return html;
         }
     },
-    { title: "规格属性", field: 'attributes', align: "center", sortable: true, order: "desc" },
+    {
+        title: "规格属性",
+        field: 'AttributeValues',
+        align: "center",
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var datas = row.AttributeValues;
+            var html = "";
+            var url = "/product/attributevalue/";
+            for (key in datas) {
+                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
+            }
+            return html;
+        }
+    },
     {
         title: "有效",
         field: 'Active',
@@ -554,7 +583,7 @@ displayTable("#table-product-product", "/product/product/", [
         }
     },
     {
-        title: "规格类型",
+        title: "产品规格类型",
         field: 'ProductType',
         sortable: true,
         order: "desc",
@@ -590,8 +619,9 @@ displayTable("#table-product-product", "/product/product/", [
 //产品属性值
 displayTable("#table-product-attributevalue", "/product/attributevalue/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
-    { title: "属性", field: 'attribute', sortable: true, order: "desc" },
-    { title: "属性值", field: 'name', align: "center", sortable: true, order: "desc" },
+    { title: "属性", field: 'Attribute', sortable: true, order: "desc" },
+    { title: "属性值", field: 'Name', align: "center", sortable: true, order: "desc" },
+    { title: "产品规格数量", field: 'ProductsCount', align: "center", sortable: true, order: "desc" },
     {
         title: "操作",
         align: "center",

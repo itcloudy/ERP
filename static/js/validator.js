@@ -62,14 +62,16 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         for (var i = 0, len = formFields.length; i < len; i++) {
             var self = formFields[i];
             var oldValue = null;
-            // console.log(self.name + ":" + $(self).val());
             oldValue = $(self).data("oldvalue");
             // 处理radio数据
             if (self.type == "radio") {
                 if ($(self).data("type") == "string") {
-                    if ($(self).hasClass("checked")) {
-                        formData[self.name] = $(self).val();
+                    var nodeName = $("input[name ='" + self.name + "']:checked");
+                    if (nodeName != undefined) {
+                        formData[self.name] = nodeName.val();
                     }
+                } else {
+                    console.log("data  type is not string");
                 }
             } else if (self.type == "checkbox") {
                 if (self.checked) {
@@ -154,7 +156,6 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         if (method.length > 0) {
             postParams._method = method.val();
         }
-        console.log(postParams);
         $.post($form.action, postParams).success(function(response) {
             if (response.code == 'failed') {
                 if (formData.FormAction == "update") {
@@ -169,7 +170,8 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 } else {
                     toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
                 }
-                // setTimeout(function() { window.location = response.location; }, 1000);
+                console.log(response.location);
+                setTimeout(function() { window.location = response.location; }, 1000);
             }
         });
         // Use Ajax to submit form data

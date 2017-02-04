@@ -24,13 +24,38 @@ type ProductAttribute struct {
 	ValueIDs       []*ProductAttributeValue `orm:"reverse(many)"`                        //属性值
 	AttributeLines []*ProductAttributeLine  `orm:"reverse(many)"`                        //产品属性明细行
 	Products       []*ProductProduct        `orm:"rel(m2m)"`                             //拥有该属性的产品
-	// form表单字段
-	FormAction string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+	TemplatesCount int64                    `orm:"default(0)"`                           //产品款式数量
+	ProductsCount  int64                    `orm:"default(0)"`                           //产品规格数量
+	FormAction     string                   `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 
 }
 
 func init() {
 	orm.RegisterModel(new(ProductAttribute))
+}
+
+// UpdateProductAttributeTemplatesCount 更新产品款式数量
+func UpdateProductAttributeTemplatesCount(obj *ProductAttribute, updateUser *User) {
+	o := orm.NewOrm()
+	obj = &ProductAttribute{ID: obj.ID}
+	o.LoadRelated(obj, "AttributeLines")
+	nums := int64(len(obj.AttributeLines))
+	nums++
+	obj.TemplatesCount = nums
+	obj.UpdateUser = updateUser
+	o.Update(obj, "TemplatesCount", "UpdateUser")
+}
+
+// UpdateProductAttributeProductsCount 更新产品规格数量
+func UpdateProductAttributeProductsCount(obj *ProductAttribute, updateUser *User) {
+	o := orm.NewOrm()
+	obj = &ProductAttribute{ID: obj.ID}
+	m2m := o.QueryM2M(obj, "Products")
+	if nums, err := m2m.Count(); err == nil {
+		obj.ProductsCount = nums + 1
+		obj.UpdateUser = updateUser
+		o.Update(obj)
+	}
 }
 
 // AddProductAttribute insert a new ProductAttribute into database and returns

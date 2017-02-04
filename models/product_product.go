@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 	"time"
 
@@ -32,7 +33,7 @@ type ProductProduct struct {
 	StandardPrice         float64                  `json:"StandardPrice"`                       //成本价格
 	DefaultCode           string                   `orm:"unique"`                               //产品编码
 	ProductTemplate       *ProductTemplate         `orm:"rel(fk)"`                              //产品款式
-	AttributeValues       []*ProductAttributeValue `orm:"reverse(many)"`                        //产品属性
+	AttributeValues       []*ProductAttributeValue `orm:"reverse(many)"`                        //产品属性值
 	ProductType           string                   `orm:"default(\"stock\")"`                   //产品类型
 	AttributeValuesString string                   `orm:"index;default(\"\")"`                  //产品属性值ID编码，用于修改和增加时对应的产品是否已经存在
 	FirstSaleUom          *ProductUom              `orm:"rel(fk)"`                              //第一销售单位
@@ -66,9 +67,16 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 	o := orm.NewOrm()
 	obj.CreateUser = addUser
 	obj.UpdateUser = addUser
-	err = o.Begin()
-	if err != nil {
-		return 0, err
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
 	}
 	if obj.ProductTemplateID != 0 {
 		if template, err := GetProductTemplateByID(obj.ProductTemplateID); err == nil {
@@ -82,6 +90,15 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 		} else {
 			return 0, err
 		}
+	}
+	if len(obj.AttributeValueIDs) > 0 {
+		strArr := make([]string, 0, 0)
+		for _, item := range obj.AttributeValueIDs {
+			strArr = append(strArr, strconv.FormatInt(item, 10))
+
+		}
+		sort.Strings(strArr)
+		obj.AttributeValuesString = strings.Join(strArr, "-")
 	}
 	if obj.CategoryID != 0 {
 		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)
@@ -100,13 +117,27 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 	}
 	if id, err = o.Insert(obj); err != nil {
 		return 0, err
+	} else {
+		obj.ID = id
+		Oattr := orm.NewOrm()
+
+		for _, item := range obj.AttributeValueIDs {
+			m2m := o.QueryM2M(obj, "AttributeValues")
+			if attributeValue, err := GetProductAttributeValueByID(item); err == nil {
+				m2m.Add(attributeValue)
+				m2mAttr := Oattr.QueryM2M(attributeValue.Attribute, "Products")
+				m2mAttr.Add(obj)
+				UpdateProductAttributeValueProductsCount(attributeValue, addUser)
+				UpdateProductAttributeProductsCount(attributeValue.Attribute, addUser)
+			}
+		}
 	}
 	if err != nil {
 		return 0, err
 	} else {
-		err = o.Commit()
-		if err != nil {
-			return 0, err
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
 		}
 	}
 	return id, err
@@ -246,6 +277,10 @@ func GetAllProductProduct(query map[string]interface{}, exclude map[string]inter
 	}
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
+	}
+	// 获得产品规格的属性值
+	for i, _ := range objArrs {
+		o.LoadRelated(&objArrs[i], "AttributeValues")
 	}
 	return paginator, objArrs, err
 }

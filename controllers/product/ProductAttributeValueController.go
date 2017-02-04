@@ -170,10 +170,11 @@ func (ctl *ProductAttributeValueController) productAttributeValueList(query map[
 		tableLines := make([]interface{}, 0, 4)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["name"] = line.Name
-			oneLine["attribute"] = line.Attribute.Name
+			oneLine["Name"] = line.Name
+			oneLine["Attribute"] = line.Attribute.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			oneLine["ProductsCount"] = line.ProductsCount
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

@@ -51,11 +51,11 @@ $(function() {
             templateResult: function(repo) {
                 'use strict';
                 if (repo.loading) { return repo.text; }
-                return repo.name;
+                return repo.name || repo.Name;
             },
             templateSelection: function(repo) {
                 'use strict';
-                return repo.name || repo.text;
+                return repo.name || repo.Name || repo.text;
             }
         });
     };
@@ -112,11 +112,11 @@ $(function() {
             templateResult: function(repo) {
                 'use strict';
                 if (repo.loading) { return repo.text; }
-                return repo.name;
+                return repo.name || repo.Name;
             },
             templateSelection: function(repo) {
                 'use strict';
-                return repo.name || repo.text;
+                return repo.name || repo.Name || repo.text;
             }
         });
     };

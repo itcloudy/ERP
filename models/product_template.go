@@ -85,9 +85,16 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 	o := orm.NewOrm()
 	obj.CreateUser = addUser
 	obj.UpdateUser = addUser
-	err = o.Begin()
-	if err != nil {
-		return 0, err
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
 	}
 	if obj.CategoryID != 0 {
 		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)
@@ -110,9 +117,9 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 		obj.ID = id
 		if len(obj.ProductAttributeLines) > 0 {
 			for _, item := range obj.ProductAttributeLines {
-				if Attribute, err := GetProductAttributeByID(item.AttributeID); err == nil {
+				if attribute, err := GetProductAttributeByID(item.AttributeID); err == nil {
 					productAttributeLine := new(ProductAttributeLine)
-					productAttributeLine.Attribute = Attribute
+					productAttributeLine.Attribute = attribute
 					productAttributeLine.CreateUser = addUser
 					productAttributeLine.UpdateUser = addUser
 					productAttributeLine.ProductTemplate = obj
@@ -123,15 +130,19 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 						for _, attrValueID := range attributeValueIDArr {
 							if valueObj, err := GetProductAttributeValueByID(attrValueID); err == nil {
 								productAttributeLine.AttributeValues = append(productAttributeLine.AttributeValues, valueObj)
+								fmt.Printf("%+v\n", productAttributeLine.Attribute)
+								UpdateProductAttributeTemplatesCount(productAttributeLine.Attribute, addUser)
 							} else {
 								return 0, err
 							}
 						}
-						for _, attrVal := range productAttributeLine.AttributeValues {
-							if !m2m.Exist(attrVal) {
-								m2m.Add(attrVal)
-							}
-						}
+						// for _, attrVal := range productAttributeLine.AttributeValues {
+						// 	if !m2m.Exist(attrVal) {
+						// 		m2m.Add(attrVal)
+						// 	}
+						// }
+						// 创建直接添加
+						m2m.Add(productAttributeLine.AttributeValues)
 						obj.AttributeLines = append(obj.AttributeLines, productAttributeLine)
 					} else {
 						return 0, err
@@ -146,9 +157,9 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 	if err != nil {
 		return 0, err
 	} else {
-		err = o.Commit()
-		if err != nil {
-			return 0, err
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
 		}
 	}
 	return id, err
@@ -290,12 +301,9 @@ func GetAllProductTemplate(query map[string]interface{}, exclude map[string]inte
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
-	for i, _ := range objArrs {
-		o.LoadRelated(&objArrs[i], "Category")
-		o.LoadRelated(&objArrs[i], "FirstSaleUom")
-		// o.LoadRelated(&objArrs[i], "FirstPurchaseUom")
-
-	}
+	// for i, _ := range objArrs {
+	// 	o.LoadRelated(&objArrs[i], "AttributeLines")
+	// }
 	return paginator, objArrs, err
 }
 
