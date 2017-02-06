@@ -563,7 +563,7 @@ displayTable("#table-product-template", "/product/template/", [
 //产品款式
 displayTable("#table-product-attribute-line", "/product/attributeline/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
-    { title: "款式编码", field: 'DefaultCode', sortable: true, order: "desc" },
+    { title: "款式编码", field: 'ProductTemplate.DefaultCode', sortable: true, order: "desc" },
     { title: "产品款式", field: 'ProductTemplate', sortable: true, order: "desc" },
     { title: "属性", field: 'Attribute', align: "center", sortable: true, order: "desc" },
     {

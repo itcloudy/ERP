@@ -154,7 +154,7 @@ func (ctl *ProductAttributeLineController) productAttributeLineList(query map[st
 			oneLine := make(map[string]interface{})
 			oneLine["Attribute"] = line.Attribute.Name
 			oneLine["ProductTemplate"] = line.ProductTemplate.Name
-			oneLine["DefaultCode"] = line.ProductTemplate.DefaultCode
+			oneLine["ProductTemplate.DefaultCode"] = line.ProductTemplate.DefaultCode
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
 			attributeValueArrs := make([]interface{}, 0, 4)

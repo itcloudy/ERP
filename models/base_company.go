@@ -117,9 +117,9 @@ func GetAllCompany(query map[string]interface{}, exclude map[string]interface{},
 			for i, v := range sortby {
 				orderby := ""
 				if order[i] == "desc" {
-					orderby = "-" + v
+					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby = v
+					orderby =  strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -131,9 +131,9 @@ func GetAllCompany(query map[string]interface{}, exclude map[string]interface{},
 			for _, v := range sortby {
 				orderby := ""
 				if order[0] == "desc" {
-					orderby = "-" + v
+					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby = v
+					orderby =  strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
