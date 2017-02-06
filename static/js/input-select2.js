@@ -20,6 +20,7 @@ $(function() {
             if (el.id != undefined && el.id != "") {
                 var $selectNode = $("#" + el.id);
                 $selectNode.select2({
+                    width: "off",
                     data: data,
                     escapeMarkup: function(markup) { return markup; },
                     // minimumInputLength: 1,
@@ -94,7 +95,7 @@ $(function() {
     select2AjaxData(".select-product-category", "/product/category/?action=search"); // 选择产品类别;
     select2AjaxData(".select-product-attribute", '/product/attribute/?action=search'); // 选择属性
     select2AjaxData(".select-product-attribute-value", '/product/attributevalue/?action=search'); // 选择属性值
-    // selectStaticData(".select-product-type", [{ id: 1, name: '库存商品' }, { id: 2, name: '消耗品' }, { id: 3, name: '服务' }]); // 产品类型
+    selectStaticData(".select-product-type", [{ id: "stock", name: '库存商品' }, { id: "consume", name: '消耗品' }, { id: "service", name: '服务' }]); // 产品类型
     select2AjaxData(".select-product-uom", "/product/uom/?action=search"); // 选择产品单位
     select2AjaxData(".select-product-uom-category", "/product/uomcateg/?action=search"); //计量单位类别
     selectStaticData(".select-product-uom-category-type", [{ id: 1, name: '小于参考计量单位' }, { id: 2, name: '参考计量单位' }, { id: 3, name: '大于参考计量单位' }]); // 产品类型

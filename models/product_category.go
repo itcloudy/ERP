@@ -77,6 +77,41 @@ func GetProductCategoryByID(id int64) (obj *ProductCategory, err error) {
 	return nil, err
 }
 
+// GetAllChildCategorys 获得所有的下级分类
+func GetAllChildCategorys(parentID int64) (utils.Paginator, []ProductCategory, error) {
+	var (
+		objArrs   []ProductCategory
+		paginator utils.Paginator
+		err       error
+		allLen    int
+	)
+	query := make(map[string]interface{})
+	exclude := make(map[string]interface{})
+	cond := make(map[string]map[string]interface{})
+	fields := make([]string, 0, 0)
+	sortby := make([]string, 0, 1)
+	order := make([]string, 0, 1)
+	sortby = append(sortby, "Id")
+	order = append(order, "desc")
+
+	categoryIDArr := make([]int64, 0, 0)
+	categoryIDArr = append(categoryIDArr, parentID)
+	for {
+		query["Parent.Id.in"] = categoryIDArr
+		if _, objArrs, err = GetAllProductCategory(query, exclude, cond, fields, sortby, order, 0, -1); err == nil {
+			for _, item := range objArrs {
+				categoryIDArr = append(categoryIDArr, item.ID)
+			}
+			if allLen == len(objArrs) {
+				break
+			} else {
+				allLen = len(objArrs)
+			}
+		}
+	}
+	return paginator, objArrs, err
+}
+
 // GetAllProductCategory retrieves all ProductCategory matches certain condition. Returns empty list if
 // no records exist
 func GetAllProductCategory(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []ProductCategory, error) {

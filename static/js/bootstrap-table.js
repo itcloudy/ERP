@@ -29,27 +29,78 @@ $.extend($.fn.bootstrapTable.defaults, {
 });
 var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
     var $tableNode = $(selectId);
+    //根据数据类型获得正确的数据,默认string
+    var getCurrentDataType = function(val, dataType) {
+        if (dataType == "" || dataType === undefined || dataType === null) {
+            dataType = "string";
+        }
+        switch (dataType) {
+            case "int": // 整形
+                val = parseInt(val);
+                break;
+            case "float": // 浮点型
+                val = parseFloat(val);
+                break;
+            case "array_int": // 整形数组
+                var a_arr = [];
+                for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                    a_arr.push(parseInt(val[a_i]));
+                }
+                val = a_arr;
+                break;
+            case "arrar_float": //  浮点型数组
+                var a_arr = [];
+                for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                    a_arr.push(parseFloat(val[a_i]));
+                }
+                val = a_arr;
+                break;
+        }
+        return val
+    };
     var options = {
         url: ajaxUrl,
         queryParams: function(params) {
+            // console.log(params);
             var xsrf = $("input[name ='_xsrf']");
             if (xsrf != undefined) {
                 params._xsrf = xsrf[0].value;
             }
             params.action = 'table';
-            var filterCond = $(".list-info-table .form-control");
+            var filterCond = $("#listViewSearch .filter-condition");
             var filter = {};
+            console.log(filterCond);
             //获得过滤条件
-            if (filterCond.length > 0) {
-                filterCond.each(function() {
-                    if (this.type == 'text') {
-                        if (this.value != "") {
-                            filter[this.name] = this.value;
+            for (var i = 0, len = filterCond.length; i < len; i++) {
+                var self = filterCond[i];
+                // 处理radio数据
+                if (self.type == "radio") {
+                    if ($(self).data("type") == "string") {
+                        var nodeName = $("input[name ='" + self.name + "']:checked");
+                        if (nodeName != undefined) {
+                            filter[self.name] = nodeName.val();
                         }
+                    } else {
+                        console.log("data  type is not string");
                     }
-                });
+                } else if (self.type == "checkbox") {
+                    if (self.checked) {
+                        filter[self.name] = true;
+                    } else {
+                        filter[self.name] = false;
+                    }
+                } else {
+                    var val = $(self).val();
+                    console.log(self.name + ":" + val);
+                    if (val != "") {
+                        // 若为null跳出此次循环
+                        if (val === null) {
+                            continue;
+                        }
+                        filter[self.name] = getCurrentDataType(val, $(self).data("type"))
+                    }
+                }
             }
-
             params.filter = JSON.stringify(filter);
             return params;
         },
@@ -512,6 +563,25 @@ displayTable("#table-product-template", "/product/template/", [
 //产品款式
 displayTable("#table-product-attribute-line", "/product/attributeline/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "款式编码", field: 'DefaultCode', sortable: true, order: "desc" },
+    { title: "产品款式", field: 'ProductTemplate', sortable: true, order: "desc" },
+    { title: "属性", field: 'Attribute', align: "center", sortable: true, order: "desc" },
+    {
+        title: "属性值",
+        field: 'Attribute',
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.attributeValueArrs.length > 0) {
+                var attributeValueArrs = row.attributeValueArrs;
+                for (var i = 0, len = attributeValueArrs.length; i < len; i++) {
+                    html += "<a  class='display-block label label-success' href='/product/attributevalue/" + attributeValueArrs[i].id + "?action=detail'>" + attributeValueArrs[i].name + "</a>";
+                }
+            }
+            return html;
+        }
+    },
+
 
 ]);
 
@@ -724,6 +794,7 @@ displayTable("#table-product-uom", "/product/uom/", [
 $(".list-info-table .form-control").change(function(e) {
     $(".table-diplay-info").bootstrapTable('refresh');
 });
-$("#clearListSearchCond-table ").click(function() {
+$("#clearListSearchCond-table").click(function() {
     $(".table-diplay-info").bootstrapTable('refresh');
 });
+$("#listViewSearch input").on("change", function(e) { console.log(e); });

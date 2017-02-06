@@ -1,0 +1,53 @@
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="name" class="col-md-4 control-label label-start">款式名称<span class="required-input"></span></label>
+            <div class="col-md-8">
+                <input data-type="string" class="filter-condition form-control" id="name" name="Name" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="DefaultCode" class="col-md-4 control-label">款式编码<span class="required-input"></span></label>
+            <div class="col-md-8">
+                <input data-type="string" class="filter-condition form-control" id="DefaultCode" name="DefaultCode" type="text" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="category" class="col-md-4 control-label label-start">款式类别<span class="required-input"></span></label>
+            <div class="col-md-8">
+                <select data-type="int" name="Category" id="category" class="filter-condition form-control select-product-category"> </select>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="productType" class="col-md-4 control-label label-start">款式类型<span class="required-input"></span></label>
+            <div class="col-md-8">
+                <select data-type="string" name="ProductType" id="productType" class="filter-condition form-control select-product-type"> </select>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="active" class="col-md-4 control-label ">有效</label>
+            <div class="col-md-8">
+                <input data-type="bool" name="Active" id="active" class="filter-condition form-control form-checkbox " checked="checked" type="checkbox">
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="saleok" class="col-md-4 control-label">可销售</label>
+            <div class="col-md-8">
+                <input data-type="bool" name="SaleOk" id="saleok" class="filter-condition form-control form-checkbox " checked="checked" type="checkbox">
+            </div>
+        </div>
+    </div>
+</div>

@@ -64,7 +64,7 @@ $(function() {
     });
 
     //如果搜索添加不为空，增加提示样式
-    $("#listViewSearch input").change(function(e) {
+    $("#listViewSearch .filter-condition").change(function(e) {
         e.currentTarget.value = e.currentTarget.value.trim();
         var nums = $.grep($("#listViewSearch input"), function(el, index) {
             if (el.value != "") {
@@ -92,6 +92,7 @@ $(function() {
                 return false;
             }
         });
+        // console.log(nums);
         if (nums.length < 1) {
             $("button[id^='clearListSearchCond']").addClass("hide");
         } else {
@@ -105,4 +106,5 @@ $(function() {
         $(this).addClass("hide");
         $(".table-diplay-info").bootstrapTable('refresh');
     });
+
 });

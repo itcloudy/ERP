@@ -159,7 +159,7 @@ func (ctl *ProductUomController) productUomList(query map[string]interface{}, ex
 			case 2:
 				oneLine["type"] = "参考计量单位"
 			case 3:
-				oneLine["type"] = "大约参考计量单位"
+				oneLine["type"] = "大于参考计量单位"
 				oneLine["factorInv"] = line.FactorInv
 			default:
 				oneLine["type"] = "参考计量单位"

@@ -67,7 +67,7 @@ func (ctl *ProductAttributeLineController) Get() {
 	b.WriteString("\\")
 	b.WriteString(ctl.PageAction)
 	ctl.Data["PageName"] = b.String()
-	ctl.URL = "/product/category/"
+	ctl.URL = "/product/attributeline/"
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuProductAttributeLineActive"] = "active"
 }
@@ -89,7 +89,7 @@ func (ctl *ProductAttributeLineController) Edit() {
 	ctl.Data["RecordID"] = id
 	ctl.Layout = "base/base.html"
 
-	ctl.TplName = "product/product_category_form.html"
+	ctl.TplName = "product/product_attribute_line_form.html"
 }
 
 // Detail 显示款式属性明细 get

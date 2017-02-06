@@ -21,17 +21,15 @@
                 <p id="list-title">{{.PageName}}</p>
             </div>
             {{.xsrf}}
-            <div class="row text-center">
+            <div class="row">
                 <a href="{{.URL}}?action=create" type="buttom" class="btn btn-success fa fa-plus pull-left">&nbsp新建</a>
                 <a type="button" data-toggle="modal" data-target="#importModal" class="btn btn-warning fa fa-mail-reply pull-left">&nbsp导入</a>
-                <button class="btn btn-info fa fa-search pull-left search-hidden" id='search-enable'>&nbsp开启</button>
-                <div class="btn-group btn-group-sm pull-right">
-                    <button class="btn btn-default fa fa-list-ul list-button active" data-view-type="list"></button>
-                    <button class="btn btn-default fa fa-th-large list-button" data-view-type="kanban"></button>
-                    <!--<button class="btn btn-default fa fa-edit list-button" data-view-type="form"></button>
+                <!--<div class="btn-group btn-group-sm pull-right">-->
+                <!--<button class="btn btn-default fa fa-list-ul list-button active" data-view-type="list"></button>-->
+                <!--<button class="btn btn-default fa fa-th-large list-button" data-view-type="kanban"></button>-->
+                <!--<button class="btn btn-default fa fa-edit list-button" data-view-type="form"></button>
                     <button class="btn btn-default fa fa-tree" tdata-view-type="graph"></button>-->
-                </div>
-
+                <!--</div>-->
             </div>
             <div class="row">
                 <div class="panel-group panel-list-info" id="accordion" role="tablist" aria-multiselectable="false">
@@ -42,7 +40,7 @@
                                     <i class="glyphicon glyphicon-plus icon-plus">过滤条件</i>
                                     <i class="glyphicon glyphicon-minus icon-minus">过滤条件</i>
                                 </a>
-                                <button id="clearListSearchCond-{{.ViewType}}" class="btn btn-xs btn-primary hide">清空条件</button>
+                                <button id="clearListSearchCond-{{.ViewType}}" class="btn btn-xs btn-primary hide">清空非默认条件</button>
                             </p>
                         </div>
                         <div id="listViewSearch" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">

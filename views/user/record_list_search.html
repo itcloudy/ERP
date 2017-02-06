@@ -1,57 +1,55 @@
-<div class="list-view-search">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="name" class="col-md-4 control-label label-start">用户名<span class="required-input"></span></label>
-                <div class="col-md-8">
-                    <input class="form-control" name="name" {{if not .Readonly}}autofocus{{end}} type="text" value="{{.User.Name}}" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="namezh" class="col-md-4 control-label">用户名(中文)<span class="required-input"></span></label>
-                <div class="col-md-8">
-                    <input class="form-control" name="namezh" type="text" value="{{.User.NameZh}}" />
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="mobile" class="col-md-4 control-label label-start">手机号码<span class="required-input"></span></label>
-                <div class="col-md-8">
-                    <input class="form-control" name="mobile" id="mobile" type="text" value="{{.User.Mobile}}" />
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="email" class="col-md-4 control-label label-start">邮箱<span class="required-input"></span></label>
-                <div class="col-md-8">
-                    <input class="form-control" name="email" id="email" type="email" value="{{.User.Email}}" />
-                </div>
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="name" class="col-md-4 control-label label-start">用户名<span class="required-input"></span></label>
+            <div class="col-md-8">
+                <input class="form-control" name="name" {{if not .Readonly}}autofocus{{end}} type="text" value="{{.User.Name}}" />
             </div>
         </div>
     </div>
-    <br>
-    <div class="row">
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="qq" class="col-md-4 control-label ">QQ</label>
-                <div class="col-md-8">
-                    <input class="form-control" name="qq" id="qq" type="text" />
-                </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="namezh" class="col-md-4 control-label">用户名(中文)<span class="required-input"></span></label>
+            <div class="col-md-8">
+                <input class="form-control" name="namezh" type="text" value="{{.User.NameZh}}" />
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="form-group">
-                <label for="wechat" class="col-md-4 control-label">微信</label>
-                <div class="col-md-8">
-                    <input class="form-control" name="wechat" id="wechat" type="text" />
-                </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="mobile" class="col-md-4 control-label label-start">手机号码<span class="required-input"></span></label>
+            <div class="col-md-8">
+                <input class="form-control" name="mobile" id="mobile" type="text" value="{{.User.Mobile}}" />
+                </select>
             </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="email" class="col-md-4 control-label label-start">邮箱<span class="required-input"></span></label>
+            <div class="col-md-8">
+                <input class="form-control" name="email" id="email" type="email" value="{{.User.Email}}" />
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="qq" class="col-md-4 control-label ">QQ</label>
+            <div class="col-md-8">
+                <input class="form-control" name="qq" id="qq" type="text" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="form-group">
+            <label for="wechat" class="col-md-4 control-label">微信</label>
+            <div class="col-md-8">
+                <input class="form-control" name="wechat" id="wechat" type="text" />
+            </div>
+        </div>
 
-        </div>
     </div>
 </div>

@@ -130,7 +130,6 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 						for _, attrValueID := range attributeValueIDArr {
 							if valueObj, err := GetProductAttributeValueByID(attrValueID); err == nil {
 								productAttributeLine.AttributeValues = append(productAttributeLine.AttributeValues, valueObj)
-								fmt.Printf("%+v\n", productAttributeLine.Attribute)
 								UpdateProductAttributeTemplatesCount(productAttributeLine.Attribute, addUser)
 							} else {
 								return 0, err
@@ -222,6 +221,7 @@ func GetAllProductTemplate(query map[string]interface{}, exclude map[string]inte
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(ProductTemplate))
 	qs = qs.RelatedSel()
