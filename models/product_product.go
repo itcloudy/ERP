@@ -53,6 +53,7 @@ type ProductProduct struct {
 	SecondSaleUomID       int64                    `orm:"-" json:"SecondSaleUom"`               //第二销售单位form
 	FirstPurchaseUomID    int64                    `orm:"-" json:"FirstPurchaseUom"`            //第一采购单位form
 	SecondPurchaseUomID   int64                    `orm:"-" json:"SecondPurchaseUom"`           //第二采购单位form
+	ProductCounterID      int64                    `orm:"-" json:"ProductCounter"`              //产品柜台
 	ProductAttributeLines []ProductAttributeLine   `orm:"-" json:"ProductAttributes"`           //产品属性
 	ProductTemplateID     int64                    `orm:"-" json:"ProductTemplateID"`           //产品款式
 	AttributeValueIDs     []int64                  `orm:"-" json:"AttributeValueIds"`           //产品规格属性值
@@ -101,6 +102,9 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 		}
 		sort.Strings(strArr)
 		obj.AttributeValuesString = strings.Join(strArr, "-")
+	}
+	if obj.ProductCounterID != 0 {
+		obj.ProductCounter, _ = GetProductCounterByID(obj.ProductCounterID)
 	}
 	if obj.CategoryID != 0 {
 		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)

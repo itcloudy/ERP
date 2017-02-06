@@ -23,7 +23,7 @@ type Company struct {
 	Parent     *Company         `orm:"rel(fk);null" json:"parent"`           //上级公司
 	Department []*Department    `orm:"reverse(many)" json:"departments"`     //部门
 	Country    *AddressCountry  `orm:"rel(fk);null" json:"country"`          //国家
-	Province   *AddressProvince `orm:"rel(fk);null" json:"province"`         //身份
+	Province   *AddressProvince `orm:"rel(fk);null" json:"province"`         //省份
 	City       *AddressCity     `orm:"rel(fk);null" json:"city"`             //城市
 	District   *AddressDistrict `orm:"rel(fk);null" json:"district"`         //区县
 	Street     string           `orm:"default(\"\")" json:"street"`          //街道

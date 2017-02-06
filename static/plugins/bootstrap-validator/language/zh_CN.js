@@ -153,9 +153,9 @@
             }
         },
         id: {
-            'default': '请输入有效的身份证件号码',
+            'default': '请输入有效的省份证件号码',
             countryNotSupported: '不支持 %s 国家或地区',
-            country: '请输入有效的 %s 国家或地区的身份证件号码',
+            country: '请输入有效的 %s 国家或地区的省份证件号码',
             countries: {
                 BA: '波黑',
                 BG: '保加利亚',

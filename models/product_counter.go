@@ -19,8 +19,12 @@ type ProductCounter struct {
 	CreateDate       time.Time          `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate       time.Time          `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Name             string             `orm:"unique"  json:"Name"`                  //产品属性名称
+	Description      string             `orm:"type(text);null"  json:"Description"`  //描述
 	ProductProducts  []*ProductProduct  `orm:"reverse(many)"`                        //产品规格
 	ProductTemplates []*ProductTemplate `orm:"reverse(many)"`                        //产品款式
+	ProductsCount    int                `orm:"-"`                                    //产品规格数量
+	TemplatesCount   int                `orm:"-"`                                    //产品款式数量
+
 	// form表单使用字段
 	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
 
@@ -160,6 +164,12 @@ func GetAllProductCounter(query map[string]interface{}, exclude map[string]inter
 	}
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
+	}
+	for i, _ := range objArrs {
+		o.LoadRelated(&objArrs[i], "ProductProducts")
+		objArrs[i].ProductsCount = len(objArrs[i].ProductProducts)
+		o.LoadRelated(&objArrs[i], "ProductTemplates")
+		objArrs[i].TemplatesCount = len(objArrs[i].ProductTemplates)
 	}
 	return paginator, objArrs, err
 }

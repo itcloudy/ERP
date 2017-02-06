@@ -432,8 +432,9 @@ displayTable("#table-product-attribute", "/product/attribute/", [
 displayTable("#table-product-counter", "/product/counter/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
     { title: "柜台名称", field: 'Name', sortable: true, order: "desc" },
-    { title: "产品款式数量", field: 'TemplatesCount', sortable: true, order: "desc" },
-    { title: "产品规格数量", field: 'ProductsCount', sortable: true, order: "desc" },
+    { title: "产品款式数量", field: 'TemplatesCount', align: "center" },
+    { title: "产品规格数量", field: 'ProductsCount', align: "center" },
+    { title: "柜台描述", field: 'Description' },
     {
         title: "操作",
         align: "center",
@@ -479,6 +480,20 @@ displayTable("#table-product-template", "/product/template/", [
         order: "desc",
         formatter: function cellStyle(value, row, index) {
             return row.Category.name;
+        }
+    },
+    {
+        title: "产品柜台",
+        field: 'ProductCounter',
+        align: "center",
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.ProductCounter != undefined) {
+                html = row.ProductCounter.name + "<a class='pull-right' href='/product/counter/" + row.ProductCounter.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            }
+            return html;
         }
     },
     { title: "规格数量", field: 'VariantCount', align: "center", sortable: true, order: "desc" },
@@ -632,6 +647,20 @@ displayTable("#table-product-product", "/product/product/", [
         order: "desc",
         formatter: function cellStyle(value, row, index) {
             var html = row.ProductTemplate.name + "<a class='pull-right' href='/product/template/" + row.ProductTemplate.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    },
+    {
+        title: "产品柜台",
+        field: 'ProductCounter',
+        align: "center",
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.ProductCounter != undefined) {
+                html = row.ProductCounter.name + "<a class='pull-right' href='/product/counter/" + row.ProductCounter.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            }
             return html;
         }
     },

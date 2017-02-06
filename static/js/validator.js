@@ -171,7 +171,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                     toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
                 }
                 console.log(response.location);
-                setTimeout(function() { window.location = response.location; }, 1000);
+                // setTimeout(function() { window.location = response.location; }, 1000);
             }
         });
         // Use Ajax to submit form data
@@ -430,6 +430,38 @@ $(function() {
             }
         }
     });
+    // 柜台form
+    BootstrapValidator("#productCounterForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "柜台名称不能为空"
+                },
+                remote: {
+                    url: "/product/category/",
+                    message: "该柜台名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            },
+        }
+    });
     //产品分类form
     BootstrapValidator("#productCategoryForm", {
         Name: {
@@ -460,7 +492,7 @@ $(function() {
                     },
                 }
             },
-        },
+        }
     });
     //产品属性form
     BootstrapValidator("#productAttributeForm", {

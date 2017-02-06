@@ -94,5 +94,16 @@ func init() {
 	beego.Router("/purchase/order/state/?:id", &purchase.PurchaseOrderStateController{})
 	//采购订单明细
 	beego.Router("/purchase/order/line/state/?:id", &purchase.PurchaseOrderLineStateController{})
+	//========================================仓库管理=====================================
+	//采购设置
+	beego.Router("/stock/config/?:id", &purchase.PurchaseConfigController{})
+	//采购订单
+	beego.Router("/purchase/order/?:id", &purchase.PurchaseOrderController{})
+	//采购订单明细
+	beego.Router("/purchase/order/line/?:id", &purchase.PurchaseOrderLineController{})
+	//采购订单
+	beego.Router("/purchase/order/state/?:id", &purchase.PurchaseOrderStateController{})
+	//采购订单明细
+	beego.Router("/purchase/order/line/state/?:id", &purchase.PurchaseOrderLineStateController{})
 
 }

@@ -58,8 +58,9 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview {{.MenuProductCategoryActive}}{{.MenuProductAttributeActive}}{{.MenuProductAttributeValueActive}}
-            {{.MenuProductTemplateActive}}{{.MenuProductProductActive}}{{.MenuProductUomCategActive}}{{.MenuProductUomActive}}{{.MenuProductAttributeLineActive}}">
+            <li class="treeview {{.MenuProductCounterActive}}{{.MenuProductCategoryActive}}{{.MenuProductAttributeActive}}
+            {{.MenuProductAttributeValueActive}}{{.MenuProductTemplateActive}}{{.MenuProductProductActive}}{{.MenuProductUomCategActive}}
+            {{.MenuProductUomActive}}{{.MenuProductAttributeLineActive}}">
                 <a href="#">
                     <i class="fa fa-newspaper-o" aria-hidden="true"></i><span>产品管理</span>
                 </a>
@@ -120,7 +121,7 @@
                     <i class="fa fa-database" aria-hidden="true"></i><span>仓库管理</span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{.MenuStockSettingActive}}"><a href="/stock/setting/"><i class="fa fa-gears"></i>设置</a></li>
+                    <li class="{{.MenuStockSettingActive}}"><a href="/stock/config/"><i class="fa fa-gears"></i>设置</a></li>
                     <li class="{{.MenuStockReportActive}}"><a href="/stock/report/"><i class="fa fa-pie-chart"></i>库存报表</a></li>
                 </ul>
             </li>

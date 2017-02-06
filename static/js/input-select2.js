@@ -92,6 +92,7 @@ $(function() {
     select2AjaxData(".select-department", "/department/?action=search"); // 选择部门
     select2AjaxData(".select-position", "/position/?action=search"); // 选择职位
     select2AjaxData(".select-group", "/group/?action=search", true); // 选择分组
+    select2AjaxData(".select-product-counter", "/product/counter/?action=search"); // 选择产品柜台
     select2AjaxData(".select-product-category", "/product/category/?action=search"); // 选择产品类别;
     select2AjaxData(".select-product-attribute", '/product/attribute/?action=search'); // 选择属性
     select2AjaxData(".select-product-attribute-value", '/product/attributevalue/?action=search'); // 选择属性值
@@ -187,6 +188,9 @@ $(function() {
                         $("#secondSaleUom").empty().append("<option value='" + Pdata.SecondSaleUom.id + "' selected='selected'>" + Pdata.SecondSaleUom.name + "</option>");
                     }
                     $("#firstPurchaseUom").empty().append("<option value='" + Pdata.FirstPurchaseUom.id + "' selected='selected'>" + Pdata.FirstPurchaseUom.name + "</option>");
+                    if (Pdata.ProductCounter != undefined) {
+                        $("#productCounter").empty().append("<option value='" + Pdata.ProductCounter.id + "' selected='selected'>" + Pdata.ProductCounter.name + "</option>");
+                    }
                     if (Pdata.SecondPurchaseUom != undefined) {
                         $("#secondPurchaseUom").empty().append("<option value='" + Pdata.SecondPurchaseUom.id + "' selected='selected'>" + Pdata.SecondPurchaseUom.name + "</option>");
                     }

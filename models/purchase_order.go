@@ -24,7 +24,7 @@ type PurchaseOrder struct {
 	PurchasesMan *User                `orm:"rel(fk)"`                              //业务员
 	Company      *Company             `orm:"rel(fk)"`                              //公司
 	Country      *AddressCountry      `orm:"rel(fk);null" json:"country"`          //国家
-	Province     *AddressProvince     `orm:"rel(fk);null" json:"province"`         //身份
+	Province     *AddressProvince     `orm:"rel(fk);null" json:"province"`         //省份
 	City         *AddressCity         `orm:"rel(fk);null" json:"city"`             //城市
 	District     *AddressDistrict     `orm:"rel(fk);null" json:"district"`         //区县
 	Street       string               `orm:"default(\"\")" json:"street"`          //街道

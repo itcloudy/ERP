@@ -160,7 +160,9 @@
                         <div class="form-group">
                             <label for="defaultCode" class="col-md-4 control-label label-start">规格编码</label>
                             <div class="col-md-8">
-                                <p>{{if .Product}} {{.Product.DefaultCode}} {{end}}</p>
+                                {{if .Product}}
+                                <p> {{.Product.DefaultCode}}</p>{{else}}
+                                <p style="color: gray">自动创建</p> {{end}}
                             </div>
                         </div>
                     </div>
@@ -172,6 +174,21 @@
                                 <select data-type="int" {{if and .Product .Product.Category}} data-oldvalue="{{.Product.Category.ID}}" {{end}} name="Category" id="category" class="{{.FormField}} form-control select-product-category">
                                     {{if and .Product .Product.Category}}
                                     <option value="{{.Product.Category.ID}}" selected="selected">{{.Product.Category.Name}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="productCounter" class="col-md-4 control-label label-start">柜台</label>
+                            <div class="col-md-8">
+                                <p>{{if and .Tp .Tp.ProductCounter}}{{.Tp.ProductCounter.Name}} {{end}}</p>
+                                <select data-type="int" {{if and .Tp .Tp.ProductCounter}} data-oldvalue="{{.Tp.ProductCounter.ID}}" {{end}} name="ProductCounter" id="productCounter" class="{{.FormField}} form-control select-product-counter">
+                                    {{if and .Tp .Tp.ProductCounter}}
+                                    <option value="{{.Tp.ProductCounter.ID}}" selected="selected">{{.Tp.ProductCounter.Name}}</option>
                                     {{end}}
                                 </select>
                             </div>

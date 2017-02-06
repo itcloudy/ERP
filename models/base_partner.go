@@ -24,7 +24,7 @@ type Partner struct {
 	IsCustomer bool             `orm:"default(true)"`              //是客户
 	Active     bool             `orm:"default(true)"`              //有效
 	Country    *AddressCountry  `orm:"rel(fk);null"`               //国家
-	Province   *AddressProvince `orm:"rel(fk);null"`               //身份
+	Province   *AddressProvince `orm:"rel(fk);null"`               //省份
 	City       *AddressCity     `orm:"rel(fk);null"`               //城市
 	District   *AddressDistrict `orm:"rel(fk);null"`               //区县
 	Street     string           `orm:"default(\"\")"`              //街道

@@ -72,7 +72,7 @@ func (ctl *ProductCounterController) Edit() {
 
 			if counter, err := md.GetProductCounterByID(idInt64); err == nil {
 				ctl.PageAction = counter.Name
-				ctl.Data["Counter"] = counter
+				ctl.Data["ProductCounter"] = counter
 			}
 		}
 	}
@@ -169,7 +169,10 @@ func (ctl *ProductCounterController) productCounterList(query map[string]interfa
 		tableLines := make([]interface{}, 0, 4)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["name"] = line.Name
+			oneLine["Name"] = line.Name
+			oneLine["ProductsCount"] = line.ProductsCount
+			oneLine["TemplatesCount"] = line.TemplatesCount
+			oneLine["Description"] = line.Description
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
 			tableLines = append(tableLines, oneLine)
