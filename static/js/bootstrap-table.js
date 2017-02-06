@@ -69,7 +69,7 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
             params.action = 'table';
             var filterCond = $("#listViewSearch .filter-condition");
             var filter = {};
-            console.log(filterCond);
+            // console.log(filterCond);
             //获得过滤条件
             for (var i = 0, len = filterCond.length; i < len; i++) {
                 var self = filterCond[i];
@@ -428,7 +428,25 @@ displayTable("#table-product-attribute", "/product/attribute/", [
         }
     }
 ]);
-
+// 产品柜台
+displayTable("#table-product-counter", "/product/counter/", [
+    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "柜台名称", field: 'Name', sortable: true, order: "desc" },
+    { title: "产品款式数量", field: 'TemplatesCount', sortable: true, order: "desc" },
+    { title: "产品规格数量", field: 'ProductsCount', sortable: true, order: "desc" },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/product/counter/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
 //产品类别
 displayTable("#table-product-category", "/product/category/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
@@ -463,7 +481,7 @@ displayTable("#table-product-template", "/product/template/", [
             return row.Category.name;
         }
     },
-    { title: "规格数量", field: 'VariantCount', sortable: true, order: "desc" },
+    { title: "规格数量", field: 'VariantCount', align: "center", sortable: true, order: "desc" },
     {
         title: "有效",
         field: 'Active',
@@ -535,15 +553,23 @@ displayTable("#table-product-template", "/product/template/", [
         }
     },
     {
-        title: "产品款式属性",
-        field: 'Attributes',
+        title: "第一销售单位",
+        field: 'FirstSaleUom',
+        sortable: true,
+        order: "desc",
         align: "center",
         formatter: function cellStyle(value, row, index) {
-            var html = "";
-            for (item in row.Attributes) {
-                html += "<a  class='display-block label label-success' href='#'>" + key + "</a>";
-            }
-            return html;
+            return row.FirstSaleUom.name;
+        }
+    },
+    {
+        title: "第一采购单位",
+        field: 'FirstPurchaseUom',
+        align: "center",
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            return row.FirstPurchaseUom.name;
         }
     },
     {
@@ -560,7 +586,7 @@ displayTable("#table-product-template", "/product/template/", [
     }
 
 ]);
-//产品款式
+//产品款式属性明细
 displayTable("#table-product-attribute-line", "/product/attributeline/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
     { title: "款式编码", field: 'ProductTemplate.DefaultCode', sortable: true, order: "desc" },
@@ -673,6 +699,26 @@ displayTable("#table-product-product", "/product/product/", [
                 html = '-';
             }
             return html;
+        }
+    },
+    {
+        title: "第一销售单位",
+        field: 'FirstSaleUom',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            return row.FirstSaleUom.name;
+        }
+    },
+    {
+        title: "第一采购单位",
+        field: 'FirstPurchaseUom',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            return row.FirstPurchaseUom.name;
         }
     },
     {

@@ -256,6 +256,12 @@ func (ctl *ProductTemplateController) productTemplateList(query map[string]inter
 				category["name"] = line.Category.Name
 				oneLine["Category"] = category
 			}
+			if line.ProductCounter != nil {
+				productCounter := make(map[string]interface{})
+				productCounter["id"] = line.ProductCounter.ID
+				productCounter["name"] = line.ProductCounter.Name
+				oneLine["ProductCounter"] = productCounter
+			}
 			if line.FirstSaleUom != nil {
 				firstSaleUom := make(map[string]interface{})
 				firstSaleUom["id"] = line.FirstSaleUom.ID

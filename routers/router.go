@@ -44,6 +44,8 @@ func init() {
 	//区县
 	beego.Router("/address/district/?:id", &address.DistrictController{})
 	//=======================================产品管理===========================================
+	//产品柜台
+	beego.Router("/product/counter/?:id", &product.ProductCounterController{})
 	//产品类别
 	beego.Router("/product/category/?:id", &product.ProductCategoryController{})
 	//属性

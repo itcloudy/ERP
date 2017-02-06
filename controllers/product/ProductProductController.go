@@ -211,11 +211,41 @@ func (ctl *ProductProductController) productProductList(query map[string]interfa
 				category["name"] = line.Category.Name
 				oneLine["Category"] = category
 			}
+			if line.ProductCounter != nil {
+				productCounter := make(map[string]interface{})
+				productCounter["id"] = line.ProductCounter.ID
+				productCounter["name"] = line.ProductCounter.Name
+				oneLine["ProductCounter"] = productCounter
+			}
 			if line.ProductTemplate != nil {
 				productTemplate := make(map[string]interface{})
 				productTemplate["id"] = line.ProductTemplate.ID
 				productTemplate["name"] = line.ProductTemplate.Name
 				oneLine["ProductTemplate"] = productTemplate
+			}
+			if line.FirstSaleUom != nil {
+				firstSaleUom := make(map[string]interface{})
+				firstSaleUom["id"] = line.FirstSaleUom.ID
+				firstSaleUom["name"] = line.FirstSaleUom.Name
+				oneLine["FirstSaleUom"] = firstSaleUom
+			}
+			if line.SecondSaleUom != nil {
+				secondSaleUom := make(map[string]interface{})
+				secondSaleUom["id"] = line.SecondSaleUom.ID
+				secondSaleUom["name"] = line.SecondSaleUom.Name
+				oneLine["SecondSaleUom"] = secondSaleUom
+			}
+			if line.FirstPurchaseUom != nil {
+				firstPurchaseUom := make(map[string]interface{})
+				firstPurchaseUom["id"] = line.FirstPurchaseUom.ID
+				firstPurchaseUom["name"] = line.FirstPurchaseUom.Name
+				oneLine["FirstPurchaseUom"] = firstPurchaseUom
+			}
+			if line.SecondPurchaseUom != nil {
+				secondPurchaseUom := make(map[string]interface{})
+				secondPurchaseUom["id"] = line.SecondPurchaseUom.ID
+				secondPurchaseUom["name"] = line.SecondPurchaseUom.Name
+				oneLine["SecondPurchaseUom"] = secondPurchaseUom
 			}
 			mapValues := make(map[int64]string)
 			values := line.AttributeValues

@@ -23,6 +23,7 @@ type ProductProduct struct {
 	CreateDate            time.Time                `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate            time.Time                `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Name                  string                   `orm:"index"`                                //产品属性名称
+	ProductCounter        *ProductCounter          `orm:"rel(fk);null"`                         //产品规格所属柜台
 	Company               *Company                 `orm:"rel(fk);null"`                         //公司
 	Category              *ProductCategory         `orm:"rel(fk)"`                              //产品类别
 	IsProductVariant      bool                     `orm:"default(true)"`                        //是多规格产品
@@ -55,6 +56,7 @@ type ProductProduct struct {
 	ProductAttributeLines []ProductAttributeLine   `orm:"-" json:"ProductAttributes"`           //产品属性
 	ProductTemplateID     int64                    `orm:"-" json:"ProductTemplateID"`           //产品款式
 	AttributeValueIDs     []int64                  `orm:"-" json:"AttributeValueIds"`           //产品规格属性值
+
 }
 
 func init() {
@@ -244,7 +246,7 @@ func GetAllProductProduct(query map[string]interface{}, exclude map[string]inter
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -258,7 +260,7 @@ func GetAllProductProduct(query map[string]interface{}, exclude map[string]inter
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
