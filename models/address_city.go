@@ -31,10 +31,30 @@ func init() {
 
 // AddAddressCity insert a new AddressCity into database and returns
 // last inserted ID on success.
-func AddAddressCity(obj *AddressCity) (id int64, err error) {
+func AddAddressCity(obj *AddressCity, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
 	id, err = o.Insert(obj)
+	if err != nil {
+		return 0, err
+	} else {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
@@ -44,20 +64,23 @@ func GetAddressCityByID(id int64) (obj *AddressCity, err error) {
 	o := orm.NewOrm()
 	obj = &AddressCity{ID: id}
 	if err = o.Read(obj); err == nil {
-		return obj, nil
+		_, err := o.LoadRelated(obj, "Districts")
+		return obj, err
 	}
 	return nil, err
 }
 
 // GetAddressCityByName retrieves AddressCity by Name. Returns error if
 // Name doesn't exist
-func GetAddressCityByName(name string) (obj *AddressCity, err error) {
+func GetAddressCityByName(name string) (*AddressCity, error) {
 	o := orm.NewOrm()
-	obj = &AddressCity{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
+	var obj AddressCity
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }
 
 // GetAllAddressCity retrieves all AddressCity matches certain condition. Returns empty list if
@@ -72,6 +95,7 @@ func GetAllAddressCity(query map[string]interface{}, exclude map[string]interfac
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(AddressCity))
 	qs = qs.RelatedSel()
@@ -105,7 +129,6 @@ func GetAllAddressCity(query map[string]interface{}, exclude map[string]interfac
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -116,7 +139,7 @@ func GetAllAddressCity(query map[string]interface{}, exclude map[string]interfac
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -130,7 +153,7 @@ func GetAllAddressCity(query map[string]interface{}, exclude map[string]interfac
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -152,20 +175,22 @@ func GetAllAddressCity(query map[string]interface{}, exclude map[string]interfac
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
+	// for i, _ := range objArrs {
+	// 	o.LoadRelated(&objArrs[i], "AttributeLines")
+	// }
 	return paginator, objArrs, err
 }
 
-// UpdateAddressCityByID updates AddressCity by ID and returns error if
+// UpdateAddressCity updates AddressCity by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateAddressCityByID(m *AddressCity) error {
+func UpdateAddressCity(obj *AddressCity, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := AddressCity{ID: m.ID}
-	var err error
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		_, err = o.Update(m)
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return err
+	return obj.ID, err
 }
 
 // DeleteAddressCity deletes AddressCity by ID and returns error if

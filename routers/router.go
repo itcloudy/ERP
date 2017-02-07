@@ -6,6 +6,7 @@ import (
 	"goERP/controllers/product"
 	"goERP/controllers/purchase"
 	"goERP/controllers/sale"
+	"goERP/controllers/stock"
 
 	"github.com/astaxie/beego"
 )
@@ -36,13 +37,13 @@ func init() {
 	beego.Router("/templatefile/?:id", &base.TemplateFileController{})
 	// ===============================地址===========================================
 	//国家
-	beego.Router("/address/country/?:id", &address.CountryController{})
+	beego.Router("/address/country/?:id", &address.AddressCountryController{})
 	//省份
-	beego.Router("/address/province/?:id", &address.ProvinceController{})
+	beego.Router("/address/province/?:id", &address.AddressProvinceController{})
 	//城市
-	beego.Router("/address/city/?:id", &address.CityController{})
+	beego.Router("/address/city/?:id", &address.AddressCityController{})
 	//区县
-	beego.Router("/address/district/?:id", &address.DistrictController{})
+	beego.Router("/address/district/?:id", &address.AddressDistrictController{})
 	//=======================================产品管理===========================================
 	//产品柜台
 	beego.Router("/product/counter/?:id", &product.ProductCounterController{})
@@ -95,15 +96,7 @@ func init() {
 	//采购订单明细
 	beego.Router("/purchase/order/line/state/?:id", &purchase.PurchaseOrderLineStateController{})
 	//========================================仓库管理=====================================
-	//采购设置
-	beego.Router("/stock/config/?:id", &purchase.PurchaseConfigController{})
-	//采购订单
-	beego.Router("/purchase/order/?:id", &purchase.PurchaseOrderController{})
-	//采购订单明细
-	beego.Router("/purchase/order/line/?:id", &purchase.PurchaseOrderLineController{})
-	//采购订单
-	beego.Router("/purchase/order/state/?:id", &purchase.PurchaseOrderStateController{})
-	//采购订单明细
-	beego.Router("/purchase/order/line/state/?:id", &purchase.PurchaseOrderLineStateController{})
+	//  仓库管理
+	beego.Router("/stock/warehouse/?:id", &stock.StockWarehouseController{})
 
 }

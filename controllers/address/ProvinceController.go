@@ -5,72 +5,151 @@ import (
 	"encoding/json"
 	"goERP/controllers/base"
 	md "goERP/models"
+	"strconv"
 	"strings"
 )
 
-type ProvinceController struct {
+type AddressProvinceController struct {
 	base.BaseController
 }
 
-func (ctl *ProvinceController) Post() {
+func (ctl *AddressProvinceController) Post() {
+	ctl.URL = "/address/province/"
+	ctl.Data["URL"] = ctl.URL
 	action := ctl.Input().Get("action")
 	switch action {
 	case "validator":
 		ctl.Validator()
 	case "table": //bootstrap table的post请求
 		ctl.PostList()
+	case "create":
+		ctl.PostCreate()
 	default:
 		ctl.PostList()
 	}
 }
-func (ctl *ProvinceController) Get() {
+func (ctl *AddressProvinceController) Get() {
+	ctl.URL = "/address/province/"
 	ctl.PageName = "省份管理"
-	ctl.URL = "/address/city/"
-	ctl.Data["URL"] = ctl.URL
-	ctl.Data["MenuProvinceActive"] = "active"
-	ctl.GetList()
+	action := ctl.Input().Get("action")
+	switch action {
+	case "create":
+		ctl.Create()
+	case "edit":
+		ctl.Edit()
+	case "detail":
+		ctl.Detail()
+	default:
+		ctl.GetList()
+	}
 	// 标题合成
 	b := bytes.Buffer{}
 	b.WriteString(ctl.PageName)
 	b.WriteString("\\")
 	b.WriteString(ctl.PageAction)
 	ctl.Data["PageName"] = b.String()
+	ctl.Data["URL"] = ctl.URL
+	ctl.Data["MenuAddressProvinceActive"] = "active"
 }
-func (ctl *ProvinceController) PostList() {
-	query := make(map[string]interface{})
-	exclude := make(map[string]interface{})
-	cond := make(map[string]map[string]interface{})
 
-	fields := make([]string, 0, 0)
-	sortby := make([]string, 0, 1)
-	order := make([]string, 0, 1)
-	offset, _ := ctl.GetInt64("offset")
-	limit, _ := ctl.GetInt64("limit")
-	name := strings.TrimSpace(ctl.GetString("Name"))
-	if name != "" {
-		query["Name"] = name
+// Put 修改产品款式
+func (ctl *AddressProvinceController) Put() {
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	province := new(md.AddressProvince)
+	var (
+		err    error
+		id     int64
+		errs   []error
+		debugs []string
+	)
+	if err = json.Unmarshal([]byte(postData), province); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(province)).Type().Name()
+		if id, err = md.AddAddressProvince(province, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
+			}
+			result["debug"] = debugs
+		}
 	}
-	orderStr := ctl.GetString("order")
-	sortStr := ctl.GetString("sort")
-	if orderStr != "" && sortStr != "" {
-		sortby = append(sortby, sortStr)
-		order = append(order, orderStr)
-	} else {
-		sortby = append(sortby, "Id")
-		order = append(order, "desc")
+	if err != nil {
+		result["code"] = "failed"
+		debugs = append(debugs, err.Error())
+		result["debug"] = debugs
 	}
-	if result, err := ctl.provinceList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
-		ctl.Data["json"] = result
-	}
+	ctl.Data["json"] = result
 	ctl.ServeJSON()
-
 }
-func (ctl *ProvinceController) Validator() {
-	name := ctl.GetString("Name")
-	name = strings.TrimSpace(name)
+func (ctl *AddressProvinceController) PostCreate() {
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	province := new(md.AddressProvince)
+	var (
+		err error
+		id  int64
+	)
+	if err = json.Unmarshal([]byte(postData), province); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(province)).Type().Name()
+		if id, err = md.AddAddressProvince(province, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			result["debug"] = err.Error()
+		}
+	} else {
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
+}
+func (ctl *AddressProvinceController) Edit() {
+	id := ctl.Ctx.Input.Param(":id")
+	if id != "" {
+		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
+			if province, err := md.GetAddressProvinceByID(idInt64); err == nil {
+				ctl.PageAction = province.Name
+				ctl.Data["Province"] = province
+			}
+		}
+	}
+	ctl.Data["Action"] = "edit"
+	ctl.Data["RecordID"] = id
+	ctl.Data["FormField"] = "form-edit"
+	ctl.Layout = "base/base.html"
+	ctl.TplName = "address/address_province_form.html"
+}
+func (ctl *AddressProvinceController) Detail() {
+	ctl.Edit()
+	ctl.Data["Readonly"] = true
+	ctl.Data["FormTreeField"] = "form-tree-edit"
+	ctl.Data["Action"] = "detail"
+}
+func (ctl *AddressProvinceController) Create() {
+	ctl.Data["Action"] = "create"
+	ctl.Data["Readonly"] = false
+	ctl.PageAction = "创建"
+	ctl.Layout = "base/base.html"
+	ctl.Data["FormField"] = "form-create"
+	ctl.Data["FormTreeField"] = "form-tree-create"
+	ctl.TplName = "address/address_province_form.html"
+}
+
+func (ctl *AddressProvinceController) Validator() {
+	name := strings.TrimSpace(ctl.GetString("Name"))
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
-	obj, err := md.GetPositionByName(name)
+	obj, err := md.GetAddressProvinceByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
@@ -90,23 +169,22 @@ func (ctl *ProvinceController) Validator() {
 	ctl.ServeJSON()
 }
 
-// 获得符合要求的地区数据
-func (ctl *ProvinceController) provinceList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+// 获得符合要求的款式数据
+func (ctl *AddressProvinceController) addressTemplateList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
-	var provinces []md.AddressProvince
-	paginator, provinces, err := md.GetAllAddressProvince(query, exclude, condMap, fields, sortby, order, offset, limit)
+	var arrs []md.AddressProvince
+	paginator, arrs, err := md.GetAllAddressProvince(query, exclude, cond, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
-		// result["recordsFiltered"] = paginator.TotalCount
+		//使用多线程来处理数据，待修改
 		tableLines := make([]interface{}, 0, 4)
-		for _, province := range provinces {
+		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["Name"] = province.Name
-			oneLine["Country"] = province.Country.Name
-			oneLine["ID"] = province.ID
-			oneLine["id"] = province.ID
-
+			oneLine["Name"] = line.Name
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
+			oneLine["Country"] = line.Country.Name
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -117,14 +195,74 @@ func (ctl *ProvinceController) provinceList(query map[string]interface{}, exclud
 	}
 	return result, err
 }
+func (ctl *AddressProvinceController) PostList() {
+	query := make(map[string]interface{})
+	exclude := make(map[string]interface{})
+	cond := make(map[string]map[string]interface{})
+	condAnd := make(map[string]interface{})
+	condOr := make(map[string]interface{})
+	filterMap := make(map[string]interface{})
+	fields := make([]string, 0, 0)
+	sortby := make([]string, 0, 1)
+	order := make([]string, 0, 1)
+	if CountryID, err := ctl.GetInt64("CountryID"); err == nil {
+		query["Country.Id"] = CountryID
+	}
+	if ID, err := ctl.GetInt64("Id"); err == nil {
+		query["Id"] = ID
+	}
+	if name := strings.TrimSpace(ctl.GetString("Name")); name != "" {
+		condAnd["Name.icontains"] = name
+	}
+	filter := ctl.GetString("filter")
+	if filter != "" {
+		json.Unmarshal([]byte(filter), &filterMap)
+	}
+	// 对filterMap进行判断
+	if filterActive, ok := filterMap["Active"]; ok {
+		condAnd["Active"] = filterActive
+	}
+	if filterSaleOk, ok := filterMap["SaleOk"]; ok {
+		condAnd["SaleOk"] = filterSaleOk
+	}
+	if filterName, ok := filterMap["Name"]; ok {
+		filterName = strings.TrimSpace(filterName.(string))
+		if filterName != "" {
+			condAnd["Name.icontains"] = filterName
+		}
+	}
+	if len(condAnd) > 0 {
+		cond["and"] = condAnd
+	}
+	if len(condOr) > 0 {
+		cond["or"] = condOr
+	}
+	offset, _ := ctl.GetInt64("offset")
+	limit, _ := ctl.GetInt64("limit")
+	orderStr := ctl.GetString("order")
+	sortStr := ctl.GetString("sort")
+	if orderStr != "" && sortStr != "" {
+		sortby = append(sortby, sortStr)
+		order = append(order, orderStr)
+	} else {
+		sortby = append(sortby, "Id")
+		order = append(order, "desc")
 
-func (ctl *ProvinceController) GetList() {
+	}
+	if result, err := ctl.addressTemplateList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		ctl.Data["json"] = result
+	}
+	ctl.ServeJSON()
+
+}
+
+func (ctl *AddressProvinceController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {
 		ctl.Data["ViewType"] = "table"
 	}
 	ctl.PageAction = "列表"
-	ctl.Data["tableId"] = "table-province"
+	ctl.Data["tableId"] = "table-address-province"
 	ctl.Layout = "base/base_list_view.html"
-	ctl.TplName = "address/province_list_search.html"
+	ctl.TplName = "address/address_province_list_search.html"
 }

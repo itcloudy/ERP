@@ -1,7 +1,12 @@
 package models
 
-import "time"
+import (
+	"time"
 
+	"github.com/astaxie/beego/orm"
+)
+
+// StockLocation 库位
 type StockLocation struct {
 	ID               int64            `orm:"column(id);pk;auto" json:"id"`         //主键
 	CreateUser       *User            `orm:"rel(fk);null" json:"-"`                //创建者
@@ -21,4 +26,8 @@ type StockLocation struct {
 	Posz             int64            `json:"Posz"`                                //层
 	PutawayStrategy  string           ``                                           //入库策略,需后续改为many2one
 	RemovalStrategyd string           ``                                           //出库策略需后续改为many2one
+}
+
+func init() {
+	orm.RegisterModel(new(StockLocation))
 }

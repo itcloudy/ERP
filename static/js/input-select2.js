@@ -89,6 +89,8 @@ $(function() {
         });
 
     };
+
+    select2AjaxData(".select-company", "/company/?action=search"); // 选择公司
     select2AjaxData(".select-department", "/department/?action=search"); // 选择部门
     select2AjaxData(".select-position", "/position/?action=search"); // 选择职位
     select2AjaxData(".select-group", "/group/?action=search", true); // 选择分组
@@ -100,6 +102,111 @@ $(function() {
     select2AjaxData(".select-product-uom", "/product/uom/?action=search"); // 选择产品单位
     select2AjaxData(".select-product-uom-category", "/product/uomcateg/?action=search"); //计量单位类别
     selectStaticData(".select-product-uom-category-type", [{ id: 1, name: '小于参考计量单位' }, { id: 2, name: '参考计量单位' }, { id: 3, name: '大于参考计量单位' }]); // 产品类型
+    //地址选择
+    var addressSelectData = function(selectClass, ajaxUrl) {
+        $(selectClass).select2({
+            width: "off",
+            ajax: {
+                url: ajaxUrl,
+                dataType: 'json',
+                delay: 250,
+                type: "POST",
+                data: function(params) {
+                    var selectParams = {
+                        Name: params.term || "", // search term
+                        DefaultCode: params.term || "",
+                        offset: (params.page || 0) * LIMIT,
+                        limit: LIMIT,
+                    };
+                    var xsrf = $("input[name ='_xsrf']");
+                    if (xsrf.length > 0) {
+                        selectParams._xsrf = xsrf[0].value;
+                    }
+                    var selectId = this.attr("id");
+                    if (selectId == "district") {
+                        var city = $("#city");
+                        if (city.length < 1) {
+                            toastr.error("没有城市选项", "错误");
+                            return;
+                        } else {
+                            city = city.val();
+                            if (city == null || city == undefined) {
+                                toastr.error("请安装“国家->省份->城市->区县”的顺序选择", "错误");
+                                return;
+                            } else {
+                                selectParams.CityID = parseInt(city);
+                            }
+                        }
+                    } else if (selectId == "city") {
+                        var province = $("#province");
+                        if (province.length < 1) {
+                            toastr.error("没有省份选项", "错误");
+                            return;
+                        } else {
+                            province = province.val();
+                            if (province == null || province == undefined) {
+                                toastr.error("请安装“国家->省份->城市->区县”的顺序选择", "错误");
+                                return;
+                            } else {
+                                selectParams.ProvinceID = parseInt(province);
+                            }
+                        }
+                    } else if (selectId == "province") {
+                        var country = $("#country");
+                        if (country.length < 1) {
+                            toastr.error("没有国家选项", "错误");
+                            return;
+                        } else {
+                            country = country.val();
+                            if (country == null || country == undefined) {
+                                toastr.error("请安装“国家->省份->城市->区县”的顺序选择", "错误");
+                                return;
+                            } else {
+                                selectParams.CountryID = parseInt(country);
+                            }
+                        }
+                    }
+                    return selectParams
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 0;
+                    var paginator = JSON.parse(data.paginator);
+                    return {
+                        results: data.data,
+                        pagination: {
+                            more: paginator.totalPage > paginator.currentPage
+                        }
+                    };
+                }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 0,
+            templateResult: function(repo) {
+                'use strict';
+                if (repo.loading) { return repo.text; }
+                var html = "";
+                html = "<p>" + repo.Name + "</p>";
+                return html;
+            },
+            templateSelection: function(repo) {
+                'use strict';
+                var html = "";
+                if (repo.Name != undefined) {
+                    html = "<p>" + repo.Name + "</p>";
+                } else {
+                    html = repo.text;
+                }
+
+                return html;
+            }
+        });
+    };
+    addressSelectData(".select-address-country", "/address/country/?action=search"); // 选择国家
+    addressSelectData(".select-address-province", "/address/province/?action=search"); // 选择省份
+    addressSelectData(".select-address-city", "/address/city/?action=search"); // 选择城市
+    addressSelectData(".select-address-district", "/address/district/?action=search"); // 选择地区
     // 根据款式创建产品，款式修改后，需要同时更新产品的类别，销售和采购单位
     $(".select-product-template").select2({
         width: "off",

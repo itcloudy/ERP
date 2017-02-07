@@ -28,9 +28,30 @@ func init() {
 
 // AddAddressDistrict insert a new AddressDistrict into database and returns
 // last inserted ID on success.
-func AddAddressDistrict(obj *AddressDistrict) (id int64, err error) {
+func AddAddressDistrict(obj *AddressDistrict, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
 	id, err = o.Insert(obj)
+	if err != nil {
+		return 0, err
+	} else {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
@@ -40,20 +61,22 @@ func GetAddressDistrictByID(id int64) (obj *AddressDistrict, err error) {
 	o := orm.NewOrm()
 	obj = &AddressDistrict{ID: id}
 	if err = o.Read(obj); err == nil {
-		return obj, nil
+		return obj, err
 	}
 	return nil, err
 }
 
 // GetAddressDistrictByName retrieves AddressDistrict by Name. Returns error if
 // Name doesn't exist
-func GetAddressDistrictByName(name string) (obj *AddressDistrict, err error) {
+func GetAddressDistrictByName(name string) (*AddressDistrict, error) {
 	o := orm.NewOrm()
-	obj = &AddressDistrict{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
+	var obj AddressDistrict
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }
 
 // GetAllAddressDistrict retrieves all AddressDistrict matches certain condition. Returns empty list if
@@ -68,6 +91,7 @@ func GetAllAddressDistrict(query map[string]interface{}, exclude map[string]inte
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(AddressDistrict))
 	qs = qs.RelatedSel()
@@ -101,7 +125,6 @@ func GetAllAddressDistrict(query map[string]interface{}, exclude map[string]inte
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -112,7 +135,7 @@ func GetAllAddressDistrict(query map[string]interface{}, exclude map[string]inte
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -126,7 +149,7 @@ func GetAllAddressDistrict(query map[string]interface{}, exclude map[string]inte
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -140,6 +163,7 @@ func GetAllAddressDistrict(query map[string]interface{}, exclude map[string]inte
 			return paginator, nil, errors.New("Error: unused 'order' fields")
 		}
 	}
+
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
 		paginator = utils.GenPaginator(limit, offset, cnt)
@@ -147,22 +171,22 @@ func GetAllAddressDistrict(query map[string]interface{}, exclude map[string]inte
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
+	// for i, _ := range objArrs {
+	// 	o.LoadRelated(&objArrs[i], "AttributeLines")
+	// }
 	return paginator, objArrs, err
 }
 
-// UpdateAddressDistrictByID updates AddressDistrict by ID and returns error if
+// UpdateAddressDistrict updates AddressDistrict by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateAddressDistrictByID(m *AddressDistrict) (err error) {
+func UpdateAddressDistrict(obj *AddressDistrict, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := AddressDistrict{ID: m.ID}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return
+	return obj.ID, err
 }
 
 // DeleteAddressDistrict deletes AddressDistrict by ID and returns error if

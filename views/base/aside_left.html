@@ -19,7 +19,7 @@
         <ul class="sidebar-menu">
             <!--<li class="header text-center">菜单</li>-->
             <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}
-            {{.MenuCountryActive}}{{.MenuProvinceActive}}{{.MenuCityActive}}{{.MenuDistrictActive}}{{.MenuUserActive}}
+            {{.MenuAddressCountryActive}}{{.MenuAddressProvinceActive}}{{.MenuAddressCityActive}}{{.MenuAddressDistrictActive}}{{.MenuUserActive}}
             {{.MenuGroupActive}}{{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}{{.MenuSequenceActive}}">
                 <a href="#">
                     <i class="fa fa-gears"></i>
@@ -43,12 +43,12 @@
                         </ul>
                     </li>
                     <li class="{{.MenuUserActive}}"><a href="/user/"><i class="fa fa-users" aria-hidden="true"></i></i>用户管理</a></li>
-                    <li class="treeview {{.MenuCountryActive}}{{.MenuProvinceActive}}{{.MenuCityActive}}{{.MenuDistrictActive}}"><a href="#"><i class="fa fa-building" aria-hidden="true"></i></i>地址管理</a>
+                    <li class="treeview {{.MenuAddressCountryActive}}{{.MenuAddressProvinceActive}}{{.MenuAddressCityActive}}{{.MenuAddressDistrictActive}}"><a href="#"><i class="fa fa-building" aria-hidden="true"></i></i>地址管理</a>
                         <ul class="treeview-menu">
-                            <li class="{{.MenuCountryActive}}"><a href="/address/country/"><i class="fa fa-check-circle-o"></i>国家管理</a></li>
-                            <li class="{{.MenuProvinceActive}}"><a href="/address/province/"><i class="fa fa-arrow-circle-right"></i>省份管理</a></li>
-                            <li class="{{.MenuCityActive}}"><a href="/address/city/"><i class="fa fa-arrow-circle-right"></i>城市管理</a></li>
-                            <li class="{{.MenuDistrictActive}}"><a href="/address/district/"><i class="fa fa-arrow-circle-right"></i>区县管理</a></li>
+                            <li class="{{.MenuAddressCountryActive}}"><a href="/address/country/"><i class="fa fa-check-circle-o"></i>国家管理</a></li>
+                            <li class="{{.MenuAddressProvinceActive}}"><a href="/address/province/"><i class="fa fa-arrow-circle-right"></i>省份管理</a></li>
+                            <li class="{{.MenuAddressCityActive}}"><a href="/address/city/"><i class="fa fa-arrow-circle-right"></i>城市管理</a></li>
+                            <li class="{{.MenuAddressDistrictActive}}"><a href="/address/district/"><i class="fa fa-arrow-circle-right"></i>区县管理</a></li>
                         </ul>
                     </li>
                     <li class="treeview {{.MenuSequenceActive}}">
@@ -116,13 +116,15 @@
                     <li class="{{.MenuPurchaseReportActive}}"><a href="/purchase/report/"><i class="fa fa-bar-chart"></i>采购报表</a></li>
                 </ul>
             </li>
-            <li class="treeview {{.MenuStockSettingActive}}">
+            <li class="treeview {{.MenuStockWarehouseActive}}">
                 <a href="#">
                     <i class="fa fa-database" aria-hidden="true"></i><span>仓库管理</span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="{{.MenuStockSettingActive}}"><a href="/stock/config/"><i class="fa fa-gears"></i>设置</a></li>
-                    <li class="{{.MenuStockReportActive}}"><a href="/stock/report/"><i class="fa fa-pie-chart"></i>库存报表</a></li>
+
+                    <li class="{{.MenuStockWarehouseActive}}"><a href="/stock/warehouse/"><i class="fa fa-bars"></i>仓库管理</a></li>
+
+                    <li class="{{.MenuStockReportActive}}"><a href="#"><i class="fa fa-pie-chart"></i>库存报表</a></li>
                 </ul>
             </li>
             <li class="treeview {{.MenuTemplateActive}}">

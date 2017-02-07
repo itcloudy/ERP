@@ -23,7 +23,7 @@ type Company struct {
 	Parent     *Company         `orm:"rel(fk);null" json:"parent"`           //上级公司
 	Department []*Department    `orm:"reverse(many)" json:"departments"`     //部门
 	Country    *AddressCountry  `orm:"rel(fk);null" json:"country"`          //国家
-	Province   *AddressProvince `orm:"rel(fk);null" json:"province"`         //省份
+	Province   *Company         `orm:"rel(fk);null" json:"province"`         //省份
 	City       *AddressCity     `orm:"rel(fk);null" json:"city"`             //城市
 	District   *AddressDistrict `orm:"rel(fk);null" json:"district"`         //区县
 	Street     string           `orm:"default(\"\")" json:"street"`          //街道
@@ -35,9 +35,30 @@ func init() {
 
 // AddCompany insert a new Company into database and returns
 // last inserted ID on success.
-func AddCompany(obj *Company) (id int64, err error) {
+func AddCompany(obj *Company, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
 	id, err = o.Insert(obj)
+	if err != nil {
+		return 0, err
+	} else {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
@@ -47,20 +68,24 @@ func GetCompanyByID(id int64) (obj *Company, err error) {
 	o := orm.NewOrm()
 	obj = &Company{ID: id}
 	if err = o.Read(obj); err == nil {
-		return obj, nil
+		o.LoadRelated(obj, "Department")
+		o.LoadRelated(obj, "Children")
+		return obj, err
 	}
 	return nil, err
 }
 
 // GetCompanyByName retrieves Company by Name. Returns error if
 // Name doesn't exist
-func GetCompanyByName(name string) (obj *Company, err error) {
+func GetCompanyByName(name string) (*Company, error) {
 	o := orm.NewOrm()
-	obj = &Company{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
+	var obj Company
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }
 
 // GetAllCompany retrieves all Company matches certain condition. Returns empty list if
@@ -75,6 +100,7 @@ func GetAllCompany(query map[string]interface{}, exclude map[string]interface{},
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Company))
 	qs = qs.RelatedSel()
@@ -108,7 +134,6 @@ func GetAllCompany(query map[string]interface{}, exclude map[string]interface{},
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -119,7 +144,7 @@ func GetAllCompany(query map[string]interface{}, exclude map[string]interface{},
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -133,7 +158,7 @@ func GetAllCompany(query map[string]interface{}, exclude map[string]interface{},
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -155,22 +180,22 @@ func GetAllCompany(query map[string]interface{}, exclude map[string]interface{},
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
+	// for i, _ := range objArrs {
+	// 	o.LoadRelated(&objArrs[i], "AttributeLines")
+	// }
 	return paginator, objArrs, err
 }
 
-// UpdateCompanyByID updates Company by ID and returns error if
+// UpdateCompany updates Company by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateCompanyByID(m *Company) (err error) {
+func UpdateCompany(obj *Company, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := Company{ID: m.ID}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return
+	return obj.ID, err
 }
 
 // DeleteCompany deletes Company by ID and returns error if

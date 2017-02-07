@@ -86,7 +86,7 @@ func initCountry(filename string, user *md.User) {
 			var initCountries InitCountries
 			if xml.Unmarshal(data, &initCountries) == nil {
 				for _, k := range initCountries.Countries {
-					md.AddAddressCountry(&k)
+					md.AddAddressCountry(&k, user)
 				}
 			}
 		}
@@ -104,7 +104,7 @@ func initProvince(filename string, user *md.User) {
 					if country, err := md.GetAddressCountryByID(pid); err == nil {
 						province.Country = country
 						province.Name = k.Name
-						md.AddAddressProvince(&province)
+						md.AddAddressProvince(&province, user)
 					}
 				}
 			}
@@ -123,7 +123,7 @@ func initCity(filename string, user *md.User) {
 					if province, e := md.GetAddressProvinceByID(pid); e == nil {
 						city.Province = province
 						city.Name = k.Name
-						md.AddAddressCity(&city)
+						md.AddAddressCity(&city, user)
 					}
 				}
 			}
@@ -145,7 +145,7 @@ func initDistrict(filename string, user *md.User) {
 					if city, e := md.GetAddressCityByID(pid); e == nil {
 						district.City = city
 						district.Name = k.Name
-						md.AddAddressDistrict(&district)
+						md.AddAddressDistrict(&district, user)
 					}
 				}
 			}

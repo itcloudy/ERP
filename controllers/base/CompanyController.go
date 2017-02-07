@@ -13,8 +13,9 @@ type CompanyController struct {
 	BaseController
 }
 
-// Post 请求 公司
 func (ctl *CompanyController) Post() {
+	ctl.URL = "/company/"
+	ctl.Data["URL"] = ctl.URL
 	action := ctl.Input().Get("action")
 	switch action {
 	case "validator":
@@ -27,32 +28,9 @@ func (ctl *CompanyController) Post() {
 		ctl.PostList()
 	}
 }
-
-// Put request
-func (ctl *CompanyController) Put() {
-	id := ctl.Ctx.Input.Param(":id")
-	ctl.URL = "/company/"
-	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if company, err := md.GetCompanyByID(idInt64); err == nil {
-			if err := ctl.ParseForm(&company); err == nil {
-				if parentID, err := ctl.GetInt64("parent"); err == nil {
-					if parent, err := md.GetCompanyByID(parentID); err == nil {
-						company.Parent = parent
-					}
-				}
-				if err := md.UpdateCompanyByID(company); err == nil {
-					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
-				}
-			}
-		}
-	}
-	ctl.Redirect(ctl.URL+id+"?action=edit", 302)
-
-}
-
-// Get request
 func (ctl *CompanyController) Get() {
-	ctl.PageName = "公司管理管理"
+	ctl.URL = "/company/"
+	ctl.PageName = "公司管理"
 	action := ctl.Input().Get("action")
 	switch action {
 	case "create":
@@ -70,80 +48,106 @@ func (ctl *CompanyController) Get() {
 	b.WriteString("\\")
 	b.WriteString(ctl.PageAction)
 	ctl.Data["PageName"] = b.String()
-	ctl.URL = "/company/"
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuCompanyActive"] = "active"
 }
 
-// Edit company
+// Put 修改产品款式
+func (ctl *CompanyController) Put() {
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	company := new(md.Company)
+	var (
+		err    error
+		id     int64
+		errs   []error
+		debugs []string
+	)
+	if err = json.Unmarshal([]byte(postData), company); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(company)).Type().Name()
+		if id, err = md.AddCompany(company, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
+			}
+			result["debug"] = debugs
+		}
+	}
+	if err != nil {
+		result["code"] = "failed"
+		debugs = append(debugs, err.Error())
+		result["debug"] = debugs
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
+}
+func (ctl *CompanyController) PostCreate() {
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	company := new(md.Company)
+	var (
+		err error
+		id  int64
+	)
+	if err = json.Unmarshal([]byte(postData), company); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(company)).Type().Name()
+		if id, err = md.AddCompany(company, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			result["debug"] = err.Error()
+		}
+	} else {
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
+}
 func (ctl *CompanyController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	companyInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-
 			if company, err := md.GetCompanyByID(idInt64); err == nil {
-
-				companyInfo["name"] = company.Name
-				parent := make(map[string]interface{})
-				if company.Parent != nil {
-					parent["id"] = company.Parent.ID
-					parent["name"] = company.Parent.Name
-				}
-				companyInfo["parent"] = parent
+				ctl.PageAction = company.Name
+				ctl.Data["Province"] = company
 			}
 		}
 	}
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["Category"] = companyInfo
+	ctl.Data["FormField"] = "form-edit"
 	ctl.Layout = "base/base.html"
-	ctl.PageAction = "编辑"
-	ctl.TplName = "user/company_form.html"
+	ctl.TplName = "address/address_company_form.html"
 }
-
-// Detail display company info
 func (ctl *CompanyController) Detail() {
-	//获取信息一样，直接调用Edit
 	ctl.Edit()
-	ctl.PageAction = "详情"
 	ctl.Data["Readonly"] = true
+	ctl.Data["FormTreeField"] = "form-tree-edit"
 	ctl.Data["Action"] = "detail"
 }
-
-//PostCreate 请求创建产品分类
-func (ctl *CompanyController) PostCreate() {
-	company := new(md.Company)
-	if err := ctl.ParseForm(company); err == nil {
-		if parentID, err := ctl.GetInt64("parent"); err == nil {
-			if parent, err := md.GetCompanyByID(parentID); err == nil {
-				company.Parent = parent
-			}
-		}
-		if id, err := md.AddCompany(company); err == nil {
-			ctl.Redirect("/company/"+strconv.FormatInt(id, 10)+"?action=detail", 302)
-		} else {
-			ctl.Get()
-		}
-	} else {
-		ctl.Get()
-	}
-}
-
-// Create page
 func (ctl *CompanyController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
 	ctl.Layout = "base/base.html"
-	ctl.TplName = "user/company_form.html"
+	ctl.Data["FormField"] = "form-create"
+	ctl.Data["FormTreeField"] = "form-tree-create"
+	ctl.TplName = "address/address_company_form.html"
 }
 
-// Validator js validator
 func (ctl *CompanyController) Validator() {
-	name := ctl.GetString("name")
+	name := strings.TrimSpace(ctl.GetString("Name"))
 	recordID, _ := ctl.GetInt64("recordID")
-	name = strings.TrimSpace(name)
 	result := make(map[string]bool)
 	obj, err := md.GetCompanyByName(name)
 	if err != nil {
@@ -165,26 +169,22 @@ func (ctl *CompanyController) Validator() {
 	ctl.ServeJSON()
 }
 
-// 获得符合要求的城市数据
-func (ctl *CompanyController) companyList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+// 获得符合要求的款式数据
+func (ctl *CompanyController) addressTemplateList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.Company
-	paginator, arrs, err := md.GetAllCompany(query, exclude, condMap, fields, sortby, order, offset, limit)
+	paginator, arrs, err := md.GetAllCompany(query, exclude, cond, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
-		// result["recordsFiltered"] = paginator.TotalCount
+		//使用多线程来处理数据，待修改
 		tableLines := make([]interface{}, 0, 4)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["name"] = line.Name
-			if line.Parent != nil {
-				oneLine["parent"] = line.Parent.Name
-			} else {
-				oneLine["parent"] = "-"
-			}
+			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			oneLine["Country"] = line.Country.Name
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -195,16 +195,45 @@ func (ctl *CompanyController) companyList(query map[string]interface{}, exclude 
 	}
 	return result, err
 }
-
-// PostList post request  json response
 func (ctl *CompanyController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
-
+	condAnd := make(map[string]interface{})
+	condOr := make(map[string]interface{})
+	filterMap := make(map[string]interface{})
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 0, 1)
 	order := make([]string, 0, 1)
+	if ID, err := ctl.GetInt64("Id"); err == nil {
+		query["Id"] = ID
+	}
+	if name := strings.TrimSpace(ctl.GetString("Name")); name != "" {
+		condAnd["Name.icontains"] = name
+	}
+	filter := ctl.GetString("filter")
+	if filter != "" {
+		json.Unmarshal([]byte(filter), &filterMap)
+	}
+	// 对filterMap进行判断
+	if filterActive, ok := filterMap["Active"]; ok {
+		condAnd["Active"] = filterActive
+	}
+	if filterSaleOk, ok := filterMap["SaleOk"]; ok {
+		condAnd["SaleOk"] = filterSaleOk
+	}
+	if filterName, ok := filterMap["Name"]; ok {
+		filterName = strings.TrimSpace(filterName.(string))
+		if filterName != "" {
+			condAnd["Name.icontains"] = filterName
+		}
+	}
+	if len(condAnd) > 0 {
+		cond["and"] = condAnd
+	}
+	if len(condOr) > 0 {
+		cond["or"] = condOr
+	}
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
 	orderStr := ctl.GetString("order")
@@ -215,22 +244,22 @@ func (ctl *CompanyController) PostList() {
 	} else {
 		sortby = append(sortby, "Id")
 		order = append(order, "desc")
+
 	}
-	if result, err := ctl.companyList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.addressTemplateList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()
 
 }
 
-// GetList display company table
 func (ctl *CompanyController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {
 		ctl.Data["ViewType"] = "table"
 	}
 	ctl.PageAction = "列表"
-	ctl.Data["tableId"] = "table-company"
+	ctl.Data["tableId"] = "table-address-company"
 	ctl.Layout = "base/base_list_view.html"
-	ctl.TplName = "user/company_list_search.html"
+	ctl.TplName = "address/address_company_list_search.html"
 }

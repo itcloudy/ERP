@@ -30,9 +30,30 @@ func init() {
 
 // AddAddressProvince insert a new AddressProvince into database and returns
 // last inserted ID on success.
-func AddAddressProvince(obj *AddressProvince) (id int64, err error) {
+func AddAddressProvince(obj *AddressProvince, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
 	id, err = o.Insert(obj)
+	if err != nil {
+		return 0, err
+	} else {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
@@ -42,20 +63,24 @@ func GetAddressProvinceByID(id int64) (obj *AddressProvince, err error) {
 	o := orm.NewOrm()
 	obj = &AddressProvince{ID: id}
 	if err = o.Read(obj); err == nil {
-		return obj, nil
+		o.LoadRelated(obj, "Citys")
+		o.LoadRelated(obj, "Country")
+		return obj, err
 	}
 	return nil, err
 }
 
 // GetAddressProvinceByName retrieves AddressProvince by Name. Returns error if
 // Name doesn't exist
-func GetAddressProvinceByName(name string) (obj *AddressProvince, err error) {
+func GetAddressProvinceByName(name string) (*AddressProvince, error) {
 	o := orm.NewOrm()
-	obj = &AddressProvince{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
+	var obj AddressProvince
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }
 
 // GetAllAddressProvince retrieves all AddressProvince matches certain condition. Returns empty list if
@@ -70,6 +95,7 @@ func GetAllAddressProvince(query map[string]interface{}, exclude map[string]inte
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(AddressProvince))
 	qs = qs.RelatedSel()
@@ -103,7 +129,6 @@ func GetAllAddressProvince(query map[string]interface{}, exclude map[string]inte
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -114,7 +139,7 @@ func GetAllAddressProvince(query map[string]interface{}, exclude map[string]inte
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -128,7 +153,7 @@ func GetAllAddressProvince(query map[string]interface{}, exclude map[string]inte
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -150,22 +175,22 @@ func GetAllAddressProvince(query map[string]interface{}, exclude map[string]inte
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
+	// for i, _ := range objArrs {
+	// 	o.LoadRelated(&objArrs[i], "AttributeLines")
+	// }
 	return paginator, objArrs, err
 }
 
-// UpdateAddressProvinceByID updates AddressProvince by ID and returns error if
+// UpdateAddressProvince updates AddressProvince by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateAddressProvinceByID(m *AddressProvince) (err error) {
+func UpdateAddressProvince(obj *AddressProvince, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := AddressProvince{ID: m.ID}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return
+	return obj.ID, err
 }
 
 // DeleteAddressProvince deletes AddressProvince by ID and returns error if

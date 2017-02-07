@@ -318,7 +318,7 @@ displayTable("#table-sequence", "/sequence", [
     }
 ]);
 //国家表
-displayTable("#table-country", "/address/country/", [
+displayTable("#table-address-country", "/address/country/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
     { title: "国家", field: 'Name', sortable: true, order: "desc" },
     {
@@ -335,7 +335,7 @@ displayTable("#table-country", "/address/country/", [
     }
 ]);
 //省份表
-displayTable("#table-province", "/address/province/", [
+displayTable("#table-address-province", "/address/province/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
     { title: "省份", field: 'Name', sortable: true, order: "desc" },
     { title: "国家", field: 'Country', sortable: true, order: "desc" },
@@ -354,7 +354,7 @@ displayTable("#table-province", "/address/province/", [
 ]);
 
 //城市表
-displayTable("#table-city", "/address/city/", [
+displayTable("#table-address-city", "/address/city/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
     { title: "城市", field: 'Name', sortable: true, order: "desc" },
     { title: "省份", field: 'Province', sortable: true, order: "desc" },
@@ -373,7 +373,7 @@ displayTable("#table-city", "/address/city/", [
     }
 ]);
 //区县表
-displayTable("#table-district", "/address/district/", [
+displayTable("#table-address-district", "/address/district/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
     { title: "地区", field: 'Name', sortable: true, order: "desc" },
     { title: "城市", field: 'City', sortable: true, order: "desc" },
