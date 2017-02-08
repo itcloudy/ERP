@@ -1094,4 +1094,105 @@ $(function() {
             }
         }
     });
+    // 仓库管理
+    BootstrapValidator("#stockWarehouseForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "仓库名称不能为空"
+                },
+                remote: {
+                    url: "/stock/warehouse/",
+                    message: "仓库名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var xsrf = $("input[name ='_xsrf']")
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                },
+            },
+        },
+        Company: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "所属公司不能为空"
+                },
+            }
+        },
+        Code: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "仓库编码不能为空"
+                },
+                remote: {
+                    url: "/stock/warehouse/",
+                    message: "仓库编码已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var xsrf = $("input[name ='_xsrf']")
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                },
+            },
+        },
+        Province: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "省份不能为空"
+                }
+            }
+        },
+        City: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "城市不能为空"
+                }
+            }
+        },
+        District: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "区县不能为空"
+                }
+            }
+        },
+        Street: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "街道不能为空"
+                }
+            }
+        }
+    });
 });

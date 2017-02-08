@@ -8,13 +8,13 @@ import (
 	"strings"
 )
 
-// PermissionController 权限
-type PermissionController struct {
+// MenuController 菜单
+type MenuController struct {
 	BaseController
 }
 
-func (ctl *PermissionController) Post() {
-	ctl.URL = "/permission/"
+func (ctl *MenuController) Post() {
+	ctl.URL = "/menu/"
 	ctl.Data["URL"] = ctl.URL
 	action := ctl.Input().Get("action")
 	switch action {
@@ -28,9 +28,9 @@ func (ctl *PermissionController) Post() {
 		ctl.PostList()
 	}
 }
-func (ctl *PermissionController) Get() {
-	ctl.URL = "/permission/"
-	ctl.PageName = "权限管理"
+func (ctl *MenuController) Get() {
+	ctl.URL = "/menu/"
+	ctl.PageName = "菜单管理"
 	action := ctl.Input().Get("action")
 	switch action {
 	case "create":
@@ -49,24 +49,24 @@ func (ctl *PermissionController) Get() {
 	b.WriteString(ctl.PageAction)
 	ctl.Data["PageName"] = b.String()
 	ctl.Data["URL"] = ctl.URL
-	ctl.Data["MenuPermissionActive"] = "active"
+	ctl.Data["MenuMenuActive"] = "active"
 }
 
 // Put 修改产品款式
-func (ctl *PermissionController) Put() {
+func (ctl *MenuController) Put() {
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
-	permission := new(md.Permission)
+	menu := new(md.Menu)
 	var (
 		err    error
 		id     int64
 		errs   []error
 		debugs []string
 	)
-	if err = json.Unmarshal([]byte(postData), permission); err == nil {
+	if err = json.Unmarshal([]byte(postData), menu); err == nil {
 		// 获得struct表名
-		// structName := reflect.Indirect(reflect.ValueOf(permission)).Type().Name()
-		if id, err = md.AddPermission(permission, &ctl.User); err == nil {
+		// structName := reflect.Indirect(reflect.ValueOf(menu)).Type().Name()
+		if id, err = md.AddMenu(menu, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
@@ -86,19 +86,19 @@ func (ctl *PermissionController) Put() {
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
-func (ctl *PermissionController) PostCreate() {
+func (ctl *MenuController) PostCreate() {
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
-	permission := new(md.Permission)
+	menu := new(md.Menu)
 	var (
 		err error
 		id  int64
 	)
-	if err = json.Unmarshal([]byte(postData), permission); err == nil {
+	if err = json.Unmarshal([]byte(postData), menu); err == nil {
 		// 获得struct表名
-		// structName := reflect.Indirect(reflect.ValueOf(permission)).Type().Name()
+		// structName := reflect.Indirect(reflect.ValueOf(menu)).Type().Name()
 
-		if id, err = md.AddPermission(permission, &ctl.User); err == nil {
+		if id, err = md.AddMenu(menu, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
@@ -114,13 +114,13 @@ func (ctl *PermissionController) PostCreate() {
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
-func (ctl *PermissionController) Edit() {
+func (ctl *MenuController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-			if permission, err := md.GetPermissionByID(idInt64); err == nil {
-				ctl.PageAction = permission.Name
-				ctl.Data["Permission"] = permission
+			if menu, err := md.GetMenuByID(idInt64); err == nil {
+				ctl.PageAction = menu.Name
+				ctl.Data["Menu"] = menu
 			}
 		}
 	}
@@ -128,29 +128,29 @@ func (ctl *PermissionController) Edit() {
 	ctl.Data["RecordID"] = id
 	ctl.Data["FormField"] = "form-edit"
 	ctl.Layout = "base/base.html"
-	ctl.TplName = "security/permission_form.html"
+	ctl.TplName = "security/menu_form.html"
 }
-func (ctl *PermissionController) Detail() {
+func (ctl *MenuController) Detail() {
 	ctl.Edit()
 	ctl.Data["Readonly"] = true
 	ctl.Data["FormTreeField"] = "form-tree-edit"
 	ctl.Data["Action"] = "detail"
 }
-func (ctl *PermissionController) Create() {
+func (ctl *MenuController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
 	ctl.Layout = "base/base.html"
 	ctl.Data["FormField"] = "form-create"
 	ctl.Data["FormTreeField"] = "form-tree-create"
-	ctl.TplName = "security/permission_form.html"
+	ctl.TplName = "security/menu_form.html"
 }
 
-func (ctl *PermissionController) Validator() {
+func (ctl *MenuController) Validator() {
 	name := strings.TrimSpace(ctl.GetString("Name"))
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
-	obj, err := md.GetPermissionByName(name)
+	obj, err := md.GetMenuByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
@@ -171,10 +171,10 @@ func (ctl *PermissionController) Validator() {
 }
 
 // 获得符合要求的款式数据
-func (ctl *PermissionController) addressTemplateList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *MenuController) addressTemplateList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
-	var arrs []md.Permission
-	paginator, arrs, err := md.GetAllPermission(query, exclude, cond, fields, sortby, order, offset, limit)
+	var arrs []md.Menu
+	paginator, arrs, err := md.GetAllMenu(query, exclude, cond, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -185,20 +185,6 @@ func (ctl *PermissionController) addressTemplateList(query map[string]interface{
 			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
-			if line.Source != nil {
-				b := bytes.Buffer{}
-				b.WriteString(line.Source.Name)
-				b.WriteString("[")
-				b.WriteString(line.Source.ModelName)
-				b.WriteString("]")
-				oneLine["Source"] = b.String()
-			}
-			oneLine["PermCreate"] = line.PermCreate
-			oneLine["PermRead"] = line.PermRead
-			oneLine["PermWrite"] = line.PermWrite
-			oneLine["PermDelete"] = line.PermDelete
-			oneLine["Relation"] = line.Relation
-
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -209,7 +195,7 @@ func (ctl *PermissionController) addressTemplateList(query map[string]interface{
 	}
 	return result, err
 }
-func (ctl *PermissionController) PostList() {
+func (ctl *MenuController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
@@ -269,13 +255,13 @@ func (ctl *PermissionController) PostList() {
 
 }
 
-func (ctl *PermissionController) GetList() {
+func (ctl *MenuController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {
 		ctl.Data["ViewType"] = "table"
 	}
 	ctl.PageAction = "列表"
-	ctl.Data["tableId"] = "table-permission"
+	ctl.Data["tableId"] = "table-menu"
 	ctl.Layout = "base/base_list_view.html"
-	ctl.TplName = "security/permission_list_search.html"
+	ctl.TplName = "security/menu_list_search.html"
 }

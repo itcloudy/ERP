@@ -1,3 +1,17 @@
+//鼠标进入展示详情，离开隐藏详情
+// $('#table-user').on('mouseenter mouseleave', 'tbody>tr',
+//     function(e) {
+//         $(this).find(".detail-icon").trigger("click");
+//     }
+// );
+$(".list-info-table .form-control").change(function(e) {
+    $(".table-diplay-info").bootstrapTable('refresh');
+});
+$("#clearListSearchCond-table").click(function() {
+    $(".table-diplay-info").bootstrapTable('refresh');
+});
+$("#listViewSearch input").on("change", function(e) { console.log(e); });
+
 //tabel视图中使用bootstrap-table来显示数据
 $.extend($.fn.bootstrapTable.defaults, {
     method: "post",
@@ -472,6 +486,23 @@ displayTable("#table-permission", "/permission/", [
         }
     }
 ]);
+displayTable("#table-menu", '/menu/', [
+    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "菜单名", field: 'Name', sortable: true, order: "desc" },
+    { title: "菜单唯一标识", field: 'Identity', sortable: true, order: "desc" },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/menu/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
 //登录记录表
 displayTable("#table-record", "/record/", [
     { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
@@ -536,7 +567,6 @@ displayTable("#table-sequence", "/sequence", [
             return html;
         }
     },
-
     {
         title: "操作",
         align: "center",
@@ -1092,17 +1122,23 @@ displayTable("#table-product-uom", "/product/uom/", [
         }
     }
 ]);
+displayTable("#table-stock-warehouse", "/stock/warehouse/", [
+    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "所属公司", field: 'Company', sortable: true, order: "desc" },
+    { title: "仓库名称", field: 'Name', sortable: true, order: "desc" },
+    { title: "仓库编码", field: 'Code', align: "center", sortable: true, order: "desc" },
+    { title: "仓库地址", field: 'Address' },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
 
-//鼠标进入展示详情，离开隐藏详情
-// $('#table-user').on('mouseenter mouseleave', 'tbody>tr',
-//     function(e) {
-//         $(this).find(".detail-icon").trigger("click");
-//     }
-// );
-$(".list-info-table .form-control").change(function(e) {
-    $(".table-diplay-info").bootstrapTable('refresh');
-});
-$("#clearListSearchCond-table").click(function() {
-    $(".table-diplay-info").bootstrapTable('refresh');
-});
-$("#listViewSearch input").on("change", function(e) { console.log(e); });
+            var html = "";
+            var url = "/stock/warehouse/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);

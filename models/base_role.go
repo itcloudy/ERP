@@ -3,7 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
-	"pms/utils"
+	"goERP/utils"
 	"strings"
 	"time"
 
@@ -20,6 +20,7 @@ type Role struct {
 	Name        string        `orm:"unique" json:"Name"`                   //角色名称
 	Users       []*User       `orm:"rel(m2m)" json:"-"`                    //角色所对应的用户
 	Permissions []*Permission `orm:"reverse(many)"`                        //权限列表
+	Menus       []*Menu       `orm:"rel(m2m)"`                             //用户拥有的角色
 }
 
 func init() {

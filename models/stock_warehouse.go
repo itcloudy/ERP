@@ -3,7 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
-	"pms/utils"
+	"goERP/utils"
 	"strings"
 	"time"
 
@@ -49,6 +49,21 @@ func AddStockWarehouse(obj *StockWarehouse, addUser *User) (id int64, errs []err
 	if err != nil {
 		errs = append(errs, err)
 	}
+	if obj.CompanyID != 0 {
+		obj.Company, _ = GetCompanyByID(obj.CompanyID)
+	}
+	if obj.CountryID != 0 {
+		obj.Country, _ = GetAddressCountryByID(obj.CountryID)
+	}
+	if obj.ProvinceID != 0 {
+		obj.Province, _ = GetAddressProvinceByID(obj.ProvinceID)
+	}
+	if obj.CityID != 0 {
+		obj.City, _ = GetAddressCityByID(obj.CityID)
+	}
+	if obj.DistrictID != 0 {
+		obj.District, _ = GetAddressDistrictByID(obj.DistrictID)
+	}
 	id, err = o.Insert(obj)
 	if err != nil {
 		errs = append(errs, err)
@@ -82,6 +97,11 @@ func GetStockWarehouseByName(name string) (obj *StockWarehouse, err error) {
 	o := orm.NewOrm()
 	obj = &StockWarehouse{Name: name}
 	if err = o.Read(obj); err == nil {
+		o.LoadRelated(obj, "Company")
+		o.LoadRelated(obj, "Country")
+		o.LoadRelated(obj, "Province")
+		o.LoadRelated(obj, "City")
+		o.LoadRelated(obj, "District")
 		return obj, nil
 	}
 	return nil, err
@@ -178,9 +198,6 @@ func GetAllStockWarehouse(query map[string]interface{}, exclude map[string]inter
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
-				for i, _ := range objArrs {
-					o.LoadRelated(&objArrs[i], "ValueIDs")
-				}
 			}
 		}
 	}

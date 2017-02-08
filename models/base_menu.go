@@ -10,30 +10,25 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// Permission  权限控制
-type Permission struct {
-	ID         int64     `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name       string    `orm:"unique" json:"Name"`                   //权限名称
-	Source     *Source   `orm:"rel(fk)"`                              //权限对应的资源
-	PermCreate bool      `orm:"default(true)" json:"PermCreate"`      //权限:增
-	PermRead   bool      `orm:"default(true)" json:"PermRead"`        //权限:查
-	PermWrite  bool      `orm:"default(true)" json:"PermWrite"`       //权限:改
-	PermDelete bool      `orm:"default(false)" json:"PermDelete"`     //权限:删
-	Relation   string    `json:"Relation"`                            //该权限是私有还是角色权限role owner
-	Roles      []*Role   `orm:"rel(m2m)"`                             //拥有该权限的角色
+// Menu  菜单
+type Menu struct {
+	ID         int64     `orm:"column(id);pk;auto" json:"id"`                //主键
+	CreateUser *User     `orm:"rel(fk);null" json:"-"`                       //创建者
+	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                       //最后更新者
+	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"`        //创建时间
+	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`            //最后更新时间
+	Name       string    `orm:"unique" json:"Name"`                          //菜单名称
+	Identity   string    `orm:"unique;index" json:"Identity" xml:"identity"` //菜单唯一标识
+	Roles      []*Role   `orm:"reverse(many)" json:"-"`                      //菜单可见角色
 }
 
 func init() {
-	orm.RegisterModel(new(Permission))
+	orm.RegisterModel(new(Menu))
 }
 
-// Permission insert a new Permission into database and returns
+// Menu insert a new Menu into database and returns
 // last inserted ID on success.
-func AddPermission(obj *Permission, addUser *User) (id int64, err error) {
+func AddMenu(obj *Menu, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
 	obj.CreateUser = addUser
 	obj.UpdateUser = addUser
@@ -58,22 +53,22 @@ func AddPermission(obj *Permission, addUser *User) (id int64, err error) {
 	return id, err
 }
 
-// GetPermissionByID retrieves Permission by ID. Returns error if
+// GetMenuByID retrieves Menu by ID. Returns error if
 // ID doesn't exist
-func GetPermissionByID(id int64) (obj *Permission, err error) {
+func GetMenuByID(id int64) (obj *Menu, err error) {
 	o := orm.NewOrm()
-	obj = &Permission{ID: id}
+	obj = &Menu{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, err
 	}
 	return nil, err
 }
 
-// GetPermissionByName retrieves Permission by Name. Returns error if
+// GetMenuByName retrieves Menu by Name. Returns error if
 // Name doesn't exist
-func GetPermissionByName(name string) (*Permission, error) {
+func GetMenuByName(name string) (*Menu, error) {
 	o := orm.NewOrm()
-	var obj Permission
+	var obj Menu
 	cond := orm.NewCondition()
 	cond = cond.And("Name", name)
 	qs := o.QueryTable(&obj)
@@ -82,11 +77,11 @@ func GetPermissionByName(name string) (*Permission, error) {
 	return &obj, err
 }
 
-// GetAllPermission retrieves all Permission matches certain condition. Returns empty list if
+// GetAllMenu retrieves all Menu matches certain condition. Returns empty list if
 // no records exist
-func GetAllPermission(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []Permission, error) {
+func GetAllMenu(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []Menu, error) {
 	var (
-		objArrs   []Permission
+		objArrs   []Menu
 		paginator utils.Paginator
 		num       int64
 		err       error
@@ -96,7 +91,7 @@ func GetAllPermission(query map[string]interface{}, exclude map[string]interface
 	}
 
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Permission))
+	qs := o.QueryTable(new(Menu))
 	qs = qs.RelatedSel()
 
 	//cond k=v cond必须放到Filter和Exclude前面
@@ -173,15 +168,20 @@ func GetAllPermission(query map[string]interface{}, exclude map[string]interface
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
+				for i, _ := range objArrs {
+					o.LoadRelated(&objArrs[i], "Permissions")
+					o.LoadRelated(&objArrs[i], "Users")
+				}
 			}
 		}
 	}
+
 	return paginator, objArrs, err
 }
 
-// UpdatePermission updates Permission by ID and returns error if
+// UpdateMenu updates Menu by ID and returns error if
 // the record to be updated doesn't exist
-func UpdatePermission(obj *Permission, updateUser *User) (id int64, err error) {
+func UpdateMenu(obj *Menu, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
 	obj.UpdateUser = updateUser
 	var num int64
@@ -191,15 +191,15 @@ func UpdatePermission(obj *Permission, updateUser *User) (id int64, err error) {
 	return obj.ID, err
 }
 
-// DeletePermission deletes Permission by ID and returns error if
+// DeleteMenu deletes Menu by ID and returns error if
 // the record to be deleted doesn't exist
-func DeletePermission(id int64) (err error) {
+func DeleteMenu(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Permission{ID: id}
+	v := Menu{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Permission{ID: id}); err == nil {
+		if num, err = o.Delete(&Menu{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

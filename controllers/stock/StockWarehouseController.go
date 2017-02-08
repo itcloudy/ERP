@@ -187,6 +187,24 @@ func (ctl *StockWarehouseController) stockWarehouseList(query map[string]interfa
 			oneLine["Code"] = line.Code
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			if line.Company != nil {
+				oneLine["Company"] = line.Company.Name
+			}
+			b := bytes.Buffer{}
+			if line.Country != nil {
+				b.WriteString(line.Country.Name)
+			}
+			if line.Province != nil {
+				b.WriteString(line.Province.Name)
+			}
+			if line.City != nil {
+				b.WriteString(line.City.Name)
+			}
+			if line.District != nil {
+				b.WriteString(line.District.Name)
+			}
+			b.WriteString(line.Street)
+			oneLine["Address"] = b.String()
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
