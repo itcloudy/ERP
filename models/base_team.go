@@ -12,17 +12,24 @@ import (
 
 //Team 团队
 type Team struct {
-	ID            int64     `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser    *User     `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser    *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate    time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate    time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction    string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name          string    `orm:"unique" xml:"name"`                    //组名称
-	Members       []*User   `orm:"reverse(many)"`                        //组员
-	GlobalLoation string    `orm:"unique" `                              //全局定位
-	Active        bool      `orm:"default(true)"`                        //是否有效
-	Description   string    `orm:"default(\"\")"`                        //描述
+	ID          int64       `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser  *User       `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser  *User       `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate  time.Time   `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate  time.Time   `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Name        string      `orm:"unique" json:"Name"`                   //组名称
+	Leader      *User       `orm:"rel(fk);null"`                         //团队负责人
+	Company     *Company    `orm:"rel(fk);null"`                         //公司
+	Department  *Department `orm:"rel(fk);null"`                         //所属
+	Members     []*User     `orm:"reverse(many)"`                        //组员
+	Active      bool        `orm:"default(true)"`                        //是否有效
+	Description string      `orm:"default(\"\")" json:"Description"`     //描述
+	//表单使用字段
+	FormAction   string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+	LeaderID     int64  `orm:"-" json:"Leader"`     //负责人
+	CompanyID    int64  `orm:"-" json:"Company"`    //公司
+	DepartmentID int64  `orm:"-" json:"Department"` //部门
+
 }
 
 func init() {
@@ -31,9 +38,40 @@ func init() {
 
 // AddTeam insert a new Team into database and returns
 // last inserted ID on success.
-func AddTeam(obj *Team) (id int64, err error) {
+func AddTeam(obj *Team, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+			utils.LogOut("prod", "AddTeam:%s", err.Error())
+		}
+	}()
+	if obj.CompanyID != 0 {
+		obj.Company, _ = GetCompanyByID(obj.CompanyID)
+	}
+	if obj.LeaderID != 0 {
+		obj.Leader, _ = GetUserByID(obj.LeaderID)
+	}
+	if obj.DepartmentID != 0 {
+		obj.Department, _ = GetDepartmentByID(obj.DepartmentID)
+	}
+	if errBegin != nil {
+		return 0, errBegin
+	}
 	id, err = o.Insert(obj)
+	if err != nil {
+		return 0, err
+	} else {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
@@ -43,20 +81,32 @@ func GetTeamByID(id int64) (obj *Team, err error) {
 	o := orm.NewOrm()
 	obj = &Team{ID: id}
 	if err = o.Read(obj); err == nil {
-		return obj, nil
+		o.LoadRelated(obj, "Members")
+		if obj.Leader != nil {
+			o.Read(obj.Leader)
+		}
+		if obj.Leader != nil {
+			o.Read(obj.Company)
+		}
+		if obj.Leader != nil {
+			o.Read(obj.Department)
+		}
+		return obj, err
 	}
 	return nil, err
 }
 
 // GetTeamByName retrieves Team by Name. Returns error if
 // Name doesn't exist
-func GetTeamByName(name string) (obj *Team, err error) {
+func GetTeamByName(name string) (*Team, error) {
 	o := orm.NewOrm()
-	obj = &Team{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
+	var obj Team
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }
 
 // GetAllTeam retrieves all Team matches certain condition. Returns empty list if
@@ -71,6 +121,7 @@ func GetAllTeam(query map[string]interface{}, exclude map[string]interface{}, co
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Team))
 	qs = qs.RelatedSel()
@@ -104,7 +155,6 @@ func GetAllTeam(query map[string]interface{}, exclude map[string]interface{}, co
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -115,7 +165,7 @@ func GetAllTeam(query map[string]interface{}, exclude map[string]interface{}, co
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -129,7 +179,7 @@ func GetAllTeam(query map[string]interface{}, exclude map[string]interface{}, co
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -151,22 +201,22 @@ func GetAllTeam(query map[string]interface{}, exclude map[string]interface{}, co
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
+	for i, _ := range objArrs {
+		o.LoadRelated(&objArrs[i], "Members")
+	}
 	return paginator, objArrs, err
 }
 
-// UpdateTeamByID updates Team by ID and returns error if
+// UpdateTeam updates Team by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateTeamByID(m *Team) (err error) {
+func UpdateTeam(obj *Team, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := Team{ID: m.ID}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return
+	return obj.ID, err
 }
 
 // DeleteTeam deletes Team by ID and returns error if

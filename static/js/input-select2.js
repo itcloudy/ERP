@@ -126,12 +126,12 @@ $(function() {
                     if (selectId == "district") {
                         var city = $("#city");
                         if (city.length < 1) {
-                            toastr.error("没有城市选项", "错误");
+                            toastr.error("没有<strong>城市</strong>选项", "错误");
                             return;
                         } else {
                             city = city.val();
                             if (city == null || city == undefined) {
-                                toastr.error("请安装“国家->省份->城市->区县”的顺序选择", "错误");
+                                toastr.error("请按照<strong>国家->省份->城市->区县</strong>的顺序选择", "错误");
                                 return;
                             } else {
                                 selectParams.CityID = parseInt(city);
@@ -140,12 +140,12 @@ $(function() {
                     } else if (selectId == "city") {
                         var province = $("#province");
                         if (province.length < 1) {
-                            toastr.error("没有省份选项", "错误");
+                            toastr.error("没有<strong>省份</strong>选项", "错误");
                             return;
                         } else {
                             province = province.val();
                             if (province == null || province == undefined) {
-                                toastr.error("请安装“国家->省份->城市->区县”的顺序选择", "错误");
+                                toastr.error("请按照<strong>国家->省份->城市->区县</strong>的顺序选择", "错误");
                                 return;
                             } else {
                                 selectParams.ProvinceID = parseInt(province);
@@ -154,12 +154,12 @@ $(function() {
                     } else if (selectId == "province") {
                         var country = $("#country");
                         if (country.length < 1) {
-                            toastr.error("没有国家选项", "错误");
+                            toastr.error("没有<strong>国家</strong>选项", "错误");
                             return;
                         } else {
                             country = country.val();
                             if (country == null || country == undefined) {
-                                toastr.error("请安装“国家->省份->城市->区县”的顺序选择", "错误");
+                                toastr.error("请按照<strong>国家->省份->城市->区县</strong>的顺序选择", "错误");
                                 return;
                             } else {
                                 selectParams.CountryID = parseInt(country);
@@ -325,12 +325,12 @@ $(function() {
                     };
                     var tmpId = $("#ProductTemplateID");
                     if (tmpId.length < 1) {
-                        toastr.error("请先选择款式", "错误");
+                        toastr.error("请先选择<strong>款式</strong>", "错误");
                         return;
                     } else {
                         tmpId = tmpId.val();
                         if (tmpId == null || tmpId == undefined) {
-                            toastr.error("请先选择款式", "错误");
+                            toastr.error("请先选择<strong>款式</strong>", "错误");
                             return;
                         } else {
                             selectParams.tmpId = parseInt(tmpId);
@@ -345,7 +345,7 @@ $(function() {
                         var attributeId = $("#" + attributeid).val();
                         if (attributeId == null) {
                             // 弹框提示
-                            toastr.error("请先选择属性", "错误");
+                            toastr.error("请先选择<strong>属性</strong>", "错误");
                             return;
                         } else {
                             selectParams.attributeId = attributeId;

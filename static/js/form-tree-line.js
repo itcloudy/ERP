@@ -82,7 +82,7 @@ $(function() {
                         var attributeId = $("#" + attributeid).val();
                         if (attributeId == null) {
                             // 弹框提示
-                            toastr.error("请先选择属性", "错误");
+                            toastr.error("请先选择<strong>属性<strong>", "错误");
                             return;
                         } else {
                             selectParams.attributeId = attributeId;

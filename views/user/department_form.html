@@ -2,12 +2,12 @@
     <p id="list-title">{{.PageName}}</p>
 </div>
 
-<form id="DepartmentForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+<form id="departmentForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
     <div class="row">
         {{if .RecordID}} {{if .Readonly}}
         <a href="{{.URL}}{{.RecordID}}?action=edit" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</a>
         <a href="{{.URL}}?action=create" type="buttom" class="btn btn-success fa fa-plus pull-left form-create-btn">&nbsp新建</a>{{end}}{{end}}
-        <button type="submit" form="DepartmentForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button> {{if .Readonly}}
+        <button type="submit" form="departmentForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button> {{if .Readonly}}
         <button type="button" class="btn btn-danger fa fa-remove  pull-left form-cancel-btn">&nbsp取消</button> {{else}}
         <a href="{{.URL}}" class="btn btn-danger fa fa-remove  pull-left">&nbsp取消</a> {{end}}
         <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
@@ -22,6 +22,19 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label for="company" class="col-md-4 control-label label-start">所属公司<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Department .Department.Company}} {{.Department.Company.Name}}{{end}}</p>
+                                <select data-type="int" name="Company" id="company" class="{{.FormField}} form-control select-company">
+                             {{if and .Department .Department.Company}}
+                            <option value="{{.Department.Company.ID}}" selected="selected">{{.Department.Company.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
                             <label for="name" class="col-md-4 control-label label-start">部门名称<span class="required-input">&nbsp*</span></label>
                             <div class="col-md-8">
                                 <p class="p-form-control">{{if .Department}} {{.Department.Name}} {{end}}</p>
@@ -29,6 +42,9 @@
                             </div>
                         </div>
                     </div>
+
+                </div>
+                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="leader" class="col-md-4 control-label label-start">负责人</label>
@@ -42,8 +58,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="parent" class="col-md-4 control-label label-start">上级部门</label>
@@ -52,19 +66,6 @@
                                 <select data-type="int" name="Parent" id="parent" class="{{.FormField}} form-control select-department">
                              {{if and .Department .Department.Parent}}
                             <option value="{{.Department.Parent.ID}}" selected="selected">{{.Department.Parent.Name}}</option>
-                             {{end}} 
-                        </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="company" class="col-md-4 control-label label-start">所属公司</label>
-                            <div class="col-md-8">
-                                <p class="p-form-control"> {{if and .Department .Department.Company}} {{.Department.Company.Name}}{{end}}</p>
-                                <select data-type="int" name="Company" id="company" class="{{.FormField}} form-control select-company">
-                             {{if and .Department .Department.Company}}
-                            <option value="{{.Department.Company.ID}}" selected="selected">{{.Department.Company.Name}}</option>
                              {{end}} 
                         </select>
                             </div>

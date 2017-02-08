@@ -12,16 +12,17 @@ import (
 
 //Department 部门
 type Department struct {
-	ID         int64       `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser *User       `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser *User       `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate time.Time   `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate time.Time   `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name       string      `orm:"unique"`                               //团队名称
-	Leader     *User       `orm:"rel(fk);null"`                         //团队领导者
-	Parent     *Department `orm:"rel(fk);null"`                         //上级分类
-	Members    []*User     `orm:"reverse(many)"`                        //组员
-	Company    *Company    `orm:"rel(fk);null"`                         //公司
+	ID         int64         `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser *User         `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser *User         `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate time.Time     `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate time.Time     `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Name       string        `orm:"unique"`                               //部门名称
+	Leader     *User         `orm:"rel(fk);null"`                         //部门负责人
+	Parent     *Department   `orm:"rel(fk);null"`                         //上级部门
+	Childs     []*Department `orm:"reverse(many)"`                        //下级部门
+	Members    []*User       `orm:"reverse(many)"`                        //组员
+	Company    *Company      `orm:"rel(fk);null"`                         //公司
 	//表单使用字段
 	FormAction string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
 	CompanyID  int64  `orm:"-" json:"Company"`    //公司
@@ -73,13 +74,17 @@ func GetDepartmentByID(id int64) (obj *Department, err error) {
 	o := orm.NewOrm()
 	obj = &Department{ID: id}
 	if err = o.Read(obj); err == nil {
-		o.LoadRelated(obj, "Department")
-		o.LoadRelated(obj, "Children")
-		o.LoadRelated(obj, "Parent")
-		o.LoadRelated(obj, "Country")
-		o.LoadRelated(obj, "Province")
-		o.LoadRelated(obj, "City")
-		o.LoadRelated(obj, "District")
+		o.LoadRelated(obj, "Members")
+		o.LoadRelated(obj, "Childs")
+		if obj.Leader != nil {
+			o.Read(obj.Leader)
+		}
+		if obj.Leader != nil {
+			o.Read(obj.Parent)
+		}
+		if obj.Leader != nil {
+			o.Read(obj.Company)
+		}
 		return obj, err
 	}
 	return nil, err

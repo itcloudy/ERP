@@ -188,9 +188,9 @@ func (ctl *ProductAttributeController) productAttributeList(query map[string]int
 			oneLine["Sequence"] = line.Sequence
 			oneLine["ProductsCount"] = line.ProductsCount
 			oneLine["TemplatesCount"] = line.TemplatesCount
-			mapValues := make(map[int64]string)
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			mapValues := make(map[int64]string)
 			values := line.ValueIDs
 			for _, line := range values {
 				mapValues[line.ID] = line.Name

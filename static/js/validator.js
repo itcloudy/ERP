@@ -352,7 +352,7 @@ $(function() {
                 },
                 remote: {
                     url: "/company/",
-                    message: "用户已经存在",
+                    message: "公司名称已经存在",
                     dataType: "json",
                     delay: 200,
                     type: "POST",
@@ -430,6 +430,118 @@ $(function() {
             validators: {
                 notEmpty: {
                     message: "街道不能为空"
+                }
+            }
+        }
+    });
+    // 部门
+    BootstrapValidator("#departmentForm", {
+        Company: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "所属公司不能为空"
+                },
+            }
+        },
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "部门名称不能为空"
+                },
+                remote: {
+                    url: "/department/",
+                    message: "部门名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+
+                        var params = {
+                            action: "validator"
+                        }
+
+                        var company = $("#company");
+                        if (company.length > 0) {
+                            company = company.val();
+                            if (!company) {
+                                toastr.error("请先选择<strong>所属公司</strong>", "错误");
+                            }
+                        } else {
+                            toastr.error("没有公司选项", "错误");
+                        }
+
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        }
+    });
+    // 团队
+    BootstrapValidator("#teamForm", {
+        Company: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "所属公司不能为空"
+                },
+            }
+        },
+        Leader: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "负责人不能为空"
+                },
+            }
+        },
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "团队名称不能为空"
+                },
+                remote: {
+                    url: "/team/",
+                    message: "团队名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+
+                        var params = {
+                            action: "validator"
+                        }
+
+                        var company = $("#company");
+                        if (company.length > 0) {
+                            company = company.val();
+                            if (!company) {
+                                toastr.error("请先选择<strong>所属公司</strong>", "错误");
+                            }
+                        } else {
+                            toastr.error("没有公司选项", "错误");
+                        }
+
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
                 }
             }
         }

@@ -44,9 +44,7 @@ func AddAddressDistrict(obj *AddressDistrict, addUser *User) (id int64, err erro
 		return 0, errBegin
 	}
 	id, err = o.Insert(obj)
-	if err != nil {
-		return 0, err
-	} else {
+	if err == nil {
 		errCommit := o.Commit()
 		if errCommit != nil {
 			return 0, errCommit

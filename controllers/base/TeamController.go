@@ -3,6 +3,7 @@ package base
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	md "goERP/models"
 	"strconv"
 	"strings"
@@ -13,24 +14,23 @@ type TeamController struct {
 	BaseController
 }
 
-// Post request
 func (ctl *TeamController) Post() {
-
+	ctl.URL = "/team/"
+	ctl.Data["URL"] = ctl.URL
 	action := ctl.Input().Get("action")
 	switch action {
 	case "validator":
 		ctl.Validator()
 	case "table": //bootstrap table的post请求
 		ctl.PostList()
-	case "selectSearch":
-		ctl.PostList()
+	case "create":
+		ctl.PostCreate()
 	default:
 		ctl.PostList()
 	}
 }
-
-// Get request
 func (ctl *TeamController) Get() {
+	ctl.URL = "/team/"
 	ctl.PageName = "团队管理"
 	action := ctl.Input().Get("action")
 	switch action {
@@ -49,54 +49,106 @@ func (ctl *TeamController) Get() {
 	b.WriteString("\\")
 	b.WriteString(ctl.PageAction)
 	ctl.Data["PageName"] = b.String()
-	ctl.URL = "/team/"
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuTeamActive"] = "active"
 }
 
-// Edit edit team
+// Put 修改产品款式
+func (ctl *TeamController) Put() {
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	team := new(md.Team)
+	var (
+		err    error
+		id     int64
+		errs   []error
+		debugs []string
+	)
+	if err = json.Unmarshal([]byte(postData), team); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(team)).Type().Name()
+		if id, err = md.AddTeam(team, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
+			}
+			result["debug"] = debugs
+		}
+	}
+	if err != nil {
+		result["code"] = "failed"
+		debugs = append(debugs, err.Error())
+		result["debug"] = debugs
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
+}
+func (ctl *TeamController) PostCreate() {
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	team := new(md.Team)
+	var (
+		err error
+		id  int64
+	)
+	if err = json.Unmarshal([]byte(postData), team); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(team)).Type().Name()
+		if id, err = md.AddTeam(team, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			result["debug"] = err.Error()
+		}
+	} else {
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
+}
 func (ctl *TeamController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	teamInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-
 			if team, err := md.GetTeamByID(idInt64); err == nil {
 				ctl.PageAction = team.Name
-				teamInfo["Name"] = team.Name
-
+				fmt.Printf("%+v\n", team)
+				ctl.Data["Team"] = team
 			}
 		}
 	}
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["Team"] = teamInfo
+	ctl.Data["FormField"] = "form-edit"
 	ctl.Layout = "base/base.html"
-
 	ctl.TplName = "user/team_form.html"
 }
-
-// Detail dispaly team info
 func (ctl *TeamController) Detail() {
-	//获取信息一样，直接调用Edit
 	ctl.Edit()
 	ctl.Data["Readonly"] = true
+	ctl.Data["FormTreeField"] = "form-tree-edit"
 	ctl.Data["Action"] = "detail"
 }
-
-// Create get create page
 func (ctl *TeamController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
-
+	ctl.PageAction = "创建"
 	ctl.Layout = "base/base.html"
+	ctl.Data["FormField"] = "form-create"
+	ctl.Data["FormTreeField"] = "form-tree-create"
 	ctl.TplName = "user/team_form.html"
 }
 
-// Validator js valid
 func (ctl *TeamController) Validator() {
-	name := ctl.GetString("name")
-	name = strings.TrimSpace(name)
+	name := strings.TrimSpace(ctl.GetString("Name"))
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
 	obj, err := md.GetTeamByName(name)
@@ -119,26 +171,41 @@ func (ctl *TeamController) Validator() {
 	ctl.ServeJSON()
 }
 
-// 获得符合要求的城市数据
-func (ctl *TeamController) teamList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+// 获得符合要求的团队数据
+func (ctl *TeamController) addressTemplateList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
-	var teams []md.Team
-	paginator, teams, err := md.GetAllTeam(query, exclude, condMap, fields, sortby, order, offset, limit)
+	var arrs []md.Team
+	paginator, arrs, err := md.GetAllTeam(query, exclude, cond, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
-		// result["recordsFiltered"] = paginator.TotalCount
+		//使用多线程来处理数据，待修改
 		tableLines := make([]interface{}, 0, 4)
-		for _, team := range teams {
+		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-
-			oneLine["ID"] = team.ID
-			oneLine["id"] = team.ID
-			oneLine["name"] = team.Name
-
+			oneLine["Name"] = line.Name
+			oneLine["ID"] = line.ID
+			oneLine["id"] = line.ID
+			if line.Leader != nil {
+				leader := make(map[string]interface{})
+				leader["id"] = line.Leader.ID
+				leader["name"] = line.Leader.Name
+				oneLine["Leader"] = leader
+			}
+			if line.Leader != nil {
+				leader := make(map[string]interface{})
+				leader["id"] = line.Leader.ID
+				leader["name"] = line.Leader.Name
+				oneLine["Leader"] = leader
+			}
+			mapValues := make(map[int64]string)
+			members := line.Members
+			for _, line := range members {
+				mapValues[line.ID] = line.Name
+			}
+			oneLine["Members"] = mapValues
 			tableLines = append(tableLines, oneLine)
 		}
-
 		result["data"] = tableLines
 		if jsonResult, er := json.Marshal(&paginator); er == nil {
 			result["paginator"] = string(jsonResult)
@@ -147,22 +214,47 @@ func (ctl *TeamController) teamList(query map[string]interface{}, exclude map[st
 	}
 	return result, err
 }
-
-// PostList post request json response
 func (ctl *TeamController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
-
+	condAnd := make(map[string]interface{})
+	condOr := make(map[string]interface{})
+	filterMap := make(map[string]interface{})
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 0, 1)
 	order := make([]string, 0, 1)
+	if ID, err := ctl.GetInt64("Id"); err == nil {
+		query["Id"] = ID
+	}
+	if name := strings.TrimSpace(ctl.GetString("Name")); name != "" {
+		condAnd["Name.icontains"] = name
+	}
+	filter := ctl.GetString("filter")
+	if filter != "" {
+		json.Unmarshal([]byte(filter), &filterMap)
+	}
+	// 对filterMap进行判断
+	if filterActive, ok := filterMap["Active"]; ok {
+		condAnd["Active"] = filterActive
+	}
+	if filterSaleOk, ok := filterMap["SaleOk"]; ok {
+		condAnd["SaleOk"] = filterSaleOk
+	}
+	if filterName, ok := filterMap["Name"]; ok {
+		filterName = strings.TrimSpace(filterName.(string))
+		if filterName != "" {
+			condAnd["Name.icontains"] = filterName
+		}
+	}
+	if len(condAnd) > 0 {
+		cond["and"] = condAnd
+	}
+	if len(condOr) > 0 {
+		cond["or"] = condOr
+	}
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
-	name := strings.TrimSpace(ctl.Input().Get("name"))
-	if name != "" {
-		query["name"] = name
-	}
 	orderStr := ctl.GetString("order")
 	sortStr := ctl.GetString("sort")
 	if orderStr != "" && sortStr != "" {
@@ -171,16 +263,22 @@ func (ctl *TeamController) PostList() {
 	} else {
 		sortby = append(sortby, "Id")
 		order = append(order, "desc")
+
 	}
-	if result, err := ctl.teamList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.addressTemplateList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()
 
 }
 
-// GetList display team with table
 func (ctl *TeamController) GetList() {
+	viewType := ctl.Input().Get("view")
+	if viewType == "" || viewType == "table" {
+		ctl.Data["ViewType"] = "table"
+	}
+	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-team"
-	ctl.TplName = "user/base_list_view.html"
+	ctl.Layout = "base/base_list_view.html"
+	ctl.TplName = "user/team_list_search.html"
 }

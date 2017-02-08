@@ -256,6 +256,33 @@ displayTable("#table-team", '/team/', [
     { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
     { title: "团队名称", field: 'Name', sortable: true, order: "desc" },
     {
+        title: "负责人",
+        field: 'Leader',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.Leader) {
+                html = row.Leader.name + "<a class='pull-right' href='/user/" + row.Leader.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            }
+            return html;
+        }
+    },
+    {
+        title: "团队成员",
+        field: 'Members',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var datas = row.Members;
+            var html = "";
+            for (key in datas) {
+                html += "<a  class='display-block label label-success' href='/product/uom/" + key + "?action=detail'>" + datas[key] + "</a>";
+            }
+            return html;
+        }
+    },
+    {
         title: "操作",
         align: "center",
         field: 'action',
