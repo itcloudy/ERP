@@ -27,14 +27,16 @@
                     <span>设置</span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}"><a href="#"><i class="fa fa-child" aria-hidden="true"></i></i>个人资料</a>
+                    <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}">
+                        <a href="#"><i class="fa fa-child" aria-hidden="true"></i></i>个人资料</a>
                         <ul class="treeview-menu">
                             <li class="{{.MenuSelfInfoActive}}"><a href="/user/{{.user.ID}}?action=detail"><i class="fa fa-user-secret" aria-hidden="true"></i>个人信息</a></li>
                             <li class="{{.MenuChangePwdActive}}"><a href="/user/{{.user.ID}}?action=changepasswd"><i class="fa fa-unlock"></i>密码修改</a></li>
                             <li class="{{.MenuRecordActive}}"><a href="/record/"><i class="fa fa-list-ol"></i>登录记录</a></li>
                         </ul>
                     </li>
-                    <li class="treeview {{.MenuSourceActive}}{{.MenuRoleActive}}{{.MenuPermissionActive}}"><a href="#"><i class="fa fa-film" aria-hidden="true"></i></i>权限管理</a>
+                    <li class="treeview {{.MenuSourceActive}}{{.MenuRoleActive}}{{.MenuPermissionActive}}">
+                        <a href="#"><i class="fa fa-film" aria-hidden="true"></i></i>权限管理</a>
                         <ul class="treeview-menu">
                             <li class="{{.MenuSourceActive}}"><a href="/source/"><i class="fa fa-calendar-minus-o" aria-hidden="true"></i>系统资源</a></li>
                             <li class="{{.MenuRoleActive}}"><a href="/role/"><i class="fa fa-bars" aria-hidden="true"></i>角色管理</a></li>
@@ -50,7 +52,8 @@
                         </ul>
                     </li>
                     <li class="{{.MenuUserActive}}"><a href="/user/"><i class="fa fa-users" aria-hidden="true"></i></i>用户管理</a></li>
-                    <li class="treeview {{.MenuAddressCountryActive}}{{.MenuAddressProvinceActive}}{{.MenuAddressCityActive}}{{.MenuAddressDistrictActive}}"><a href="#"><i class="fa fa-building" aria-hidden="true"></i></i>地址管理</a>
+                    <li class="treeview {{.MenuAddressCountryActive}}{{.MenuAddressProvinceActive}}{{.MenuAddressCityActive}}{{.MenuAddressDistrictActive}}">
+                        <a href="#"><i class="fa fa-building" aria-hidden="true"></i></i>地址管理</a>
                         <ul class="treeview-menu">
                             <li class="{{.MenuAddressCountryActive}}"><a href="/address/country/"><i class="fa fa-check-circle-o"></i>国家管理</a></li>
                             <li class="{{.MenuAddressProvinceActive}}"><a href="/address/province/"><i class="fa fa-arrow-circle-right"></i>省份管理</a></li>
@@ -128,9 +131,7 @@
                     <i class="fa fa-database" aria-hidden="true"></i><span>仓库管理</span>
                 </a>
                 <ul class="treeview-menu">
-
                     <li class="{{.MenuStockWarehouseActive}}"><a href="/stock/warehouse/"><i class="fa fa-bars"></i>仓库管理</a></li>
-
                     <li class="{{.MenuStockReportActive}}"><a href="#"><i class="fa fa-pie-chart"></i>库存报表</a></li>
                 </ul>
             </li>
@@ -139,7 +140,6 @@
                     <i class="fa fa-folder-o" aria-hidden="true"></i><span>模版管理</span>
                 </a>
             </li>
-
         </ul>
     </section>
     <!-- /.sidebar -->

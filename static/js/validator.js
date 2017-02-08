@@ -546,6 +546,67 @@ $(function() {
             }
         }
     });
+    // 资源
+    BootstrapValidator("#sourceForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "资源名称不能为空"
+                },
+                remote: {
+                    url: "/source/",
+                    message: "资源名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator"
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        },
+        ModelName: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "Model名称不能为空"
+                },
+                remote: {
+                    url: "/source/",
+                    message: "Model名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator"
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        }
+    });
     // 序列号
     BootstrapValidator("#sequenceForm", {
         Name: {

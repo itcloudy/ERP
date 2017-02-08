@@ -2,42 +2,42 @@
 <Sources>
     <source>
         <name>用户表</name>
-        <identity>User</identity>
+        <modelName>User</modelName>
     </source>
      <source>
         <name>国家</name>
-        <identity>AddressCountry</identity>
+        <modelName>AddressCountry</modelName>
     </source>
      <source>
         <name>省份</name>
-        <identity>AddressProvince</identity>
+        <modelName>AddressProvince</modelName>
     </source>
     <source>
         <name>城市</name>
-        <identity>AddressCity</identity>
+        <modelName>AddressCity</modelName>
     </source>
     <source>
         <name>区县</name>
-        <identity>AddressDistrict</identity>
+        <modelName>AddressDistrict</modelName>
     </source>
      <source>
         <name>公司</name>
-        <identity>Company</identity>
+        <modelName>Company</modelName>
     </source>
      <source>
         <name>部门</name>
-        <identity>Department</identity>
+        <modelName>Department</modelName>
     </source>
      <source>
         <name>团队</name>
-        <identity>Team</identity>
+        <modelName>Team</modelName>
     </source>
      <source>
         <name>登录日志</name>
-        <identity>Record</identity>
+        <modelName>Record</modelName>
     </source>
      <source>
         <name>单据序号</name>
-        <identity>Sequence</identity>
+        <modelName>Sequence</modelName>
     </source>
 </Sources>

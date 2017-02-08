@@ -189,7 +189,7 @@ func (ctl *PermissionController) addressTemplateList(query map[string]interface{
 				b := bytes.Buffer{}
 				b.WriteString(line.Source.Name)
 				b.WriteString("[")
-				b.WriteString(line.Source.Identity)
+				b.WriteString(line.Source.ModelName)
 				b.WriteString("]")
 				oneLine["Source"] = b.String()
 			}
@@ -198,7 +198,7 @@ func (ctl *PermissionController) addressTemplateList(query map[string]interface{
 			oneLine["PermWrite"] = line.PermWrite
 			oneLine["PermDelete"] = line.PermDelete
 			oneLine["Relation"] = line.Relation
-			
+
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

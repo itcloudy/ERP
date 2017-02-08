@@ -31,10 +31,10 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="identity" class="col-md-4 control-label label-start">Model名称</label>
+                            <label for="modelName" class="col-md-4 control-label label-start">Model名称<span class="required-input">&nbsp*</span></label>
                             <div class="col-md-8">
                                 <p class="p-form-control">{{if .Source}} {{.Source.Identity}} {{end}}</p>
-                                <input data-type="string" class="{{.FormField}} form-control" id="identity" name="Identity" type="text" {{if .Source}} value="{{.Source.Identity}}" {{end}} />
+                                <input data-type="string" class="{{.FormField}} form-control" id="modelName" name="ModelName" type="text" {{if .Source}} value="{{.Source.Identity}}" {{end}} />
                             </div>
                         </div>
                     </div>

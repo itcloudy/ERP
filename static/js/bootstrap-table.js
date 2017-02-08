@@ -299,7 +299,7 @@ displayTable("#table-team", '/team/', [
 displayTable("#table-source", "/source/", [
     { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
     { title: "资源名称", field: 'Name', sortable: true, order: "desc" },
-    { title: "资源唯一标识", field: 'Identity', sortable: true, order: "desc" },
+    { title: "Model名称", field: 'ModelName', sortable: true, order: "desc" },
     {
         title: "操作",
         align: "center",

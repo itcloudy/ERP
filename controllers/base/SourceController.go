@@ -148,24 +148,43 @@ func (ctl *SourceController) Create() {
 
 func (ctl *SourceController) Validator() {
 	name := strings.TrimSpace(ctl.GetString("Name"))
+	modelName := strings.TrimSpace(ctl.GetString("ModelName"))
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
-	obj, err := md.GetSourceByName(name)
-	if err != nil {
-		result["valid"] = true
-	} else {
-		if obj.Name == name {
-			if recordID == obj.ID {
-				result["valid"] = true
-			} else {
-				result["valid"] = false
-			}
-
-		} else {
+	result["valid"] = true
+	if name != "" {
+		obj, err := md.GetSourceByName(name)
+		if err != nil {
 			result["valid"] = true
+		} else {
+			if obj.Name == name {
+				if recordID == obj.ID {
+					result["valid"] = true
+				} else {
+					result["valid"] = false
+				}
+			} else {
+				result["valid"] = true
+			}
 		}
-
 	}
+	if modelName != "" {
+		obj, err := md.GetSourceByModelName(modelName)
+		if err != nil {
+			result["valid"] = true
+		} else {
+			if obj.ModelName == modelName {
+				if recordID == obj.ID {
+					result["valid"] = true
+				} else {
+					result["valid"] = false
+				}
+			} else {
+				result["valid"] = true
+			}
+		}
+	}
+
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
@@ -183,7 +202,7 @@ func (ctl *SourceController) addressTemplateList(query map[string]interface{}, e
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
 			oneLine["Name"] = line.Name
-			oneLine["Identity"] = line.Identity
+			oneLine["ModelName"] = line.ModelName
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
 			tableLines = append(tableLines, oneLine)
@@ -212,7 +231,7 @@ func (ctl *SourceController) PostList() {
 	if name := strings.TrimSpace(ctl.GetString("Name")); name != "" {
 		condAnd["Name.icontains"] = name
 	}
-	if identity := strings.TrimSpace(ctl.GetString("Identity")); identity != "" {
+	if identity := strings.TrimSpace(ctl.GetString("ModelName")); identity != "" {
 		condAnd["Identity"] = identity
 	}
 	filter := ctl.GetString("filter")

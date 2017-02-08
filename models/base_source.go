@@ -12,14 +12,14 @@ import (
 )
 
 type Source struct {
-	ID         int64         `orm:"column(id);pk;auto" json:"id"`                //主键
-	CreateUser *User         `orm:"rel(fk);null" json:"-"`                       //创建者
-	UpdateUser *User         `orm:"rel(fk);null" json:"-"`                       //最后更新者
-	CreateDate time.Time     `orm:"auto_now_add;type(datetime)" json:"-"`        //创建时间
-	UpdateDate time.Time     `orm:"auto_now;type(datetime)" json:"-"`            //最后更新时间
-	Name       string        `orm:"unique;index" json:"Name" xml:"name"`         //资源名称
-	Identity   string        `orm:"unique;index" json:"Identity" xml:"identity"` //资源唯一标识 model名称
-	Permission []*Permission `orm:"reverse(many)"`                               //权限列表
+	ID         int64         `orm:"column(id);pk;auto" json:"id"`                  //主键
+	CreateUser *User         `orm:"rel(fk);null" json:"-"`                         //创建者
+	UpdateUser *User         `orm:"rel(fk);null" json:"-"`                         //最后更新者
+	CreateDate time.Time     `orm:"auto_now_add;type(datetime)" json:"-"`          //创建时间
+	UpdateDate time.Time     `orm:"auto_now;type(datetime)" json:"-"`              //最后更新时间
+	Name       string        `orm:"unique;index" json:"Name" xml:"name"`           //资源名称
+	ModelName  string        `orm:"unique;index" json:"ModelName" xml:"modelName"` //资源唯一标识 model名称
+	Permission []*Permission `orm:"reverse(many)"`                                 //权限列表
 }
 
 func init() {
@@ -64,15 +64,17 @@ func GetSourceByID(id int64) (obj *Source, err error) {
 	return nil, err
 }
 
-// GetSourceByIdentity retrieves Source by Identity. Returns error if
+// GetSourceByGetSourceByModelName retrieves Source by GetSourceByModelName. Returns error if
 // ID doesn't exist
-func GetSourceByIdentity(identity string) (obj *Source, err error) {
+func GetSourceByModelName(modelName string) (*Source, error) {
 	o := orm.NewOrm()
-	obj = &Source{Identity: identity}
-	if err = o.Read(obj); err == nil {
-		return obj, err
-	}
-	return nil, err
+	var obj Source
+	cond := orm.NewCondition()
+	cond = cond.And("ModelName", modelName)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }
 
 // GetSourceByName retrieves Source by Name. Returns error if

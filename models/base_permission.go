@@ -24,7 +24,7 @@ type Permission struct {
 	PermWrite  bool      `orm:"default(true)" json:"PermWrite"`       //权限:改
 	PermDelete bool      `orm:"default(false)" json:"PermDelete"`     //权限:删
 	Relation   string    `json:"Relation"`                            //该权限是私有还是角色权限role owner
-	Role       *Role     `orm:"rel(fk)"`                              //拥有该权限的角色
+	Roles      []*Role   `orm:"rel(m2m)"`                             //拥有该权限的角色
 }
 
 func init() {

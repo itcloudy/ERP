@@ -33,8 +33,8 @@ func loadSources(filename string) {
 				for _, k := range sources.Sources {
 					user := new(md.User)
 					user.ID = 1
-					if id, err := md.GetSourceByIdentity(k.Identity); err != nil {
-						if id == nil {
+					if obj, err := md.GetSourceByModelName(k.ModelName); err != nil {
+						if obj.ID == 0 {
 							md.AddSource(&k, user)
 						}
 					}

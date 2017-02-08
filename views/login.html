@@ -9,6 +9,8 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.6 -->
     <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <!--bootstrap validator-->
+    <link rel="stylesheet" href="/static/plugins/bootstrap-validator/bootstrapValidator.min.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="/static/font-awesome-4.5.0/css/font-awesome.min.css">
     <!-- Ionicons -->
@@ -37,7 +39,7 @@
         <div class="login-box-body">
             <p class="login-box-msg">{{i18n .Lang "login.title"}}</p>
 
-            <form action="/login/in" method="post">
+            <form id="loginForm" action="/login/in" method="post">
                 {{ .xsrf }}
                 <div class="form-group has-feedback">
                     <input type="text" class="form-control" name="loginName" placeholder={{i18n .Lang "global.loginName"}}>
@@ -50,9 +52,8 @@
                 <div class="row">
                     <div class="col-xs-8">
                         <div class="checkbox icheck">
-                            <label>
-              <input name="remember" type="checkbox"> {{i18n .Lang "global.rememberMe"}}
-            </label>
+                            <!--<label> <input name="remember" type="checkbox"> {{i18n .Lang "global.rememberMe"}}-->
+                            </label>
                         </div>
                     </div>
                     <!-- /.col -->
@@ -78,21 +79,42 @@
     <script src="/static/plugins/jQuery/jquery-2.2.3.min.js"></script>
     <!-- Bootstrap 3.3.6 -->
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
-    <!-- iCheck -->
-    <script src="/static/plugins/iCheck/icheck.min.js"></script>
+    <!--bootstrap validator-->
+    <script src="/static/plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrap-show-password/bootstrap-show-password.min.js"></script>
     <script>
         $(function() {
-            $('input').iCheck({
-                checkboxClass: 'icheckbox_square-blue',
-                radioClass: 'iradio_square-blue',
-                increaseArea: '20%' // optional
-            });
-        });
-        $(function() {
             $('#password').password().on('show.bs.password', function(e) {}).on('hide.bs.password', function(e) {});
-
         });
+        $("#loginForm").bootstrapValidator({
+            message: '该值无效',
+            feedbackIcons: { /*input状态样式图片*/
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            live: 'enabled',
+            submitButtons: 'button[type="submit"]',
+            trigger: null,
+            fields: {
+                loginName: {
+                    message: "该值无效",
+                    validators: {
+                        notEmpty: {
+                            message: "用户名不能为空"
+                        },
+                    }
+                },
+                password: {
+                    message: "该值无效",
+                    validators: {
+                        notEmpty: {
+                            message: "密码不能为空"
+                        },
+                    }
+                }
+            }
+        })
     </script>
 </body>
 
