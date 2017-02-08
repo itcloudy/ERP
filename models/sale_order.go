@@ -112,7 +112,7 @@ func GetAllSaleOrder(query map[string]interface{}, exclude map[string]interface{
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -126,7 +126,7 @@ func GetAllSaleOrder(query map[string]interface{}, exclude map[string]interface{
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -143,10 +143,12 @@ func GetAllSaleOrder(query map[string]interface{}, exclude map[string]interface{
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
-		paginator = utils.GenPaginator(limit, offset, cnt)
-	}
-	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-		paginator.CurrentPageSize = num
+		if cnt > 0 {
+			paginator = utils.GenPaginator(limit, offset, cnt)
+			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
+				paginator.CurrentPageSize = num
+			}
+		}
 	}
 	return paginator, objArrs, err
 }

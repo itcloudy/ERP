@@ -174,15 +174,16 @@ func GetAllStockWarehouse(query map[string]interface{}, exclude map[string]inter
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
-		paginator = utils.GenPaginator(limit, offset, cnt)
+		if cnt > 0 {
+			paginator = utils.GenPaginator(limit, offset, cnt)
+			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
+				paginator.CurrentPageSize = num
+				for i, _ := range objArrs {
+					o.LoadRelated(&objArrs[i], "ValueIDs")
+				}
+			}
+		}
 	}
-	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-		paginator.CurrentPageSize = num
-	}
-	for i, _ := range objArrs {
-		o.LoadRelated(&objArrs[i], "ValueIDs")
-	}
-
 	return paginator, objArrs, err
 }
 

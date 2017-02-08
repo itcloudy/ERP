@@ -235,12 +235,6 @@ func (ctl *TeamController) PostList() {
 		json.Unmarshal([]byte(filter), &filterMap)
 	}
 	// 对filterMap进行判断
-	if filterActive, ok := filterMap["Active"]; ok {
-		condAnd["Active"] = filterActive
-	}
-	if filterSaleOk, ok := filterMap["SaleOk"]; ok {
-		condAnd["SaleOk"] = filterSaleOk
-	}
 	if filterName, ok := filterMap["Name"]; ok {
 		filterName = strings.TrimSpace(filterName.(string))
 		if filterName != "" {

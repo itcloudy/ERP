@@ -133,7 +133,7 @@ func GetAllProductUomCateg(query map[string]interface{}, exclude map[string]inte
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -147,7 +147,7 @@ func GetAllProductUomCateg(query map[string]interface{}, exclude map[string]inte
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -164,14 +164,17 @@ func GetAllProductUomCateg(query map[string]interface{}, exclude map[string]inte
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
-		paginator = utils.GenPaginator(limit, offset, cnt)
+		if cnt > 0 {
+			paginator = utils.GenPaginator(limit, offset, cnt)
+			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
+				paginator.CurrentPageSize = num
+				for i, _ := range objArrs {
+					o.LoadRelated(&objArrs[i], "Uoms")
+				}
+			}
+		}
 	}
-	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-		paginator.CurrentPageSize = num
-	}
-	for i, _ := range objArrs {
-		o.LoadRelated(&objArrs[i], "Uoms")
-	}
+
 	return paginator, objArrs, err
 }
 

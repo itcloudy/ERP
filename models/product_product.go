@@ -281,10 +281,12 @@ func GetAllProductProduct(query map[string]interface{}, exclude map[string]inter
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
-		paginator = utils.GenPaginator(limit, offset, cnt)
-	}
-	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-		paginator.CurrentPageSize = num
+		if cnt > 0 {
+			paginator = utils.GenPaginator(limit, offset, cnt)
+			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
+				paginator.CurrentPageSize = num
+			}
+		}
 	}
 	// 获得产品规格的属性值
 	for i, _ := range objArrs {

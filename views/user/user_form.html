@@ -143,19 +143,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="form-group">
-                    <label for="usergroup" class="col-md-4 control-label label-start">权限组<span class="required-input">&nbsp*</span></label>
-                    <div class="col-md-8">
-                        <p class="p-form-control"> {{if .User}} {{if .User.Groups}} {{range .User.Groups}}<a class='display-block label label-primary'>{{.name}}</a>{{end}}{{end}} {{end}}</p>
-                        <select data-type="array_int" name="Group" id="usergroup" multiple="multiple" class="form-control select-group {{.FormField}}">
-                            {{range  .User.Groups}}
-                            <option value="{{.id}}" selected="selected">{{.name}}</option>
-                            {{end}}
-                        </select>
-                    </div>
-                </div>
-            </div>
         </div>
     </fieldset>
 

@@ -24,9 +24,6 @@ func init() {
 	beego.Router("/department/?:id", &base.DepartmentController{})
 	//职位
 	beego.Router("/position/?:id", &base.PositionController{})
-
-	//权限
-	beego.Router("/group/?:id", &base.GroupController{})
 	//团队
 	beego.Router("/team/?:id", &base.TeamController{})
 	//登录日志
@@ -35,6 +32,13 @@ func init() {
 	beego.Router("/sequence/?:id", &base.SequenceController{})
 	//文件模版
 	beego.Router("/templatefile/?:id", &base.TemplateFileController{})
+	// ===============================权限控制===========================================
+	// 系统资源
+	beego.Router("/source/?:id", &base.SourceController{})
+	// 角色
+	beego.Router("/role/?:id", &base.RoleController{})
+	// 权限控制
+	beego.Router("/permission/?:id", &base.PermissionController{})
 	// ===============================地址===========================================
 	//国家
 	beego.Router("/address/country/?:id", &address.AddressCountryController{})

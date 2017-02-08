@@ -295,19 +295,99 @@ displayTable("#table-team", '/team/', [
         }
     }
 ]);
-//权限
-displayTable("#table-group", "/group/", [
+//系统资源
+displayTable("#table-source", "/source/", [
     { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
-    { title: "权限组名", field: 'name', sortable: true, order: "desc" },
+    { title: "资源名称", field: 'Name', sortable: true, order: "desc" },
+    { title: "资源唯一标识", field: 'Identity', sortable: true, order: "desc" },
     {
-        title: "有效",
-        field: 'active',
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/source/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
+//角色
+displayTable("#table-role", "/role/", [
+    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "角色名称", field: 'Name', sortable: true, order: "desc" },
+    {
+        title: "角色用户",
+        field: 'Users',
+        formatter: function cellStyle(value, row, index) {
+            var datas = row.Users;
+            var html = "";
+            var url = "/role/";
+            for (key in datas) {
+                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
+            }
+            return html;
+        }
+    },
+    {
+        title: "权限列表",
+        field: 'Permissions',
+        formatter: function cellStyle(value, row, index) {
+            var datas = row.Permissions;
+            var html = "";
+            var url = "/permission/";
+            for (key in datas) {
+                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
+            }
+            return html;
+        }
+    },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/role/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
+//权限
+displayTable("#table-permission", "/permission/", [
+    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "权限名称", field: 'Name', sortable: true, order: "desc" },
+    { title: "资源名称", field: 'Source', sortable: true, order: "desc" },
+    {
+        title: "权限类型",
+        field: 'Relation',
         sortable: true,
         order: "desc",
         align: "center",
         formatter: function cellStyle(value, row, index) {
             var html = "";
-            if (row.active) {
+            if (row.ProductType == "owner") {
+                html = '私有权限';
+            } else if (row.ProductType == "role") {
+                html = '角色权限';
+            } else {
+                html = '-';
+            }
+            return html;
+        }
+    },
+    {
+        title: "创建权限",
+        field: 'PermCreate',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.PermCreate) {
                 html = '<i class="fa fa-check"></i>';
             } else {
                 html = '<i class="fa fa-remove"></i>';
@@ -315,15 +395,77 @@ displayTable("#table-group", "/group/", [
             return html;
         }
     },
-    { title: "定位", field: 'location', sortable: true, order: "desc" },
-    { title: "描述", field: 'description', sortable: true },
+    {
+        title: "创建权限",
+        field: 'PermCreate',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.PermCreate) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "查询权限",
+        field: 'PermRead',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.PermRead) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "修改权限",
+        field: 'PermWrite',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.PermWrite) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "删除权限",
+        field: 'PermDelete',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.PermCreate) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
     {
         title: "操作",
         align: "center",
         field: 'action',
         formatter: function cellStyle(value, row, index) {
             var html = "";
-            var url = "/group/";
+            var url = "/permission/";
             html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
             html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
             return html;

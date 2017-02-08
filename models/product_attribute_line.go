@@ -137,15 +137,17 @@ func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
+		if cnt > 0 {
+			paginator = utils.GenPaginator(limit, offset, cnt)
+			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
+				paginator.CurrentPageSize = num
+				for i, _ := range objArrs {
+					o.LoadRelated(&objArrs[i], "AttributeValues")
+				}
+			}
+		}
+	}
 
-		paginator = utils.GenPaginator(limit, offset, cnt)
-	}
-	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-		paginator.CurrentPageSize = num
-	}
-	for i, _ := range objArrs {
-		o.LoadRelated(&objArrs[i], "AttributeValues")
-	}
 	return paginator, objArrs, err
 }
 

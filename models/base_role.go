@@ -3,67 +3,85 @@ package models
 import (
 	"errors"
 	"fmt"
-	"goERP/utils"
+	"pms/utils"
 	"strings"
 	"time"
 
 	"github.com/astaxie/beego/orm"
 )
 
-//Group 权限组
-type Group struct {
-	ID            int64     `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser    *User     `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser    *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate    time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate    time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction    string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name          string    `orm:"unique" xml:"name"`                    //组名称
-	Members       []*User   `orm:"reverse(many)"`                        //组员
-	GlobalLoation string    `orm:"unique" `                              //全局定位
-	Active        bool      `orm:"default(true)"`                        //是否有效
-	Description   string    `orm:"default(\"\")"`                        //描述
+// Role  角色
+type Role struct {
+	ID          int64         `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser  *User         `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser  *User         `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate  time.Time     `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate  time.Time     `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Name        string        `orm:"unique" json:"Name"`                   //角色名称
+	Users       []*User       `orm:"rel(m2m)" json:"-"`                    //角色所对应的用户
+	Permissions []*Permission `orm:"reverse(many)"`                        //权限列表
 }
 
 func init() {
-	orm.RegisterModel(new(Group))
+	orm.RegisterModel(new(Role))
 }
 
-// AddGroup insert a new Group into database and returns
+// Role insert a new Role into database and returns
 // last inserted ID on success.
-func AddGroup(obj *Group) (id int64, err error) {
+func AddRole(obj *Role, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
 	id, err = o.Insert(obj)
+	if err == nil {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
-// GetGroupByID retrieves Group by ID. Returns error if
+// GetRoleByID retrieves Role by ID. Returns error if
 // ID doesn't exist
-func GetGroupByID(id int64) (obj *Group, err error) {
+func GetRoleByID(id int64) (obj *Role, err error) {
 	o := orm.NewOrm()
-	obj = &Group{ID: id}
+	obj = &Role{ID: id}
 	if err = o.Read(obj); err == nil {
-		return obj, nil
+		return obj, err
 	}
 	return nil, err
 }
 
-// GetGroupByName retrieves Group by Name. Returns error if
+// GetRoleByName retrieves Role by Name. Returns error if
 // Name doesn't exist
-func GetGroupByName(name string) (obj *Group, err error) {
+func GetRoleByName(name string) (*Role, error) {
 	o := orm.NewOrm()
-	obj = &Group{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
+	var obj Role
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }
 
-// GetAllGroup retrieves all Group matches certain condition. Returns empty list if
+// GetAllRole retrieves all Role matches certain condition. Returns empty list if
 // no records exist
-func GetAllGroup(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []Group, error) {
+func GetAllRole(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []Role, error) {
 	var (
-		objArrs   []Group
+		objArrs   []Role
 		paginator utils.Paginator
 		num       int64
 		err       error
@@ -71,8 +89,9 @@ func GetAllGroup(query map[string]interface{}, exclude map[string]interface{}, c
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(Group))
+	qs := o.QueryTable(new(Role))
 	qs = qs.RelatedSel()
 
 	//cond k=v cond必须放到Filter和Exclude前面
@@ -104,7 +123,6 @@ func GetAllGroup(query map[string]interface{}, exclude map[string]interface{}, c
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -115,7 +133,7 @@ func GetAllGroup(query map[string]interface{}, exclude map[string]interface{}, c
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -129,7 +147,7 @@ func GetAllGroup(query map[string]interface{}, exclude map[string]interface{}, c
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -146,38 +164,42 @@ func GetAllGroup(query map[string]interface{}, exclude map[string]interface{}, c
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
-		paginator = utils.GenPaginator(limit, offset, cnt)
+		if cnt > 0 {
+			paginator = utils.GenPaginator(limit, offset, cnt)
+			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
+				paginator.CurrentPageSize = num
+				for i, _ := range objArrs {
+					o.LoadRelated(&objArrs[i], "Permissions")
+					o.LoadRelated(&objArrs[i], "Users")
+				}
+			}
+		}
 	}
-	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-		paginator.CurrentPageSize = num
-	}
+
 	return paginator, objArrs, err
 }
 
-// UpdateGroupByID updates Group by ID and returns error if
+// UpdateRole updates Role by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateGroupByID(m *Group) (err error) {
+func UpdateRole(obj *Role, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := Group{ID: m.ID}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return
+	return obj.ID, err
 }
 
-// DeleteGroup deletes Group by ID and returns error if
+// DeleteRole deletes Role by ID and returns error if
 // the record to be deleted doesn't exist
-func DeleteGroup(id int64) (err error) {
+func DeleteRole(id int64) (err error) {
 	o := orm.NewOrm()
-	v := Group{ID: id}
+	v := Role{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&Group{ID: id}); err == nil {
+		if num, err = o.Delete(&Role{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

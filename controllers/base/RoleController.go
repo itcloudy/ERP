@@ -1,20 +1,20 @@
-package address
+package base
 
 import (
 	"bytes"
 	"encoding/json"
-	cb "goERP/controllers/base"
 	md "goERP/models"
 	"strconv"
 	"strings"
 )
 
-type AddressDistrictController struct {
-	cb.BaseController
+// RoleController 公司
+type RoleController struct {
+	BaseController
 }
 
-func (ctl *AddressDistrictController) Post() {
-	ctl.URL = "/address/district/"
+func (ctl *RoleController) Post() {
+	ctl.URL = "/role/"
 	ctl.Data["URL"] = ctl.URL
 	action := ctl.Input().Get("action")
 	switch action {
@@ -28,9 +28,9 @@ func (ctl *AddressDistrictController) Post() {
 		ctl.PostList()
 	}
 }
-func (ctl *AddressDistrictController) Get() {
-	ctl.URL = "/address/district/"
-	ctl.PageName = "区县管理"
+func (ctl *RoleController) Get() {
+	ctl.URL = "/role/"
+	ctl.PageName = "角色管理"
 	action := ctl.Input().Get("action")
 	switch action {
 	case "create":
@@ -49,24 +49,24 @@ func (ctl *AddressDistrictController) Get() {
 	b.WriteString(ctl.PageAction)
 	ctl.Data["PageName"] = b.String()
 	ctl.Data["URL"] = ctl.URL
-	ctl.Data["MenuAddressDistrictActive"] = "active"
+	ctl.Data["MenuRoleActive"] = "active"
 }
 
 // Put 修改产品款式
-func (ctl *AddressDistrictController) Put() {
+func (ctl *RoleController) Put() {
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
-	district := new(md.AddressDistrict)
+	role := new(md.Role)
 	var (
 		err    error
 		id     int64
 		errs   []error
 		debugs []string
 	)
-	if err = json.Unmarshal([]byte(postData), district); err == nil {
+	if err = json.Unmarshal([]byte(postData), role); err == nil {
 		// 获得struct表名
-		// structName := reflect.Indirect(reflect.ValueOf(district)).Type().Name()
-		if id, err = md.AddAddressDistrict(district, &ctl.User); err == nil {
+		// structName := reflect.Indirect(reflect.ValueOf(role)).Type().Name()
+		if id, err = md.AddRole(role, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
@@ -86,18 +86,19 @@ func (ctl *AddressDistrictController) Put() {
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
-func (ctl *AddressDistrictController) PostCreate() {
+func (ctl *RoleController) PostCreate() {
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
-	district := new(md.AddressDistrict)
+	role := new(md.Role)
 	var (
 		err error
 		id  int64
 	)
-	if err = json.Unmarshal([]byte(postData), district); err == nil {
+	if err = json.Unmarshal([]byte(postData), role); err == nil {
 		// 获得struct表名
-		// structName := reflect.Indirect(reflect.ValueOf(district)).Type().Name()
-		if id, err = md.AddAddressDistrict(district, &ctl.User); err == nil {
+		// structName := reflect.Indirect(reflect.ValueOf(role)).Type().Name()
+
+		if id, err = md.AddRole(role, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
@@ -113,13 +114,13 @@ func (ctl *AddressDistrictController) PostCreate() {
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
-func (ctl *AddressDistrictController) Edit() {
+func (ctl *RoleController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-			if district, err := md.GetAddressDistrictByID(idInt64); err == nil {
-				ctl.PageAction = district.Name
-				ctl.Data["District"] = district
+			if role, err := md.GetRoleByID(idInt64); err == nil {
+				ctl.PageAction = role.Name
+				ctl.Data["Role"] = role
 			}
 		}
 	}
@@ -127,29 +128,29 @@ func (ctl *AddressDistrictController) Edit() {
 	ctl.Data["RecordID"] = id
 	ctl.Data["FormField"] = "form-edit"
 	ctl.Layout = "base/base.html"
-	ctl.TplName = "address/address_district_form.html"
+	ctl.TplName = "security/role_form.html"
 }
-func (ctl *AddressDistrictController) Detail() {
+func (ctl *RoleController) Detail() {
 	ctl.Edit()
 	ctl.Data["Readonly"] = true
 	ctl.Data["FormTreeField"] = "form-tree-edit"
 	ctl.Data["Action"] = "detail"
 }
-func (ctl *AddressDistrictController) Create() {
+func (ctl *RoleController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
 	ctl.Layout = "base/base.html"
 	ctl.Data["FormField"] = "form-create"
 	ctl.Data["FormTreeField"] = "form-tree-create"
-	ctl.TplName = "address/address_district_form.html"
+	ctl.TplName = "security/role_form.html"
 }
 
-func (ctl *AddressDistrictController) Validator() {
+func (ctl *RoleController) Validator() {
 	name := strings.TrimSpace(ctl.GetString("Name"))
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
-	obj, err := md.GetAddressDistrictByName(name)
+	obj, err := md.GetRoleByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
@@ -170,34 +171,20 @@ func (ctl *AddressDistrictController) Validator() {
 }
 
 // 获得符合要求的款式数据
-func (ctl *AddressDistrictController) addressTemplateList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *RoleController) addressTemplateList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
-	var arrs []md.AddressDistrict
-	paginator, arrs, err := md.GetAllAddressDistrict(query, exclude, cond, fields, sortby, order, offset, limit)
+	var arrs []md.Role
+	paginator, arrs, err := md.GetAllRole(query, exclude, cond, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
 		//使用多线程来处理数据，待修改
 		tableLines := make([]interface{}, 0, 4)
-		provinceMap := make(map[int64]string)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
 			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
-			provinceID := line.City.Province.ID
-			if _, ok := provinceMap[provinceID]; ok != true {
-				if province, e := md.GetAddressProvinceByID(line.City.Province.ID); e == nil {
-					provinceMap[provinceID] = province.Country.Name
-				}
-			}
-			if _, ok := provinceMap[provinceID]; ok {
-				oneLine["Country"] = provinceMap[provinceID]
-			}
-			oneLine["City"] = line.City.Name
-
-			oneLine["Province"] = line.City.Province.Name
-
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -208,7 +195,7 @@ func (ctl *AddressDistrictController) addressTemplateList(query map[string]inter
 	}
 	return result, err
 }
-func (ctl *AddressDistrictController) PostList() {
+func (ctl *RoleController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
@@ -218,24 +205,29 @@ func (ctl *AddressDistrictController) PostList() {
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 0, 1)
 	order := make([]string, 0, 1)
-	if CityID, err := ctl.GetInt64("CityID"); err == nil {
-		query["City.Id"] = CityID
-	}
 	if ID, err := ctl.GetInt64("Id"); err == nil {
 		query["Id"] = ID
 	}
 	if name := strings.TrimSpace(ctl.GetString("Name")); name != "" {
 		condAnd["Name.icontains"] = name
 	}
+	if identity := strings.TrimSpace(ctl.GetString("Identity")); identity != "" {
+		condAnd["Identity"] = identity
+	}
 	filter := ctl.GetString("filter")
 	if filter != "" {
 		json.Unmarshal([]byte(filter), &filterMap)
 	}
-	// 对filterMap进行判断
 	if filterName, ok := filterMap["Name"]; ok {
 		filterName = strings.TrimSpace(filterName.(string))
 		if filterName != "" {
 			condAnd["Name.icontains"] = filterName
+		}
+	}
+	if filterIdentity, ok := filterMap["Identity"]; ok {
+		filterIdentity = strings.TrimSpace(filterIdentity.(string))
+		if filterIdentity != "" {
+			condAnd["Identity"] = filterIdentity
 		}
 	}
 	if len(condAnd) > 0 {
@@ -263,13 +255,13 @@ func (ctl *AddressDistrictController) PostList() {
 
 }
 
-func (ctl *AddressDistrictController) GetList() {
+func (ctl *RoleController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {
 		ctl.Data["ViewType"] = "table"
 	}
 	ctl.PageAction = "列表"
-	ctl.Data["tableId"] = "table-address-district"
+	ctl.Data["tableId"] = "table-role"
 	ctl.Layout = "base/base_list_view.html"
-	ctl.TplName = "address/address_district_list_search.html"
+	ctl.TplName = "security/role_list_search.html"
 }

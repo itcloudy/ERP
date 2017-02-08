@@ -20,7 +20,8 @@
             <!--<li class="header text-center">菜单</li>-->
             <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}
             {{.MenuAddressCountryActive}}{{.MenuAddressProvinceActive}}{{.MenuAddressCityActive}}{{.MenuAddressDistrictActive}}{{.MenuUserActive}}
-            {{.MenuGroupActive}}{{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}{{.MenuSequenceActive}}">
+            {{.MenuGroupActive}}{{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}{{.MenuSequenceActive}}
+            {{.MenuSourceActive}}{{.MenuRoleActive}}{{.MenuPermissionActive}}">
                 <a href="#">
                     <i class="fa fa-gears"></i>
                     <span>设置</span>
@@ -33,7 +34,13 @@
                             <li class="{{.MenuRecordActive}}"><a href="/record/"><i class="fa fa-list-ol"></i>登录记录</a></li>
                         </ul>
                     </li>
-                    <li class="{{.MenuGroupActive}}"><a class="{{.MenuGroupActive}}" href="/group/"><i class="fa fa-gavel" aria-hidden="true"></i>权限管理</a></li>
+                    <li class="treeview {{.MenuSourceActive}}{{.MenuRoleActive}}{{.MenuPermissionActive}}"><a href="#"><i class="fa fa-film" aria-hidden="true"></i></i>权限管理</a>
+                        <ul class="treeview-menu">
+                            <li class="{{.MenuSourceActive}}"><a href="/source/"><i class="fa fa-calendar-minus-o" aria-hidden="true"></i>系统资源</a></li>
+                            <li class="{{.MenuRoleActive}}"><a href="/role/"><i class="fa fa-bars" aria-hidden="true"></i>角色管理</a></li>
+                            <li class="{{.MenuPermissionActive}}"><a href="/permission/"><i class="fa fa-lock" aria-hidden="true"></i>权限设置</a></li>
+                        </ul>
+                    </li>
                     <li class="treeview {{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}">
                         <a href="#"><i class="fa fa-indent" aria-hidden="true"></i>公司管理</a>
                         <ul class="treeview-menu">

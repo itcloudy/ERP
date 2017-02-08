@@ -25,7 +25,6 @@ func InitDb() {
 			xmDir += split + "init_xml" + split
 			initUser(xmDir + "Users.xml")
 			if user, err := md.GetUserByID(1); err == nil {
-				initGroup(xmDir+"Groups.xml", user)
 				initCountry(xmDir+"Countries.xml", user)
 				initProvince(xmDir+"Provinces.xml", user)
 				initCity(xmDir+"Cities.xml", user)
@@ -58,20 +57,6 @@ func initUser(filename string) {
 				for _, k := range initUsers.Users {
 					//admin系统管理员
 					md.AddUser(&k)
-				}
-			}
-		}
-	}
-
-}
-func initGroup(filename string, user *md.User) {
-	if file, err := os.Open(filename); err == nil {
-		defer file.Close()
-		if data, err := ioutil.ReadAll(file); err == nil {
-			var initGroups InitGroups
-			if xml.Unmarshal(data, &initGroups) == nil {
-				for _, k := range initGroups.Groups {
-					md.AddGroup(&k)
 				}
 			}
 		}

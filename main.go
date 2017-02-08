@@ -56,6 +56,8 @@ func init() {
 	orm.RunSyncdb(dbAlias, coverDb, true)
 	InitApp()
 	InitDb()
+	// 加载权限控制文件
+	LoadSecurity()
 	beego.AddFuncMap("i18n", i18n.Tr)
 
 }

@@ -28,8 +28,7 @@ type User struct {
 	Tel             string      `orm:"size(20);default(\"\")" json:"Tel" json:"tel"`      //固定号码
 	Password        string      `xml:"password" json:"Password" json:"password"`          //密码
 	ConfirmPassword string      `orm:"-" xml:"ConfirmPassword" json:"ConfirmPassword"`    //确认密码,数据库中不保存
-	Groups          []*Group    `orm:"rel(m2m);rel_table(user_groups)"`                   //权限组
-	GroupIDs        []string    `orm:"-" json:"Group"`                                    //权限组，用于form表单
+	Roles           []*Role     `orm:"reverse(many)"`                                     //用户拥有的角色
 	Teams           []*Team     `orm:"rel(m2m);rel_table(user_teams)"`                    //团队
 	TeamIDs         []string    `orm:"-" json:"Team"`                                     //团队，用于form表单
 	IsAdmin         bool        `orm:"default(false)" xml:"isAdmin" json:"IsAdmin"`       //是否为超级用户
@@ -65,9 +64,7 @@ func GetUserByID(id int64) (obj *User, err error) {
 		if obj.Department != nil {
 			o.Read(obj.Department)
 		}
-		if obj.Groups != nil {
-			o.LoadRelated(obj, "Groups")
-		}
+
 		if obj.Position != nil {
 			o.Read(obj.Position)
 		}
@@ -147,7 +144,7 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -161,7 +158,7 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -178,10 +175,12 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
-		paginator = utils.GenPaginator(limit, offset, cnt)
-	}
-	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-		paginator.CurrentPageSize = num
+		if cnt > 0 {
+			paginator = utils.GenPaginator(limit, offset, cnt)
+			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
+				paginator.CurrentPageSize = num
+			}
+		}
 	}
 	return paginator, objArrs, err
 }

@@ -196,14 +196,17 @@ func GetAllTeam(query map[string]interface{}, exclude map[string]interface{}, co
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
-		paginator = utils.GenPaginator(limit, offset, cnt)
+		if cnt > 0 {
+			paginator = utils.GenPaginator(limit, offset, cnt)
+			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
+				paginator.CurrentPageSize = num
+				for i, _ := range objArrs {
+					o.LoadRelated(&objArrs[i], "Members")
+				}
+			}
+		}
 	}
-	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-		paginator.CurrentPageSize = num
-	}
-	for i, _ := range objArrs {
-		o.LoadRelated(&objArrs[i], "Members")
-	}
+
 	return paginator, objArrs, err
 }
 

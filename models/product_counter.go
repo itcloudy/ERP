@@ -160,17 +160,20 @@ func GetAllProductCounter(query map[string]interface{}, exclude map[string]inter
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
-		paginator = utils.GenPaginator(limit, offset, cnt)
+		if cnt > 0 {
+			paginator = utils.GenPaginator(limit, offset, cnt)
+			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
+				paginator.CurrentPageSize = num
+				for i, _ := range objArrs {
+					o.LoadRelated(&objArrs[i], "ProductProducts")
+					objArrs[i].ProductsCount = len(objArrs[i].ProductProducts)
+					o.LoadRelated(&objArrs[i], "ProductTemplates")
+					objArrs[i].TemplatesCount = len(objArrs[i].ProductTemplates)
+				}
+			}
+		}
 	}
-	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-		paginator.CurrentPageSize = num
-	}
-	for i, _ := range objArrs {
-		o.LoadRelated(&objArrs[i], "ProductProducts")
-		objArrs[i].ProductsCount = len(objArrs[i].ProductProducts)
-		o.LoadRelated(&objArrs[i], "ProductTemplates")
-		objArrs[i].TemplatesCount = len(objArrs[i].ProductTemplates)
-	}
+
 	return paginator, objArrs, err
 }
 

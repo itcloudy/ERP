@@ -5,11 +5,11 @@ import (
 	md "goERP/models"
 )
 
-type InitGroups struct {
-	XMLName xml.Name   `xml:"Groups"`
-	Groups  []md.Group `xml:"group"`
+// InitSources 资源标识符
+type InitSources struct {
+	XMLName xml.Name    `xml:"Sources"`
+	Sources []md.Source `xml:"source"`
 }
-
 type InitUsers struct {
 	XMLName xml.Name  `xml:"Users"`
 	Users   []md.User `xml:"user"`

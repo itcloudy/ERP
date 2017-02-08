@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Sources>
+    <source>
+        <name>用户表</name>
+        <identity>User</identity>
+    </source>
+     <source>
+        <name>国家</name>
+        <identity>AddressCountry</identity>
+    </source>
+     <source>
+        <name>省份</name>
+        <identity>AddressProvince</identity>
+    </source>
+    <source>
+        <name>城市</name>
+        <identity>AddressCity</identity>
+    </source>
+    <source>
+        <name>区县</name>
+        <identity>AddressDistrict</identity>
+    </source>
+     <source>
+        <name>公司</name>
+        <identity>Company</identity>
+    </source>
+     <source>
+        <name>部门</name>
+        <identity>Department</identity>
+    </source>
+     <source>
+        <name>团队</name>
+        <identity>Team</identity>
+    </source>
+     <source>
+        <name>登录日志</name>
+        <identity>Record</identity>
+    </source>
+     <source>
+        <name>单据序号</name>
+        <identity>Sequence</identity>
+    </source>
+</Sources>

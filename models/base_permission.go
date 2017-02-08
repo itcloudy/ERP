@@ -3,55 +3,90 @@ package models
 import (
 	"errors"
 	"fmt"
+	"pms/utils"
 	"strings"
 	"time"
-
-	"goERP/utils"
 
 	"github.com/astaxie/beego/orm"
 )
 
-// SaleOrderLineState 订单明细状态
-type SaleOrderLineState struct {
+// Permission  权限控制
+type Permission struct {
 	ID         int64     `orm:"column(id);pk;auto" json:"id"`         //主键
 	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
 	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name       string    `orm:"default(\"\")" json:"name"`            ///状态名称
-
+	Name       string    `orm:"unique" json:"Name"`                   //权限名称
+	Source     *Source   `orm:"rel(fk)"`                              //权限对应的资源
+	PermCreate bool      `orm:"default(true)" json:"PermCreate"`      //权限:增
+	PermRead   bool      `orm:"default(true)" json:"PermRead"`        //权限:查
+	PermWrite  bool      `orm:"default(true)" json:"PermWrite"`       //权限:改
+	PermDelete bool      `orm:"default(false)" json:"PermDelete"`     //权限:删
+	Relation   string    `json:"Relation"`                            //该权限是私有还是角色权限role owner
+	Role       *Role     `orm:"rel(fk)"`                              //拥有该权限的角色
 }
 
 func init() {
-	orm.RegisterModel(new(SaleOrderLineState))
+	orm.RegisterModel(new(Permission))
 }
 
-// AddSaleOrderLineState insert a new SaleOrderLineState into database and returns
+// Permission insert a new Permission into database and returns
 // last inserted ID on success.
-func AddSaleOrderLineState(obj *SaleOrderLineState) (id int64, err error) {
+func AddPermission(obj *Permission, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
 	id, err = o.Insert(obj)
+	if err == nil {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
-// GetSaleOrderLineStateByID retrieves SaleOrderLineState by ID. Returns error if
+// GetPermissionByID retrieves Permission by ID. Returns error if
 // ID doesn't exist
-func GetSaleOrderLineStateByID(id int64) (obj *SaleOrderLineState, err error) {
+func GetPermissionByID(id int64) (obj *Permission, err error) {
 	o := orm.NewOrm()
-	obj = &SaleOrderLineState{ID: id}
+	obj = &Permission{ID: id}
 	if err = o.Read(obj); err == nil {
-		return obj, nil
+		return obj, err
 	}
 	return nil, err
 }
 
-// GetAllSaleOrderLineState retrieves all SaleOrderLineState matches certain condition. Returns empty list if
+// GetPermissionByName retrieves Permission by Name. Returns error if
+// Name doesn't exist
+func GetPermissionByName(name string) (*Permission, error) {
+	o := orm.NewOrm()
+	var obj Permission
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
+}
+
+// GetAllPermission retrieves all Permission matches certain condition. Returns empty list if
 // no records exist
-func GetAllSaleOrderLineState(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []SaleOrderLineState, error) {
+func GetAllPermission(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []Permission, error) {
 	var (
-		objArrs   []SaleOrderLineState
+		objArrs   []Permission
 		paginator utils.Paginator
 		num       int64
 		err       error
@@ -59,8 +94,9 @@ func GetAllSaleOrderLineState(query map[string]interface{}, exclude map[string]i
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(SaleOrderLineState))
+	qs := o.QueryTable(new(Permission))
 	qs = qs.RelatedSel()
 
 	//cond k=v cond必须放到Filter和Exclude前面
@@ -92,7 +128,6 @@ func GetAllSaleOrderLineState(query map[string]interface{}, exclude map[string]i
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -103,7 +138,7 @@ func GetAllSaleOrderLineState(query map[string]interface{}, exclude map[string]i
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -117,7 +152,7 @@ func GetAllSaleOrderLineState(query map[string]interface{}, exclude map[string]i
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -144,41 +179,27 @@ func GetAllSaleOrderLineState(query map[string]interface{}, exclude map[string]i
 	return paginator, objArrs, err
 }
 
-// UpdateSaleOrderLineStateByID updates SaleOrderLineState by ID and returns error if
+// UpdatePermission updates Permission by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateSaleOrderLineStateByID(m *SaleOrderLineState) (err error) {
+func UpdatePermission(obj *Permission, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := SaleOrderLineState{ID: m.ID}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return
+	return obj.ID, err
 }
 
-// GetSaleOrderLineStateByName retrieves SaleOrderLineState by Name. Returns error if
-// Name doesn't exist
-func GetSaleOrderLineStateByName(name string) (obj *SaleOrderLineState, err error) {
-	o := orm.NewOrm()
-	obj = &SaleOrderLineState{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
-}
-
-// DeleteSaleOrderLineState deletes SaleOrderLineState by ID and returns error if
+// DeletePermission deletes Permission by ID and returns error if
 // the record to be deleted doesn't exist
-func DeleteSaleOrderLineState(id int64) (err error) {
+func DeletePermission(id int64) (err error) {
 	o := orm.NewOrm()
-	v := SaleOrderLineState{ID: id}
+	v := Permission{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&SaleOrderLineState{ID: id}); err == nil {
+		if num, err = o.Delete(&Permission{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

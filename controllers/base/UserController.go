@@ -27,23 +27,6 @@ func (ctl *UserController) Put() {
 						upateField = append(upateField, "Department")
 					}
 				}
-				groupIDsStr := ctl.GetStrings("group")
-				var groupIDs []int64
-				for _, el := range groupIDsStr {
-					if idInt64, err := strconv.ParseInt(el, 10, 64); err == nil {
-						groupIDs = append(groupIDs, idInt64)
-					}
-				}
-				if len(groupIDs) > 0 {
-					var groups []*md.Group
-					for _, groupID := range groupIDs {
-						if group, err := md.GetGroupByID(groupID); err == nil {
-							groups = append(groups, group)
-						}
-					}
-					user.Groups = groups
-					upateField = append(upateField, "Groups")
-				}
 				if positionID, err := ctl.GetInt64("position"); err == nil {
 					if position, err := md.GetPositionByID(positionID); err == nil {
 						user.Position = position
