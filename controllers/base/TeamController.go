@@ -73,7 +73,7 @@ func (ctl *TeamController) Edit() {
 	ctl.Data["Team"] = teamInfo
 	ctl.Layout = "base/base.html"
 
-	ctl.TplName = "base/team_form.html"
+	ctl.TplName = "user/team_form.html"
 }
 
 // Detail dispaly team info
@@ -90,7 +90,7 @@ func (ctl *TeamController) Create() {
 	ctl.Data["Readonly"] = false
 
 	ctl.Layout = "base/base.html"
-	ctl.TplName = "base/team_form.html"
+	ctl.TplName = "user/team_form.html"
 }
 
 // Validator js valid
@@ -182,5 +182,5 @@ func (ctl *TeamController) PostList() {
 // GetList display team with table
 func (ctl *TeamController) GetList() {
 	ctl.Data["tableId"] = "table-team"
-	ctl.TplName = "base/base_list_view.html"
+	ctl.TplName = "user/base_list_view.html"
 }

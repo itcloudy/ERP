@@ -81,7 +81,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 }
             } else {
                 var val = $(self).val();
-
+                console.log(self.name + ":" + val);
                 if (val != "") {
                     // 若为null跳出此次循环
                     if (val === null) {
@@ -226,7 +226,7 @@ $(function() {
                     regexp: /^[a-zA-Z0-9_\.]+$/,
                     message: '用户名由数字字母下划线和.组成'
                 }
-            },
+            }
         },
         NameZh: {
             message: "该值无效",
@@ -234,7 +234,7 @@ $(function() {
                 notEmpty: {
                     message: "用户名(中文)不能为空"
                 }
-            },
+            }
         },
         Mobile: {
             message: "该值无效",
@@ -341,6 +341,98 @@ $(function() {
                 }
             }
         },
+    });
+    // 公司
+    BootstrapValidator("#companyForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "公司名称不能为空"
+                },
+                remote: {
+                    url: "/company/",
+                    message: "用户已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+
+                        var params = {
+                            action: "validator"
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        },
+        Code: {
+            message: "该值无效",
+            validators: {
+                remote: {
+                    url: "/company/",
+                    message: "公司编码已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+
+                        var params = {
+                            action: "validator"
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        },
+        Province: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "省份不能为空"
+                }
+            }
+        },
+        City: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "城市不能为空"
+                }
+            }
+        },
+        District: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "区县不能为空"
+                }
+            }
+        },
+        Street: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "街道不能为空"
+                }
+            }
+        }
     });
     // 序列号
     BootstrapValidator("#sequenceForm", {

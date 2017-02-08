@@ -1,0 +1,133 @@
+<div class="row">
+    <p id="list-title">{{.PageName}}</p>
+</div>
+
+<form id="companyForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+    <div class="row">
+        {{if .RecordID}} {{if .Readonly}}
+        <a href="{{.URL}}{{.RecordID}}?action=edit" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</a>
+        <a href="{{.URL}}?action=create" type="buttom" class="btn btn-success fa fa-plus pull-left form-create-btn">&nbsp新建</a>{{end}}{{end}}
+        <button type="submit" form="companyForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button> {{if .Readonly}}
+        <button type="button" class="btn btn-danger fa fa-remove  pull-left form-cancel-btn">&nbsp取消</button> {{else}}
+        <a href="{{.URL}}" class="btn btn-danger fa fa-remove  pull-left">&nbsp取消</a> {{end}}
+        <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
+    </div>
+    {{ .xsrf }} {{if .RecordID}}
+    <input type="hidden" data-type="int" class="{{.FormField}}" name="recordID" id="record-id" value="{{.RecordID}}"> {{end}}
+
+    <div class="row">
+        <div class="col-md-6">
+            <fieldset>
+                <legend>基本信息</legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name" class="col-md-4 control-label label-start">公司名称<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Company}} {{.Company.Name}} {{end}}</p>
+                                <input data-type="string" class="{{.FormField}} form-control" name="Name" type="text" {{if .Company}} value="{{.Company.Name}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="code" class="col-md-4 control-label label-start">公司编码</label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Company}} {{.Company.Code}} {{end}}</p>
+                                <input data-type="string" class="{{.FormField}} form-control" name="Code" type="text" {{if .Company}} value="{{.Company.Code}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="parent" class="col-md-4 control-label label-start">母公司</label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Company .Company.Parent}} {{.Company.Parent.Name}}{{end}}</p>
+                                <select data-type="int" name="Parent" id="parent" class="{{.FormField}} form-control select-company">
+                             {{if and .Company .Company.Parent}}
+                            <option value="{{.Company.Parent.ID}}" selected="selected">{{.Company.Parent.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-md-6">
+            <fieldset>
+                <legend>地址信息</legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="country" class="col-md-4 control-label label-start">国家<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Company .Company.Country}} {{.Company.Country.Name}}{{end}}</p>
+                                <select data-type="int" name="Country" id="country" class="{{.FormField}} form-control select-address-country">
+                             {{if and .Company .Company.Country}}
+                            <option value="{{.Company.Country.ID}}" selected="selected">{{.Company.Country.Name}}</option>
+                            {{else}}<option value="1" selected="selected">中国</option>{{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="province" class="col-md-4 control-label label-start">省份<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Company .Company.Province}} {{.Company.Province.Name}}{{end}}</p>
+                                <select data-type="int" name="Province" id="province" class="{{.FormField}} form-control select-address-province">
+                             {{if and .Company .Company.Province}}
+                            <option value="{{.Company.Province.ID}}" selected="selected">{{.Company.Province.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="city" class="col-md-4 control-label label-start">城市<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Company .Company.City}} {{.Company.City.Name}}{{end}}</p>
+                                <select data-type="int" name="City" id="city" class="{{.FormField}} form-control select-address-city">
+                             {{if and .Company .Company.City}}
+                            <option value="{{.Company.City.ID}}" selected="selected">{{.Company.City.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="district" class="col-md-4 control-label label-start">区县<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Company .Company.District}} {{.Company.District.Name}}{{end}}</p>
+                                <select data-type="int" name="District" id="district" class="{{.FormField}} form-control select-address-district">
+                             {{if and .Company .Company.District}}
+                            <option value="{{.Company.District.ID}}" selected="selected">{{.Company.District.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="Street" class="col-md-2 control-label label-start">街道<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-10">
+                                <p class="p-form-control">{{if .Company}} {{.Company.Street}} {{end}}</p>
+                                <textarea data-type="string" class="{{.FormField}}  form-control" name="Street" rows="2" placeholder="请输入街道信息">{{if .Company}}  {{.Company.Street}} {{end}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+</form>

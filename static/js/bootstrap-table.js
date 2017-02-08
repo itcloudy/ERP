@@ -204,6 +204,70 @@ displayTable("#table-user", "/user/", [
         }
     });
 });
+// 公司
+displayTable("#table-company", '/company/', [
+    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "公司名称", field: 'Name', sortable: true, order: "desc" },
+    { title: "公司编码", field: 'Code', sortable: true, order: "desc" },
+    { title: "母公司", field: 'Parent', sortable: true, order: "desc" },
+    { title: "公司地址", field: 'Address' },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/company/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
+// 部门
+displayTable("#table-department", '/department/', [
+    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "部门名称", field: 'Name', sortable: true, order: "desc" },
+    {
+        title: "负责人",
+        field: 'Leader',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = row.Leader.name + "<a class='pull-right' href='/user/" + row.Leader.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/department/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
+// 团队
+displayTable("#table-team", '/team/', [
+    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "团队名称", field: 'Name', sortable: true, order: "desc" },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/team/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
 //权限
 displayTable("#table-group", "/group/", [
     { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
@@ -375,7 +439,7 @@ displayTable("#table-address-city", "/address/city/", [
 //区县表
 displayTable("#table-address-district", "/address/district/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
-    { title: "地区", field: 'Name', sortable: true, order: "desc" },
+    { title: "区县", field: 'Name', sortable: true, order: "desc" },
     { title: "城市", field: 'City', sortable: true, order: "desc" },
     { title: "省份", field: 'Province', sortable: true, order: "desc" },
     { title: "国家", field: 'Country', sortable: true, order: "desc" },

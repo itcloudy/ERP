@@ -133,5 +133,5 @@ func (ctl *PositionController) PostList() {
 func (ctl *PositionController) GetList() {
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-position"
-	ctl.TplName = "base/base_list_view.html"
+	ctl.TplName = "user/base_list_view.html"
 }

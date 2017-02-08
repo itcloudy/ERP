@@ -55,14 +55,16 @@
             </div>
         </div>
         <div class="row">
-            <!--<div class="col-md-3">
+            {{if eq .FormField "form-create"}}
+            <div class="col-md-3">
                 <div class="form-group">
                     <label for="password" class="col-md-4 control-label label-start">密码<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <input class="form-control" name="password" id="password" type="password" />
                     </div>
                 </div>
-            </div>-->
+            </div>
+            {{end}}
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="email" class="col-md-4 control-label label-start">邮箱<span class="required-input">&nbsp*</span></label>
@@ -109,8 +111,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="position" class="col-md-4 control-label label-start">职位<span class="required-input">&nbsp*</span></label>

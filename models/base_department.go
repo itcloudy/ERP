@@ -17,12 +17,15 @@ type Department struct {
 	UpdateUser *User       `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time   `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time   `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction string      `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 	Name       string      `orm:"unique"`                               //团队名称
 	Leader     *User       `orm:"rel(fk);null"`                         //团队领导者
 	Parent     *Department `orm:"rel(fk);null"`                         //上级分类
 	Members    []*User     `orm:"reverse(many)"`                        //组员
 	Company    *Company    `orm:"rel(fk);null"`                         //公司
+	//表单使用字段
+	FormAction string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+	CompanyID  int64  `orm:"-" json:"Company"`    //公司
+	LeaderID   int64  `orm:"-" json:"Leader"`     //负责人
 }
 
 func init() {
@@ -31,9 +34,36 @@ func init() {
 
 // AddDepartment insert a new Department into database and returns
 // last inserted ID on success.
-func AddDepartment(obj *Department) (id int64, err error) {
+func AddDepartment(obj *Department, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
+	if obj.CompanyID != 0 {
+		obj.Company, _ = GetCompanyByID(obj.CompanyID)
+	}
+	if obj.LeaderID != 0 {
+		obj.Leader, _ = GetUserByID(obj.LeaderID)
+	}
 	id, err = o.Insert(obj)
+	if err != nil {
+		return 0, err
+	} else {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
@@ -43,20 +73,29 @@ func GetDepartmentByID(id int64) (obj *Department, err error) {
 	o := orm.NewOrm()
 	obj = &Department{ID: id}
 	if err = o.Read(obj); err == nil {
-		return obj, nil
+		o.LoadRelated(obj, "Department")
+		o.LoadRelated(obj, "Children")
+		o.LoadRelated(obj, "Parent")
+		o.LoadRelated(obj, "Country")
+		o.LoadRelated(obj, "Province")
+		o.LoadRelated(obj, "City")
+		o.LoadRelated(obj, "District")
+		return obj, err
 	}
 	return nil, err
 }
 
-// GetDepartmentByName retrieves Department by ID. Returns error if
+// GetDepartmentByName retrieves Department by Name. Returns error if
 // Name doesn't exist
-func GetDepartmentByName(name string) (obj *Department, err error) {
+func GetDepartmentByName(name string) (*Department, error) {
 	o := orm.NewOrm()
-	obj = &Department{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
+	var obj Department
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }
 
 // GetAllDepartment retrieves all Department matches certain condition. Returns empty list if
@@ -71,6 +110,7 @@ func GetAllDepartment(query map[string]interface{}, exclude map[string]interface
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Department))
 	qs = qs.RelatedSel()
@@ -104,7 +144,6 @@ func GetAllDepartment(query map[string]interface{}, exclude map[string]interface
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -115,7 +154,7 @@ func GetAllDepartment(query map[string]interface{}, exclude map[string]interface
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -129,7 +168,7 @@ func GetAllDepartment(query map[string]interface{}, exclude map[string]interface
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -151,22 +190,22 @@ func GetAllDepartment(query map[string]interface{}, exclude map[string]interface
 	if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 		paginator.CurrentPageSize = num
 	}
+	// for i, _ := range objArrs {
+	// 	o.LoadRelated(&objArrs[i], "AttributeLines")
+	// }
 	return paginator, objArrs, err
 }
 
-// UpdateDepartmentByID updates Department by ID and returns error if
+// UpdateDepartment updates Department by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateDepartmentByID(m *Department) (err error) {
+func UpdateDepartment(obj *Department, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := Department{ID: m.ID}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return
+	return obj.ID, err
 }
 
 // DeleteDepartment deletes Department by ID and returns error if

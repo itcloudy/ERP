@@ -97,6 +97,7 @@ func (ctl *CompanyController) PostCreate() {
 	if err = json.Unmarshal([]byte(postData), company); err == nil {
 		// 获得struct表名
 		// structName := reflect.Indirect(reflect.ValueOf(company)).Type().Name()
+
 		if id, err = md.AddCompany(company, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
@@ -119,7 +120,7 @@ func (ctl *CompanyController) Edit() {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if company, err := md.GetCompanyByID(idInt64); err == nil {
 				ctl.PageAction = company.Name
-				ctl.Data["Province"] = company
+				ctl.Data["Company"] = company
 			}
 		}
 	}
@@ -127,7 +128,7 @@ func (ctl *CompanyController) Edit() {
 	ctl.Data["RecordID"] = id
 	ctl.Data["FormField"] = "form-edit"
 	ctl.Layout = "base/base.html"
-	ctl.TplName = "address/address_company_form.html"
+	ctl.TplName = "user/company_form.html"
 }
 func (ctl *CompanyController) Detail() {
 	ctl.Edit()
@@ -142,7 +143,7 @@ func (ctl *CompanyController) Create() {
 	ctl.Layout = "base/base.html"
 	ctl.Data["FormField"] = "form-create"
 	ctl.Data["FormTreeField"] = "form-tree-create"
-	ctl.TplName = "address/address_company_form.html"
+	ctl.TplName = "user/company_form.html"
 }
 
 func (ctl *CompanyController) Validator() {
@@ -182,9 +183,28 @@ func (ctl *CompanyController) addressTemplateList(query map[string]interface{}, 
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
 			oneLine["Name"] = line.Name
+			oneLine["Code"] = line.Code
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
-			oneLine["Country"] = line.Country.Name
+			if line.Parent != nil {
+				oneLine["Parent"] = line.Parent.Name
+			}
+			b := bytes.Buffer{}
+			if line.Country != nil {
+				b.WriteString(line.Country.Name)
+			}
+			if line.Province != nil {
+				b.WriteString(line.Province.Name)
+			}
+			if line.City != nil {
+				b.WriteString(line.City.Name)
+			}
+			if line.District != nil {
+				b.WriteString(line.District.Name)
+			}
+			b.WriteString(line.Street)
+			oneLine["Address"] = b.String()
+
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -259,7 +279,7 @@ func (ctl *CompanyController) GetList() {
 		ctl.Data["ViewType"] = "table"
 	}
 	ctl.PageAction = "列表"
-	ctl.Data["tableId"] = "table-address-company"
+	ctl.Data["tableId"] = "table-company"
 	ctl.Layout = "base/base_list_view.html"
-	ctl.TplName = "address/address_company_list_search.html"
+	ctl.TplName = "user/company_list_search.html"
 }

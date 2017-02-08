@@ -17,16 +17,23 @@ type Company struct {
 	UpdateUser *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name       string           `orm:"unique" json:"name"`                   //公司名称
-	Children   []*Company       `orm:"reverse(many)" json:"childs"`          //子公司
-	Parent     *Company         `orm:"rel(fk);null" json:"parent"`           //上级公司
-	Department []*Department    `orm:"reverse(many)" json:"departments"`     //部门
-	Country    *AddressCountry  `orm:"rel(fk);null" json:"country"`          //国家
-	Province   *Company         `orm:"rel(fk);null" json:"province"`         //省份
-	City       *AddressCity     `orm:"rel(fk);null" json:"city"`             //城市
-	District   *AddressDistrict `orm:"rel(fk);null" json:"district"`         //区县
-	Street     string           `orm:"default(\"\")" json:"street"`          //街道
+	Name       string           `orm:"unique" json:"Name"`                   //公司名称
+	Code       string           `orm:"unique" json:"Code"`                   //公司编码
+	Children   []*Company       `orm:"reverse(many)" json:"-"`               //子公司
+	Parent     *Company         `orm:"rel(fk);null" json:"-"`                //上级公司
+	Department []*Department    `orm:"reverse(many)" json:"-"`               //部门
+	Country    *AddressCountry  `orm:"rel(fk);null" json:"-"`                //国家
+	Province   *AddressProvince `orm:"rel(fk);null" json:"-"`                //省份
+	City       *AddressCity     `orm:"rel(fk);null" json:"-"`                //城市
+	District   *AddressDistrict `orm:"rel(fk);null" json:"-"`                //区县
+	Street     string           `orm:"default(\"\")" json:"Street"`          //街道
+	//表单使用字段
+	FormAction string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+	ParentID   int64  `orm:"-" json:"Parent"`     //母公司
+	CountryID  int64  `orm:"-" json:"Country"`    //国家
+	ProvinceID int64  `orm:"-" json:"Province"`   //省份
+	CityID     int64  `orm:"-" json:"City"`       //城市
+	DistrictID int64  `orm:"-" json:"District"`   //区县
 }
 
 func init() {
@@ -50,6 +57,21 @@ func AddCompany(obj *Company, addUser *User) (id int64, err error) {
 	if errBegin != nil {
 		return 0, errBegin
 	}
+	if obj.ParentID != 0 {
+		obj.Parent, _ = GetCompanyByID(obj.ParentID)
+	}
+	if obj.CountryID != 0 {
+		obj.Country, _ = GetAddressCountryByID(obj.CountryID)
+	}
+	if obj.ProvinceID != 0 {
+		obj.Province, _ = GetAddressProvinceByID(obj.ProvinceID)
+	}
+	if obj.CityID != 0 {
+		obj.City, _ = GetAddressCityByID(obj.CityID)
+	}
+	if obj.DistrictID != 0 {
+		obj.District, _ = GetAddressDistrictByID(obj.DistrictID)
+	}
 	id, err = o.Insert(obj)
 	if err != nil {
 		return 0, err
@@ -70,6 +92,11 @@ func GetCompanyByID(id int64) (obj *Company, err error) {
 	if err = o.Read(obj); err == nil {
 		o.LoadRelated(obj, "Department")
 		o.LoadRelated(obj, "Children")
+		o.LoadRelated(obj, "Parent")
+		o.LoadRelated(obj, "Country")
+		o.LoadRelated(obj, "Province")
+		o.LoadRelated(obj, "City")
+		o.LoadRelated(obj, "District")
 		return obj, err
 	}
 	return nil, err

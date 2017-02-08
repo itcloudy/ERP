@@ -89,7 +89,7 @@ $(function() {
         });
 
     };
-
+    select2AjaxData(".select-user", "/user/?action=search"); // 选择用户
     select2AjaxData(".select-company", "/company/?action=search"); // 选择公司
     select2AjaxData(".select-department", "/department/?action=search"); // 选择部门
     select2AjaxData(".select-position", "/position/?action=search"); // 选择职位
