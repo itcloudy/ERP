@@ -11,15 +11,16 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// 系统资源
 type Source struct {
-	ID         int64         `orm:"column(id);pk;auto" json:"id"`                  //主键
-	CreateUser *User         `orm:"rel(fk);null" json:"-"`                         //创建者
-	UpdateUser *User         `orm:"rel(fk);null" json:"-"`                         //最后更新者
-	CreateDate time.Time     `orm:"auto_now_add;type(datetime)" json:"-"`          //创建时间
-	UpdateDate time.Time     `orm:"auto_now;type(datetime)" json:"-"`              //最后更新时间
-	Name       string        `orm:"unique;index" json:"Name" xml:"name"`           //资源名称
-	ModelName  string        `orm:"unique;index" json:"ModelName" xml:"modelName"` //资源唯一标识 model名称
-	Permission []*Permission `orm:"reverse(many)"`                                 //权限列表
+	ID          int64         `orm:"column(id);pk;auto" json:"id"`                  //主键
+	CreateUser  *User         `orm:"rel(fk);null" json:"-"`                         //创建者
+	UpdateUser  *User         `orm:"rel(fk);null" json:"-"`                         //最后更新者
+	CreateDate  time.Time     `orm:"auto_now_add;type(datetime)" json:"-"`          //创建时间
+	UpdateDate  time.Time     `orm:"auto_now;type(datetime)" json:"-"`              //最后更新时间
+	Name        string        `orm:"unique;index" json:"Name" xml:"name"`           //资源名称
+	ModelName   string        `orm:"unique;index" json:"ModelName" xml:"modelName"` //资源唯一标识 model名称
+	Permissions []*Permission `orm:"reverse(many)"`                                 //权限列表
 }
 
 func init() {
@@ -59,12 +60,13 @@ func GetSourceByID(id int64) (obj *Source, err error) {
 	o := orm.NewOrm()
 	obj = &Source{ID: id}
 	if err = o.Read(obj); err == nil {
+		o.LoadRelated(obj, "Permissions")
 		return obj, err
 	}
 	return nil, err
 }
 
-// GetSourceByGetSourceByModelName retrieves Source by GetSourceByModelName. Returns error if
+// GetSourceByModelName retrieves Source by GetSourceByModelName. Returns error if
 // ID doesn't exist
 func GetSourceByModelName(modelName string) (*Source, error) {
 	o := orm.NewOrm()
@@ -74,6 +76,9 @@ func GetSourceByModelName(modelName string) (*Source, error) {
 	qs := o.QueryTable(&obj)
 	qs = qs.SetCond(cond)
 	err := qs.One(&obj)
+	if err == nil {
+		o.LoadRelated(&obj, "Permissions")
+	}
 	return &obj, err
 }
 
@@ -87,6 +92,9 @@ func GetSourceByName(name string) (*Source, error) {
 	qs := o.QueryTable(&obj)
 	qs = qs.SetCond(cond)
 	err := qs.One(&obj)
+	if err == nil {
+		o.LoadRelated(&obj, "Permissions")
+	}
 	return &obj, err
 }
 
@@ -181,6 +189,9 @@ func GetAllSource(query map[string]interface{}, exclude map[string]interface{}, 
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
+				for i, _ := range objArrs {
+					o.LoadRelated(&objArrs[i], "Permissions")
+				}
 			}
 		}
 	}

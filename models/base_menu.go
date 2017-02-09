@@ -59,6 +59,7 @@ func GetMenuByID(id int64) (obj *Menu, err error) {
 	o := orm.NewOrm()
 	obj = &Menu{ID: id}
 	if err = o.Read(obj); err == nil {
+		o.LoadRelated(obj, "Roles")
 		return obj, err
 	}
 	return nil, err
@@ -169,8 +170,7 @@ func GetAllMenu(query map[string]interface{}, exclude map[string]interface{}, co
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
 				for i, _ := range objArrs {
-					o.LoadRelated(&objArrs[i], "Permissions")
-					o.LoadRelated(&objArrs[i], "Users")
+					o.LoadRelated(&objArrs[i], "Roles")
 				}
 			}
 		}

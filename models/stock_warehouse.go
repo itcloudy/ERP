@@ -86,6 +86,11 @@ func GetStockWarehouseByID(id int64) (obj *StockWarehouse, err error) {
 	o := orm.NewOrm()
 	obj = &StockWarehouse{ID: id}
 	if err = o.Read(obj); err == nil {
+		o.LoadRelated(obj, "Company")
+		o.LoadRelated(obj, "Country")
+		o.LoadRelated(obj, "Province")
+		o.LoadRelated(obj, "City")
+		o.LoadRelated(obj, "District")
 		return obj, nil
 	}
 	return nil, err

@@ -24,8 +24,8 @@
                         <div class="form-group">
                             <label for="name" class="col-md-4 control-label label-start">资源名称<span class="required-input">&nbsp*</span></label>
                             <div class="col-md-8">
-                                <p class="p-form-control">{{if .Source}} {{.Source.Name}} {{end}}</p>
-                                <input data-type="string" class="{{.FormField}} form-control" id="name" name="Name" type="text" {{if .Source}} value="{{.Source.Name}}" {{end}} />
+                                <p class="p-form-control">{{if .Menu}} {{.Menu.Name}} {{end}}</p>
+                                <input data-type="string" class="{{.FormField}} form-control" id="name" name="Name" type="text" {{if .Menu}} value="{{.Menu.Name}}" {{end}} />
                             </div>
                         </div>
                     </div>
@@ -33,9 +33,29 @@
                         <div class="form-group">
                             <label for="modelName" class="col-md-4 control-label label-start">Model名称<span class="required-input">&nbsp*</span></label>
                             <div class="col-md-8">
-                                <p class="p-form-control">{{if .Source}} {{.Source.Identity}} {{end}}</p>
-                                <input data-type="string" class="{{.FormField}} form-control" id="modelName" name="ModelName" type="text" {{if .Source}} value="{{.Source.Identity}}" {{end}} />
+                                <p class="p-form-control">{{if .Menu}} {{.Menu.Identity}} {{end}}</p>
+                                <input data-type="string" class="{{.FormField}} form-control" id="modelName" name="ModelName" type="text" {{if .Menu}} value="{{.Menu.Identity}}" {{end}} />
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-md-6">
+            <fieldset>
+                <legend>角色信息</legend>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="menuIds" class="col-md-2 control-label label-start">菜单可见角色</label>
+                        <div class="col-md-10">
+                            <p class="p-form-control">{{if and .Menu .Menu.Menus}} {{range $j,$attrVal := .Menu.Menus}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
+                            <select data-type='array_int' data-name='MenuIds' name='MenuIds' id='menuIds' multiple='multiple' class='{{.FormField}} form-line-cell-edit form-control select-menu'>
+                            {{if and .Menu  .Menu.Menus}} 
+                                {{range $j,$attrVal :=  .Menu.Menus}}
+                                    <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>
+                                {{end}}
+                            {{end}}
+                        </select>
                         </div>
                     </div>
                 </div>

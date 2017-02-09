@@ -491,6 +491,20 @@ displayTable("#table-menu", '/menu/', [
     { title: "菜单名", field: 'Name', sortable: true, order: "desc" },
     { title: "菜单唯一标识", field: 'Identity', sortable: true, order: "desc" },
     {
+        title: "菜单可见角色",
+        field: 'Roles',
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var datas = row.Roles;
+            var html = "";
+            var url = "/role/";
+            for (key in datas) {
+                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
+            }
+            return html;
+        }
+    },
+    {
         title: "操作",
         align: "center",
         field: 'action',

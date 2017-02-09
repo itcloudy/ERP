@@ -185,6 +185,12 @@ func (ctl *MenuController) addressTemplateList(query map[string]interface{}, exc
 			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			mapValues := make(map[int64]string)
+			roles := line.Roles
+			for _, role := range roles {
+				mapValues[role.ID] = role.Name
+			}
+			oneLine["Roles"] = mapValues
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

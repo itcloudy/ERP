@@ -36,6 +36,9 @@ $(function() {
                 processResults: function(data, params) {
                     params.page = params.page || 0;
                     var paginator = JSON.parse(data.paginator);
+                    if (data.data == undefined || data.data.length < 1) {
+                        toastr.warning("没有更多可选数据", "警告");
+                    }
                     return {
                         results: data.data,
                         pagination: {
@@ -96,6 +99,9 @@ $(function() {
                 processResults: function(data, params) {
                     params.page = params.page || 0;
                     var paginator = JSON.parse(data.paginator);
+                    if (data.data == undefined || data.data.length < 1) {
+                        toastr.warning("没有更多可选数据", "警告");
+                    }
                     return {
                         results: data.data,
                         pagination: {

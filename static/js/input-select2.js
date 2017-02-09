@@ -72,6 +72,9 @@ $(function() {
                 processResults: function(data, params) {
                     params.page = params.page || 0;
                     var paginator = JSON.parse(data.paginator);
+                    if (data.data == undefined || data.data.length < 1) {
+                        toastr.warning("没有更多可选数据", "警告");
+                    }
                     return {
                         results: data.data,
                         pagination: {
@@ -89,6 +92,10 @@ $(function() {
         });
 
     };
+    select2AjaxData(".select-permission", "/permission/?action=search"); // 选择权限
+    select2AjaxData(".select-role", "/role/?action=search"); // 选择角色
+    select2AjaxData(".select-source", "/source/?action=search"); // 选择菜单
+    select2AjaxData(".select-menu", "/menu/?action=search"); // 系统资源
     select2AjaxData(".select-user", "/user/?action=search"); // 选择用户
     select2AjaxData(".select-company", "/company/?action=search"); // 选择公司
     select2AjaxData(".select-department", "/department/?action=search"); // 选择部门
@@ -171,6 +178,9 @@ $(function() {
                 processResults: function(data, params) {
                     params.page = params.page || 0;
                     var paginator = JSON.parse(data.paginator);
+                    if (data.data == undefined || data.data.length < 1) {
+                        toastr.warning("没有更多可选数据", "警告");
+                    }
                     return {
                         results: data.data,
                         pagination: {
@@ -234,6 +244,9 @@ $(function() {
             processResults: function(data, params) {
                 params.page = params.page || 0;
                 var paginator = JSON.parse(data.paginator);
+                if (data.data == undefined || data.data.length < 1) {
+                    toastr.warning("没有更多可选数据", "警告");
+                }
                 return {
                     results: data.data,
                     pagination: {

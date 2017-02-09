@@ -172,6 +172,7 @@ func GetAllRole(query map[string]interface{}, exclude map[string]interface{}, co
 				for i, _ := range objArrs {
 					o.LoadRelated(&objArrs[i], "Permissions")
 					o.LoadRelated(&objArrs[i], "Users")
+					o.LoadRelated(&objArrs[i], "Menus")
 				}
 			}
 		}
