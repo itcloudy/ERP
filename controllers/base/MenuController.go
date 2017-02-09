@@ -185,6 +185,7 @@ func (ctl *MenuController) addressTemplateList(query map[string]interface{}, exc
 			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			oneLine["Identity"] = line.Identity
 			mapValues := make(map[int64]string)
 			roles := line.Roles
 			for _, role := range roles {

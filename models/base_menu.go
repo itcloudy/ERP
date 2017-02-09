@@ -17,7 +17,7 @@ type Menu struct {
 	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                       //最后更新者
 	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"`        //创建时间
 	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`            //最后更新时间
-	Name       string    `orm:"unique" json:"Name"`                          //菜单名称
+	Name       string    `orm:"unique" json:"Name" xml:"name"`               //菜单名称
 	Identity   string    `orm:"unique;index" json:"Identity" xml:"identity"` //菜单唯一标识
 	Roles      []*Role   `orm:"reverse(many)" json:"-"`                      //菜单可见角色
 }
@@ -75,6 +75,22 @@ func GetMenuByName(name string) (*Menu, error) {
 	qs := o.QueryTable(&obj)
 	qs = qs.SetCond(cond)
 	err := qs.One(&obj)
+	return &obj, err
+}
+
+// GetMenuByIdentity retrieves Source by GetMenuByIdentity. Returns error if
+// ID doesn't exist
+func GetMenuByIdentity(modelName string) (*Source, error) {
+	o := orm.NewOrm()
+	var obj Source
+	cond := orm.NewCondition()
+	cond = cond.And("ModelName", modelName)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+	if err == nil {
+		o.LoadRelated(&obj, "Permissions")
+	}
 	return &obj, err
 }
 

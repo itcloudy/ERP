@@ -4,40 +4,196 @@
         <name>用户表</name>
         <modelName>User</modelName>
     </source>
-     <source>
-        <name>国家</name>
-        <modelName>AddressCountry</modelName>
-    </source>
-     <source>
-        <name>省份</name>
-        <modelName>AddressProvince</modelName>
-    </source>
     <source>
         <name>城市</name>
         <modelName>AddressCity</modelName>
     </source>
     <source>
+        <name>国家</name>
+        <modelName>AddressCountry</modelName>
+    </source>
+    <source>
         <name>区县</name>
         <modelName>AddressDistrict</modelName>
+    </source>
+    <source>
+        <name>省份</name>
+        <modelName>AddressProvince</modelName>
     </source>
      <source>
         <name>公司</name>
         <modelName>Company</modelName>
     </source>
-     <source>
+    <source>
         <name>部门</name>
         <modelName>Department</modelName>
     </source>
-     <source>
-        <name>团队</name>
-        <modelName>Team</modelName>
+    <source>
+        <name>菜单</name>
+        <modelName>Menu</modelName>
     </source>
-     <source>
+    <source>
+        <name>合作伙伴</name>
+        <modelName>Partner</modelName>
+    </source>
+    <source>
+        <name>权限</name>
+        <modelName>Permission</modelName>
+    </source>
+    <source>
+        <name>职位</name>
+        <modelName>Position</modelName>
+    </source>
+    <source>
         <name>登录日志</name>
         <modelName>Record</modelName>
+    </source>
+    <source>
+        <name>角色</name>
+        <modelName>Role</modelName>
     </source>
      <source>
         <name>单据序号</name>
         <modelName>Sequence</modelName>
     </source>
+    <source>
+        <name>系统资源</name>
+        <modelName>Source</modelName>
+    </source>
+    <source>
+        <name>团队</name>
+        <modelName>Team</modelName>
+    </source>
+    <source>
+        <name>模版文件</name>
+        <modelName>TemplateFile</modelName>
+    </source>
+    <source>
+        <name>用户</name>
+        <modelName>User</modelName>
+    </source>
+    <source>
+        <name>产品价格表</name>
+        <modelName>ProductPriceList</modelName>
+    </source>
+    <source>
+        <name>产品属性明细</name>
+        <modelName>ProductAttributeLine</modelName>
+    </source>
+    <source>
+        <name>产品属性价格</name>
+        <modelName>ProductAttributePrice</modelName>
+    </source>
+    <source>
+        <name>产品属性值</name>
+        <modelName>ProductAttributeValue</modelName>
+    </source>
+    <source>
+        <name>产品属性</name>
+        <modelName>ProductAttribute</modelName>
+    </source>
+    <source>
+        <name>产品分类</name>
+        <modelName>ProductCategory</modelName>
+    </source>
+    <source>
+        <name>产品柜台</name>
+        <modelName>ProductCounter</modelName>
+    </source>
+    <source>
+        <name>产品图片</name>
+        <modelName>ProductImage</modelName>
+    </source>
+    <source>
+        <name>产品打包方式</name>
+        <modelName>ProductPackaging</modelName>
+    </source>
+    <source>
+        <name>产品价格明细</name>
+        <modelName>ProductPricelistItem</modelName>
+    </source>
+    <source>
+        <name>产品规格</name>
+        <modelName>ProductProduct</modelName>
+    </source>
+    <source>
+        <name>产品供应商</name>
+        <modelName>ProductSupplier</modelName>
+    </source>
+    <source>
+        <name>产品标签</name>
+        <modelName>ProductTag</modelName>
+    </source>
+    <source>
+        <name>产品款式</name>
+        <modelName>ProductTemplate</modelName>
+    </source>
+    <source>
+        <name>产品单位类别</name>
+        <modelName>ProductUomCateg</modelName>
+    </source>
+    <source>
+        <name>产品单位</name>
+        <modelName>ProductUom</modelName>
+    </source>
+    <source>
+        <name>采购配置</name>
+        <modelName>PurchaseConfig</modelName>
+    </source>
+    <source>
+        <name>采购订单明细状态</name>
+        <modelName>PurchaseOrderLineState</modelName>
+    </source>
+    <source>
+        <name>采购订单明细</name>
+        <modelName>PurchaseOrderLine</modelName>
+    </source>   
+     <source>
+         <name>采购订单状态</name>
+         <modelName>PurchaseOrderState</modelName>
+     </source>
+    <source>
+        <name>采购订单</name>
+        <modelName>PurchaseOrder</modelName>
+    </source>
+    <source>
+        <name>销售配置</name>
+        <modelName>SaleConfig</modelName>
+    </source>
+    <source>
+        <name>销售订单明细状态</name>
+        <modelName>SaleOrderLineState</modelName>
+    </source>
+    <source>
+        <name>销售订单明细</name>
+        <modelName>SaleOrderLine</modelName>
+    </source>
+    <source>
+        <name>销售订单状态</name>
+        <modelName>SaleOrderState</modelName>
+    </source>
+    <source>
+        <name>销售订单</name>
+        <modelName>SaleOrder</modelName>
+    </source>
+    <source>
+        <name>库位</name>
+        <modelName>StockLocation</modelName>
+    </source>
+    <source>
+        <name>移动明细</name>
+        <modelName>StockMove</modelName>
+    </source>
+    <!--source>name{}+modelName{}
+    source>name{}+modelName{}
+    source>name{}+modelName{}
+    source>name{}+modelName{}
+    source>name{}+modelName{}
+    source>name{}+modelName{}
+    source>name{}+modelName{}
+    source>name{}+modelName{}-->
+    
+    
+    
+    
 </Sources>

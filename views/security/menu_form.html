@@ -48,10 +48,10 @@
                     <div class="form-group">
                         <label for="menuIds" class="col-md-2 control-label label-start">菜单可见角色</label>
                         <div class="col-md-10">
-                            <p class="p-form-control">{{if and .Menu .Menu.Menus}} {{range $j,$attrVal := .Menu.Menus}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
+                            <p class="p-form-control">{{if and .Menu .Menu.Roles}} {{range $j,$attrVal := .Menu.Roles}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
                             <select data-type='array_int' data-name='MenuIds' name='MenuIds' id='menuIds' multiple='multiple' class='{{.FormField}} form-line-cell-edit form-control select-menu'>
-                            {{if and .Menu  .Menu.Menus}} 
-                                {{range $j,$attrVal :=  .Menu.Menus}}
+                            {{if and .Menu  .Menu.Roles}} 
+                                {{range $j,$attrVal :=  .Menu.Roles}}
                                     <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>
                                 {{end}}
                             {{end}}

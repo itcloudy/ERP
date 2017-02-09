@@ -22,6 +22,8 @@ func LoadSecurity() {
 	if xmDir, err := os.Getwd(); err == nil {
 		xmDir += split + "security" + split
 		loadSources(xmDir + "sources.xml")
+		loadMenus(xmDir + "menus.xml")
+
 	}
 }
 func loadSources(filename string) {
@@ -36,6 +38,25 @@ func loadSources(filename string) {
 					if obj, err := md.GetSourceByModelName(k.ModelName); err != nil {
 						if obj.ID == 0 {
 							md.AddSource(&k, user)
+						}
+					}
+				}
+			}
+		}
+	}
+}
+func loadMenus(filename string) {
+	if file, err := os.Open(filename); err == nil {
+		defer file.Close()
+		if data, err := ioutil.ReadAll(file); err == nil {
+			var menus InitMenus
+			if xml.Unmarshal(data, &menus) == nil {
+				for _, k := range menus.Menus {
+					user := new(md.User)
+					user.ID = 1
+					if obj, err := md.GetMenuByIdentity(k.Identity); err != nil {
+						if obj.ID == 0 {
+							md.AddMenu(&k, user)
 						}
 					}
 				}
