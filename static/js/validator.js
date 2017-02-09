@@ -1,5 +1,36 @@
 var BootstrapValidator = function(selector, needValidatorFields) {
-
+    //根据数据类型获得正确的数据,默认string
+    var getCurrentDataType = function(val, dataType) {
+        if (dataType == "" || dataType === undefined || dataType === null) {
+            dataType = "string";
+        }
+        switch (dataType) {
+            case "bool":
+                val = bool(val);
+                break;
+            case "int": // 整形
+                val = parseInt(val);
+                break;
+            case "float": // 浮点型
+                val = parseFloat(val);
+                break;
+            case "array_int": // 整形数组
+                var a_arr = [];
+                for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                    a_arr.push(parseInt(val[a_i]));
+                }
+                val = a_arr;
+                break;
+            case "array_float": //  浮点型数组
+                var a_arr = [];
+                for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                    a_arr.push(parseFloat(val[a_i]));
+                }
+                val = a_arr;
+                break;
+        }
+        return val
+    };
     $(selector).bootstrapValidator({
         message: '该值无效',
         feedbackIcons: { /*input状态样式图片*/
@@ -30,35 +61,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         if ($form.find("input[name='recordID']").length > 0) {
             formData.FormAction = "update";
         }
-        //根据数据类型获得正确的数据,默认string
-        var getCurrentDataType = function(val, dataType) {
-            if (dataType == "" || dataType === undefined || dataType === null) {
-                dataType = "string";
-            }
-            switch (dataType) {
-                case "int": // 整形
-                    val = parseInt(val);
-                    break;
-                case "float": // 浮点型
-                    val = parseFloat(val);
-                    break;
-                case "array_int": // 整形数组
-                    var a_arr = [];
-                    for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
-                        a_arr.push(parseInt(val[a_i]));
-                    }
-                    val = a_arr;
-                    break;
-                case "arrar_float": //  浮点型数组
-                    var a_arr = [];
-                    for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
-                        a_arr.push(parseFloat(val[a_i]));
-                    }
-                    val = a_arr;
-                    break;
-            }
-            return val
-        };
+
         for (var i = 0, len = formFields.length; i < len; i++) {
             var self = formFields[i];
             var oldValue = null;
@@ -80,14 +83,37 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                     formData[self.name] = false;
                 }
             } else {
+
                 var val = $(self).val();
-                console.log(self.name + ":" + val);
+                // 如果值未改变不添加进去
+                if (val == oldValue) {
+                    continue;
+                }
+                console.log(self.name + ":" + val + ";oldvalue:" + oldValue);
+                var dataType = $(self).data("type");
+                // 判断整形数组值是否改变，oldValue="1,2,3,"
+                if (dataType == "array_int") {
+                    var oldValueArrs = oldValue.split(","); //字符分割
+                    console.log(oldValueArrs);
+                    var arrIds = [];
+                    for (var i = 0, len = oldValueArrs.length; i < len; i++) {
+                        if (oldValueArrs[i] != "") {
+                            arrIds.push(oldValueArrs[i]);
+                        }
+                    }
+                    arrIds.sort();
+                    if (val) {
+                        if (arrIds.join(",") == val.join(",")) {
+                            continue;
+                        }
+                    }
+                }
                 if (val != "") {
                     // 若为null跳出此次循环
                     if (val === null) {
                         continue;
                     }
-                    formData[self.name] = getCurrentDataType(val, $(self).data("type"))
+                    formData[self.name] = getCurrentDataType(val, dataType)
                 }
             }
         }
@@ -171,7 +197,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                     toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
                 }
                 console.log(response.location);
-                setTimeout(function() { window.location = response.location; }, 1000);
+                // setTimeout(function() { window.location = response.location; }, 1000);
             }
         });
         // Use Ajax to submit form data

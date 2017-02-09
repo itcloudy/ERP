@@ -68,4 +68,55 @@
             </fieldset>
         </div>
     </div>
+    <fieldset>
+        <legend>权限设置</legend>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="permCreate" class="col-md-4 control-label ">创建</label>
+                    <div class="col-md-8 ">
+                        <input name="PermCreate" id="permCreate" class="form-control form-checkbox {{.FormField}}" checked="checked" type="checkbox">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="permRead" class="col-md-4 control-label ">读取</label>
+                    <div class="col-md-8 ">
+                        <input name="PermRead" id="permRead" class="form-control form-checkbox {{.FormField}}" checked="checked" type="checkbox">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="permWrite" class="col-md-4 control-label ">更新</label>
+                    <div class="col-md-8 ">
+                        <input name="PermWrite" id="permWrite" class="form-control form-checkbox {{.FormField}}" checked="checked" type="checkbox">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="permDelete" class="col-md-4 control-label ">删除</label>
+                    <div class="col-md-8 ">
+                        <input name="PermDelete" id="permDelete" class="form-control form-checkbox {{.FormField}}" checked="checked" type="checkbox">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="type" class="col-md-2 control-label label-start">权限类型</label>
+                    <div class="col-md-10">
+                        <input data-type="string" class="{{.FormField}} input-radio" {{if and .Product .Product.ProductType}} data-oldvalue="{{.Product.ProductType}}" {{else}}data-oldvalue="stock" {{end}} type="radio" id="stock-radio" value="stock" name="ProductType">
+                        <label class="input-radio-label" for="stock-radio">角色权限</label>
+                        <input data-type="string" class="{{.FormField}} input-radio" {{if and .Product .Product.ProductType}} data-oldvalue="{{.Product.ProductType}}" {{else}}data-oldvalue="stock" {{end}} type="radio" id="consume-radio" value="consume" name="ProductType">
+                        <label class="input-radio-label" for="consume-radio">私有权限</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
 </form>

@@ -271,7 +271,8 @@
                                 </td>
                                 <td>
                                     <p class="p-form-control"> {{range $j,$attrVal := $attributeLine.AttributeValues}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}</p>
-                                    <select data-type='array_int' data-name='AttributeValueIds' name='AttributeValueIds' data-attributeid='AttributeId-{{$lineId}}' id='AttributeValueIds-{{$lineId}}' multiple='multiple' class='form-line-cell-edit form-control form-tree-select-product-template-attribute-value'>
+                                    <select data-type='array_int' data-name='AttributeValueIds' name='AttributeValueIds' data-attributeid='AttributeId-{{$lineId}}' id='AttributeValueIds-{{$lineId}}' data-oldValue="{{range $j,$attrVal := $attributeLine.AttributeValues}}{{$attrVal.ID}},{{end}}"
+                                        multiple='multiple' class='form-line-cell-edit form-control form-tree-select-product-template-attribute-value'>
 	                                    {{range $j,$attrVal :=  $attributeLine.AttributeValues}}
                                             <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>
                                         {{end}}

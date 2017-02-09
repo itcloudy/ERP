@@ -1,5 +1,10 @@
 $(function() {
     'use strict';
+    // 左侧菜单显示
+    var currentMenu = $("#top-menu li.active");
+    if (currentMenu.length > 0) {
+
+    }
     // 单选checkbox
     $('.form-checkbox').each(function(index, el) {
         $(el).iCheck({

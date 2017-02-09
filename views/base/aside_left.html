@@ -16,18 +16,15 @@
             </div>
         </div>
         <!-- sidebar menu: : style can be found in sidebar.less -->
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" id="top-menu">
             <!--<li class="header text-center">菜单</li>-->
-            <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}
-            {{.MenuAddressCountryActive}}{{.MenuAddressProvinceActive}}{{.MenuAddressCityActive}}{{.MenuAddressDistrictActive}}{{.MenuUserActive}}
-            {{.MenuGroupActive}}{{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}{{.MenuSequenceActive}}
-            {{.MenuSourceActive}}{{.MenuRoleActive}}{{.MenuPermissionActive}}{{.MenuMenuActive}}">
+            <li class="treeview">
                 <a href="#">
                     <i class="fa fa-gears"></i>
                     <span>设置</span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="treeview {{.MenuSelfInfoActive}}{{.MenuChangePwdActive}}{{.MenuRecordActive}}">
+                    <li class="treeview">
                         <a href="#"><i class="fa fa-child" aria-hidden="true"></i></i>个人资料</a>
                         <ul class="treeview-menu">
                             <li class="{{.MenuSelfInfoActive}}"><a href="/user/{{.user.ID}}?action=detail"><i class="fa fa-user-secret" aria-hidden="true"></i>个人信息</a></li>
@@ -35,7 +32,7 @@
                             <li class="{{.MenuRecordActive}}"><a href="/record/"><i class="fa fa-list-ol"></i>登录记录</a></li>
                         </ul>
                     </li>
-                    <li class="treeview {{.MenuSourceActive}}{{.MenuRoleActive}}{{.MenuPermissionActive}}{{.MenuMenuActive}}">
+                    <li class="treeview">
                         <a href="#"><i class="fa fa-film" aria-hidden="true"></i></i>权限管理</a>
                         <ul class="treeview-menu">
                             <li class="{{.MenuSourceActive}}"><a href="/source/"><i class="fa fa-calendar-minus-o" aria-hidden="true"></i>系统资源</a></li>
@@ -44,7 +41,7 @@
                             <li class="{{.MenuMenuActive}}"><a href="/menu/"><i class="fa fa-bars" aria-hidden="true"></i>菜单管理</a></li>
                         </ul>
                     </li>
-                    <li class="treeview {{.MenuCompanyActive}}{{.MenuDepartmentActive}}{{.MenuTeamActive}}">
+                    <li class="treeview">
                         <a href="#"><i class="fa fa-indent" aria-hidden="true"></i>公司管理</a>
                         <ul class="treeview-menu">
                             <li><a class="{{.MenuCompanyActive}}" href="/company/"><i class="fa fa-check-circle-o"></i>公司资料</a></li>
@@ -53,7 +50,7 @@
                         </ul>
                     </li>
                     <li class="{{.MenuUserActive}}"><a href="/user/"><i class="fa fa-users" aria-hidden="true"></i></i>用户管理</a></li>
-                    <li class="treeview {{.MenuAddressCountryActive}}{{.MenuAddressProvinceActive}}{{.MenuAddressCityActive}}{{.MenuAddressDistrictActive}}">
+                    <li class="treeview">
                         <a href="#"><i class="fa fa-building" aria-hidden="true"></i></i>地址管理</a>
                         <ul class="treeview-menu">
                             <li class="{{.MenuAddressCountryActive}}"><a href="/address/country/"><i class="fa fa-check-circle-o"></i>国家管理</a></li>
@@ -69,9 +66,7 @@
                     </li>
                 </ul>
             </li>
-            <li class="treeview {{.MenuProductCounterActive}}{{.MenuProductCategoryActive}}{{.MenuProductAttributeActive}}
-            {{.MenuProductAttributeValueActive}}{{.MenuProductTemplateActive}}{{.MenuProductProductActive}}{{.MenuProductUomCategActive}}
-            {{.MenuProductUomActive}}{{.MenuProductAttributeLineActive}}">
+            <li class="treeview">
                 <a href="#">
                     <i class="fa fa-newspaper-o" aria-hidden="true"></i><span>产品管理</span>
                 </a>
@@ -88,13 +83,12 @@
                 </ul>
             </li>
 
-            <li class="treeview {{.MenuSaleConfigActive}}{{.MenuSaleCustomerActive}}{{.MenuSaleOrderDraftActive}}{{.MenuSaleOrderActive}}
-            {{.MenuSaleOrderLineActive}}{{.MenuSaleReportActive}}{{.MenuSaleOrderStateActive}}{{.MenuSaleOrderLineStateActive}}">
+            <li class="treeview">
                 <a href="#" id="sale-menu">
                     <i class="fa fa-shopping-basket" aria-hidden="true"></i><span>销售管理</span>
                 </a>
                 <ul class="treeview-menu">
-                    <li class="treeview {{.MenuSaleConfigActive}}{{.MenuSaleOrderStateActive}}{{.MenuSaleOrderLineStateActive}}">
+                    <li class="treeview">
                         <a href="#">
                             <i class="fa fa-gears" aria-hidden="true"></i><span>销售设置</span>
                         </a>
@@ -111,8 +105,7 @@
                     <li class="{{.MenuSaleReportActive}}"><a href="/sale/report/"><i class="fa fa-line-chart"></i>销售报表</a></li>
                 </ul>
             </li>
-            <li class="treeview {{.MenuPurchaseConfigActive}}{{.MenuPurchaseSupplierActive}}{{.MenuPurchaseOrderDraftActive}}
-            {{.MenuPurchaseOrderActive}}{{.MenuPurchaseOrderLineActive}}{{.MenuPurchaseReportActive}}">
+            <li class="treeview">
                 <a href="#">
                     <i class="fa fa-tasks" aria-hidden="true"></i><span>采购管理</span>
                 </a>

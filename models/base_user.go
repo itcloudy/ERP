@@ -62,10 +62,12 @@ func GetUserByID(id int64) (obj *User, err error) {
 	o := orm.NewOrm()
 	obj = &User{ID: id}
 	if err = o.Read(obj); err == nil {
+		if obj.Company != nil {
+			o.Read(obj.Company)
+		}
 		if obj.Department != nil {
 			o.Read(obj.Department)
 		}
-
 		if obj.Position != nil {
 			o.Read(obj.Position)
 		}
