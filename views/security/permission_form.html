@@ -54,7 +54,7 @@
                             <label for="permissionIds" class="col-md-2 control-label label-start">拥有该权限的角色</label>
                             <div class="col-md-10">
                                 <p class="p-form-control">{{if and .Permission .Permission.Roles}} {{range $j,$attrVal := .Permission.Roles}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
-                                <select data-type='array_int' data-name='PermissionIds' name='PermissionIds' id='permissionIds' multiple='multiple' class='{{.FormField}} form-line-cell-edit form-control select-role'>
+                                <select data-type='array_int' data-name='PermissionIds' name='PermissionIds' id='permissionIds' multiple='multiple' class='{{.FormField}} form-control select-role'>
                                     {{if and .Permission  .Permission.Roles}} 
                                         {{range $j,$attrVal :=  .Permission.Roles}}
                                             <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>

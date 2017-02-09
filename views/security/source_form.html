@@ -49,7 +49,7 @@
                         <label for="permissionIds" class="col-md-2 control-label label-start">资源所有权限</label>
                         <div class="col-md-10">
                             <p class="p-form-control">{{if and .Source .Source.Permissions}} {{range $j,$attrVal := .Source.Permissions}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
-                            <select data-type='array_int' data-name='PermissionIds' name='PermissionIds' id='permissionIds' multiple='multiple' class='{{.FormField}} form-line-cell-edit form-control select-permission'>
+                            <select data-type='array_int' data-name='PermissionIds' name='PermissionIds' id='permissionIds' multiple='multiple' class='{{.FormField}} form-control select-permission'>
                             {{if and .Source  .Source.Permissions}} 
                                 {{range $j,$attrVal :=  .Source.Permissions}}
                                     <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>
