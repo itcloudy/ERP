@@ -172,6 +172,32 @@ displayTable("#table-user", "/user/", [
         }
     },
     {
+        title: "角色",
+        field: 'Roles',
+        formatter: function cellStyle(value, row, index) {
+            var datas = row.Roles;
+            var html = "";
+            var url = "/role/";
+            for (key in datas) {
+                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
+            }
+            return html;
+        }
+    },
+    {
+        title: "团队",
+        field: 'Teams',
+        formatter: function cellStyle(value, row, index) {
+            var datas = row.Teams;
+            var html = "";
+            var url = "/team/";
+            for (key in datas) {
+                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
+            }
+            return html;
+        }
+    },
+    {
         title: "操作",
         align: "left",
         align: "center",

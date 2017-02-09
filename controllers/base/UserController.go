@@ -196,6 +196,17 @@ func (ctl *UserController) userList(query map[string]interface{}, exclude map[st
 			} else {
 				oneLine["Position"] = "-"
 			}
+			roleMapValues := make(map[int64]string)
+			roles := user.Roles
+			for _, role := range roles {
+				roleMapValues[role.ID] = role.Name
+			}
+			oneLine["Roles"] = roleMapValues
+			teamMapValues := make(map[int64]string)
+			teams := user.Teams
+			for _, team := range teams {
+				teamMapValues[team.ID] = team.Name
+			}
 
 			oneLine["Email"] = user.Email
 			oneLine["Mobile"] = user.Mobile

@@ -18,9 +18,15 @@ type Role struct {
 	CreateDate  time.Time     `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate  time.Time     `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Name        string        `orm:"unique" json:"Name"`                   //角色名称
-	Users       []*User       `orm:"rel(m2m)" json:"-"`                    //角色所对应的用户
+	Users       []*User       `orm:"reverse(many)"`                        //角色所对应的用户
 	Permissions []*Permission `orm:"reverse(many)"`                        //权限列表
 	Menus       []*Menu       `orm:"rel(m2m)"`                             //用户拥有的角色
+
+	// form表单字段
+	FormAction    string  `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+	UserIDs       []int64 `orm:"-" json:"UserIds"`
+	PermissionIDs []int64 `orm:"-" json:"PermissionIds"`
+	MenuIDs       []int64 `orm:"-" json:"MenuIds"`
 }
 
 func init() {
@@ -44,7 +50,27 @@ func AddRole(obj *Role, addUser *User) (id int64, err error) {
 	if errBegin != nil {
 		return 0, errBegin
 	}
-	id, err = o.Insert(obj)
+	if id, err = o.Insert(obj); err == nil {
+		obj.ID = id
+		for _, item := range obj.UserIDs {
+			m2m := o.QueryM2M(obj, "Users")
+			if user, err := GetUserByID(item); err == nil {
+				m2m.Add(user)
+			}
+		}
+		for _, item := range obj.PermissionIDs {
+			m2m := o.QueryM2M(obj, "Permissions")
+			if permission, err := GetPermissionByID(item); err == nil {
+				m2m.Add(permission)
+			}
+		}
+		for _, item := range obj.MenuIDs {
+			m2m := o.QueryM2M(obj, "Menus")
+			if menu, err := GetMenuByID(item); err == nil {
+				m2m.Add(menu)
+			}
+		}
+	}
 	if err == nil {
 		errCommit := o.Commit()
 		if errCommit != nil {
@@ -60,6 +86,9 @@ func GetRoleByID(id int64) (obj *Role, err error) {
 	o := orm.NewOrm()
 	obj = &Role{ID: id}
 	if err = o.Read(obj); err == nil {
+		o.LoadRelated(obj, "Users")
+		o.LoadRelated(obj, "Permissions")
+		o.LoadRelated(obj, "Menus")
 		return obj, err
 	}
 	return nil, err

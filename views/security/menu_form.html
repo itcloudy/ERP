@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name" class="col-md-4 control-label label-start">资源名称<span class="required-input">&nbsp*</span></label>
+                            <label for="name" class="col-md-4 control-label label-start">菜单名称<span class="required-input">&nbsp*</span></label>
                             <div class="col-md-8">
                                 <p class="p-form-control">{{if .Menu}} {{.Menu.Name}} {{end}}</p>
                                 <input data-type="string" class="{{.FormField}} form-control" id="name" name="Name" type="text" {{if .Menu}} value="{{.Menu.Name}}" {{end}} />
@@ -31,10 +31,10 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="modelName" class="col-md-4 control-label label-start">Model名称<span class="required-input">&nbsp*</span></label>
+                            <label for="identity" class="col-md-4 control-label label-start">菜单唯一标识<span class="required-input">&nbsp*</span></label>
                             <div class="col-md-8">
                                 <p class="p-form-control">{{if .Menu}} {{.Menu.Identity}} {{end}}</p>
-                                <input data-type="string" class="{{.FormField}} form-control" id="modelName" name="ModelName" type="text" {{if .Menu}} value="{{.Menu.Identity}}" {{end}} />
+                                <input data-type="string" class="{{.FormField}} form-control" id="identity" name="Identity" type="text" {{if .Menu}} value="{{.Menu.Identity}}" {{end}} />
                             </div>
                         </div>
                     </div>

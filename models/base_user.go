@@ -28,7 +28,7 @@ type User struct {
 	Tel             string      `orm:"size(20);default(\"\")" json:"Tel" json:"tel"`      //固定号码
 	Password        string      `xml:"password" json:"Password" json:"password"`          //密码
 	ConfirmPassword string      `orm:"-" xml:"ConfirmPassword" json:"ConfirmPassword"`    //确认密码,数据库中不保存
-	Roles           []*Role     `orm:"reverse(many)"`                                     //用户拥有的角色
+	Roles           []*Role     `orm:"rel(m2m)"`                                          //用户拥有的角色
 	Teams           []*Team     `orm:"rel(m2m);rel_table(user_teams)"`                    //团队
 	TeamIDs         []string    `orm:"-" json:"Team"`                                     //团队，用于form表单
 	IsAdmin         bool        `orm:"default(false)" xml:"isAdmin" json:"IsAdmin"`       //是否为超级用户
@@ -37,7 +37,8 @@ type User struct {
 	WeChat          string      `orm:"default(\"\")" xml:"wechat" json:"WeChat"`          //微信
 	Position        *Position   `orm:"rel(fk);null;" json:"Position"`                     //职位
 	PositionID      int64       `orm:"-" json:"Position"`                                 //职位，用于form表单
-	FormAction      string      `orm:"-" json:"FormAction"`                               //非数据库字段，用于表示记录的增加，修改
+	// form表单字段
+	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
 
 }
 
@@ -179,6 +180,10 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
+				for i, _ := range objArrs {
+					o.LoadRelated(&objArrs[i], "Roles")
+					o.LoadRelated(&objArrs[i], "Teams")
+				}
 			}
 		}
 	}

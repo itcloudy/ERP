@@ -1,7 +1,7 @@
 <div class="row">
     <p id="list-title">{{.PageName}}</p>
 </div>
-<form id="userForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+<form id="userForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" Team="form">
     <div class="row">
         {{if .RecordID}} {{if .Readonly}}
         <a href="{{.URL}}{{.RecordID}}?action=edit" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</a>
@@ -122,6 +122,21 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="position" class="col-md-4 control-label label-start">团队<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control">{{if and .User .User.Teams}} {{range $j,$attrVal := .User.Teams}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
+                        <select data-type='array_int' data-name='UserIds' name='UserIds' id='UserIds' multiple='multiple' class='{{.FormField}} form-control select-team'>
+                            {{if and .User  .User.Teams}} 
+                                {{range $j,$attrVal :=  .User.Teams}}
+                                    <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>
+                                {{end}}
+                            {{end}}
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
     </fieldset>
     <fieldset>
@@ -140,6 +155,21 @@
                     <label for="active" class="col-md-4 control-label ">有效</label>
                     <div class="col-md-8 ">
                         <input name="Active" id="active" class="form-control form-checkbox {{.FormField}}" checked="checked" type="checkbox">
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="rolesIds" class="col-md-2 control-label ">角色</label>
+                    <div class="col-md-10">
+                        <p class="p-form-control">{{if and .User .User.Roles}} {{range $j,$attrVal := .User.Roles}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
+                        <select data-type='array_int' data-name='RolesIds' name='RolesIds' id='rolesIds' multiple='multiple' class='{{.FormField}} form-control select-role'>
+                            {{if and .User  .User.Roles}} 
+                                {{range $j,$attrVal :=  .User.Roles}}
+                                    <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>
+                                {{end}}
+                            {{end}}
+                        </select>
                     </div>
                 </div>
             </div>

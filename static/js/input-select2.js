@@ -100,7 +100,7 @@ $(function() {
     select2AjaxData(".select-company", "/company/?action=search"); // 选择公司
     select2AjaxData(".select-department", "/department/?action=search"); // 选择部门
     select2AjaxData(".select-position", "/position/?action=search"); // 选择职位
-    select2AjaxData(".select-group", "/group/?action=search", true); // 选择分组
+    select2AjaxData(".select-team", "/team/?action=search", true); // 选择团队
     select2AjaxData(".select-product-counter", "/product/counter/?action=search"); // 选择产品柜台
     select2AjaxData(".select-product-category", "/product/category/?action=search"); // 选择产品类别;
     select2AjaxData(".select-product-attribute", '/product/attribute/?action=search'); // 选择属性

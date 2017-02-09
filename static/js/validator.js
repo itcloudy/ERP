@@ -171,7 +171,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                     toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
                 }
                 console.log(response.location);
-                // setTimeout(function() { window.location = response.location; }, 1000);
+                setTimeout(function() { window.location = response.location; }, 1000);
             }
         });
         // Use Ajax to submit form data
@@ -532,6 +532,99 @@ $(function() {
                             toastr.error("没有公司选项", "错误");
                         }
 
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        }
+    });
+    // 菜单
+    BootstrapValidator("#menuForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "菜单名称不能为空"
+                },
+                remote: {
+                    url: "/menu/",
+                    message: "菜单名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator"
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        },
+        Identity: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "菜单唯一标识不能为空"
+                },
+                remote: {
+                    url: "/menu/",
+                    message: "菜单唯一标识已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator"
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        }
+    });
+    // 角色
+    BootstrapValidator("#roleForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "角色名称不能为空"
+                },
+                remote: {
+                    url: "/role/",
+                    message: "角色名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator"
+                        }
                         var xsrf = $("input[name ='_xsrf']");
                         if (xsrf.length > 0) {
                             params._xsrf = xsrf[0].value;
