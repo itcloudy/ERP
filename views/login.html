@@ -46,7 +46,7 @@
 
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" id="password" name="password" class="form-control" placeholder={{i18n .Lang "global.password"}}>
+                    <input type="password" id="password" name="password" class="form-control password" placeholder={{i18n .Lang "global.password"}}>
                     <!--<span class="glyphicon glyphicon-lock form-control-feedback"></span>-->
                 </div>
                 <div class="row">
@@ -82,10 +82,9 @@
     <!--bootstrap validator-->
     <script src="/static/plugins/bootstrap-validator/bootstrapValidator.min.js"></script>
     <script src="/static/plugins/bootstrap-show-password/bootstrap-show-password.min.js"></script>
+    <!--密码显示-->
+    <script src="/static/js/show-password.js"></script>
     <script>
-        $(function() {
-            $('#password').password().on('show.bs.password', function(e) {}).on('hide.bs.password', function(e) {});
-        });
         $("#loginForm").bootstrapValidator({
             message: '该值无效',
             feedbackIcons: { /*input状态样式图片*/

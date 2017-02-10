@@ -28,6 +28,9 @@ type Record struct {
 func init() {
 	orm.RegisterModel(new(Record))
 }
+func (u *Record) TableName() string {
+	return "base_record"
+}
 
 // AddRecord insert a new Record into database and returns
 // last inserted ID on success.

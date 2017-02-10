@@ -126,7 +126,6 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 	} else {
 		obj.ID = id
 		Oattr := orm.NewOrm()
-
 		for _, item := range obj.AttributeValueIDs {
 			m2m := o.QueryM2M(obj, "AttributeValues")
 			if attributeValue, err := GetProductAttributeValueByID(item); err == nil {

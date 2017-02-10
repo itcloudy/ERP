@@ -30,6 +30,9 @@ type Permission struct {
 func init() {
 	orm.RegisterModel(new(Permission))
 }
+func (u *Permission) TableName() string {
+	return "base_permission"
+}
 
 // Permission insert a new Permission into database and returns
 // last inserted ID on success.

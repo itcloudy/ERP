@@ -41,6 +41,9 @@ type Partner struct {
 func init() {
 	orm.RegisterModel(new(Partner))
 }
+func (u *Partner) TableName() string {
+	return "base_partner"
+}
 
 // AddPartner insert a new Partner into database and returns
 // last inserted ID on success.

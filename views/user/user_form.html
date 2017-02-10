@@ -55,16 +55,14 @@
             </div>
         </div>
         <div class="row">
-            {{if eq .FormField "form-create"}}
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="password" class="col-md-4 control-label label-start">密码<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
-                        <input class="form-control" name="password" id="password" type="password" />
+                        <input class="form-control {{.FormField}}" name="Password" id="password" type="text" />
                     </div>
                 </div>
             </div>
-            {{end}}
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="email" class="col-md-4 control-label label-start">邮箱<span class="required-input">&nbsp*</span></label>
@@ -94,13 +92,27 @@
 
             </div>
         </div>
+
     </fieldset>
     <fieldset>
         <legend>部门信息</legend>
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="Department" class="col-md-4 control-label label-start">部门<span class="required-input">&nbsp*</span></label>
+                    <label for="company" class="col-md-4 control-label label-start">所属公司<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <p class="p-form-control"> {{if and .User .User.Company}} {{.User.Company.Name}} {{end}}</p>
+                        <select data-type="int" aria-hidden="true" name="Company" id="company" class="form-control select-company {{.FormField}}" {{if and .User .User.Company}} data-oldValue="{{.User.Company.ID}}" {{end}}>
+                           {{if and .User .User.Company}}
+                            <option value="{{.User.Company.ID}}" selected="selected"> {{.User.Company.Name}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="department" class="col-md-4 control-label label-start">部门<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{if and .User .User.Department}} {{.User.Department.Name}} {{end}}</p>
                         <select data-type="int" aria-hidden="true" name="Department" id="department" class="form-control select-department {{.FormField}}" {{if and .User .User.Department}} data-oldValue="{{.User.Department.ID}}" {{end}}>
@@ -126,10 +138,10 @@
             </div>
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="position" class="col-md-4 control-label label-start">团队<span class="required-input">&nbsp*</span></label>
+                    <label for="teamIds" class="col-md-4 control-label label-start">团队 </label>
                     <div class="col-md-8">
                         <p class="p-form-control">{{if and .User .User.Teams}} {{range $j,$attrVal := .User.Teams}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
-                        <select data-type='array_int' data-name='UserIds' name='UserIds' id='UserIds' data-oldValue="{{if and .User .User.Teams}}{{range $j,$attrVal :=.User.Teams}}{{$attrVal.ID}},{{end}}{{end}}" multiple='multiple' class='{{.FormField}} form-control select-team'>
+                        <select data-type='array_int' data-name='TeamIds' name='TeamIds' id='teamIds' data-oldValue="{{if and .User .User.Teams}}{{range $j,$attrVal :=.User.Teams}}{{$attrVal.ID}},{{end}}{{end}}" multiple='multiple' class='{{.FormField}} form-control select-team'>
                             {{if and .User  .User.Teams}} 
                                 {{range $j,$attrVal :=  .User.Teams}}
                                     <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>
@@ -148,7 +160,7 @@
                 <div class="form-group">
                     <label for="isadmin" class="col-md-4 control-label ">超级用户</label>
                     <div class="col-md-8 ">
-                        <input data-type="bool" name="IsAdmin" id="isadmin" class="form-control form-checkbox {{.FormField}}" {{if and .User .User.IsAdmin}} {{if eq .User.IsAdmin true }}data-oldValue="{{.User.IsAdmin}}" {{end}} {{end}} type="checkbox">
+                        <input data-type="bool" name="IsAdmin" id="isadmin" class="form-control form-checkbox {{.FormField}}" {{if and .User .User.IsAdmin}} {{if eq .User.IsAdmin true }} data-oldValue="{{.User.IsAdmin}}" {{end}} {{end}} type="checkbox">
                     </div>
                 </div>
             </div>
@@ -162,10 +174,10 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="rolesIds" class="col-md-2 control-label ">角色</label>
+                    <label for="roleIds" class="col-md-2 control-label label-start">角色 </label>
                     <div class="col-md-10">
                         <p class="p-form-control">{{if and .User .User.Roles}} {{range $j,$attrVal := .User.Roles}}<a class='display-block label label-primary'>{{$attrVal.Name}}</a> {{end}}{{end}}</p>
-                        <select data-type='array_int' data-name='RolesIds' name='RolesIds' id='rolesIds' data-oldValue="{{if and .User .User.Roles}}{{range $j,$attrVal :=.User.Roles}}{{$attrVal.ID}},{{end}}{{end}}" multiple='multiple' class='{{.FormField}} form-control select-role'>
+                        <select data-type='array_int' data-name='RoleIds' name='RoleIds' id='roleIds' data-oldValue="{{if and .User .User.Roles}}{{range $j,$attrVal :=.User.Roles}}{{$attrVal.ID}},{{end}}{{end}}" multiple='multiple' class='{{.FormField}} form-control select-role'>
                             {{if and .User  .User.Roles}} 
                                 {{range $j,$attrVal :=  .User.Roles}}
                                     <option value="{{$attrVal.ID}}" selected="selected">{{$attrVal.Name}}</option>

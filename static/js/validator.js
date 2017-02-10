@@ -62,10 +62,11 @@ var BootstrapValidator = function(selector, needValidatorFields) {
             formData.FormAction = "update";
         }
 
-        for (var i = 0, len = formFields.length; i < len; i++) {
-            var self = formFields[i];
+        for (var item = 0, formFieldsLen = formFields.length; item < formFieldsLen; item++) {
+            var self = formFields[item];
             var oldValue = null;
             oldValue = $(self).data("oldvalue");
+            var val = $(self).val();
             // 处理radio数据
             if (self.type == "radio") {
                 if ($(self).data("type") == "string") {
@@ -84,21 +85,19 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 }
             } else {
 
-                var val = $(self).val();
                 // 如果值未改变不添加进去
                 if (val == oldValue) {
                     continue;
                 }
-                console.log(self.name + ":" + val + ";oldvalue:" + oldValue);
+
                 var dataType = $(self).data("type");
                 // 判断整形数组值是否改变，oldValue="1,2,3,"
                 if (dataType == "array_int") {
                     var oldValueArrs = oldValue.split(","); //字符分割
-                    console.log(oldValueArrs);
                     var arrIds = [];
-                    for (var i = 0, len = oldValueArrs.length; i < len; i++) {
-                        if (oldValueArrs[i] != "") {
-                            arrIds.push(oldValueArrs[i]);
+                    for (var j = 0, len = oldValueArrs.length; j < len; j++) {
+                        if (oldValueArrs[j] != "") {
+                            arrIds.push(oldValueArrs[j]);
                         }
                     }
                     arrIds.sort();
@@ -294,6 +293,19 @@ $(function() {
                         }
                         return params
                     },
+                },
+                regexp: {
+                    regexp: /^[0-9-]+$/,
+                    message: '手机号码只能为数字'
+                }
+            }
+        },
+        Tel: {
+            message: "该值无效",
+            validators: {
+                regexp: {
+                    regexp: /^[0-9-]+$/,
+                    message: '座机只能为数字和 - '
                 }
             }
         },
@@ -364,9 +376,45 @@ $(function() {
             validators: {
                 notEmpty: {
                     message: "密码不能为空"
+                },
+                identical: { //相同
+                    field: 'ConfirmPassword',
+                    message: '两次密码不一致'
+                },
+                different: { //不能和用户名相同
+                    field: 'Name,Email,Mobile',
+                    message: '不能和用户名,手机,邮箱,相同'
+                },
+                regexp: { //匹配规则
+                    regexp: /^[a-zA-Z0-9_\.]+$/,
+                    message: '密码只能是字母数字下划线'
                 }
             }
         },
+        ConfirmPassword: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "确认密码不能为空"
+                },
+                identical: { //相同
+                    field: 'Password',
+                    message: '两次密码不一致'
+                },
+                different: { //不能和用户名相同
+                    field: 'Name,Email,Mobile',
+                    message: '不能和用户名,手机,邮箱,相同'
+                },
+                different: { //不能和用户名相同
+                    field: 'Name,Email,Mobile',
+                    message: '不能和用户名,手机,邮箱,相同'
+                },
+                regexp: { //匹配规则
+                    regexp: /^[a-zA-Z0-9_\.]+$/,
+                    message: '密码只能是字母数字下划线'
+                }
+            }
+        }
     });
     // 公司
     BootstrapValidator("#companyForm", {
@@ -558,6 +606,37 @@ $(function() {
                             toastr.error("没有公司选项", "错误");
                         }
 
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        }
+    });
+    BootstrapValidator("#positionForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "职位名称不能为空"
+                },
+                remote: {
+                    url: "/position/",
+                    message: "职位名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator"
+                        }
                         var xsrf = $("input[name ='_xsrf']");
                         if (xsrf.length > 0) {
                             params._xsrf = xsrf[0].value;

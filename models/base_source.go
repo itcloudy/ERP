@@ -26,6 +26,9 @@ type Source struct {
 func init() {
 	orm.RegisterModel(new(Source))
 }
+func (u *Source) TableName() string {
+	return "base_source"
+}
 
 // Source insert a new Source into database and returns
 // last inserted ID on success.

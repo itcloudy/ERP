@@ -24,8 +24,8 @@ type ProductTemplate struct {
 	Company               *Company                `orm:"rel(fk);null"`                           //公司
 	Sequence              int32                   `json:"Sequence"`                              //序列号
 	Description           string                  `orm:"type(text);null"`                        //描述
-	DescriptioSale        string                  `orm:"type(text);null"`                        //销售描述
-	DescriptioPurchase    string                  `orm:"type(text);null"`                        //采购描述
+	DescriptionSale        string                  `orm:"type(text);null"`                        //销售描述
+	DescriptionPurchase    string                  `orm:"type(text);null"`                        //采购描述
 	Rental                bool                    `orm:"default(false)"`                         //代售品
 	Category              *ProductCategory        `orm:"rel(fk)"`                                //产品类别
 	Price                 float64                 `json:"Price"`                                 //模版产品价格

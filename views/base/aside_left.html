@@ -44,9 +44,10 @@
                     <li class="treeview">
                         <a href="#"><i class="fa fa-indent" aria-hidden="true"></i>公司管理</a>
                         <ul class="treeview-menu">
-                            <li><a class="{{.MenuCompanyActive}}" href="/company/"><i class="fa fa-check-circle-o"></i>公司资料</a></li>
-                            <li><a class="{{.MenuDepartmentActive}}" href="/department/"><i class="fa fa-arrow-circle-right"></i>部门管理</a></li>
-                            <li><a class="{{.MenuTeamActive}}" href="/team/"><i class="fa fa-arrow-circle-right"></i>团队管理</a></li>
+                            <li class="{{.MenuCompanyActive}}"><a href="/company/"><i class="fa fa-check-circle-o"></i>公司资料</a></li>
+                            <li class="{{.MenuDepartmentActive}}"><a href="/department/"><i class="fa fa-arrow-circle-right"></i>部门管理</a></li>
+                            <li class="{{.MenuTeamActive}}"><a href="/team/"><i class="fa fa-arrow-circle-right"></i>团队管理</a></li>
+                            <li class="{{.MenuPositionActive}}"><a href="/position/"><i class="fa fa-arrow-circle-right"></i>职位管理</a></li>
                         </ul>
                     </li>
                     <li class="{{.MenuUserActive}}"><a href="/user/"><i class="fa fa-users" aria-hidden="true"></i></i>用户管理</a></li>

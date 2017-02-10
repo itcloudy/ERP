@@ -33,6 +33,9 @@ type Sequence struct {
 func init() {
 	orm.RegisterModel(new(Sequence))
 }
+func (u *Sequence) TableName() string {
+	return "base_sequence"
+}
 
 // GetNextSequece获得下一个序号
 func GetNextSequece(structName string) (stStr string, errs []error) {

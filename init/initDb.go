@@ -53,10 +53,12 @@ func initUser(filename string) {
 		defer file.Close()
 		if data, err := ioutil.ReadAll(file); err == nil {
 			var initUsers InitUsers
+			var user md.User
+			user.ID = 1
 			if xml.Unmarshal(data, &initUsers) == nil {
 				for _, k := range initUsers.Users {
 					//admin系统管理员
-					md.AddUser(&k)
+					md.AddUser(&k, &user)
 				}
 			}
 		}

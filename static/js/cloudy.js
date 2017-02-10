@@ -15,7 +15,6 @@ $(function() {
                         parentNode = parentNode[0].parentNode;
                         if (parentNode) {
                             if (parentNode.nodeName == "LI") {
-                                console.log("li:" + parentNode);
                                 $(parentNode).addClass("active");
                             }
                         }

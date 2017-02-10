@@ -19,40 +19,90 @@ type User struct {
 	CreateDate      time.Time   `orm:"auto_now_add;type(datetime)" json:"-"`              //创建时间
 	UpdateDate      time.Time   `orm:"auto_now;type(datetime)" json:"-"`                  //最后更新时间
 	Name            string      `orm:"size(20)" xml:"name" json:"Name"`                   //用户名
-	Company         *Company    `orm:"rel(fk);null"`                                      //公司
+	Company         *Company    `orm:"rel(fk);null" json:"-"`                             //公司
 	NameZh          string      `orm:"size(20)"  json:"NameZh"`                           //中文用户名
-	Department      *Department `orm:"rel(fk);null;"  json:"department"`                  //部门
-	DepartmentID    int64       `orm:"-" json:"Department"`                               //部门，用于form表单
-	Email           string      `orm:"size(20)" xml:"email" json:"Email" json:"email"`    //邮箱
+	Department      *Department `orm:"rel(fk);null;" json:"-"`                            //部门
+	Email           string      `orm:"size(20)" xml:"email" json:"Email"`                 //邮箱
 	Mobile          string      `orm:"size(20);default(\"\")" xml:"mobile" json:"Mobile"` //手机号码
-	Tel             string      `orm:"size(20);default(\"\")" json:"Tel" json:"tel"`      //固定号码
-	Password        string      `xml:"password" json:"Password" json:"password"`          //密码
+	Tel             string      `orm:"size(20);default(\"\")" json:"Tel" `                //固定号码
+	Password        string      `xml:"password" json:"Password"`                          //密码
 	ConfirmPassword string      `orm:"-" xml:"ConfirmPassword" json:"ConfirmPassword"`    //确认密码,数据库中不保存
 	Roles           []*Role     `orm:"rel(m2m)"`                                          //用户拥有的角色
-	Teams           []*Team     `orm:"rel(m2m);rel_table(user_teams)"`                    //团队
-	TeamIDs         []string    `orm:"-" json:"Team"`                                     //团队，用于form表单
+	Teams           []*Team     `orm:"rel(m2m)"`                                          //团队
 	IsAdmin         bool        `orm:"default(false)" xml:"isAdmin" json:"IsAdmin"`       //是否为超级用户
 	Active          bool        `orm:"default(true)" xml:"active" json:"Active"`          //有效
 	Qq              string      `orm:"default(\"\")" xml:"qq" json:"Qq"`                  //QQ
 	WeChat          string      `orm:"default(\"\")" xml:"wechat" json:"WeChat"`          //微信
-	Position        *Position   `orm:"rel(fk);null;" json:"Position"`                     //职位
-	PositionID      int64       `orm:"-" json:"Position"`                                 //职位，用于form表单
+	Position        *Position   `orm:"rel(fk);null;" json:"-" `                           //职位
 	// form表单字段
-	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
-
+	FormAction   string  `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+	DepartmentID int64   `orm:"-" json:"Department"`
+	CompanyID    int64   `orm:"-" json:"Company"`
+	PositionID   int64   `orm:"-" json:"Position"`
+	TeamIDs      []int64 `orm:"-" json:"TeamIds"`
+	RoleIDs      []int64 `orm:"-" json:"RoleIds"`
 }
 
 func init() {
 	orm.RegisterModel(new(User))
 }
 
+func (u *User) TableName() string {
+	return "base_user"
+}
+
 // AddUser insert a new User into database and returns
 // last inserted ID on success.
-func AddUser(obj *User) (id int64, err error) {
+func AddUser(obj *User, addUser *User) (id int64, err error) {
+
 	o := orm.NewOrm()
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
 	password := utils.PasswordMD5(obj.Password, obj.Mobile)
 	obj.Password = password
-	id, err = o.Insert(obj)
+	if obj.CompanyID != 0 {
+		obj.Company, _ = GetCompanyByID(obj.CompanyID)
+	}
+	if obj.DepartmentID != 0 {
+		obj.Department, _ = GetDepartmentByID(obj.DepartmentID)
+	}
+	if obj.PositionID != 0 {
+		obj.Position, _ = GetPositionByID(obj.PositionID)
+	}
+	if id, err = o.Insert(obj); err == nil {
+		obj.ID = id
+		m2m := o.QueryM2M(obj, "Teams")
+		for _, item := range obj.TeamIDs {
+			if team, err := GetTeamByID(item); err == nil {
+				m2m.Add(team)
+			}
+		}
+		m2m = o.QueryM2M(obj, "Roles")
+		for _, item := range obj.RoleIDs {
+			if role, err := GetRoleByID(item); err == nil {
+				m2m.Add(role)
+			}
+		}
+	}
+	if err != nil {
+		return 0, err
+	} else {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
@@ -71,6 +121,9 @@ func GetUserByID(id int64) (obj *User, err error) {
 		if obj.Position != nil {
 			o.Read(obj.Position)
 		}
+		o.LoadRelated(obj, "Teams")
+		o.LoadRelated(obj, "Roles")
+
 		return obj, nil
 	}
 	return nil, err
@@ -78,16 +131,19 @@ func GetUserByID(id int64) (obj *User, err error) {
 
 // GetUserByName get user
 func GetUserByName(name string) (User, error) {
+	orm.Debug = true
 	o := orm.NewOrm()
 	var user User
 	//7LR8ZC-855575-64657756081974692
 	o.Using("default")
+	fmt.Println(name)
 	cond := orm.NewCondition()
-	cond = cond.And("mobile", name).Or("email", name).Or("name", name)
+	cond = cond.And("mobile", name).Or("email__icontains", name).Or("name", name)
 	qs := o.QueryTable(&user)
 	qs = qs.SetCond(cond)
 	qs = qs.RelatedSel()
 	err := qs.One(&user)
+	fmt.Println(err)
 	return user, err
 }
 
@@ -192,9 +248,9 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 	return paginator, objArrs, err
 }
 
-// UpdateUserByID updates User by ID and returns error if
+// UpdateUser updates User by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateUserByID(m *User) (err error) {
+func UpdateUser(m *User, updateUser *User) (err error) {
 	o := orm.NewOrm()
 	v := User{ID: m.ID}
 	// ascertain id exists in the database
@@ -234,7 +290,7 @@ func CheckUserByName(name, password string) (User, bool, error) {
 	//7LR8ZC-855575-64657756081974692
 	o.Using("default")
 	cond := orm.NewCondition()
-	cond = cond.And("active", true).And("mobile", name).Or("email", name)
+	cond = cond.And("active", true).And("Name", name).Or("Email", name).Or("Mobile", name)
 	qs := o.QueryTable(&user)
 	qs = qs.SetCond(cond)
 	if err = qs.One(&user); err == nil {

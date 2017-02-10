@@ -26,6 +26,10 @@ func init() {
 	orm.RegisterModel(new(TemplateFile))
 }
 
+func (u *TemplateFile) TableName() string {
+	return "base_template_file"
+}
+
 // AddTemplateFile insert a new TemplateFile into database and returns
 // last inserted ID on success.
 func AddTemplateFile(obj *TemplateFile, addUser *User) (id int64, errs []error) {
@@ -144,7 +148,7 @@ func GetAllTemplateFile(query map[string]interface{}, exclude map[string]interfa
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -158,7 +162,7 @@ func GetAllTemplateFile(query map[string]interface{}, exclude map[string]interfa
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}

@@ -39,6 +39,9 @@ type Company struct {
 func init() {
 	orm.RegisterModel(new(Company))
 }
+func (u *Company) TableName() string {
+	return "base_company"
+}
 
 // AddCompany insert a new Company into database and returns
 // last inserted ID on success.

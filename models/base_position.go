@@ -18,20 +18,41 @@ type Position struct {
 	CreateDate  time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate  time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	FormAction  string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name        string    `orm:"unique"`                               //职位名称
-	Description string    //职位描述
+	Name        string    `orm:"unique" json:"Name"`                   //职位名称
+	Description string    `orm:"type(text)" json:"Description"`        //职位描述
 }
 
 func init() {
 	orm.RegisterModel(new(Position))
 }
+func (u *Position) TableName() string {
+	return "base_position"
+}
 
-// AddPosition insert a new Position into database and returns
+// Position insert a new Position into database and returns
 // last inserted ID on success.
-func AddPosition(obj *Position) (id int64, err error) {
+func AddPosition(obj *Position, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
 	id, err = o.Insert(obj)
+	if err == nil {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 
@@ -41,9 +62,23 @@ func GetPositionByID(id int64) (obj *Position, err error) {
 	o := orm.NewOrm()
 	obj = &Position{ID: id}
 	if err = o.Read(obj); err == nil {
-		return obj, nil
+		return obj, err
 	}
 	return nil, err
+}
+
+// GetPositionByName retrieves Position by Name. Returns error if
+// Name doesn't exist
+func GetPositionByName(name string) (*Position, error) {
+	o := orm.NewOrm()
+	var obj Position
+	cond := orm.NewCondition()
+	cond = cond.And("Name", name)
+	qs := o.QueryTable(&obj)
+	qs = qs.SetCond(cond)
+	err := qs.One(&obj)
+
+	return &obj, err
 }
 
 // GetAllPosition retrieves all Position matches certain condition. Returns empty list if
@@ -58,6 +93,7 @@ func GetAllPosition(query map[string]interface{}, exclude map[string]interface{}
 	if limit == 0 {
 		limit = 20
 	}
+
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(Position))
 	qs = qs.RelatedSel()
@@ -91,7 +127,6 @@ func GetAllPosition(query map[string]interface{}, exclude map[string]interface{}
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Exclude(k, v)
 	}
-
 	// order by:
 	var sortFields []string
 	if len(sortby) != 0 {
@@ -102,7 +137,7 @@ func GetAllPosition(query map[string]interface{}, exclude map[string]interface{}
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -116,7 +151,7 @@ func GetAllPosition(query map[string]interface{}, exclude map[string]interface{}
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -137,36 +172,23 @@ func GetAllPosition(query map[string]interface{}, exclude map[string]interface{}
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
+
 			}
 		}
 	}
 	return paginator, objArrs, err
 }
 
-// UpdatePositionByID updates Position by ID and returns error if
+// UpdatePosition updates Position by ID and returns error if
 // the record to be updated doesn't exist
-func UpdatePositionByID(m *Position) (err error) {
+func UpdatePosition(obj *Position, updateUser *User) (id int64, err error) {
 	o := orm.NewOrm()
-	v := Position{ID: m.ID}
-	// ascertain id exists in the database
-	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
-		}
+	obj.UpdateUser = updateUser
+	var num int64
+	if num, err = o.Update(obj); err == nil {
+		fmt.Println("Number of records updated in database:", num)
 	}
-	return
-}
-
-// GetPositionByName retrieves Position by Name. Returns error if
-// Name doesn't exist
-func GetPositionByName(name string) (obj *Position, err error) {
-	o := orm.NewOrm()
-	obj = &Position{Name: name}
-	if err = o.Read(obj); err == nil {
-		return obj, nil
-	}
-	return nil, err
+	return obj.ID, err
 }
 
 // DeletePosition deletes Position by ID and returns error if

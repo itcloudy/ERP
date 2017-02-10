@@ -25,6 +25,10 @@ type Menu struct {
 func init() {
 	orm.RegisterModel(new(Menu))
 }
+func (u *Menu) TableName() string {
+	return "base_menu"
+}
+
 
 // Menu insert a new Menu into database and returns
 // last inserted ID on success.

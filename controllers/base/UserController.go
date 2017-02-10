@@ -3,6 +3,7 @@ package base
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	md "goERP/models"
 	"strconv"
 	"strings"
@@ -33,7 +34,7 @@ func (ctl *UserController) Put() {
 						upateField = append(upateField, "Position")
 					}
 				}
-				if err := md.UpdateUserByID(user); err == nil {
+				if err := md.UpdateUser(user, &ctl.User); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -122,6 +123,12 @@ func (ctl *UserController) GetList() {
 func (ctl *UserController) Validator() {
 	recordID, _ := ctl.GetInt64("recordID")
 	name := strings.TrimSpace(ctl.GetString("Name"))
+	if name == "" {
+		name = strings.TrimSpace(ctl.GetString("Mobile"))
+		if name == "" {
+			name = strings.TrimSpace(ctl.GetString("Email"))
+		}
+	}
 	result := make(map[string]bool)
 	obj, err := md.GetUserByName(name)
 	if err != nil {
@@ -133,7 +140,6 @@ func (ctl *UserController) Validator() {
 			} else {
 				result["valid"] = false
 			}
-
 		} else {
 			result["valid"] = true
 		}
@@ -148,15 +154,43 @@ func (ctl *UserController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
+	condAnd := make(map[string]interface{})
+	condOr := make(map[string]interface{})
+	filterMap := make(map[string]interface{})
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 0, 1)
 	order := make([]string, 0, 1)
+	if ID, err := ctl.GetInt64("Id"); err == nil {
+		query["Id"] = ID
+	}
+	if name := strings.TrimSpace(ctl.GetString("Name")); name != "" {
+		condAnd["Name.icontains"] = name
+	}
+	filter := ctl.GetString("filter")
+	if filter != "" {
+		json.Unmarshal([]byte(filter), &filterMap)
+	}
+	// 对filterMap进行判断
+	if filterActive, ok := filterMap["Active"]; ok {
+		condAnd["Active"] = filterActive
+	}
+	if filterSaleOk, ok := filterMap["SaleOk"]; ok {
+		condAnd["SaleOk"] = filterSaleOk
+	}
+	if filterName, ok := filterMap["Name"]; ok {
+		filterName = strings.TrimSpace(filterName.(string))
+		if filterName != "" {
+			condAnd["Name.icontains"] = filterName
+		}
+	}
+	if len(condAnd) > 0 {
+		cond["and"] = condAnd
+	}
+	if len(condOr) > 0 {
+		cond["or"] = condOr
+	}
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
-	name := strings.TrimSpace(ctl.Input().Get("Name"))
-	if name != "" {
-		query["Name"] = name
-	}
 	orderStr := ctl.GetString("order")
 	sortStr := ctl.GetString("sort")
 	if orderStr != "" && sortStr != "" {
@@ -165,6 +199,7 @@ func (ctl *UserController) PostList() {
 	} else {
 		sortby = append(sortby, "Id")
 		order = append(order, "desc")
+
 	}
 	if result, err := ctl.userList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
@@ -207,7 +242,6 @@ func (ctl *UserController) userList(query map[string]interface{}, exclude map[st
 			for _, team := range teams {
 				teamMapValues[team.ID] = team.Name
 			}
-
 			oneLine["Email"] = user.Email
 			oneLine["Mobile"] = user.Mobile
 			oneLine["Tel"] = user.Tel
@@ -240,23 +274,32 @@ func (ctl *UserController) ChangePwd() {
 //PostCreate create user with post params
 func (ctl *UserController) PostCreate() {
 
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	fmt.Printf("%+v\n", postData)
 	user := new(md.User)
-	if err := ctl.ParseForm(user); err == nil {
-		if deparentID, err := ctl.GetInt64("Department"); err == nil {
-			if department, err := md.GetDepartmentByID(deparentID); err == nil {
-				user.Department = department
-			}
+	var (
+		err error
+		id  int64
+	)
+	if err = json.Unmarshal([]byte(postData), user); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
+		if id, err = md.AddUser(user, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			result["debug"] = err.Error()
 		}
-		if positionID, err := ctl.GetInt64("Position"); err == nil {
-			if position, err := md.GetPositionByID(positionID); err == nil {
-				user.Position = position
-			}
-		}
-		if id, err := md.AddUser(user); err == nil {
-			ctl.Redirect(ctl.URL+strconv.FormatInt(id, 10)+"?action=detail", 302)
-
-		}
+	} else {
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
 	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 
 }
 

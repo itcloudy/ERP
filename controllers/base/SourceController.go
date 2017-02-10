@@ -190,7 +190,7 @@ func (ctl *SourceController) Validator() {
 }
 
 // 获得符合要求的款式数据
-func (ctl *SourceController) addressTemplateList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *SourceController) sourceList(query map[string]interface{}, exclude map[string]interface{}, cond map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
 	var arrs []md.Source
 	paginator, arrs, err := md.GetAllSource(query, exclude, cond, fields, sortby, order, offset, limit)
@@ -268,7 +268,7 @@ func (ctl *SourceController) PostList() {
 		order = append(order, "desc")
 
 	}
-	if result, err := ctl.addressTemplateList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.sourceList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()

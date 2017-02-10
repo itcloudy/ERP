@@ -35,6 +35,9 @@ type Team struct {
 func init() {
 	orm.RegisterModel(new(Team))
 }
+func (u *Team) TableName() string {
+	return "base_team"
+}
 
 // AddTeam insert a new Team into database and returns
 // last inserted ID on success.

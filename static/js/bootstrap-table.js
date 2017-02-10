@@ -335,6 +335,25 @@ displayTable("#table-team", '/team/', [
         }
     }
 ]);
+// 职位
+displayTable("#table-position", '/position/', [
+    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "职位名称", field: 'Name', sortable: true, order: "desc" },
+    { title: "职位描述", field: 'Description' },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/position/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+
+]);
 //系统资源
 displayTable("#table-source", "/source/", [
     { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },

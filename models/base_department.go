@@ -32,6 +32,9 @@ type Department struct {
 func init() {
 	orm.RegisterModel(new(Department))
 }
+func (u *Department) TableName() string {
+	return "base_department"
+}
 
 // AddDepartment insert a new Department into database and returns
 // last inserted ID on success.
@@ -79,7 +82,7 @@ func GetDepartmentByID(id int64) (obj *Department, err error) {
 		if obj.Leader != nil {
 			o.Read(obj.Leader)
 		}
-		if obj.Leader != nil {
+		if obj.Parent != nil {
 			o.Read(obj.Parent)
 		}
 		if obj.Leader != nil {
