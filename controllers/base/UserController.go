@@ -16,31 +16,32 @@ type UserController struct {
 
 // Put request
 func (ctl *UserController) Put() {
-	id := ctl.Ctx.Input.Param(":id")
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	fmt.Printf("%+v\n", postData)
 	ctl.URL = "/user/"
-	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if user, err := md.GetUserByID(idInt64); err == nil {
-			if err := ctl.ParseForm(&user); err == nil {
-				var upateField []string
-				if departmentID, err := ctl.GetInt64("department"); err == nil {
-					if department, err := md.GetDepartmentByID(departmentID); err == nil {
-						user.Department = department
-						upateField = append(upateField, "Department")
-					}
-				}
-				if positionID, err := ctl.GetInt64("position"); err == nil {
-					if position, err := md.GetPositionByID(positionID); err == nil {
-						user.Position = position
-						upateField = append(upateField, "Position")
-					}
-				}
-				if err := md.UpdateUser(user, &ctl.User); err == nil {
-					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
-				}
-			}
+	user := new(md.User)
+	var (
+		err error
+	)
+	if err = json.Unmarshal([]byte(postData), user); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
+		if err = md.UpdateUser(user, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(user.ID, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据更新失败"
+			result["debug"] = err.Error()
 		}
+	} else {
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
 	}
-	ctl.Redirect(ctl.URL+id+"?action=edit", 302)
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 }
 
 // Get request
@@ -273,7 +274,6 @@ func (ctl *UserController) ChangePwd() {
 
 //PostCreate create user with post params
 func (ctl *UserController) PostCreate() {
-
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
 	fmt.Printf("%+v\n", postData)

@@ -21,15 +21,28 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 }
                 val = a_arr;
                 break;
-            case "array_float": //  浮点型数组
-                var a_arr = [];
-                for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
-                    a_arr.push(parseFloat(val[a_i]));
-                }
-                val = a_arr;
-                break;
         }
         return val
+    };
+    var getTreeLineData = function(cellFields, action = "create") {
+        var funCellData = {
+            FormAction: action
+        };
+        for (var j = 0, cellLen = cellFields.length; j < cellLen; j++) {
+            var funHasProp = false;
+            var cell = cellFields[j];
+            var cellName = cell.name;
+            var oldValue = $(cell).data("oldvalue");
+            var cellValue = $(cell).val();
+            if (cellValue != "") {
+                if (cellValue === null) {
+                    continue;
+                }
+                funCellData[cellName] = getCurrentDataType(cellValue, $(cell).data("type"));
+                funHasProp = true;
+            }
+        }
+        return { cellData: funCellData, hasProp: funHasProp };
     };
     $(selector).bootstrapValidator({
         message: '该值无效',
@@ -45,11 +58,11 @@ var BootstrapValidator = function(selector, needValidatorFields) {
     }).on('success.form.bv', function(e) {
         // Prevent form submission
         e.preventDefault();
-
-
+        // 默认为表单数据创建
+        var httpMethod = "POST";
         var $form = $(e.currentTarget);
         var formData = {
-            FormAction: "create" //默认为创建
+            FormAction: "create"
         };
         var xsrf = $("input[name ='_xsrf']");
         if (xsrf.length > 0) {
@@ -59,9 +72,11 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         //    获得form直接的字段
         var formFields = $form.find(".form-create,.form-edit");
         if ($form.find("input[name='recordID']").length > 0) {
+            // 表单数据更新
             formData.FormAction = "update";
+            httpMethod = "PUT";
         }
-
+        var actionFields = [];
         for (var item = 0, formFieldsLen = formFields.length; item < formFieldsLen; item++) {
             var self = formFields[item];
             var oldValue = null;
@@ -72,6 +87,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 if ($(self).data("type") == "string") {
                     var nodeName = $("input[name ='" + self.name + "']:checked");
                     if (nodeName != undefined) {
+                        actionFields.push(self.name);
                         formData[self.name] = nodeName.val();
                     }
                 } else {
@@ -83,6 +99,8 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 } else {
                     formData[self.name] = false;
                 }
+                actionFields.push(self.name);
+
             } else {
 
                 // 如果值未改变不添加进去
@@ -112,30 +130,20 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                     if (val === null) {
                         continue;
                     }
-                    formData[self.name] = getCurrentDataType(val, dataType)
+                    // 如果input[@name="recordID"]存在
+                    if (self.name == 'recordID') {
+                        formData["id"] = getCurrentDataType(val, dataType);
+                    } else {
+                        formData[self.name] = getCurrentDataType(val, dataType);
+                        // 剔除数组类字段
+                        if (dataType != "array_int") {
+                            actionFields.push(self.name);
+                        }
+                    }
                 }
             }
         }
-        var getTreeLineData = function(cellFields, action = "create") {
-            var funCellData = {
-                FormAction: action
-            };
-            for (var j = 0, cellLen = cellFields.length; j < cellLen; j++) {
-                var funHasProp = false;
-                var cell = cellFields[j];
-                var cellName = cell.name;
-                var oldValue = $(cell).data("oldvalue");
-                var cellValue = $(cell).val();
-                if (cellValue != "") {
-                    if (cellValue === null) {
-                        continue;
-                    }
-                    funCellData[cellName] = getCurrentDataType(cellValue, $(cell).data("type"));
-                    funHasProp = true;
-                }
-            }
-            return { cellData: funCellData, hasProp: funHasProp };
-        };
+        formData["actionFields"] = actionFields;
         //获得form-tree-create信息
         var formTreeFields = $form.find(".form-tree-line-create");
         for (var i = 0, lineLen = formTreeFields.length; i < lineLen; i++) {
@@ -173,36 +181,63 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 }
             }
         }
-        var postParams = {
+        var requestParams = {
             postData: JSON.stringify(formData),
             _xsrf: xsrf
         };
         var method = $form.find("input[name='_method']");
         if (method.length > 0) {
-            postParams._method = method.val();
+            requestParams._method = method.val();
         }
-        $.post($form.action, postParams).success(function(response) {
-            if (response.code == 'failed') {
-                if (formData.FormAction == "update") {
-                    toastr.error("修改失败", "错误");
+        $.ajax({
+            type: httpMethod,
+            url: $form.action,
+            data: requestParams,
+            dataType: "json",
+            success: function(response) {
+                if (response.code == 'failed') {
+                    if (formData.FormAction == "update") {
+                        toastr.error("修改失败", "错误");
+                    } else {
+                        toastr.error("创建失败", "错误");
+                    }
+                    return;
                 } else {
-                    toastr.error("创建失败", "错误");
+                    if (formData.FormAction == "update") {
+                        toastr.success("<h3>修改成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
+                    } else {
+                        toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
+                    }
+                    console.log(response.location);
+                    // setTimeout(function() { window.location = response.location; }, 1000);
                 }
-                return;
-            } else {
-                if (formData.FormAction == "update") {
-                    toastr.success("<h3>修改成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
-                } else {
-                    toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
-                }
-                console.log(response.location);
-                // setTimeout(function() { window.location = response.location; }, 1000);
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                console.log(XMLHttpRequest.status);
+                console.log(XMLHttpRequest.readyState);
+                console.log(textStatus);
+                toastr.error("请求失败，请刷新页面后再操作", "错误");
             }
         });
-        // Use Ajax to submit form data
-        // $.post($form.attr('action'), $form.serialize(), function(result) {
-        //     console.log(result);
-        // }, 'json');
+        // $.post($form.action, requestParams).success(function(response) {
+        //     if (response.code == 'failed') {
+        //         if (formData.FormAction == "update") {
+        //             toastr.error("修改失败", "错误");
+        //         } else {
+        //             toastr.error("创建失败", "错误");
+        //         }
+        //         return;
+        //     } else {
+        //         if (formData.FormAction == "update") {
+        //             toastr.success("<h3>修改成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
+        //         } else {
+        //             toastr.success("<h3>创建成功</h3><br><a href='" + response.location + "'>1秒后跳转</a>");
+        //         }
+        //         console.log(response.location);
+        //         // setTimeout(function() { window.location = response.location; }, 1000);
+        //     }
+        // });
+
     });
 };
 

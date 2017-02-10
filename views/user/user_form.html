@@ -57,14 +57,6 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="form-group">
-                    <label for="password" class="col-md-4 control-label label-start">密码<span class="required-input">&nbsp*</span></label>
-                    <div class="col-md-8">
-                        <input class="form-control {{.FormField}}" name="Password" id="password" type="text" />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="form-group">
                     <label for="email" class="col-md-4 control-label label-start">邮箱<span class="required-input">&nbsp*</span></label>
                     <div class="col-md-8">
                         <p class="p-form-control"> {{.User.Email}} </p>
@@ -89,11 +81,33 @@
                         <input data-type="string" class="form-control {{.FormField}}" name="WeChat" id="wechat" data-oldValue="{{.User.WeChat}}" type="text" value="{{.User.WeChat}}" />
                     </div>
                 </div>
-
             </div>
         </div>
 
     </fieldset>
+    {{if eq .FormField "form-create"}}
+    <fieldset>
+        <legend>密码设置</legend>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="password" class="col-md-4 control-label label-start">密码<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <input class="form-control password {{.FormField}}" name="Password" id="password" type="password" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="confirmPassword" class="col-md-4 control-label label-start">确认密码<span class="required-input">&nbsp*</span></label>
+                    <div class="col-md-8">
+                        <input class="form-control password {{.FormField}}" name="ConfirmPassword" id="confirmPassword" type="password" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    {{end}}
     <fieldset>
         <legend>部门信息</legend>
         <div class="row">

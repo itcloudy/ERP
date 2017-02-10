@@ -274,7 +274,10 @@ displayTable("#table-department", '/department/', [
         sortable: true,
         order: "desc",
         formatter: function cellStyle(value, row, index) {
-            var html = row.Leader.name + "<a class='pull-right' href='/user/" + row.Leader.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            var html = '';
+            if (row.Leader) {
+                html = row.Leader.name + "<a class='pull-right' href='/user/" + row.Leader.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            }
             return html;
         }
     },

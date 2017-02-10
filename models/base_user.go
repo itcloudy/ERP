@@ -20,7 +20,7 @@ type User struct {
 	UpdateDate      time.Time   `orm:"auto_now;type(datetime)" json:"-"`                  //最后更新时间
 	Name            string      `orm:"size(20)" xml:"name" json:"Name"`                   //用户名
 	Company         *Company    `orm:"rel(fk);null" json:"-"`                             //公司
-	NameZh          string      `orm:"size(20)"  json:"NameZh"`                           //中文用户名
+	NameZh          string      `orm:"size(20)"  xml:"NameZh" json:"NameZh"`              //中文用户名
 	Department      *Department `orm:"rel(fk);null;" json:"-"`                            //部门
 	Email           string      `orm:"size(20)" xml:"email" json:"Email"`                 //邮箱
 	Mobile          string      `orm:"size(20);default(\"\")" xml:"mobile" json:"Mobile"` //手机号码
@@ -35,12 +35,13 @@ type User struct {
 	WeChat          string      `orm:"default(\"\")" xml:"wechat" json:"WeChat"`          //微信
 	Position        *Position   `orm:"rel(fk);null;" json:"-" `                           //职位
 	// form表单字段
-	FormAction   string  `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
-	DepartmentID int64   `orm:"-" json:"Department"`
-	CompanyID    int64   `orm:"-" json:"Company"`
-	PositionID   int64   `orm:"-" json:"Position"`
-	TeamIDs      []int64 `orm:"-" json:"TeamIds"`
-	RoleIDs      []int64 `orm:"-" json:"RoleIds"`
+	FormAction   string             `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string           `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	DepartmentID int64              `orm:"-" json:"Department"`
+	CompanyID    int64              `orm:"-" json:"Company"`
+	PositionID   int64              `orm:"-" json:"Position"`
+	TeamIDs      map[string][]int64 `orm:"-" json:"TeamIds"`
+	RoleIDs      map[string][]int64 `orm:"-" json:"RoleIds"`
 }
 
 func init() {
@@ -82,18 +83,18 @@ func AddUser(obj *User, addUser *User) (id int64, err error) {
 	}
 	if id, err = o.Insert(obj); err == nil {
 		obj.ID = id
-		m2m := o.QueryM2M(obj, "Teams")
-		for _, item := range obj.TeamIDs {
-			if team, err := GetTeamByID(item); err == nil {
-				m2m.Add(team)
-			}
-		}
-		m2m = o.QueryM2M(obj, "Roles")
-		for _, item := range obj.RoleIDs {
-			if role, err := GetRoleByID(item); err == nil {
-				m2m.Add(role)
-			}
-		}
+		// m2m := o.QueryM2M(obj, "Teams")
+		// for _, item := range obj.TeamIDs {
+		// 	if team, err := GetTeamByID(item); err == nil {
+		// 		m2m.Add(team)
+		// 	}
+		// }
+		// m2m = o.QueryM2M(obj, "Roles")
+		// for _, item := range obj.RoleIDs {
+		// 	if role, err := GetRoleByID(item); err == nil {
+		// 		m2m.Add(role)
+		// 	}
+		// }
 	}
 	if err != nil {
 		return 0, err
@@ -131,19 +132,16 @@ func GetUserByID(id int64) (obj *User, err error) {
 
 // GetUserByName get user
 func GetUserByName(name string) (User, error) {
-	orm.Debug = true
 	o := orm.NewOrm()
 	var user User
 	//7LR8ZC-855575-64657756081974692
 	o.Using("default")
-	fmt.Println(name)
 	cond := orm.NewCondition()
 	cond = cond.And("mobile", name).Or("email__icontains", name).Or("name", name)
 	qs := o.QueryTable(&user)
 	qs = qs.SetCond(cond)
 	qs = qs.RelatedSel()
 	err := qs.One(&user)
-	fmt.Println(err)
 	return user, err
 }
 
@@ -250,14 +248,27 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 
 // UpdateUser updates User by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateUser(m *User, updateUser *User) (err error) {
+func UpdateUser(obj *User, updateUser *User) (err error) {
 	o := orm.NewOrm()
-	v := User{ID: m.ID}
+	v := User{ID: obj.ID}
+	fmt.Printf("%+v\n", obj)
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Update(m); err == nil {
-			fmt.Println("Number of records updated in database:", num)
+		if obj.CompanyID != 0 {
+			obj.Company, _ = GetCompanyByID(obj.CompanyID)
+		}
+		if obj.DepartmentID != 0 {
+			obj.Department, _ = GetDepartmentByID(obj.DepartmentID)
+		}
+		if obj.PositionID != 0 {
+			obj.Position, _ = GetPositionByID(obj.PositionID)
+		}
+		if len(obj.TeamIDs) > 0 {
+			// m2mRoles := o.QueryM2M(obj, "Roles")
+			// m2mRoles.Clear()
+		}
+		if _, err = o.Update(obj, append(obj.ActionFields, "UpdateUser", "UpdateDate")...); err != nil {
+			utils.LogOut("error", "用户数据更细失败"+err.Error())
 		}
 	}
 	return
@@ -270,10 +281,7 @@ func DeleteUser(id int64) (err error) {
 	v := User{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
-		var num int64
-		if num, err = o.Delete(&User{ID: id}); err == nil {
-			fmt.Println("Number of records deleted in database:", num)
-		}
+		_, err = o.Delete(&User{ID: id})
 	}
 	return
 }

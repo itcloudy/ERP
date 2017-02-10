@@ -57,7 +57,7 @@ func init() {
 	InitApp()
 	InitDb()
 	// 加载权限控制文件
-	LoadSecurity()
+	// LoadSecurity()
 	// 初始化cache
 	utils.InitCache()
 	beego.AddFuncMap("i18n", i18n.Tr)

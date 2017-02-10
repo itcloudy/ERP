@@ -27,6 +27,7 @@ type Department struct {
 	FormAction string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
 	CompanyID  int64  `orm:"-" json:"Company"`    //公司
 	LeaderID   int64  `orm:"-" json:"Leader"`     //负责人
+	ParentID   int64  `orm:"-" json:"Parent"`
 }
 
 func init() {
@@ -55,6 +56,9 @@ func AddDepartment(obj *Department, addUser *User) (id int64, err error) {
 	}
 	if obj.CompanyID != 0 {
 		obj.Company, _ = GetCompanyByID(obj.CompanyID)
+	}
+	if obj.ParentID != 0 {
+		obj.Parent, _ = GetDepartmentByID(obj.ParentID)
 	}
 	if obj.LeaderID != 0 {
 		obj.Leader, _ = GetUserByID(obj.LeaderID)
