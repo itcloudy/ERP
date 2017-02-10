@@ -48,10 +48,11 @@ func AddTeam(obj *Team, addUser *User) (id int64, err error) {
 	errBegin := o.Begin()
 	defer func() {
 		if err != nil {
+			utils.LogOut("error", err.Error())
 			if errRollback := o.Rollback(); errRollback != nil {
 				err = errRollback
 			}
-			utils.LogOut("prod", "AddTeam:%s", err.Error())
+
 		}
 	}()
 	if obj.CompanyID != 0 {

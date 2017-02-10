@@ -39,7 +39,8 @@ func init() {
 //LogOut 输出日志
 // @Title LogOut
 // @Param	body		body 	models.AccountAccountTag	true		"body for AccountAccountTag content"
-func LogOut(level, format string, v interface{}) {
+func LogOut(level, v interface{}) {
+	format := "%s"
 	if level == "" {
 		level = "debug"
 	}

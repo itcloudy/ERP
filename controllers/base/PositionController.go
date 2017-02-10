@@ -3,7 +3,6 @@ package base
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	md "goERP/models"
 	"strconv"
 	"strings"
@@ -51,7 +50,6 @@ func (ctl *PositionController) Get() {
 	ctl.Data["PageName"] = b.String()
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuPositionActive"] = "active"
-	fmt.Printf("%+v\n", ctl.Data)
 }
 
 // Put 修改产品款式

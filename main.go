@@ -48,7 +48,7 @@ func init() {
 		orm.RegisterDataBase(dbAlias, "sqlite3", dbName)
 
 	}
-	utils.LogOut("prod", "%s", "使用数据库为:"+dbType)
+	utils.LogOut("info", "使用数据库为:"+dbType)
 	//重新运行时是否覆盖原表创建,false:不会删除原表,修改表信息时将会在原来的基础上修改，true删除原表重新创建
 	coverDb, _ := beego.AppConfig.Bool("cover_db")
 
@@ -57,11 +57,13 @@ func init() {
 	InitApp()
 	InitDb()
 	// 加载权限控制文件
-	// LoadSecurity()
+	LoadSecurity()
+	// 初始化cache
+	utils.InitCache()
 	beego.AddFuncMap("i18n", i18n.Tr)
 
 }
 func main() {
-	utils.LogOut("prod", "%s", "start server")
+	utils.LogOut("info", "start server")
 	beego.Run()
 }
