@@ -52,9 +52,10 @@ func (ctl *LoginController) Post() {
 		record.IP = ctl.Ctx.Input.IP()
 		record.UserAgent = ctl.Ctx.Request.UserAgent()
 		record.User = &user
+		user.Password = ""
+		user.ConfirmPassword = ""
 		md.AddRecord(&record)
 		ctl.SetSession("User", user)
-
 		ctl.Ctx.SetCookie("Remember", rememberMe, 31536000, "/")
 		//通过验证跳转到主界面
 		ctl.Redirect("/", 302)
