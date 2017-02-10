@@ -1,10 +1,30 @@
 $(function() {
     'use strict';
     // 左侧菜单显示
-    var currentMenu = $("#top-menu li.active");
-    if (currentMenu.length > 0) {
-
-    }
+    var menuDisplay = function() {
+        var currentMenu = $("#top-menu li.active");
+        if (currentMenu.length > 0) {
+            currentMenu = $(currentMenu)[0];
+            var parentNode = currentMenu.parentNode;
+            if (parentNode) {
+                while (true) {
+                    parentNode = $(parentNode);
+                    if (parentNode.attr("id") == "top-menu") {
+                        break;
+                    } else {
+                        parentNode = parentNode[0].parentNode;
+                        if (parentNode) {
+                            if (parentNode.nodeName == "LI") {
+                                console.log("li:" + parentNode);
+                                $(parentNode).addClass("active");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+    menuDisplay();
     // 单选checkbox
     $('.form-checkbox').each(function(index, el) {
         $(el).iCheck({
