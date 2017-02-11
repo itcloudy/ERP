@@ -28,6 +28,7 @@ type User struct {
 	ConfirmPassword string      `orm:"-" xml:"ConfirmPassword" json:"ConfirmPassword"`    //确认密码,数据库中不保存
 	Roles           []*Role     `orm:"rel(m2m)"`                                          //用户拥有的角色
 	Teams           []*Team     `orm:"rel(m2m)"`                                          //团队
+	Groups          []*Group    `orm:"rel(m2m)"`                                          //用户组
 	IsAdmin         bool        `orm:"default(false)" xml:"isAdmin" json:"IsAdmin"`       //是否为超级用户
 	Active          bool        `orm:"default(true)" xml:"active" json:"Active"`          //有效
 	Qq              string      `orm:"default(\"\")" xml:"qq" json:"Qq"`                  //QQ
@@ -166,7 +167,6 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 	}
 	o := orm.NewOrm()
 	qs := o.QueryTable(new(User))
-	qs = qs.RelatedSel()
 
 	//cond k=v cond必须放到Filter和Exclude前面
 	cond := orm.NewCondition()
@@ -238,6 +238,7 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 	}
 
 	qs = qs.OrderBy(sortFields...)
+	qs = qs.RelatedSel()
 	if cnt, err := qs.Count(); err == nil {
 		if cnt > 0 {
 			paginator = utils.GenPaginator(limit, offset, cnt)
@@ -246,6 +247,7 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 				for i, _ := range objArrs {
 					o.LoadRelated(&objArrs[i], "Roles")
 					o.LoadRelated(&objArrs[i], "Teams")
+
 				}
 			}
 		}
@@ -347,6 +349,15 @@ func CheckUserByName(name, password string) (User, bool, error) {
 	if err = qs.One(&user); err == nil {
 		if user.Password == utils.PasswordMD5(password, user.Mobile) {
 			ok = true
+			if user.Company != nil {
+				o.Read(user.Company)
+			}
+			if user.Department != nil {
+				o.Read(user.Department)
+			}
+			if user.Position != nil {
+				o.Read(user.Position)
+			}
 		}
 	}
 	return user, ok, err

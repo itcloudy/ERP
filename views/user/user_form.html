@@ -119,6 +119,8 @@
                         <select data-type="int" aria-hidden="true" name="Company" id="company" class="form-control select-company {{.FormField}}" {{if and .User .User.Company}} data-oldValue="{{.User.Company.ID}}" {{end}}>
                            {{if and .User .User.Company}}
                             <option value="{{.User.Company.ID}}" selected="selected"> {{.User.Company.Name}}</option>
+                            {{else}}
+                            <option value="{{.LoginUser.Company.ID}}" selected="selected">{{.LoginUser.Company.Name}}</option>
                             {{end}}
                         </select>
                     </div>

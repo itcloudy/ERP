@@ -26,10 +26,12 @@
                             <div class="col-md-8">
                                 <p class="p-form-control"> {{if and .Team .Team.Company}} {{.Team.Company.Name}}{{end}}</p>
                                 <select data-type="int" name="Company" id="company" class="{{.FormField}} form-control select-company">
-                             {{if and .Team .Team.Company}}
-                            <option value="{{.Team.Company.ID}}" selected="selected">{{.Team.Company.Name}}</option>
-                             {{end}} 
-                        </select>
+                                    {{if and .Team .Team.Company}}
+                                    <option value="{{.Team.Company.ID}}" selected="selected">{{.Team.Company.Name}}</option>
+                                    {{else}}
+                                    <option value="{{.LoginUser.Company.ID}}" selected="selected">{{.LoginUser.Company.Name}}</option>
+                                    {{end}} 
+                                </select>
                             </div>
                         </div>
                     </div>

@@ -1,4 +1,4 @@
-package product
+package sale
 
 import (
 	"bytes"
@@ -9,11 +9,11 @@ import (
 	"strings"
 )
 
-type ProductCounterController struct {
+type SaleCounterController struct {
 	base.BaseController
 }
 
-func (ctl *ProductCounterController) Post() {
+func (ctl *SaleCounterController) Post() {
 	action := ctl.Input().Get("action")
 	switch action {
 	case "validator":
@@ -26,14 +26,14 @@ func (ctl *ProductCounterController) Post() {
 		ctl.PostList()
 	}
 }
-func (ctl *ProductCounterController) Put() {
+func (ctl *SaleCounterController) Put() {
 	id := ctl.Ctx.Input.Param(":id")
-	ctl.URL = "/product/counter/"
+	ctl.URL = "/sale/counter/"
 	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if counter, err := md.GetProductCounterByID(idInt64); err == nil {
+		if counter, err := md.GetSaleCounterByID(idInt64); err == nil {
 			if err := ctl.ParseForm(&counter); err == nil {
 
-				if err := md.UpdateProductCounterByID(counter); err == nil {
+				if err := md.UpdateSaleCounterByID(counter); err == nil {
 					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
 				}
 			}
@@ -42,7 +42,7 @@ func (ctl *ProductCounterController) Put() {
 	ctl.Redirect(ctl.URL+id+"?action=edit", 302)
 
 }
-func (ctl *ProductCounterController) Get() {
+func (ctl *SaleCounterController) Get() {
 	ctl.PageName = "产品柜台管理"
 	action := ctl.Input().Get("action")
 	switch action {
@@ -61,18 +61,18 @@ func (ctl *ProductCounterController) Get() {
 	b.WriteString("\\")
 	b.WriteString(ctl.PageAction)
 	ctl.Data["PageName"] = b.String()
-	ctl.URL = "/product/counter/"
+	ctl.URL = "/sale/counter/"
 	ctl.Data["URL"] = ctl.URL
-	ctl.Data["MenuProductCounterActive"] = "active"
+	ctl.Data["MenuSaleCounterActive"] = "active"
 }
-func (ctl *ProductCounterController) Edit() {
+func (ctl *SaleCounterController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 
-			if counter, err := md.GetProductCounterByID(idInt64); err == nil {
+			if counter, err := md.GetSaleCounterByID(idInt64); err == nil {
 				ctl.PageAction = counter.Name
-				ctl.Data["ProductCounter"] = counter
+				ctl.Data["SaleCounter"] = counter
 			}
 		}
 	}
@@ -81,10 +81,10 @@ func (ctl *ProductCounterController) Edit() {
 	ctl.Data["RecordID"] = id
 	ctl.Layout = "base/base.html"
 
-	ctl.TplName = "product/product_counter_form.html"
+	ctl.TplName = "sale/sale_counter_form.html"
 }
 
-func (ctl *ProductCounterController) Detail() {
+func (ctl *SaleCounterController) Detail() {
 	//获取信息一样，直接调用Edit
 	ctl.Edit()
 	ctl.Data["Readonly"] = true
@@ -92,10 +92,10 @@ func (ctl *ProductCounterController) Detail() {
 }
 
 //post请求创建产品分类
-func (ctl *ProductCounterController) PostCreate() {
+func (ctl *SaleCounterController) PostCreate() {
 	result := make(map[string]interface{})
 	postData := ctl.GetString("postData")
-	counter := new(md.ProductCounter)
+	counter := new(md.SaleCounter)
 	var (
 		err  error
 		id   int64
@@ -104,7 +104,7 @@ func (ctl *ProductCounterController) PostCreate() {
 	if err = json.Unmarshal([]byte(postData), counter); err == nil {
 		// 获得struct表名
 		// structName := reflect.Indirect(reflect.ValueOf(counter)).Type().Name()
-		if id, errs = md.AddProductCounter(counter, &ctl.User); len(errs) == 0 {
+		if id, errs = md.AddSaleCounter(counter, &ctl.User); len(errs) == 0 {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
@@ -124,20 +124,20 @@ func (ctl *ProductCounterController) PostCreate() {
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
-func (ctl *ProductCounterController) Create() {
+func (ctl *SaleCounterController) Create() {
 	ctl.Data["Action"] = "create"
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
 	ctl.Data["FormField"] = "form-create"
 	ctl.Layout = "base/base.html"
-	ctl.TplName = "product/product_counter_form.html"
+	ctl.TplName = "sale/sale_counter_form.html"
 }
-func (ctl *ProductCounterController) Validator() {
+func (ctl *SaleCounterController) Validator() {
 	name := ctl.GetString("name")
 	recordID, _ := ctl.GetInt64("recordID")
 	name = strings.TrimSpace(name)
 	result := make(map[string]bool)
-	obj, err := md.GetProductCounterByName(name)
+	obj, err := md.GetSaleCounterByName(name)
 	if err != nil {
 		result["valid"] = true
 	} else {
@@ -158,10 +158,10 @@ func (ctl *ProductCounterController) Validator() {
 }
 
 // 获得符合要求的城市数据
-func (ctl *ProductCounterController) productCounterList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
+func (ctl *SaleCounterController) SaleCounterList(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (map[string]interface{}, error) {
 
-	var arrs []md.ProductCounter
-	paginator, arrs, err := md.GetAllProductCounter(query, exclude, condMap, fields, sortby, order, offset, limit)
+	var arrs []md.SaleCounter
+	paginator, arrs, err := md.GetAllSaleCounter(query, exclude, condMap, fields, sortby, order, offset, limit)
 	result := make(map[string]interface{})
 	if err == nil {
 
@@ -185,7 +185,7 @@ func (ctl *ProductCounterController) productCounterList(query map[string]interfa
 	}
 	return result, err
 }
-func (ctl *ProductCounterController) PostList() {
+func (ctl *SaleCounterController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
@@ -204,20 +204,20 @@ func (ctl *ProductCounterController) PostList() {
 		sortby = append(sortby, "Id")
 		order = append(order, "desc")
 	}
-	if result, err := ctl.productCounterList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+	if result, err := ctl.SaleCounterList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
 	}
 	ctl.ServeJSON()
 
 }
 
-func (ctl *ProductCounterController) GetList() {
+func (ctl *SaleCounterController) GetList() {
 	viewType := ctl.Input().Get("view")
 	if viewType == "" || viewType == "table" {
 		ctl.Data["ViewType"] = "table"
 	}
 	ctl.PageAction = "列表"
-	ctl.Data["tableId"] = "table-product-counter"
+	ctl.Data["tableId"] = "table-sale-counter"
 	ctl.Layout = "base/base_list_view.html"
-	ctl.TplName = "product/product_counter_list_search.html"
+	ctl.TplName = "sale/sale_counter_list_search.html"
 }

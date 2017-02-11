@@ -51,7 +51,7 @@ func (ctl *BaseController) Prepare() {
 	user := ctl.GetSession("User")
 	if user != nil {
 		ctl.User = user.(md.User)
-		ctl.Data["user"] = user
+		ctl.Data["LoginUser"] = user
 		ctl.Data["LastLogin"] = ctl.GetSession("LastLogin")
 	} else {
 		if ctl.Ctx.Request.RequestURI != "/login/in" {

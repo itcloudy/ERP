@@ -20,12 +20,11 @@ type ProductTemplate struct {
 	CreateDate            time.Time               `orm:"auto_now_add;type(datetime)" json:"-"`   //创建时间
 	UpdateDate            time.Time               `orm:"auto_now;type(datetime)" json:"-"`       //最后更新时间
 	Name                  string                  `orm:"unique;index" json:"Name"`               //产品款式名称
-	ProductCounter        *ProductCounter         `orm:"rel(fk);null"`                           //产品规格所属柜台
 	Company               *Company                `orm:"rel(fk);null"`                           //公司
 	Sequence              int32                   `json:"Sequence"`                              //序列号
 	Description           string                  `orm:"type(text);null"`                        //描述
-	DescriptionSale        string                  `orm:"type(text);null"`                        //销售描述
-	DescriptionPurchase    string                  `orm:"type(text);null"`                        //采购描述
+	DescriptionSale       string                  `orm:"type(text);null"`                        //销售描述
+	DescriptionPurchase   string                  `orm:"type(text);null"`                        //采购描述
 	Rental                bool                    `orm:"default(false)"`                         //代售品
 	Category              *ProductCategory        `orm:"rel(fk)"`                                //产品类别
 	Price                 float64                 `json:"Price"`                                 //模版产品价格
@@ -95,9 +94,6 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 	}()
 	if errBegin != nil {
 		return 0, errBegin
-	}
-	if obj.ProductCounterID != 0 {
-		obj.ProductCounter, _ = GetProductCounterByID(obj.ProductCounterID)
 	}
 	if obj.CategoryID != 0 {
 		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)

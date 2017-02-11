@@ -51,8 +51,7 @@ func init() {
 	//区县
 	beego.Router("/address/district/?:id", &address.AddressDistrictController{})
 	//=======================================产品管理===========================================
-	//产品柜台
-	beego.Router("/product/counter/?:id", &product.ProductCounterController{})
+
 	//产品类别
 	beego.Router("/product/category/?:id", &product.ProductCategoryController{})
 	//属性
@@ -82,6 +81,8 @@ func init() {
 	//=======================================销售订单管理===========================================
 	//销售设置
 	beego.Router("/sale/config/?:id", &sale.SaleConfigController{})
+	//产品柜台
+	beego.Router("/sale/counter/?:id", &sale.SaleCounterController{})
 	//销售订单
 	beego.Router("/sale/order/?:id", &sale.SaleOrderController{})
 	//销售订单明细

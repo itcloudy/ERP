@@ -11,19 +11,18 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// ProductCounter 柜台
-type ProductCounter struct {
-	ID               int64              `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser       *User              `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser       *User              `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate       time.Time          `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate       time.Time          `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name             string             `orm:"unique"  json:"Name"`                  //产品属性名称
-	Description      string             `orm:"type(text);null"  json:"Description"`  //描述
-	ProductProducts  []*ProductProduct  `orm:"reverse(many)"`                        //产品规格
-	ProductTemplates []*ProductTemplate `orm:"reverse(many)"`                        //产品款式
-	ProductsCount    int                `orm:"-"`                                    //产品规格数量
-	TemplatesCount   int                `orm:"-"`                                    //产品款式数量
+// SaleCounter 柜台
+type SaleCounter struct {
+	ID             int64     `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser     *User     `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser     *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate     time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate     time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Company        *Company  `orm:"rel(fk);null" json:"-"`                //公司
+	Name           string    `orm:"unique"  json:"Name"`                  //产品属性名称
+	Description    string    `orm:"type(text);null"  json:"Description"`  //描述
+	ProductsCount  int       `orm:"-"`                                    //产品规格数量
+	TemplatesCount int       `orm:"-"`                                    //产品款式数量
 
 	// form表单使用字段
 	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
@@ -31,12 +30,12 @@ type ProductCounter struct {
 }
 
 func init() {
-	orm.RegisterModel(new(ProductCounter))
+	orm.RegisterModel(new(SaleCounter))
 }
 
-// AddProductCounter insert a new ProductCounter into database and returns
+// AddSaleCounter insert a new SaleCounter into database and returns
 // last inserted ID on success.
-func AddProductCounter(obj *ProductCounter, addUser *User) (id int64, errs []error) {
+func AddSaleCounter(obj *SaleCounter, addUser *User) (id int64, errs []error) {
 	o := orm.NewOrm()
 	obj.CreateUser = addUser
 	obj.UpdateUser = addUser
@@ -62,22 +61,22 @@ func AddProductCounter(obj *ProductCounter, addUser *User) (id int64, errs []err
 	return id, errs
 }
 
-// GetProductCounterByID retrieves ProductCounter by ID. Returns error if
+// GetSaleCounterByID retrieves SaleCounter by ID. Returns error if
 // ID doesn't exist
-func GetProductCounterByID(id int64) (obj *ProductCounter, err error) {
+func GetSaleCounterByID(id int64) (obj *SaleCounter, err error) {
 	o := orm.NewOrm()
-	obj = &ProductCounter{ID: id}
+	obj = &SaleCounter{ID: id}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
 	return nil, err
 }
 
-// GetAllProductCounter retrieves all ProductCounter matches certain condition. Returns empty list if
+// GetAllSaleCounter retrieves all SaleCounter matches certain condition. Returns empty list if
 // no records exist
-func GetAllProductCounter(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []ProductCounter, error) {
+func GetAllSaleCounter(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []SaleCounter, error) {
 	var (
-		objArrs   []ProductCounter
+		objArrs   []SaleCounter
 		paginator utils.Paginator
 		num       int64
 		err       error
@@ -86,7 +85,7 @@ func GetAllProductCounter(query map[string]interface{}, exclude map[string]inter
 		limit = 20
 	}
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(ProductCounter))
+	qs := o.QueryTable(new(SaleCounter))
 	qs = qs.RelatedSel()
 
 	//cond k=v cond必须放到Filter和Exclude前面
@@ -164,12 +163,6 @@ func GetAllProductCounter(query map[string]interface{}, exclude map[string]inter
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
-				for i, _ := range objArrs {
-					o.LoadRelated(&objArrs[i], "ProductProducts")
-					objArrs[i].ProductsCount = len(objArrs[i].ProductProducts)
-					o.LoadRelated(&objArrs[i], "ProductTemplates")
-					objArrs[i].TemplatesCount = len(objArrs[i].ProductTemplates)
-				}
 			}
 		}
 	}
@@ -177,11 +170,11 @@ func GetAllProductCounter(query map[string]interface{}, exclude map[string]inter
 	return paginator, objArrs, err
 }
 
-// UpdateProductCounterByID updates ProductCounter by ID and returns error if
+// UpdateSaleCounterByID updates SaleCounter by ID and returns error if
 // the record to be updated doesn't exist
-func UpdateProductCounterByID(m *ProductCounter) (err error) {
+func UpdateSaleCounterByID(m *SaleCounter) (err error) {
 	o := orm.NewOrm()
-	v := ProductCounter{ID: m.ID}
+	v := SaleCounter{ID: m.ID}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
@@ -192,26 +185,26 @@ func UpdateProductCounterByID(m *ProductCounter) (err error) {
 	return
 }
 
-// GetProductCounterByName retrieves ProductCounter by Name. Returns error if
+// GetSaleCounterByName retrieves SaleCounter by Name. Returns error if
 // Name doesn't exist
-func GetProductCounterByName(name string) (obj *ProductCounter, err error) {
+func GetSaleCounterByName(name string) (obj *SaleCounter, err error) {
 	o := orm.NewOrm()
-	obj = &ProductCounter{Name: name}
+	obj = &SaleCounter{Name: name}
 	if err = o.Read(obj); err == nil {
 		return obj, nil
 	}
 	return nil, err
 }
 
-// DeleteProductCounter deletes ProductCounter by ID and returns error if
+// DeleteSaleCounter deletes SaleCounter by ID and returns error if
 // the record to be deleted doesn't exist
-func DeleteProductCounter(id int64) (err error) {
+func DeleteSaleCounter(id int64) (err error) {
 	o := orm.NewOrm()
-	v := ProductCounter{ID: id}
+	v := SaleCounter{ID: id}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		var num int64
-		if num, err = o.Delete(&ProductCounter{ID: id}); err == nil {
+		if num, err = o.Delete(&SaleCounter{ID: id}); err == nil {
 			fmt.Println("Number of records deleted in database:", num)
 		}
 	}

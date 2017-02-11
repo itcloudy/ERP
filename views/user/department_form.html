@@ -26,10 +26,12 @@
                             <div class="col-md-8">
                                 <p class="p-form-control"> {{if and .Department .Department.Company}} {{.Department.Company.Name}}{{end}}</p>
                                 <select data-type="int" name="Company" id="company" class="{{.FormField}} form-control select-company">
-                             {{if and .Department .Department.Company}}
-                            <option value="{{.Department.Company.ID}}" selected="selected">{{.Department.Company.Name}}</option>
-                             {{end}} 
-                        </select>
+                                    {{if and .Department .Department.Company}}
+                                        <option value="{{.Department.Company.ID}}" selected="selected">{{.Department.Company.Name}}</option>
+                                    {{else}}
+                                        <option value="{{.LoginUser.Company.ID}}" selected="selected">{{.LoginUser.Company.Name}}</option>
+                                    {{end}} 
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -64,10 +66,10 @@
                             <div class="col-md-8">
                                 <p class="p-form-control"> {{if and .Department .Department.Parent}} {{.Department.Parent.Name}}{{end}}</p>
                                 <select data-type="int" name="Parent" id="parent" class="{{.FormField}} form-control select-department">
-                             {{if and .Department .Department.Parent}}
-                            <option value="{{.Department.Parent.ID}}" selected="selected">{{.Department.Parent.Name}}</option>
-                             {{end}} 
-                        </select>
+                                    {{if and .Department .Department.Parent}}
+                                    <option value="{{.Department.Parent.ID}}" selected="selected">{{.Department.Parent.Name}}</option>
+                                    {{end}} 
+                                </select>
                             </div>
                         </div>
                     </div>

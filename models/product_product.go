@@ -23,7 +23,6 @@ type ProductProduct struct {
 	CreateDate            time.Time                `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate            time.Time                `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Name                  string                   `orm:"index"`                                //产品属性名称
-	ProductCounter        *ProductCounter          `orm:"rel(fk);null"`                         //产品规格所属柜台
 	Company               *Company                 `orm:"rel(fk);null"`                         //公司
 	Category              *ProductCategory         `orm:"rel(fk)"`                              //产品类别
 	IsProductVariant      bool                     `orm:"default(true)"`                        //是多规格产品
@@ -102,9 +101,6 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 		}
 		sort.Strings(strArr)
 		obj.AttributeValuesString = strings.Join(strArr, "-")
-	}
-	if obj.ProductCounterID != 0 {
-		obj.ProductCounter, _ = GetProductCounterByID(obj.ProductCounterID)
 	}
 	if obj.CategoryID != 0 {
 		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)
