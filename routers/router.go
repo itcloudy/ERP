@@ -81,8 +81,10 @@ func init() {
 	//=======================================销售订单管理===========================================
 	//销售设置
 	beego.Router("/sale/config/?:id", &sale.SaleConfigController{})
-	//产品柜台
+	//柜台
 	beego.Router("/sale/counter/?:id", &sale.SaleCounterController{})
+	//柜台产品
+	beego.Router("/sale/counter/product/?:id", &sale.SaleCounterProductController{})
 	//销售订单
 	beego.Router("/sale/order/?:id", &sale.SaleOrderController{})
 	//销售订单明细
