@@ -243,6 +243,7 @@ func (ctl *UserController) userList(query map[string]interface{}, exclude map[st
 			for _, team := range teams {
 				teamMapValues[team.ID] = team.Name
 			}
+			oneLine["Teams"] = teamMapValues
 			oneLine["Email"] = user.Email
 			oneLine["Mobile"] = user.Mobile
 			oneLine["Tel"] = user.Tel

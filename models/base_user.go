@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"goERP/utils"
 	"strings"
 	"time"
@@ -83,18 +82,26 @@ func AddUser(obj *User, addUser *User) (id int64, err error) {
 	}
 	if id, err = o.Insert(obj); err == nil {
 		obj.ID = id
-		// m2m := o.QueryM2M(obj, "Teams")
-		// for _, item := range obj.TeamIDs {
-		// 	if team, err := GetTeamByID(item); err == nil {
-		// 		m2m.Add(team)
-		// 	}
-		// }
-		// m2m = o.QueryM2M(obj, "Roles")
-		// for _, item := range obj.RoleIDs {
-		// 	if role, err := GetRoleByID(item); err == nil {
-		// 		m2m.Add(role)
-		// 	}
-		// }
+		if createTeamRecords, ok := obj.TeamIDs["create"]; ok {
+			m2mTeams := o.QueryM2M(obj, "Teams")
+			for _, teamID := range createTeamRecords {
+				if team, err := GetTeamByID(int64(teamID)); err == nil {
+					m2mTeams.Add(team)
+				} else {
+					utils.LogOut("error", "add user teams failed:"+err.Error())
+				}
+			}
+		}
+		if createRoleRecords, ok := obj.RoleIDs["create"]; ok {
+			m2mRoles := o.QueryM2M(obj, "Roles")
+			for _, RoleID := range createRoleRecords {
+				if role, err := GetRoleByID(int64(RoleID)); err == nil {
+					m2mRoles.Add(role)
+				} else {
+					utils.LogOut("error", "add user roles failed:"+err.Error())
+				}
+			}
+		}
 	}
 	if err != nil {
 		return 0, err
@@ -251,7 +258,6 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 func UpdateUser(obj *User, updateUser *User) (err error) {
 	o := orm.NewOrm()
 	v := User{ID: obj.ID}
-	fmt.Printf("%+v\n", obj)
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		if obj.CompanyID != 0 {
@@ -264,14 +270,48 @@ func UpdateUser(obj *User, updateUser *User) (err error) {
 			obj.Position, _ = GetPositionByID(obj.PositionID)
 		}
 		if createTeamRecords, ok := obj.TeamIDs["create"]; ok {
-			fmt.Printf("%+v\n", createTeamRecords)
+			m2mTeams := o.QueryM2M(obj, "Teams")
+			for _, teamID := range createTeamRecords {
+				if team, err := GetTeamByID(int64(teamID)); err == nil {
+					m2mTeams.Add(team)
+				} else {
+					utils.LogOut("error", "add user teams failed:"+err.Error())
+				}
+			}
 		}
-		// if len(obj.TeamIDs) > 0 {
-		// m2mRoles := o.QueryM2M(obj, "Roles")
-		// m2mRoles.Clear()
-		// }
+		if deleteTeamRecords, ok := obj.TeamIDs["delete"]; ok {
+			m2mTeams := o.QueryM2M(obj, "Teams")
+			for _, teamID := range deleteTeamRecords {
+				if team, err := GetTeamByID(int64(teamID)); err == nil {
+					m2mTeams.Remove(team)
+				} else {
+					utils.LogOut("error", "delete user teams failed:"+err.Error())
+
+				}
+			}
+		}
+		if createRoleRecords, ok := obj.RoleIDs["create"]; ok {
+			m2mRoles := o.QueryM2M(obj, "Roles")
+			for _, RoleID := range createRoleRecords {
+				if role, err := GetRoleByID(int64(RoleID)); err == nil {
+					m2mRoles.Add(role)
+				} else {
+					utils.LogOut("error", "add user roles failed:"+err.Error())
+				}
+			}
+		}
+		if deleteRoleRecords, ok := obj.RoleIDs["delete"]; ok {
+			m2mRoles := o.QueryM2M(obj, "Roles")
+			for _, RoleID := range deleteRoleRecords {
+				if role, err := GetRoleByID(int64(RoleID)); err == nil {
+					m2mRoles.Remove(role)
+				} else {
+					utils.LogOut("error", "delete user roles failed:"+err.Error())
+				}
+			}
+		}
 		if _, err = o.Update(obj, append(obj.ActionFields, "UpdateUser", "UpdateDate")...); err != nil {
-			utils.LogOut("error", "用户数据更细失败"+err.Error())
+			utils.LogOut("error", "update user fields failed:"+err.Error())
 		}
 	}
 	return

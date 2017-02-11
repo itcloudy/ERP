@@ -107,12 +107,17 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                 if (dataType == "array_int") {
                     var addIds = []; //值为记录的id ,int类型
                     var deleteIds = []; //值为记录的id ,int类型
+                    console.log(self.name);
+                    console.log(oldValue);
+                    console.log(val);
+
                     if (!val) {
                         val = [];
                     }
                     if (!oldValue) {
                         oldValue = "";
                     }
+
                     var newIdsStr = "," + val.join(",") + ",";
                     var oldValueArrs = oldValue.split(","); //字符分割
                     var oldIdsStr = "," + oldValue;
@@ -135,7 +140,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                         if (oldValueArrs[oIdex] == "") {
                             continue;
                         }
-                        if (newIdsStr.indexOf("," + +",") == -1) {
+                        if (newIdsStr.indexOf("," + oldValueArrs[oIdex] + ",") == -1) {
                             var deleteId = parseInt(oldValueArrs[oIdex]);
                             if (deleteId) {
                                 deleteIds.push(deleteId);
@@ -361,7 +366,7 @@ $(function() {
                 },
                 regexp: {
                     regexp: /^[0-9-]+$/,
-                    message: '手机号码只能为数字'
+                    message: '手机号码只能为数字和 - '
                 }
             }
         },

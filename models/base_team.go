@@ -89,10 +89,10 @@ func GetTeamByID(id int64) (obj *Team, err error) {
 		if obj.Leader != nil {
 			o.Read(obj.Leader)
 		}
-		if obj.Leader != nil {
+		if obj.Company != nil {
 			o.Read(obj.Company)
 		}
-		if obj.Leader != nil {
+		if obj.Department != nil {
 			o.Read(obj.Department)
 		}
 		return obj, err
