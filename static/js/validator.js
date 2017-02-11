@@ -79,12 +79,13 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         var actionFields = [];
         for (var item = 0, formFieldsLen = formFields.length; item < formFieldsLen; item++) {
             var self = formFields[item];
+            var dataType = $(self).data("type");
             var oldValue = null;
             oldValue = $(self).data("oldvalue");
             var val = $(self).val();
             // 处理radio数据
             if (self.type == "radio") {
-                if ($(self).data("type") == "string") {
+                if (dataType == "string") {
                     var nodeName = $("input[name ='" + self.name + "']:checked");
                     if (nodeName != undefined) {
                         actionFields.push(self.name);
@@ -100,43 +101,72 @@ var BootstrapValidator = function(selector, needValidatorFields) {
                     formData[self.name] = false;
                 }
                 actionFields.push(self.name);
-
             } else {
 
-                // 如果值未改变不添加进去
-                if (val == oldValue) {
-                    continue;
-                }
-
-                var dataType = $(self).data("type");
-                // 判断整形数组值是否改变，oldValue="1,2,3,"
+                // 判断整形数组值是否改变,只存在增加、删除的情况。oldValue="1,2,3,"
                 if (dataType == "array_int") {
-                    var oldValueArrs = oldValue.split(","); //字符分割
-                    var arrIds = [];
-                    for (var j = 0, len = oldValueArrs.length; j < len; j++) {
-                        if (oldValueArrs[j] != "") {
-                            arrIds.push(oldValueArrs[j]);
-                        }
+                    var addIds = []; //值为记录的id ,int类型
+                    var deleteIds = []; //值为记录的id ,int类型
+                    if (!val) {
+                        val = [];
                     }
-                    arrIds.sort();
-                    if (val) {
-                        if (arrIds.join(",") == val.join(",")) {
+                    if (!oldValue) {
+                        oldValue = "";
+                    }
+                    var newIdsStr = "," + val.join(",") + ",";
+                    var oldValueArrs = oldValue.split(","); //字符分割
+                    var oldIdsStr = "," + oldValue;
+
+                    // 如果当前值在旧值中不存在，添加到addIds中
+                    for (var nIdex = 0, nLen = val.length; nIdex < nLen; nIdex++) {
+                        if (val[nIdex] == "") {
                             continue;
                         }
+                        // oldIdsStr =",1,2,3,4," 判断时以","作为分割
+                        if (oldIdsStr.indexOf("," + val[nIdex] + ",") == -1) {
+                            var newId = parseInt(val[nIdex]);
+                            if (newId) {
+                                addIds.push(newId);
+                            }
+                        }
                     }
-                }
-                if (val != "") {
-                    // 若为null跳出此次循环
-                    if (val === null) {
+                    // 如果旧值在当前值中不存在,则认为该记录要被删除
+                    for (var oIdex = 0, oLen = oldValueArrs.length; oIdex < oLen; oIdex++) {
+                        if (oldValueArrs[oIdex] == "") {
+                            continue;
+                        }
+                        if (newIdsStr.indexOf("," + +",") == -1) {
+                            var deleteId = parseInt(oldValueArrs[oIdex]);
+                            if (deleteId) {
+                                deleteIds.push(deleteId);
+                            }
+                        }
+                    }
+                    var mapActionRecords = {};
+                    if (addIds.length > 0) {
+                        mapActionRecords.create = addIds;
+                    }
+                    if (deleteIds.length > 0) {
+                        mapActionRecords.delete = deleteIds;
+                    }
+                    if (mapActionRecords.delete != undefined || mapActionRecords.create != undefined) {
+                        formData[self.name] = mapActionRecords;
+                    }
+                } else {
+                    // 如果值未改变不添加进去
+                    if (val == oldValue) {
                         continue;
                     }
-                    // 如果input[@name="recordID"]存在
-                    if (self.name == 'recordID') {
-                        formData["id"] = getCurrentDataType(val, dataType);
-                    } else {
-                        formData[self.name] = getCurrentDataType(val, dataType);
-                        // 剔除数组类字段
-                        if (dataType != "array_int") {
+                    if (val != "") {
+                        // 若为null跳出此次循环
+                        if (val === null) {
+                            continue;
+                        }
+                        // 如果input[@name="recordID"]存在
+                        if (self.name == 'recordID') {
+                            formData["id"] = getCurrentDataType(val, dataType);
+                        } else {
+                            formData[self.name] = getCurrentDataType(val, dataType);
                             actionFields.push(self.name);
                         }
                     }

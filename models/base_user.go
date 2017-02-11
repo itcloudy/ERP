@@ -263,10 +263,13 @@ func UpdateUser(obj *User, updateUser *User) (err error) {
 		if obj.PositionID != 0 {
 			obj.Position, _ = GetPositionByID(obj.PositionID)
 		}
-		if len(obj.TeamIDs) > 0 {
-			// m2mRoles := o.QueryM2M(obj, "Roles")
-			// m2mRoles.Clear()
+		if createTeamRecords, ok := obj.TeamIDs["create"]; ok {
+			fmt.Printf("%+v\n", createTeamRecords)
 		}
+		// if len(obj.TeamIDs) > 0 {
+		// m2mRoles := o.QueryM2M(obj, "Roles")
+		// m2mRoles.Clear()
+		// }
 		if _, err = o.Update(obj, append(obj.ActionFields, "UpdateUser", "UpdateDate")...); err != nil {
 			utils.LogOut("error", "用户数据更细失败"+err.Error())
 		}
