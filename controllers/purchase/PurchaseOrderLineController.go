@@ -212,6 +212,6 @@ func (ctl *PurchaseOrderLineController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-purchase-order-line"
-	ctl.Layout = "base/base_list_view.html"
+	ctl.Layout = "base/base_view.html"
 	ctl.TplName = "purchase/purchase_order_line_list_search.html"
 }

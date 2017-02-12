@@ -254,6 +254,6 @@ func (ctl *AddressCountryController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-address-country"
-	ctl.Layout = "base/base_list_view.html"
+	ctl.Layout = "base/base_view.html"
 	ctl.TplName = "address/address_country_list_search.html"
 }

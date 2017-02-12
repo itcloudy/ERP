@@ -733,7 +733,7 @@ displayTable("#table-product-attribute", "/product/attribute/", [
             var html = "";
             var url = "/product/attributevalue/";
             for (key in datas) {
-                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
+                html += "<a  class='display-block label label-default' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
             }
             return html;
         }
@@ -754,7 +754,7 @@ displayTable("#table-product-attribute", "/product/attribute/", [
     }
 ]);
 // 产品柜台
-displayTable("#table-product-counter", "/product/counter/", [
+displayTable("#table-sale-counter", "/sale/counter/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
     { title: "柜台名称", field: 'Name', sortable: true, order: "desc" },
     { title: "产品款式数量", field: 'TemplatesCount', align: "center" },
@@ -766,7 +766,7 @@ displayTable("#table-product-counter", "/product/counter/", [
         field: 'action',
         formatter: function cellStyle(value, row, index) {
             var html = "";
-            var url = "/product/counter/";
+            var url = "/sale/counter/";
             html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
             html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
             return html;

@@ -392,6 +392,6 @@ func (ctl *ProductTemplateController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-product-template"
-	ctl.Layout = "base/base_list_view.html"
+	ctl.Layout = "base/base_view.html"
 	ctl.TplName = "product/product_template_list_search.html"
 }

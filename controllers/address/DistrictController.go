@@ -270,6 +270,6 @@ func (ctl *AddressDistrictController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-address-district"
-	ctl.Layout = "base/base_list_view.html"
+	ctl.Layout = "base/base_view.html"
 	ctl.TplName = "address/address_district_list_search.html"
 }

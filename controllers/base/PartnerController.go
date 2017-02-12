@@ -134,5 +134,5 @@ func (ctl *PartnerController) PostList() {
 func (ctl *PartnerController) GetList() {
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-partner"
-	ctl.TplName = "base/base_list_view.html"
+	ctl.TplName = "base/base_view.html"
 }

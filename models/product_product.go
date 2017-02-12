@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"sort"
 	"strings"
 	"time"
 
@@ -55,7 +54,7 @@ type ProductProduct struct {
 	ProductCounterID      int64                    `orm:"-" json:"ProductCounter"`              //产品柜台
 	ProductAttributeLines []ProductAttributeLine   `orm:"-" json:"ProductAttributes"`           //产品属性
 	ProductTemplateID     int64                    `orm:"-" json:"ProductTemplateID"`           //产品款式
-	AttributeValueIDs     []int64                  `orm:"-" json:"AttributeValueIds"`           //产品规格属性值
+	AttributeValueIDs     map[string][]int64       `orm:"-" json:"AttributeValueIds"`           //产品规格属性值
 
 }
 
@@ -93,15 +92,15 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 			return 0, err
 		}
 	}
-	if len(obj.AttributeValueIDs) > 0 {
-		strArr := make([]string, 0, 0)
-		for _, item := range obj.AttributeValueIDs {
-			strArr = append(strArr, strconv.FormatInt(item, 10))
+	// if len(obj.AttributeValueIDs) > 0 {
+	// 	strArr := make([]string, 0, 0)
+	// 	for _, item := range obj.AttributeValueIDs {
+	// 		strArr = append(strArr, strconv.FormatInt(item, 10))
 
-		}
-		sort.Strings(strArr)
-		obj.AttributeValuesString = strings.Join(strArr, "-")
-	}
+	// 	}
+	// 	sort.Strings(strArr)
+	// 	obj.AttributeValuesString = strings.Join(strArr, "-")
+	// }
 	if obj.CategoryID != 0 {
 		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)
 	}
@@ -119,12 +118,13 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 	}
 	if id, err = o.Insert(obj); err != nil {
 		return 0, err
-	} else {
-		obj.ID = id
+	}
+	obj.ID = id
+	if createAttributeValuesRecords, ok := obj.AttributeValueIDs["create"]; ok {
+		m2m := o.QueryM2M(obj, "AttributeValues")
 		Oattr := orm.NewOrm()
-		for _, item := range obj.AttributeValueIDs {
-			m2m := o.QueryM2M(obj, "AttributeValues")
-			if attributeValue, err := GetProductAttributeValueByID(item); err == nil {
+		for _, attrValID := range createAttributeValuesRecords {
+			if attributeValue, err := GetProductAttributeValueByID(attrValID); err == nil {
 				m2m.Add(attributeValue)
 				m2mAttr := Oattr.QueryM2M(attributeValue.Attribute, "Products")
 				m2mAttr.Add(obj)
@@ -133,14 +133,26 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 			}
 		}
 	}
+	// Oattr := orm.NewOrm()
+	// for _, item := range obj.AttributeValueIDs {
+	// 	m2m := o.QueryM2M(obj, "AttributeValues")
+	// 	if attributeValue, err := GetProductAttributeValueByID(item); err == nil {
+	// 		m2m.Add(attributeValue)
+	// 		m2mAttr := Oattr.QueryM2M(attributeValue.Attribute, "Products")
+	// 		m2mAttr.Add(obj)
+	// 		UpdateProductAttributeValueProductsCount(attributeValue, addUser)
+	// 		UpdateProductAttributeProductsCount(attributeValue.Attribute, addUser)
+	// 	}
+	// }
+
 	if err != nil {
 		return 0, err
-	} else {
-		errCommit := o.Commit()
-		if errCommit != nil {
-			return 0, errCommit
-		}
 	}
+	errCommit := o.Commit()
+	if errCommit != nil {
+		return 0, errCommit
+	}
+
 	return id, err
 }
 

@@ -25,7 +25,9 @@
                             {{if and .SaleCounter .SaleCounter.Company}}
                             <option value="{{.SaleCounter.Company.ID}}" selected="selected">{{.SaleCounter.Company.Name}}</option>
                             {{else}}
-                            <option value="{{.LoginUser.Company.ID}}" selected="selected">{{.LoginUser.Company.Name}}</option>
+                                {{if .LoginUser.Company}}
+                                    <option value="{{.LoginUser.Company.ID}}" selected="selected">{{.LoginUser.Company.Name}}</option>
+                                {{end}}
                             {{end}} 
                         </select>
                     </div>

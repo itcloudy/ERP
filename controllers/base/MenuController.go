@@ -269,6 +269,6 @@ func (ctl *MenuController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-menu"
-	ctl.Layout = "base/base_list_view.html"
+	ctl.Layout = "base/base_view.html"
 	ctl.TplName = "security/menu_list_search.html"
 }

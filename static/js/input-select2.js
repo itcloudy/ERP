@@ -6,13 +6,23 @@ $(function() {
 
     function formatRepo(repo) {
         'use strict';
+        var name = repo.name || repo.Name;
         if (repo.loading) { return repo.text; }
-        return repo.name || repo.Name;
+        var html = "";
+        html = "<p>" + name + "</p>";
+        return html;
     }
 
     function formatRepoSelection(repo) {
         'use strict';
-        return repo.name || repo.Name || repo.text;
+        var html = "";
+        var name = repo.name || repo.Name;
+        if (name) {
+            html = "<p>" + name + "</p>";
+        } else {
+            html = repo.text;
+        }
+        return html;
     }
     var selectStaticData = function(selectClass, data) {
         'use strict';

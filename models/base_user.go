@@ -106,12 +106,12 @@ func AddUser(obj *User, addUser *User) (id int64, err error) {
 	}
 	if err != nil {
 		return 0, err
-	} else {
-		errCommit := o.Commit()
-		if errCommit != nil {
-			return 0, errCommit
-		}
 	}
+	errCommit := o.Commit()
+	if errCommit != nil {
+		return 0, errCommit
+	}
+
 	return id, err
 }
 

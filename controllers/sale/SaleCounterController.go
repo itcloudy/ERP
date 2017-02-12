@@ -43,7 +43,7 @@ func (ctl *SaleCounterController) Put() {
 
 }
 func (ctl *SaleCounterController) Get() {
-	ctl.PageName = "产品柜台管理"
+	ctl.PageName = "柜台管理"
 	action := ctl.Input().Get("action")
 	switch action {
 	case "create":
@@ -213,11 +213,22 @@ func (ctl *SaleCounterController) PostList() {
 
 func (ctl *SaleCounterController) GetList() {
 	viewType := ctl.Input().Get("view")
-	if viewType == "" || viewType == "table" {
-		ctl.Data["ViewType"] = "table"
+	if viewType == "" {
+		viewType = "table"
 	}
+	switch viewType {
+	case "table":
+
+	}
+	ctl.Data["ViewType"] = viewType
+
+}
+func (ctl *SaleCounterController) kanban() {
+	ctl.PageAction = "看板"
+}
+func (ctl *SaleCounterController) table() {
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-sale-counter"
-	ctl.Layout = "base/base_list_view.html"
+	ctl.Layout = "base/base_view.html"
 	ctl.TplName = "sale/sale_counter_list_search.html"
 }

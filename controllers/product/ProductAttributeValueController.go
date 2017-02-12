@@ -231,6 +231,6 @@ func (ctl *ProductAttributeValueController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-product-attributevalue"
-	ctl.Layout = "base/base_list_view.html"
+	ctl.Layout = "base/base_view.html"
 	ctl.TplName = "product/product_attribute_value_list_search.html"
 }
