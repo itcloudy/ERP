@@ -102,6 +102,7 @@ $(function() {
         });
 
     };
+    select2AjaxData(".select-partner", "/partner/?action=search"); // 选择上级合伙伙伴
     select2AjaxData(".select-permission", "/permission/?action=search"); // 选择权限
     select2AjaxData(".select-role", "/role/?action=search"); // 选择角色
     select2AjaxData(".select-source", "/source/?action=search"); // 选择菜单

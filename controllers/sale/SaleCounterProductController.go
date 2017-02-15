@@ -112,7 +112,7 @@ func (ctl *SaleCounterProductController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-sale-counter-product"
-	ctl.Layout = "base/base_view.html"
+	ctl.Layout = "base/base_list_view.html"
 	ctl.TplName = "sale/sale_counter_product_list_search.html"
 }
 

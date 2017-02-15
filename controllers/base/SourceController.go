@@ -282,6 +282,6 @@ func (ctl *SourceController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-source"
-	ctl.Layout = "base/base_view.html"
+	ctl.Layout = "base/base_list_view.html"
 	ctl.TplName = "security/source_list_search.html"
 }

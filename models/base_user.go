@@ -260,6 +260,17 @@ func GetAllUser(query map[string]interface{}, exclude map[string]interface{}, co
 func UpdateUser(obj *User, updateUser *User) (err error) {
 	o := orm.NewOrm()
 	v := User{ID: obj.ID}
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return errBegin
+	}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
 		if obj.CompanyID != 0 {
@@ -316,7 +327,14 @@ func UpdateUser(obj *User, updateUser *User) (err error) {
 			utils.LogOut("error", "update user fields failed:"+err.Error())
 		}
 	}
-	return
+	if err != nil {
+		return err
+	}
+	errCommit := o.Commit()
+	if errCommit != nil {
+		return errCommit
+	}
+	return nil
 }
 
 // DeleteUser deletes User by ID and returns error if

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{i18n .Lang "global.systemName"}}</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"> {{template "base/head_css.html" .}}
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <!--<body class="skin-blue sidebar-mini sidebar-collapse">-->
+    <div class="wrapper">
+        {{template "base/head_top.html" .}}
+        <!-- Left side column. contains the logo and sidebar -->
+        {{template "base/aside_left.html" .}}
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <div class="row">
+                <p id="list-title">{{.PageName}}</p>
+            </div>
+            {{.xsrf}}
+            <div class="row" id="{{.KanbanId}}">
+            </div>
+        </div>
+
+    </div>
+
+    {{template "base/footer_js.html" .}}
+
+</body>
+
+</html>

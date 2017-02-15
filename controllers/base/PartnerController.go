@@ -64,7 +64,6 @@ func (ctl *PartnerController) Get() {
 	case "supplier":
 		ctl.PageName = "供应商管理"
 		ctl.Data["IsCustomer"] = false
-
 	}
 	action := ctl.Input().Get("action")
 	switch action {
@@ -268,6 +267,6 @@ func (ctl *PartnerController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-partner"
-	ctl.Layout = "base/base_view.html"
+	ctl.Layout = "base/base_list_view.html"
 	ctl.TplName = "partner/partner_list_search.html"
 }

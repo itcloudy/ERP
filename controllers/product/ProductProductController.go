@@ -289,6 +289,6 @@ func (ctl *ProductProductController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-product-product"
-	ctl.Layout = "base/base_view.html"
+	ctl.Layout = "base/base_list_view.html"
 	ctl.TplName = "product/product_product_list_search.html"
 }

@@ -253,6 +253,6 @@ func (ctl *ProductAttributeController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-product-attribute"
-	ctl.Layout = "base/base_view.html"
+	ctl.Layout = "base/base_list_view.html"
 	ctl.TplName = "product/product_attribute_list_search.html"
 }

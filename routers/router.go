@@ -107,5 +107,9 @@ func init() {
 	//========================================仓库管理=====================================
 	//  仓库管理
 	beego.Router("/stock/warehouse/?:id", &stock.StockWarehouseController{})
+	//  仓库单据管理
+	beego.Router("/stock/picking/type/?:id", &stock.StockPickingTypeController{})
+	//  仓库单据管理
+	beego.Router("/stock/picking/?:id", &stock.StockPickingController{})
 
 }

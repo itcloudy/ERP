@@ -276,6 +276,6 @@ func (ctl *PermissionController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-permission"
-	ctl.Layout = "base/base_view.html"
+	ctl.Layout = "base/base_list_view.html"
 	ctl.TplName = "security/permission_list_search.html"
 }

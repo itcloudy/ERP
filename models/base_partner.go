@@ -36,6 +36,11 @@ type Partner struct {
 	WeChat     string           `orm:"default(\"\")" json:"WeChat"`          //微信
 	Comment    string           `orm:"type(text)" json:"Comment"`            //备注
 	FormAction string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	ParentID   int64            `orm:"-" json:"Parent"`                      //母公司
+	CountryID  int64            `orm:"-" json:"Country"`                     //国家
+	ProvinceID int64            `orm:"-" json:"Province"`                    //省份
+	CityID     int64            `orm:"-" json:"City"`                        //城市
+	DistrictID int64            `orm:"-" json:"District"`                    //区县
 
 }
 
@@ -63,6 +68,21 @@ func AddPartner(obj *Partner, addUser *User) (id int64, err error) {
 	if errBegin != nil {
 		return 0, errBegin
 	}
+	if obj.ParentID != 0 {
+		obj.Parent, _ = GetPartnerByID(obj.ParentID)
+	}
+	if obj.CountryID != 0 {
+		obj.Country, _ = GetAddressCountryByID(obj.CountryID)
+	}
+	if obj.ProvinceID != 0 {
+		obj.Province, _ = GetAddressProvinceByID(obj.ProvinceID)
+	}
+	if obj.CityID != 0 {
+		obj.City, _ = GetAddressCityByID(obj.CityID)
+	}
+	if obj.DistrictID != 0 {
+		obj.District, _ = GetAddressDistrictByID(obj.DistrictID)
+	}
 	id, err = o.Insert(obj)
 	if err != nil {
 		return 0, err
@@ -81,6 +101,11 @@ func GetPartnerByID(id int64) (obj *Partner, err error) {
 	o := orm.NewOrm()
 	obj = &Partner{ID: id}
 	if err = o.Read(obj); err == nil {
+		o.LoadRelated(obj, "Parent")
+		o.LoadRelated(obj, "Country")
+		o.LoadRelated(obj, "Province")
+		o.LoadRelated(obj, "City")
+		o.LoadRelated(obj, "District")
 		return obj, nil
 	}
 	return nil, err

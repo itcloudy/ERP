@@ -32,6 +32,21 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label for="parent" class="col-md-4 control-label label-start">上级</label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if and .Partner .Partner.Parent}} {{.Partner.Parent.Name}}{{else}} - {{end}}</p>
+                                <select name="Parent" data-type="int" id="parent" {{if and .Partner .Partner.Parent}} data-oldvalue="{{.Partner.Parent.ID}}" {{end}} class="form-control select-partner {{.FormField}}">
+                            {{if and .Partner .Partner.Parent}} 
+                            <option value="{{.Partner.Parent.ID}}}" selected="selected">{{.Partner.Parent.Name}}</option>
+                            {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
                             <label for="IsSupplier" class="col-md-4 control-label ">是供应商</label>
                             <div class="col-md-8 ">
                                 <input data-type="bool" name="IsSupplier" data-oldvalue="{{.Partner.IsSupplier}}" id="IsCompany" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsSupplier}}{{if eq .Partner.IsSupplier true}}checked="checked" {{end}} {{else}}checked="checked"

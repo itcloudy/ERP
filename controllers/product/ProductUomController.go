@@ -240,7 +240,7 @@ func (ctl *ProductUomController) GetList() {
 	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-product-uom"
-	ctl.Layout = "base/base_view.html"
+	ctl.Layout = "base/base_list_view.html"
 	ctl.TplName = "product/product_uom_list_search.html"
 }
 func (ctl *ProductUomController) Create() {
