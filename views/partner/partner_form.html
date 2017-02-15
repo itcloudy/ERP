@@ -1,0 +1,199 @@
+<div class="row">
+    <p id="list-title">{{.PageName}}</p>
+</div>
+
+<form enctype="multipart/form-data" id="partnerForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+    <div class="row">
+        {{if .RecordID}} {{if .Readonly}}
+        <a href="{{.URL}}{{.RecordID}}?action=edit&type={{.type}}" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</a>
+        <a href="{{.URL}}?action=create&type={{.type}}" type="buttom" class="btn btn-success fa fa-plus pull-left form-create-btn">&nbsp新建</a>{{end}} {{end}}
+        <button type="submit" form="partnerForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button>
+        <a href="{{.URL}}{{if .RecordID}}{{.RecordID}}?action=detail&type={{.type}}{{end}}" class="btn btn-danger fa fa-remove  pull-left form-cancel-btn">&nbsp取消</a>
+        <a href="{{.URL}}" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
+    </div>
+    {{ .xsrf }} {{if .RecordID}}
+    <input type="hidden" data-type="int" name="recordID" id="record-id" class="{{.FormField}}" value="{{.RecordID}}">
+    <input type="hidden" data-type="string" name="_method" class="{{.FormField}}" value="PUT"> {{end}}
+    <div class="row">
+        <div class="col-md-6">
+            <fieldset>
+                <legend>基本信息</legend>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="name" class="col-md-2 control-label label-start">{{if .IsCustomer }}客户名称{{else}}供应商名称{{end}}<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-10">
+                                <p class="p-form-control">{{if .Partner}} {{.Partner.Name}} {{end}}</p>
+                                <input data-type="string" data-oldvalue="{{.Partner.Name}}" class="form-control {{.FormField}}" id="name" name="Name" type="text" {{if .Partner}} value="{{.Partner.Name}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="IsSupplier" class="col-md-4 control-label ">是供应商</label>
+                            <div class="col-md-8 ">
+                                <input data-type="bool" name="IsSupplier" data-oldvalue="{{.Partner.IsSupplier}}" id="IsCompany" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsSupplier}}{{if eq .Partner.IsSupplier true}}checked="checked" {{end}} {{else}}checked="checked"
+                                    {{end}}type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="IsCustomer" class="col-md-4 control-label ">是客户</label>
+                            <div class="col-md-8 ">
+                                <input data-type="bool" name="IsCustomer" data-oldvalue="{{.Partner.IsCustomer}}" id="IsCustomer" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsCustomer}}{{if eq .Partner.IsCustomer true}}checked="checked" {{end}} {{else}}checked="checked"
+                                    {{end}}type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="IsCompany" class="col-md-4 control-label ">是公司</label>
+                            <div class="col-md-8 ">
+                                <input data-type="bool" name="IsCompany" data-oldvalue="{{.Partner.IsCompany}}" id="IsCompany" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsCompany}}{{if eq .Partner.IsCompany true}}checked="checked" {{end}} {{else}}checked="checked"
+                                    {{end}}type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="active" class="col-md-4 control-label ">有效</label>
+                            <div class="col-md-8 ">
+                                <input data-type="bool" name="Active" data-oldvalue="{{.Partner.Active}}" id="active" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.Active}}{{if eq .Partner.Active true}}checked="checked" {{end}} {{else}}checked="checked"
+                                    {{end}}type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Mobile" class="col-md-4 control-label label-start">手机号码<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Partner}} {{.Partner.Mobile}} {{end}}</p>
+                                <input data-type="string" class="form-control {{.FormField}}" name="Mobile" type="text" {{if .Partner}} value="{{.Partner.Mobile}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Tel" class="col-md-4 control-label label-start">座机 </label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Partner}} {{.Partner.Tel}} {{end}}</p>
+                                <input data-type="string" class="form-control {{.FormField}}" name="Tel" type="text" {{if .Partner}} value="{{.Partner.Tel}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Qq" class="col-md-4 control-label label-start">QQ </label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Partner}} {{.Partner.Qq}} {{end}}</p>
+                                <input data-type="string" class="form-control {{.FormField}}" name="Qq" type="text" {{if .Partner}} value="{{.Partner.Qq}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="WeChat" class="col-md-4 control-label label-start">微信 </label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Partner}} {{.Partner.WeChat}} {{end}}</p>
+                                <input data-type="string" class="form-control {{.FormField}}" name="WeChat" type="text" {{if .Partner}} value="{{.Partner.WeChat}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Email" class="col-md-4 control-label label-start">邮箱 </label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Partner}} {{.Partner.Email}} {{end}}</p>
+                                <input data-type="string" class="form-control {{.FormField}}" name="Email" type="text" {{if .Partner}} value="{{.Partner.Email}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-md-6">
+            <fieldset>
+                <legend>地址信息</legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="country" class="col-md-4 control-label label-start">国家<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Partner .Partner.Country}} {{.Partner.Country.Name}}{{end}}</p>
+                                <select data-type="int" name="Country" id="country" class="{{.FormField}} form-control select-address-country">
+                             {{if and .Partner .Partner.Country}}
+                            <option value="{{.Partner.Country.ID}}" selected="selected">{{.Partner.Country.Name}}</option>
+                            {{else}}<option value="1" selected="selected">中国</option>{{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="province" class="col-md-4 control-label label-start">省份<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Partner .Partner.Province}} {{.Partner.Province.Name}}{{end}}</p>
+                                <select data-type="int" name="Province" id="province" class="{{.FormField}} form-control select-address-province">
+                             {{if and .Partner .Partner.Province}}
+                            <option value="{{.Partner.Province.ID}}" selected="selected">{{.Partner.Province.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="city" class="col-md-4 control-label label-start">城市<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Partner .Partner.City}} {{.Partner.City.Name}}{{end}}</p>
+                                <select data-type="int" name="City" id="city" class="{{.FormField}} form-control select-address-city">
+                             {{if and .Partner .Partner.City}}
+                            <option value="{{.Partner.City.ID}}" selected="selected">{{.Partner.City.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="district" class="col-md-4 control-label label-start">区县<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Partner .Partner.District}} {{.Partner.District.Name}}{{end}}</p>
+                                <select data-type="int" name="District" id="district" class="{{.FormField}} form-control select-address-district">
+                             {{if and .Partner .Partner.District}}
+                            <option value="{{.Partner.District.ID}}" selected="selected">{{.Partner.District.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="Street" class="col-md-2 control-label label-start">街道<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-10">
+                                <p class="p-form-control">{{if .Partner}} {{.Partner.Street}} {{end}}</p>
+                                <textarea data-type="string" class="{{.FormField}} form-control" name="Street" rows="2" placeholder="请输入街道信息">{{if .Partner}}  {{.Partner.Street}} {{end}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+
+</form>

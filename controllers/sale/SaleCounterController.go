@@ -216,15 +216,22 @@ func (ctl *SaleCounterController) GetList() {
 	if viewType == "" {
 		viewType = "table"
 	}
+	ctl.Data["ViewType"] = viewType
 	switch viewType {
 	case "table":
-
+		ctl.table()
+	case "kanban":
+		ctl.kanban()
+	default:
+		ctl.table()
 	}
-	ctl.Data["ViewType"] = viewType
 
 }
 func (ctl *SaleCounterController) kanban() {
 	ctl.PageAction = "看板"
+	ctl.Layout = "base/base_view.html"
+	ctl.TplName = "sale/sale_counter_list_search.html"
+
 }
 func (ctl *SaleCounterController) table() {
 	ctl.PageAction = "列表"

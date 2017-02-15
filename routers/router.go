@@ -77,7 +77,7 @@ func init() {
 	beego.Router("/product/uomcateg/?:id", &product.ProductUomCategController{})
 	//========================================合作伙伴管理===============================
 	//合作伙伴管理
-	beego.Router("/partner/:type/?:id", &base.PartnerController{})
+	beego.Router("/partner/?:id", &base.PartnerController{})
 	//=======================================销售订单管理===========================================
 	//销售设置
 	beego.Router("/sale/config/?:id", &sale.SaleConfigController{})

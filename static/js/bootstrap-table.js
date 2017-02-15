@@ -591,6 +591,7 @@ displayTable("#table-record", "/record/", [
     { title: "用户代理", field: "UserAgent" }
 
 ]);
+// 序号管理
 displayTable("#table-sequence", "/sequence", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
     { title: "序号名称", field: 'Name', sortable: true, order: "desc" },
@@ -717,7 +718,76 @@ displayTable("#table-address-district", "/address/district/", [
         }
     }
 ]);
-
+// 合作伙伴管理
+displayTable("#table-partner", '/partner/', [
+    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "名称", field: 'Name', sortable: true, order: "desc" },
+    {
+        title: "是公司",
+        field: 'IsCompany',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.IsCompany) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "是客户",
+        field: 'IsCustomer',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.IsCustomer) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "是供应商",
+        field: 'IsSupplier',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.IsSupplier) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    { title: "邮箱", field: 'Email', sortable: true, order: "desc" },
+    { title: "手机号码", field: 'Mobile', sortable: true, order: "desc" },
+    { title: "电话号码", field: 'Tel', sortable: true, order: "desc" },
+    { title: "QQ", field: 'Qq', sortable: true, order: "desc" },
+    { title: "微信", field: 'WeChat', sortable: true, order: "desc" },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/address/district/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
 //产品属性
 displayTable("#table-product-attribute", "/product/attribute/", [
     { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
@@ -733,7 +803,7 @@ displayTable("#table-product-attribute", "/product/attribute/", [
             var html = "";
             var url = "/product/attributevalue/";
             for (key in datas) {
-                html += "<a  class='display-block label label-default' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
+                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + "</a>";
             }
             return html;
         }
@@ -805,20 +875,6 @@ displayTable("#table-product-template", "/product/template/", [
         order: "desc",
         formatter: function cellStyle(value, row, index) {
             return row.Category.name;
-        }
-    },
-    {
-        title: "产品柜台",
-        field: 'ProductCounter',
-        align: "center",
-        sortable: true,
-        order: "desc",
-        formatter: function cellStyle(value, row, index) {
-            var html = "";
-            if (row.ProductCounter != undefined) {
-                html = row.ProductCounter.name + "<a class='pull-right' href='/product/counter/" + row.ProductCounter.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
-            }
-            return html;
         }
     },
     { title: "规格数量", field: 'VariantCount', align: "center", sortable: true, order: "desc" },
@@ -972,20 +1028,6 @@ displayTable("#table-product-product", "/product/product/", [
         order: "desc",
         formatter: function cellStyle(value, row, index) {
             var html = row.ProductTemplate.name + "<a class='pull-right' href='/product/template/" + row.ProductTemplate.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
-            return html;
-        }
-    },
-    {
-        title: "产品柜台",
-        field: 'ProductCounter',
-        align: "center",
-        sortable: true,
-        order: "desc",
-        formatter: function cellStyle(value, row, index) {
-            var html = "";
-            if (row.ProductCounter != undefined) {
-                html = row.ProductCounter.name + "<a class='pull-right' href='/product/counter/" + row.ProductCounter.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
-            }
             return html;
         }
     },
