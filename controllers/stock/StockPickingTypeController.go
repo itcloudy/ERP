@@ -247,7 +247,7 @@ func (ctl *StockPickingTypeController) PostList() {
 		order = append(order, orderStr)
 	} else {
 		sortby = append(sortby, "Id")
-		order = append(order, "desc")
+		order = append(order, "asc")
 	}
 	if result, err := ctl.pickingProductList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result

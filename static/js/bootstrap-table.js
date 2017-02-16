@@ -1259,8 +1259,7 @@ displayTable("#table-stock-picking-type", '/stock/picking/type/', [
             var html = "";
             var url = "/stock/warehouse/";
             if (row.WareHouse) {
-                html += "<a href='" + url + row.WareHouse.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
-                html += "<a href='" + url + row.WareHouse.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+                html += row.WareHouse.name + "<a href='" + url + row.WareHouse.id + "?action=detail' class='pull-right'><i class='fa fa-external-link'></i></a>";
             }
             return html;
         }
@@ -1290,6 +1289,7 @@ displayTable("#table-stock-picking-type", '/stock/picking/type/', [
         field: 'PrevStep',
         sortable: true,
         order: "desc",
+        align: "center",
         formatter: function cellStyle(value, row, index) {
             var html = "";
             if (row.PrevStep) {
@@ -1303,6 +1303,7 @@ displayTable("#table-stock-picking-type", '/stock/picking/type/', [
         field: 'NextStep',
         sortable: true,
         order: "desc",
+        align: "center",
         formatter: function cellStyle(value, row, index) {
             var html = "";
             if (row.NextStep) {
