@@ -2,6 +2,16 @@
     padding: 10px 30px;
 }
 
+.title-action {
+    border-bottom: 1px solid grey;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
+}
+
+.search-action {
+    padding-top: 2px;
+}
+
 
 /*form表单状态*/
 
