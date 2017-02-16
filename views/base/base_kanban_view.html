@@ -21,6 +21,12 @@
                 <p id="list-title">{{.PageName}}</p>
             </div>
             {{.xsrf}}
+            <div class="row">
+                <div class="btn-group btn-group-sm pull-right">
+                    <a href="{{.URL}}?action=table" class="btn btn-default fa fa-list-ul list-button " data-view-type="list"></a>
+                    <a href="{{.URL}}?action=kanban" class="btn btn-default fa fa-th-large list-button active" data-view-type="kanban"></a>
+                </div>
+            </div>
             <div class="row" id="{{.KanbanId}}">
             </div>
         </div>

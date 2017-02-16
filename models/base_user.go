@@ -72,13 +72,13 @@ func AddUser(obj *User, addUser *User) (id int64, err error) {
 	obj.UpdateUser = addUser
 	password := utils.PasswordMD5(obj.Password, obj.Mobile)
 	obj.Password = password
-	if obj.CompanyID != 0 {
+	if obj.CompanyID > 0 {
 		obj.Company, _ = GetCompanyByID(obj.CompanyID)
 	}
-	if obj.DepartmentID != 0 {
+	if obj.DepartmentID > 0 {
 		obj.Department, _ = GetDepartmentByID(obj.DepartmentID)
 	}
-	if obj.PositionID != 0 {
+	if obj.PositionID > 0 {
 		obj.Position, _ = GetPositionByID(obj.PositionID)
 	}
 	if id, err = o.Insert(obj); err == nil {
@@ -273,13 +273,13 @@ func UpdateUser(obj *User, updateUser *User) (err error) {
 	}
 	// ascertain id exists in the database
 	if err = o.Read(&v); err == nil {
-		if obj.CompanyID != 0 {
+		if obj.CompanyID > 0 {
 			obj.Company, _ = GetCompanyByID(obj.CompanyID)
 		}
-		if obj.DepartmentID != 0 {
+		if obj.DepartmentID > 0 {
 			obj.Department, _ = GetDepartmentByID(obj.DepartmentID)
 		}
-		if obj.PositionID != 0 {
+		if obj.PositionID > 0 {
 			obj.Position, _ = GetPositionByID(obj.PositionID)
 		}
 		if createTeamRecords, ok := obj.TeamIDs["create"]; ok {

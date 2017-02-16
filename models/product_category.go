@@ -44,7 +44,7 @@ func AddProductCategory(obj *ProductCategory, addUser *User) (id int64, errs []e
 	if err != nil {
 		errs = append(errs, err)
 	}
-	if obj.ParentID != 0 {
+	if obj.ParentID > 0 {
 		obj.Parent, _ = GetProductCategoryByID(obj.ParentID)
 	}
 	id, err = o.Insert(obj)

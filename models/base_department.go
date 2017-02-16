@@ -54,13 +54,13 @@ func AddDepartment(obj *Department, addUser *User) (id int64, err error) {
 	if errBegin != nil {
 		return 0, errBegin
 	}
-	if obj.CompanyID != 0 {
+	if obj.CompanyID > 0 {
 		obj.Company, _ = GetCompanyByID(obj.CompanyID)
 	}
-	if obj.ParentID != 0 {
+	if obj.ParentID > 0 {
 		obj.Parent, _ = GetDepartmentByID(obj.ParentID)
 	}
-	if obj.LeaderID != 0 {
+	if obj.LeaderID > 0 {
 		obj.Leader, _ = GetUserByID(obj.LeaderID)
 	}
 	id, err = o.Insert(obj)

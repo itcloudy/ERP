@@ -35,10 +35,10 @@
                             <div class="col-md-8">
                                 <p class="p-form-control"> {{if and .Warehouse .Warehouse.Company}} {{.Warehouse.Company.Name}}{{end}}</p>
                                 <select data-type="int" name="Company" id="compay" class="{{.FormField}} form-control select-company">
-                             {{if and .Warehouse .Warehouse.Company}}
-                            <option value="{{.Warehouse.Company.ID}}" selected="selected">{{.Warehouse.Company.Name}}</option>
-                             {{end}} 
-                        </select>
+                                    {{if and .Warehouse .Warehouse.Company}}
+                                    <option value="{{.Warehouse.Company.ID}}" selected="selected">{{.Warehouse.Company.Name}}</option>
+                                    {{end}} 
+                                </select>
                             </div>
                         </div>
                     </div>

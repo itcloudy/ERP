@@ -47,7 +47,7 @@ func AddProductUom(obj *ProductUom, addUser *User) (id int64, errs []error) {
 	if err != nil {
 		errs = append(errs, err)
 	}
-	if obj.CategoryID != 0 {
+	if obj.CategoryID > 0 {
 		obj.Category, _ = GetProductUomCategByID(obj.CategoryID)
 	}
 	id, err = o.Insert(obj)

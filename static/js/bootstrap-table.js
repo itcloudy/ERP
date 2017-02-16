@@ -1246,3 +1246,115 @@ displayTable("#table-stock-warehouse", "/stock/warehouse/", [
         }
     }
 ]);
+displayTable("#table-stock-picking-type", '/stock/picking/type/', [
+    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "库位类型", field: 'Name', align: "center", sortable: true, order: "desc" },
+    {
+        title: "所属仓库",
+        field: 'WareHouse',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+
+            var html = "";
+            var url = "/stock/warehouse/";
+            if (row.WareHouse) {
+                html += "<a href='" + url + row.WareHouse.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+                html += "<a href='" + url + row.WareHouse.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            }
+            return html;
+        }
+    },
+    {
+        title: "移库类型",
+        field: 'Code',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.Code == "outgoing") {
+                html = '出库';
+            } else if (row.Code == "incoming") {
+                html = '入库';
+            } else if (row.Code == "internal") {
+                html = '内部调拨';
+            } else {
+                html = '-';
+            }
+            return html;
+        }
+    },
+    {
+        title: "上步流程",
+        field: 'PrevStep',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.PrevStep) {
+                html = row.PrevStep.name + "<a class='pull-right' href='/stock/picking/type/" + row.PrevStep.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            }
+            return html;
+        }
+    },
+    {
+        title: "下步流程",
+        field: 'NextStep',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.NextStep) {
+                html = row.NextStep.name + "<a class='pull-right' href='/stock/picking/type/" + row.NextStep.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            }
+            return html;
+        }
+    },
+    {
+        title: "流程开始",
+        field: 'IsStart',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.IsStart) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "流程结束",
+        field: 'IsEnd',
+        sortable: true,
+        order: "desc",
+        align: "center",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.IsEnd) {
+                html = '<i class="fa fa-check"></i>';
+            } else {
+                html = '<i class="fa fa-remove"></i>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+
+            var html = "";
+            var url = "/stock/picking/type/";
+            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑&nbsp<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情&nbsp<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+
+]);

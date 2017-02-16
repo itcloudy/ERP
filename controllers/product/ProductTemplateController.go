@@ -343,7 +343,7 @@ func (ctl *ProductTemplateController) PostList() {
 	}
 	if filterCategory, ok := filterMap["Category"]; ok {
 		filterCategoryID := int64(filterCategory.(float64))
-		if filterCategoryID != 0 {
+		if filterCategoryID > 0 {
 			lineIdsArr := make([]int64, 0, 0)
 			lineIdsArr = append(lineIdsArr, filterCategoryID)
 			if _, arrs, err := md.GetAllChildCategorys(filterCategoryID); err == nil {

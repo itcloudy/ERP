@@ -1580,4 +1580,44 @@ $(function() {
             }
         }
     });
+    //库位类型管理
+    BootstrapValidator("#stockPickingTypeForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "仓库名称不能为空"
+                },
+                remote: {
+                    url: "/stock/picking/type/",
+                    message: "仓库名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var xsrf = $("input[name ='_xsrf']")
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                },
+            },
+        },
+        WareHouse: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "仓库名称不能为空"
+                }
+            }
+        }
+    });
 });

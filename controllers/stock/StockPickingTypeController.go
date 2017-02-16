@@ -28,7 +28,7 @@ func (ctl *StockPickingTypeController) Post() {
 }
 func (ctl *StockPickingTypeController) Get() {
 
-	ctl.PageName = "管理看板"
+	ctl.PageName = "库位类型管理"
 	ctl.URL = "/stock/picking/type/"
 	ctl.Data["URL"] = ctl.URL
 	action := ctl.Input().Get("action")
@@ -39,10 +39,12 @@ func (ctl *StockPickingTypeController) Get() {
 		ctl.Edit()
 	case "detail":
 		ctl.Detail()
+	case "table":
+		ctl.GetList()
 	case "kanban":
 		ctl.GetKanban()
 	default:
-		ctl.GetList()
+		ctl.GetKanban()
 	}
 	// 标题合成
 	b := bytes.Buffer{}
@@ -58,7 +60,7 @@ func (ctl *StockPickingTypeController) Get() {
 func (ctl *StockPickingTypeController) GetKanban() {
 
 	ctl.PageAction = "看板"
-	ctl.Data["KanbanId"] = "kanban-stock-picking"
+	ctl.Data["KanbanId"] = "kanban-stock-picking-type"
 	ctl.TplName = "stock/stock_picking_form.html"
 	ctl.Layout = "base/base_kanban_view.html"
 }
@@ -112,7 +114,7 @@ func (ctl *StockPickingTypeController) Create() {
 	ctl.PageAction = "创建"
 	ctl.Layout = "base/base.html"
 	ctl.Data["FormField"] = "form-create"
-	ctl.TplName = "stock/stock_picking_form.html"
+	ctl.TplName = "stock/stock_picking_type_form.html"
 }
 func (ctl *StockPickingTypeController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
@@ -120,7 +122,7 @@ func (ctl *StockPickingTypeController) Edit() {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if picking, err := md.GetStockPickingTypeByID(idInt64); err == nil {
 				ctl.PageAction = picking.Name
-				ctl.Data["Product"] = picking
+				ctl.Data["StockPickingType"] = picking
 			}
 		}
 	}
@@ -128,7 +130,7 @@ func (ctl *StockPickingTypeController) Edit() {
 	ctl.Data["RecordID"] = id
 	ctl.Layout = "base/base.html"
 	ctl.Data["FormField"] = "form-edit"
-	ctl.TplName = "stock/stock_picking_form.html"
+	ctl.TplName = "stock/stock_picking_type_form.html"
 }
 func (ctl *StockPickingTypeController) Detail() {
 	ctl.Edit()
@@ -177,8 +179,31 @@ func (ctl *StockPickingTypeController) pickingProductList(query map[string]inter
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
 			oneLine["Name"] = line.Name
+			oneLine["Code"] = line.Code
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			oneLine["IsStart"] = line.IsStart
+			oneLine["IsEnd"] = line.IsEnd
+
+			if line.WareHouse != nil {
+				wareHouse := make(map[string]interface{})
+				wareHouse["id"] = line.WareHouse.ID
+				wareHouse["name"] = line.WareHouse.Name
+				oneLine["WareHouse"] = wareHouse
+			}
+			if line.NextStep != nil {
+				nextStep := make(map[string]interface{})
+				nextStep["id"] = line.NextStep.ID
+				nextStep["name"] = line.NextStep.Name
+				oneLine["NextStep"] = nextStep
+			}
+			if line.PrevStep != nil {
+				prevStep := make(map[string]interface{})
+				prevStep["id"] = line.PrevStep.ID
+				prevStep["name"] = line.PrevStep.Name
+				oneLine["PrevStep"] = prevStep
+			}
+			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
 		if jsonResult, er := json.Marshal(&paginator); er == nil {
@@ -219,7 +244,7 @@ func (ctl *StockPickingTypeController) GetList() {
 		ctl.Data["ViewType"] = "table"
 	}
 	ctl.PageAction = "列表"
-	ctl.Data["tableId"] = "table-stock-picking"
+	ctl.Data["tableId"] = "table-stock-picking-type"
 	ctl.Layout = "base/base_list_view.html"
-	ctl.TplName = "stock/stock_picking_list_search.html"
+	ctl.TplName = "stock/stock_picking_type_list_search.html"
 }

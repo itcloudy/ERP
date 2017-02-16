@@ -163,7 +163,7 @@ func (ctl *ProductProductController) Validator() {
 			query["AttributeValuesString"] = strings.Join(AttributeValueIds, "-")
 			if _, arrs, err := md.GetAllProductProduct(query, exclude, cond, fields, sortby, order, 0, 2); err == nil {
 				if len(arrs) > 0 {
-					if recordID != 0 && len(arrs) == 1 {
+					if recordID > 0 && len(arrs) == 1 {
 						if arrs[0].ID == recordID {
 							result["valid"] = true
 						} else {

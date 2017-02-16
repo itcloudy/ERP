@@ -55,13 +55,13 @@ func AddTeam(obj *Team, addUser *User) (id int64, err error) {
 
 		}
 	}()
-	if obj.CompanyID != 0 {
+	if obj.CompanyID > 0 {
 		obj.Company, _ = GetCompanyByID(obj.CompanyID)
 	}
-	if obj.LeaderID != 0 {
+	if obj.LeaderID > 0 {
 		obj.Leader, _ = GetUserByID(obj.LeaderID)
 	}
-	if obj.DepartmentID != 0 {
+	if obj.DepartmentID > 0 {
 		obj.Department, _ = GetDepartmentByID(obj.DepartmentID)
 	}
 	if errBegin != nil {

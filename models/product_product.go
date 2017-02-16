@@ -79,7 +79,7 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 	if errBegin != nil {
 		return 0, errBegin
 	}
-	if obj.ProductTemplateID != 0 {
+	if obj.ProductTemplateID > 0 {
 		if template, err := GetProductTemplateByID(obj.ProductTemplateID); err == nil {
 			obj.ProductTemplate = template
 			sequence := GetVariantCount(template)
@@ -101,19 +101,19 @@ func AddProductProduct(obj *ProductProduct, addUser *User) (id int64, err error)
 	// 	sort.Strings(strArr)
 	// 	obj.AttributeValuesString = strings.Join(strArr, "-")
 	// }
-	if obj.CategoryID != 0 {
+	if obj.CategoryID > 0 {
 		obj.Category, _ = GetProductCategoryByID(obj.CategoryID)
 	}
-	if obj.FirstSaleUomID != 0 {
+	if obj.FirstSaleUomID > 0 {
 		obj.FirstSaleUom, _ = GetProductUomByID(obj.FirstSaleUomID)
 	}
-	if obj.SecondSaleUomID != 0 {
+	if obj.SecondSaleUomID > 0 {
 		obj.SecondSaleUom, _ = GetProductUomByID(obj.SecondSaleUomID)
 	}
-	if obj.FirstPurchaseUomID != 0 {
+	if obj.FirstPurchaseUomID > 0 {
 		obj.FirstPurchaseUom, _ = GetProductUomByID(obj.FirstPurchaseUomID)
 	}
-	if obj.SecondPurchaseUomID != 0 {
+	if obj.SecondPurchaseUomID > 0 {
 		obj.SecondPurchaseUom, _ = GetProductUomByID(obj.SecondPurchaseUomID)
 	}
 	if id, err = o.Insert(obj); err != nil {

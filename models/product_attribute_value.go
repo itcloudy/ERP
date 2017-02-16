@@ -57,7 +57,7 @@ func AddProductAttributeValue(obj *ProductAttributeValue, addUser *User) (id int
 	if err != nil {
 		errs = append(errs, err)
 	}
-	if obj.AttributeID != 0 {
+	if obj.AttributeID > 0 {
 		obj.Attribute, _ = GetProductAttributeByID(obj.AttributeID)
 	}
 	id, err = o.Insert(obj)

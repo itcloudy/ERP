@@ -17,11 +17,19 @@ type StockPickingType struct {
 	UpdateUser *User             `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time         `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time         `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name       string            `orm:"unique" json:"Name"`                   //仓库名称
-	Code       string            `json:"Code"`                                //移库类型
+	Name       string            `orm:"unique" json:"Name"`                   //分拣类型名称
+	Code       string            `json:"Code"`                                //移库类型 incoming/outgoing/internal
 	WareHouse  *StockWarehouse   `orm:"rel(fk)"`                              //仓库
 	NextStep   *StockPickingType `orm:"null;rel(one)"`                        //下一步
 	PrevStep   *StockPickingType `orm:"null;rel(one)"`                        //上一步
+	IsStart    bool              `orm:"default(false)"`                       //流程开始
+	IsEnd      bool              `orm:"default(false)"`                       //流程结束
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	WareHouseID  int64    `orm:"-" json:"WareHouse"`
+	NextStepID   int64    `orm:"-" json:"NextStep"`
+	PrevStepID   int64    `orm:"-" json:"PrevStep"`
 }
 
 func init() {
@@ -46,8 +54,15 @@ func AddStockPickingType(obj *StockPickingType, addUser *User) (id int64, err er
 		return 0, errBegin
 	}
 
-	// 获得款式产品编码
-
+	if obj.WareHouseID > 0 {
+		obj.WareHouse, _ = GetStockWarehouseByID(obj.WareHouseID)
+	}
+	if obj.NextStepID > 0 {
+		obj.NextStep, _ = GetStockPickingTypeByID(obj.NextStepID)
+	}
+	if obj.PrevStepID > 0 {
+		obj.PrevStep, _ = GetStockPickingTypeByID(obj.PrevStepID)
+	}
 	id, err = o.Insert(obj)
 	if err != nil {
 		return 0, err
@@ -66,7 +81,15 @@ func GetStockPickingTypeByID(id int64) (obj *StockPickingType, err error) {
 	o := orm.NewOrm()
 	obj = &StockPickingType{ID: id}
 	if err = o.Read(obj); err == nil {
-
+		if obj.WareHouse != nil {
+			o.Read(obj.WareHouse)
+		}
+		if obj.NextStep != nil {
+			o.Read(obj.NextStep)
+		}
+		if obj.PrevStep != nil {
+			o.Read(obj.PrevStep)
+		}
 		return obj, nil
 	}
 	return nil, err

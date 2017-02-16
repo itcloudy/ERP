@@ -1,0 +1,119 @@
+<div class="row">
+    <p id="list-title">{{.PageName}}</p>
+</div>
+
+<form id="stockPickingTypeForm" action="{{.URL}}{{.RecordID}}?action={{.Action}}" method="post" class="post-form form-horizontal {{if .Readonly}}form-disabled{{else}}form-edit{{end}}" role="form">
+    <div class="row">
+        {{if .RecordID}} {{if .Readonly}}
+        <a href="{{.URL}}{{.RecordID}}?action=edit" class="btn btn-success fa fa-pencil pull-left form-edit-btn">&nbsp编辑</a>
+        <a href="{{.URL}}?action=create" type="buttom" class="btn btn-success fa fa-plus pull-left form-create-btn">&nbsp新建</a>{{end}}{{end}}
+        <button type="submit" form="stockPickingTypeForm" class="btn btn-primary fa fa-save pull-left form-save-btn">&nbsp保存</button> {{if .Readonly}}
+        <button type="button" class="btn btn-danger fa fa-remove  pull-left form-cancel-btn">&nbsp取消</button> {{else}}
+        <a href="{{.URL}}" class="btn btn-danger fa fa-remove  pull-left">&nbsp取消</a> {{end}}
+        <a href="{{.URL}}?action=table" class="btn btn-info fa fa-list pull-left">&nbsp列表</a>
+    </div>
+    {{ .xsrf }} {{if .RecordID}}
+    <input type="hidden" data-type="int" class="{{.FormField}}" name="recordID" id="record-id" value="{{.RecordID}}"> {{end}}
+
+    <div class="row">
+        <div class="col-md-6">
+            <fieldset>
+                <legend>基本信息</legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name" class="col-md-4 control-label label-start">库位类型<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .StockPickingType}} {{ .StockPickingType.Name}}{{end}}</p>
+                                <input data-type="string" class="{{.FormField}} form-control" name="Name" type="text" {{if .StockPickingType}} value="{{.StockPickingType.Name}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="WareHouse" class="col-md-4 control-label label-start">所属仓库<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .StockPickingType .StockPickingType.WareHouse}} {{.StockPickingType.WareHouse.Name}}{{end}}</p>
+                                <select data-type="int" name="WareHouse" id="WareHouse" class="{{.FormField}} form-control select-stock-warehouse">
+                             {{if and .StockPickingType .WareHouse.WareHouse}}
+                            <option value="{{.StockPickingType.WareHouse.ID}}" selected="selected">{{.StockPickingType.WareHouse.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Code" class="col-md-4 control-label label-start">操作类型<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if .StockPickingType}} {{if eq .StockPickingType.Code "incoming"}}入库{{else if eq .StockPickingType.Code "outgoing"}}出库{{else if eq .StockPickingType.Code "internal" }} 内部调拨{{end}} {{end}}</p>
+                                <select data-type="string" name="Code" id="Code" class="{{.FormField}} form-control select-stock-picking-type-code">
+                                    {{if .StockPickingType}} 
+                                    <option value="{{.StockPickingType.Code}}" selected="selected">{{.StockPickingType.Code}}</option>
+                                    {{else}}<option value="outgoing" selected="selected">出库</option>{{end}} 
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-md-6">
+            <fieldset>
+                <legend>流程信息</legend>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="IsStart" class="col-md-4 control-label ">流程开始</label>
+                            <div class="col-md-8 ">
+                                <input data-type="bool" name="IsStart" data-oldvalue="{{.StockPickingType.IsStart}}" id="IsStart" class="form-control form-checkbox {{.FormField}}" {{if and .StockPickingType .StockPickingType.IsStart}}{{if eq .StockPickingType.IsStart true}}checked="checked"
+                                    {{end}} {{else}}checked="checked" {{end}}type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="IsEnd" class="col-md-4 control-label ">流程结束</label>
+                            <div class="col-md-8 ">
+                                <input data-type="bool" name="IsEnd" data-oldvalue="{{.StockPickingType.IsEnd}}" id="IsEnd" class="form-control form-checkbox {{.FormField}}" {{if and .StockPickingType .StockPickingType.IsEnd}}{{if eq .StockPickingType.IsEnd true}}checked="checked" {{end}}
+                                    {{else}}checked="checked" {{end}}type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="PrevStep" class="col-md-4 control-label label-start">上步流程 </label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .StockPickingType .StockPickingType.PrevStep}} {{.StockPickingType.PrevStep.Name}}{{end}}</p>
+                                <select data-type="int" name="PrevStep" id="PrevStep" class="{{.FormField}} form-control select-stock-picking-type">
+                                    {{if and .StockPickingType .StockPickingType.PrevStep}}
+                                    <option value="{{.StockPickingType.PrevStep.ID}}" selected="selected">{{.StockPickingType.PrevStep.Name}}</option>
+                                    {{end}} 
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="NextStep" class="col-md-4 control-label label-start">下步流程</label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .StockPickingType .StockPickingType.NextStep}} {{.StockPickingType.NextStep.Name}}{{end}}</p>
+                                <select data-type="int" name="NextStep" id="NextStep" class="{{.FormField}} form-control select-stock-picking-type">
+                                    {{if and .StockPickingType .StockPickingType.NextStep}}
+                                    <option value="{{.StockPickingType.NextStep.ID}}" selected="selected">{{.StockPickingType.NextStep.Name}}</option>
+                                    {{end}} 
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+
+</form>

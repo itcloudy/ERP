@@ -49,19 +49,19 @@ func AddStockWarehouse(obj *StockWarehouse, addUser *User) (id int64, errs []err
 	if err != nil {
 		errs = append(errs, err)
 	}
-	if obj.CompanyID != 0 {
+	if obj.CompanyID > 0 {
 		obj.Company, _ = GetCompanyByID(obj.CompanyID)
 	}
-	if obj.CountryID != 0 {
+	if obj.CountryID > 0 {
 		obj.Country, _ = GetAddressCountryByID(obj.CountryID)
 	}
-	if obj.ProvinceID != 0 {
+	if obj.ProvinceID > 0 {
 		obj.Province, _ = GetAddressProvinceByID(obj.ProvinceID)
 	}
-	if obj.CityID != 0 {
+	if obj.CityID > 0 {
 		obj.City, _ = GetAddressCityByID(obj.CityID)
 	}
-	if obj.DistrictID != 0 {
+	if obj.DistrictID > 0 {
 		obj.District, _ = GetAddressDistrictByID(obj.DistrictID)
 	}
 	id, err = o.Insert(obj)

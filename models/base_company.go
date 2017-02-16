@@ -60,19 +60,19 @@ func AddCompany(obj *Company, addUser *User) (id int64, err error) {
 	if errBegin != nil {
 		return 0, errBegin
 	}
-	if obj.ParentID != 0 {
+	if obj.ParentID > 0 {
 		obj.Parent, _ = GetCompanyByID(obj.ParentID)
 	}
-	if obj.CountryID != 0 {
+	if obj.CountryID > 0 {
 		obj.Country, _ = GetAddressCountryByID(obj.CountryID)
 	}
-	if obj.ProvinceID != 0 {
+	if obj.ProvinceID > 0 {
 		obj.Province, _ = GetAddressProvinceByID(obj.ProvinceID)
 	}
-	if obj.CityID != 0 {
+	if obj.CityID > 0 {
 		obj.City, _ = GetAddressCityByID(obj.CityID)
 	}
-	if obj.DistrictID != 0 {
+	if obj.DistrictID > 0 {
 		obj.District, _ = GetAddressDistrictByID(obj.DistrictID)
 	}
 	id, err = o.Insert(obj)
