@@ -35,12 +35,13 @@ type Partner struct {
 	Qq         string           `orm:"default(\"\")" json:"Qq"`              //QQ
 	WeChat     string           `orm:"default(\"\")" json:"WeChat"`          //微信
 	Comment    string           `orm:"type(text)" json:"Comment"`            //备注
-	FormAction string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	ParentID   int64            `orm:"-" json:"Parent"`                      //母公司
-	CountryID  int64            `orm:"-" json:"Country"`                     //国家
-	ProvinceID int64            `orm:"-" json:"Province"`                    //省份
-	CityID     int64            `orm:"-" json:"City"`                        //城市
-	DistrictID int64            `orm:"-" json:"District"`                    //区县
+
+	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+	ParentID   int64  `orm:"-" json:"Parent"`     //母公司
+	CountryID  int64  `orm:"-" json:"Country"`    //国家
+	ProvinceID int64  `orm:"-" json:"Province"`   //省份
+	CityID     int64  `orm:"-" json:"City"`       //城市
+	DistrictID int64  `orm:"-" json:"District"`   //区县
 
 }
 

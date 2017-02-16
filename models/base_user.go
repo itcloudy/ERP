@@ -34,7 +34,7 @@ type User struct {
 	Qq              string      `orm:"default(\"\")" xml:"qq" json:"Qq"`                  //QQ
 	WeChat          string      `orm:"default(\"\")" xml:"wechat" json:"WeChat"`          //微信
 	Position        *Position   `orm:"rel(fk);null;" json:"-" `                           //职位
-	// form表单字段
+
 	FormAction   string             `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string           `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 	DepartmentID int64              `orm:"-" json:"Department"`

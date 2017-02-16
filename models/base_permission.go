@@ -25,6 +25,9 @@ type Permission struct {
 	PermDelete bool      `orm:"default(false)" json:"PermDelete"`     //权限:删
 	Relation   string    `json:"Relation"`                            //该权限是私有还是角色权限role owner
 	Roles      []*Role   `orm:"rel(m2m)"`                             //拥有该权限的角色
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {

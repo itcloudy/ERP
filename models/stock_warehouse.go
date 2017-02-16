@@ -25,13 +25,14 @@ type StockWarehouse struct {
 	City       *AddressCity     `orm:"rel(fk);null" json:"-"`                //城市
 	District   *AddressDistrict `orm:"rel(fk);null" json:"-"`                //区县
 	Street     string           `orm:"default(\"\")" json:"Street"`          //街道
-	// form表单使用字段
-	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
-	CompanyID  int64  `orm:"-" json:"Company"`    //公司
-	CountryID  int64  `orm:"-" json:"Country"`    //地址国家
-	ProvinceID int64  `orm:"-" json:"Province"`   //地址省份
-	CityID     int64  `orm:"-" json:"City"`       //地址城市
-	DistrictID int64  `orm:"-" json:"District"`   //公司
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	CompanyID    int64    `orm:"-" json:"Company"`      //公司
+	CountryID    int64    `orm:"-" json:"Country"`      //地址国家
+	ProvinceID   int64    `orm:"-" json:"Province"`     //地址省份
+	CityID       int64    `orm:"-" json:"City"`         //地址城市
+	DistrictID   int64    `orm:"-" json:"District"`     //公司
 }
 
 func init() {

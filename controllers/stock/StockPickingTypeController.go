@@ -93,20 +93,38 @@ func (ctl *StockPickingTypeController) PostCreate() {
 	ctl.ServeJSON()
 }
 func (ctl *StockPickingTypeController) Put() {
-	id := ctl.Ctx.Input.Param(":id")
-	ctl.URL = "/stock/picking/type/"
-	//需要判断文件上传时页面不用跳转的情况
-	if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-		if picking, err := md.GetStockPickingTypeByID(idInt64); err == nil {
-			if err := ctl.ParseForm(&picking); err == nil {
-
-				if err := md.UpdateStockPickingType(picking, &ctl.User); err == nil {
-					ctl.Redirect(ctl.URL+id+"?action=detail", 302)
-				}
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	spt := new(md.StockPickingType)
+	var (
+		err    error
+		id     int64
+		errs   []error
+		debugs []string
+	)
+	if err = json.Unmarshal([]byte(postData), spt); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(template)).Type().Name()
+		if id, err = md.AddStockPickingType(spt, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
+		} else {
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			for _, item := range errs {
+				debugs = append(debugs, item.Error())
 			}
+			result["debug"] = debugs
 		}
 	}
-	ctl.Redirect(ctl.URL+id+"?action=edit", 302)
+	if err != nil {
+		result["code"] = "failed"
+		debugs = append(debugs, err.Error())
+		result["debug"] = debugs
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
+
 }
 func (ctl *StockPickingTypeController) Create() {
 	ctl.Data["Action"] = "create"

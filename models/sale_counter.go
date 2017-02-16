@@ -24,8 +24,8 @@ type SaleCounter struct {
 	ProductsCount  int       `orm:"-"`                                    //产品规格数量
 	TemplatesCount int       `orm:"-"`                                    //产品款式数量
 
-	// form表单使用字段
-	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 
 }
 

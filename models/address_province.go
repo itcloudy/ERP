@@ -17,11 +17,14 @@ type AddressProvince struct {
 	UpdateUser *User           `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time       `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time       `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction string          `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 	Name       string          `xml:"ProvinceName,attr"`                    //省份名称
 	Country    *AddressCountry `orm:"rel(fk)"`                              //国家
 	Citys      []*AddressCity  `orm:"reverse(many)"`                        //城市
 
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	CountryID    int64    `orm:"-" json:"Country"`
+	CityIDs      []int64  `orm:"-" json:"Citys"`
 }
 
 func init() {

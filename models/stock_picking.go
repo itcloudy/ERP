@@ -28,10 +28,10 @@ type StockPicking struct {
 	Partner      *Partner          `orm:"rel(fk)"`                              //合作伙伴
 	Priority     string            `orm:"default(\"normal\")" json:"Priority"`  //优先级
 	PickingType  *StockPickingType `orm:"rel(fk)"`                              //分拣类型决定分拣视图
-	FormAction   string            `orm:"-" json:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	CompanyID    int64             `orm:"-" json:"Company"`
-	ActionFields []string          `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	CompanyID    int64    `orm:"-" json:"Company"`
 }
 
 func init() {

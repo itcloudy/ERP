@@ -45,16 +45,18 @@ type ProductProduct struct {
 	MidImages             []*ProductImage          `orm:"reverse(many)"`                        //产品款式图片
 	SmallImages           []*ProductImage          `orm:"reverse(many)"`                        //产品款式图片
 	PurchaseDependTemp    bool                     `orm:"default(true)"`                        //根据款式采购，ture一个供应商可以供应所有的款式
-	FormAction            string                   `orm:"-" json:"FormAction"`                  //表单动作
-	CategoryID            int64                    `orm:"-" json:"Category"`                    //产品类别
-	FirstSaleUomID        int64                    `orm:"-" json:"FirstSaleUom"`                //第一销售单位form
-	SecondSaleUomID       int64                    `orm:"-" json:"SecondSaleUom"`               //第二销售单位form
-	FirstPurchaseUomID    int64                    `orm:"-" json:"FirstPurchaseUom"`            //第一采购单位form
-	SecondPurchaseUomID   int64                    `orm:"-" json:"SecondPurchaseUom"`           //第二采购单位form
-	ProductCounterID      int64                    `orm:"-" json:"ProductCounter"`              //产品柜台
-	ProductAttributeLines []ProductAttributeLine   `orm:"-" json:"ProductAttributes"`           //产品属性
-	ProductTemplateID     int64                    `orm:"-" json:"ProductTemplateID"`           //产品款式
-	AttributeValueIDs     map[string][]int64       `orm:"-" json:"AttributeValueIds"`           //产品规格属性值
+
+	FormAction            string                 `orm:"-" json:"FormAction"`        //非数据库字段，用于表示记录的增加，修改
+	ActionFields          []string               `orm:"-" json:"ActionFields"`      //需要操作的字段,用于update时
+	CategoryID            int64                  `orm:"-" json:"Category"`          //产品类别
+	FirstSaleUomID        int64                  `orm:"-" json:"FirstSaleUom"`      //第一销售单位form
+	SecondSaleUomID       int64                  `orm:"-" json:"SecondSaleUom"`     //第二销售单位form
+	FirstPurchaseUomID    int64                  `orm:"-" json:"FirstPurchaseUom"`  //第一采购单位form
+	SecondPurchaseUomID   int64                  `orm:"-" json:"SecondPurchaseUom"` //第二采购单位form
+	ProductCounterID      int64                  `orm:"-" json:"ProductCounter"`    //产品柜台
+	ProductAttributeLines []ProductAttributeLine `orm:"-" json:"ProductAttributes"` //产品属性
+	ProductTemplateID     int64                  `orm:"-" json:"ProductTemplateID"` //产品款式
+	AttributeValueIDs     map[string][]int64     `orm:"-" json:"AttributeValueIds"` //产品规格属性值
 
 }
 

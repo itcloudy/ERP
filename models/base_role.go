@@ -22,11 +22,11 @@ type Role struct {
 	Permissions []*Permission `orm:"reverse(many)"`                        //权限列表
 	Menus       []*Menu       `orm:"rel(m2m)"`                             //用户可见的菜单
 
-	// form表单字段
-	FormAction    string  `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
-	UserIDs       []int64 `orm:"-" json:"UserIds"`
-	PermissionIDs []int64 `orm:"-" json:"PermissionIds"`
-	MenuIDs       []int64 `orm:"-" json:"MenuIds"`
+	FormAction    string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields  []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	UserIDs       []int64  `orm:"-" json:"UserIds"`
+	PermissionIDs []int64  `orm:"-" json:"PermissionIds"`
+	MenuIDs       []int64  `orm:"-" json:"MenuIds"`
 }
 
 func init() {

@@ -35,7 +35,7 @@
                             <div class="col-md-8">
                                 <p class="p-form-control"> {{if and .StockPickingType .StockPickingType.WareHouse}} {{.StockPickingType.WareHouse.Name}}{{end}}</p>
                                 <select data-type="int" name="WareHouse" id="WareHouse" class="{{.FormField}} form-control select-stock-warehouse">
-                             {{if and .StockPickingType .WareHouse.WareHouse}}
+                             {{if and .StockPickingType .StockPickingType.WareHouse}}
                             <option value="{{.StockPickingType.WareHouse.ID}}" selected="selected">{{.StockPickingType.WareHouse.Name}}</option>
                              {{end}} 
                         </select>

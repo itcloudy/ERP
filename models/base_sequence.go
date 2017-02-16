@@ -26,7 +26,9 @@ type Sequence struct {
 	StructName string    `json:"StructName"`                          //表struct名称
 	Active     bool      `orm:"default(true)" json:"Active"`          //有效
 	IsDefault  bool      `orm:"default(true)" json:"IsDefault"`       //默认
-	FormAction string    `orm:"-" json:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 
 }
 
@@ -160,7 +162,7 @@ func GetAllSequence(query map[string]interface{}, exclude map[string]interface{}
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -174,7 +176,7 @@ func GetAllSequence(query map[string]interface{}, exclude map[string]interface{}
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}

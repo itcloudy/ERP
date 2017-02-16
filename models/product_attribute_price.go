@@ -20,6 +20,11 @@ type ProductAttributePrice struct {
 	ProductTemplate *ProductTemplate       `orm:"rel(fk)"`                              //产品款式
 	AttributeValue  *ProductAttributeValue `orm:"rel(fk)"`                              //属性值
 	PriceExtra      float64                `orm:"default(0)"`                           //属性价格
+
+	FormAction        string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields      []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	ProductTemplateID int64    `orm:"-" json:"ProductTemplate"`
+	AttributeValueID  int64    `orm:"-" json:"AttributeValue"`
 }
 
 func init() {
@@ -101,7 +106,7 @@ func GetAllProductAttributePrice(query map[string]interface{}, exclude map[strin
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -115,7 +120,7 @@ func GetAllProductAttributePrice(query map[string]interface{}, exclude map[strin
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}

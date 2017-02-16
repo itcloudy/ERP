@@ -18,7 +18,6 @@ type SaleOrder struct {
 	UpdateUser *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 	Name       string           `orm:"unique" json:"name"`                   //订单号
 	Partner    *Partner         `orm:"rel(fk)"`                              //客户
 	SalesMan   *User            `orm:"rel(fk)"`                              //业务员
@@ -30,6 +29,9 @@ type SaleOrder struct {
 	Street     string           `orm:"default(\"\")" json:"street"`          //街道
 	OrderLine  []*SaleOrderLine `orm:"reverse(many)"`                        //订单明细
 	State      *SaleOrderState  `orm:"rel(fk)"`                              //订单状态
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {

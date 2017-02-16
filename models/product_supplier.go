@@ -31,8 +31,9 @@ type ProductSupplier struct {
 	DelayHour       int32            `json:"DelayHour"`                           //下单到交货所需时间(小时)
 	ProductTemplate *ProductTemplate `orm:"rel(fk);null"`                         //产品款式
 	ProductProduct  *ProductProduct  `orm:"rel(fk);null"`                         //产品规格
-	FormAction      string           `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {

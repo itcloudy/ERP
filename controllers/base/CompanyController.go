@@ -66,7 +66,7 @@ func (ctl *CompanyController) Put() {
 	if err = json.Unmarshal([]byte(postData), company); err == nil {
 		// 获得struct表名
 		// structName := reflect.Indirect(reflect.ValueOf(company)).Type().Name()
-		if id, err = md.AddCompany(company, &ctl.User); err == nil {
+		if id, err = md.UpdateCompany(company, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {

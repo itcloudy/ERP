@@ -26,7 +26,9 @@ type ProductAttribute struct {
 	Products       []*ProductProduct        `orm:"rel(m2m)"`                             //拥有该属性的产品
 	TemplatesCount int64                    `orm:"default(0)"`                           //产品款式数量
 	ProductsCount  int64                    `orm:"default(0)"`                           //产品规格数量
-	FormAction     string                   `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 
 }
 

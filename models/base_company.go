@@ -27,13 +27,14 @@ type Company struct {
 	City       *AddressCity     `orm:"rel(fk);null" json:"-"`                //城市
 	District   *AddressDistrict `orm:"rel(fk);null" json:"-"`                //区县
 	Street     string           `orm:"default(\"\")" json:"Street"`          //街道
-	//表单使用字段
-	FormAction string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
-	ParentID   int64  `orm:"-" json:"Parent"`     //母公司
-	CountryID  int64  `orm:"-" json:"Country"`    //国家
-	ProvinceID int64  `orm:"-" json:"Province"`   //省份
-	CityID     int64  `orm:"-" json:"City"`       //城市
-	DistrictID int64  `orm:"-" json:"District"`   //区县
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	ParentID     int64    `orm:"-" json:"Parent"`       //母公司
+	CountryID    int64    `orm:"-" json:"Country"`      //国家
+	ProvinceID   int64    `orm:"-" json:"Province"`     //省份
+	CityID       int64    `orm:"-" json:"City"`         //城市
+	DistrictID   int64    `orm:"-" json:"District"`     //区县
 }
 
 func init() {

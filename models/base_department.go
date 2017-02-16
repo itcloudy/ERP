@@ -23,11 +23,12 @@ type Department struct {
 	Childs     []*Department `orm:"reverse(many)"`                        //下级部门
 	Members    []*User       `orm:"reverse(many)"`                        //组员
 	Company    *Company      `orm:"rel(fk);null"`                         //公司
-	//表单使用字段
-	FormAction string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
-	CompanyID  int64  `orm:"-" json:"Company"`    //公司
-	LeaderID   int64  `orm:"-" json:"Leader"`     //负责人
-	ParentID   int64  `orm:"-" json:"Parent"`
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	CompanyID    int64    `orm:"-" json:"Company"`      //公司
+	LeaderID     int64    `orm:"-" json:"Leader"`       //负责人
+	ParentID     int64    `orm:"-" json:"Parent"`
 }
 
 func init() {

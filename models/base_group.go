@@ -19,9 +19,10 @@ type Group struct {
 	Name       string    `orm:"unique" json:"Name" xml:"name"`        //菜单名称
 	Menus      []*Menu   `orm:"rel(m2m)"`                             //用户可见的菜单
 	Users      []*User   `orm:"reverse(many)"`                        //角色所对应的用户
-	// form表单字段
-	FormAction string  `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
-	MenuIDs    []int64 `orm:"-" json:"MenuIds"`
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	MenuIDs      []int64  `orm:"-" json:"Menus"`
 }
 
 func init() {

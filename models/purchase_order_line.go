@@ -18,7 +18,6 @@ type PurchaseOrderLine struct {
 	UpdateUser        *User                   `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate        time.Time               `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate        time.Time               `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction        string                  `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 	Name              string                  `orm:"default(\"\")" json:"name"`            //订单明细号
 	Company           *Company                `orm:"rel(fk)"`                              //公司
 	PurchaseOrder     *PurchaseOrder          `orm:"rel(fk);null" `                        //销售订单
@@ -29,6 +28,9 @@ type PurchaseOrderLine struct {
 	FirstPurchaseQty  float32                 `orm:"default(1)"`                           //第一销售单位
 	SecondPurchaseQty float32                 `orm:"default(0)"`                           //第二销售单位
 	State             *PurchaseOrderLineState `orm:"rel(fk)"`                              //订单明细状态
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {
@@ -110,7 +112,7 @@ func GetAllPurchaseOrderLine(query map[string]interface{}, exclude map[string]in
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -124,7 +126,7 @@ func GetAllPurchaseOrderLine(query map[string]interface{}, exclude map[string]in
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}

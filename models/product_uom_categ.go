@@ -20,8 +20,9 @@ type ProductUomCateg struct {
 	UpdateDate time.Time     `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Name       string        `orm:"unique" json:"Name"`                   //计量单位分类
 	Uoms       []*ProductUom `orm:"reverse(many)"`                        //计量单位
-	// form表单字段
-	FormAction string `orm:"-" json:"FormAction"` //非数据库字段，用于表示记录的增加，修改
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {

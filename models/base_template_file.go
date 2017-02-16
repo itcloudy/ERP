@@ -17,9 +17,11 @@ type TemplateFile struct {
 	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	FormAction string    `orm:"-" form:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
-	Name       string    //模版名称
-	Desc       string    //描述
+	Name       string    `orm:"unique" json:"Name"`                   //模版名称
+	Desc       string    ` json:"Desc"`                               //描述
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {

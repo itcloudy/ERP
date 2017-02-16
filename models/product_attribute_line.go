@@ -21,10 +21,10 @@ type ProductAttributeLine struct {
 	ProductTemplate *ProductTemplate         `orm:"rel(fk)"`                              //产品模版
 	AttributeValues []*ProductAttributeValue `orm:"rel(m2m)"`                             //属性值
 
-	// form表单使用字段
-	FormAction        string  `orm:"-" json:"FormAction"`        //表单动作
-	AttributeID       int64   `orm:"-" json:"AttributeId"`       //表单属性
-	AttributeValueIds []int64 `orm:"-" json:"AttributeValueIds"` //表单属性值
+	FormAction        string   `orm:"-" json:"FormAction"`        //非数据库字段，用于表示记录的增加，修改
+	ActionFields      []string `orm:"-" json:"ActionFields"`      //需要操作的字段,用于update时
+	AttributeID       int64    `orm:"-" json:"AttributeId"`       //表单属性
+	AttributeValueIds []int64  `orm:"-" json:"AttributeValueIds"` //表单属性值
 }
 
 func init() {

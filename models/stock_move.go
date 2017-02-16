@@ -23,6 +23,9 @@ type StockMove struct {
 	FirstUom     *ProductUom     `orm:"rel(fk)"`                              //第一单位
 	SecondUom    *ProductUom     `orm:"rel(fk);null"`                         //第二单位
 	State        string          `orm:"default(\"draft\")" json:"State"`      //状态
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {

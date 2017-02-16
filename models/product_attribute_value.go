@@ -25,9 +25,10 @@ type ProductAttributeValue struct {
 	PriceExtra    float64           `orm:"default(0)"`                           //额外价格
 	// Prices     *ProductAttributePrice `orm:"reverse(many)"`
 	Sequence int32 `json:"Sequence"` //序列
-	// form表单字段
-	FormAction  string `orm:"-" json:"FormAction"`  //非数据库字段，用于表示记录的增加，修改
-	AttributeID int64  `orm:"-" json:"AttributeID"` //属性
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	AttributeID  int64    `orm:"-" json:"AttributeID"`  //属性
 }
 
 func init() {
@@ -157,7 +158,7 @@ func GetAllProductAttributeValue(query map[string]interface{}, exclude map[strin
 				if order[i] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[i] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
@@ -171,7 +172,7 @@ func GetAllProductAttributeValue(query map[string]interface{}, exclude map[strin
 				if order[0] == "desc" {
 					orderby = "-" + strings.Replace(v, ".", "__", -1)
 				} else if order[0] == "asc" {
-					orderby =  strings.Replace(v, ".", "__", -1)
+					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
 					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}

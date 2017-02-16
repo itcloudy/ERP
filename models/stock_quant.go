@@ -25,6 +25,9 @@ type StockQuant struct {
 	Company      *Company           `orm:"rel(fk)"`                              //公司
 	InDate       time.Time          `orm:"auto_now_add;type(datetime)"`          //接收时间
 	// History      []*StockMove
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {

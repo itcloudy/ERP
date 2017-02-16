@@ -24,11 +24,12 @@ type Team struct {
 	Members     []*User     `orm:"reverse(many)"`                        //组员
 	Active      bool        `orm:"default(true)"`                        //是否有效
 	Description string      `orm:"default(\"\")" json:"Description"`     //描述
-	//表单使用字段
-	FormAction   string `orm:"-" form:"FormAction"` //非数据库字段，用于表示记录的增加，修改
-	LeaderID     int64  `orm:"-" json:"Leader"`     //负责人
-	CompanyID    int64  `orm:"-" json:"Company"`    //公司
-	DepartmentID int64  `orm:"-" json:"Department"` //部门
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	LeaderID     int64    `orm:"-" json:"Leader"`       //负责人
+	CompanyID    int64    `orm:"-" json:"Company"`      //公司
+	DepartmentID int64    `orm:"-" json:"Department"`   //部门
 
 }
 

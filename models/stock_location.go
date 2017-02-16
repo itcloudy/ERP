@@ -26,6 +26,9 @@ type StockLocation struct {
 	Posz             int64            `json:"Posz"`                                //层
 	PutawayStrategy  string           ``                                           //入库策略,需后续改为many2one
 	RemovalStrategyd string           ``                                           //出库策略需后续改为many2one
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {

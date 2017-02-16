@@ -20,6 +20,9 @@ type Menu struct {
 	Name       string    `orm:"unique" json:"Name" xml:"name"`               //菜单名称
 	Identity   string    `orm:"unique;index" json:"Identity" xml:"identity"` //菜单唯一标识
 	Roles      []*Role   `orm:"reverse(many)" json:"-"`                      //菜单可见角色
+
+	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
 }
 
 func init() {
@@ -28,7 +31,6 @@ func init() {
 func (u *Menu) TableName() string {
 	return "base_menu"
 }
-
 
 // Menu insert a new Menu into database and returns
 // last inserted ID on success.
