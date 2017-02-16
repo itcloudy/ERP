@@ -28,10 +28,19 @@ $(function() {
         </div>*/
         var innerHtml = "";
         for (var i = 0, len = dataArr.length; i < len; i++) {
+            var type = "";
+            if (dataArr[i].Code == "outgoing") {
+                type = "出库";
+
+            } else if (dataArr[i].Code == "incoming") {
+                type = "入库";
+            } else if (dataArr[i].Code == "internal") {
+                type = "内部调拨";
+            }
             innerHtml += '<div class="col-md-3">';
             innerHtml += '<div class="box box-success">';
             innerHtml += '<div class="box-header with-border">';
-            innerHtml += '<h3 class="box-title pull-left"><a class="text-primary" href="/stock/warehouse/' + dataArr[i].WareHouse.id + '?action=detail">' + dataArr[i].WareHouse.name + ':</a></h3>';
+            innerHtml += '<h3 class="box-title pull-left"><a class="text-primary" href="/stock/warehouse/' + dataArr[i].WareHouse.id + '?action=detail">' + dataArr[i].WareHouse.name + '[' + type + ']' + ':</a></h3>';
             innerHtml += '<h3 class="box-title">&nbsp&nbsp&nbsp<a class="text-danger" href="/stock/picking/type/' + dataArr[i].id + '?action=detail">' + dataArr[i].Name + '</a></h3>';
             innerHtml += '<div class="box-tools pull-right">';
             innerHtml += '<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>';
