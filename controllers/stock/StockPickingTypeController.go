@@ -61,8 +61,8 @@ func (ctl *StockPickingTypeController) GetKanban() {
 
 	ctl.PageAction = "看板"
 	ctl.Data["KanbanId"] = "kanban-stock-picking-type"
-	ctl.TplName = "stock/stock_picking_form.html"
-	ctl.Layout = "base/base_kanban_view.html"
+	ctl.TplName = "base/base_kanban_view.html"
+
 }
 func (ctl *StockPickingTypeController) PostCreate() {
 	result := make(map[string]interface{})
@@ -257,10 +257,6 @@ func (ctl *StockPickingTypeController) PostList() {
 }
 
 func (ctl *StockPickingTypeController) GetList() {
-	viewType := ctl.Input().Get("view")
-	if viewType == "" || viewType == "table" {
-		ctl.Data["ViewType"] = "table"
-	}
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-stock-picking-type"
 	ctl.Layout = "base/base_list_view.html"

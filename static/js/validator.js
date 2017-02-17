@@ -613,6 +613,7 @@ $(function() {
                             if (!company) {
                                 toastr.error("请先选择<strong>所属公司</strong>", "错误");
                             }
+                            params.company = company;
                         } else {
                             toastr.error("没有公司选项", "错误");
                         }
@@ -667,15 +668,7 @@ $(function() {
                             action: "validator"
                         }
 
-                        var company = $("#company");
-                        if (company.length > 0) {
-                            company = company.val();
-                            if (!company) {
-                                toastr.error("请先选择<strong>所属公司</strong>", "错误");
-                            }
-                        } else {
-                            toastr.error("没有公司选项", "错误");
-                        }
+
 
                         var xsrf = $("input[name ='_xsrf']");
                         if (xsrf.length > 0) {
@@ -1041,38 +1034,7 @@ $(function() {
             }
         }
     });
-    // 柜台form
-    BootstrapValidator("#productCounterForm", {
-        Name: {
-            message: "该值无效",
-            validators: {
-                notEmpty: {
-                    message: "柜台名称不能为空"
-                },
-                remote: {
-                    url: "/product/category/",
-                    message: "该柜台名称已经存在",
-                    dataType: "json",
-                    delay: 200,
-                    type: "POST",
-                    data: function() {
-                        var params = {
-                            action: "validator",
-                        }
-                        var xsrf = $("input[name ='_xsrf']");
-                        if (xsrf.length > 0) {
-                            params._xsrf = xsrf[0].value;
-                        }
-                        var recordID = $("input[name ='recordID']");
-                        if (recordID.length > 0) {
-                            params.recordID = recordID[0].value;
-                        }
-                        return params
-                    },
-                }
-            },
-        }
-    });
+
     //产品分类form
     BootstrapValidator("#productCategoryForm", {
         Name: {
@@ -1440,7 +1402,7 @@ $(function() {
             }
         }
     });
-    // 部门
+    // 柜台
     BootstrapValidator("#saleCounterForm", {
         Company: {
             message: "该值无效",
@@ -1465,6 +1427,16 @@ $(function() {
                     data: function() {
                         var params = {
                             action: "validator",
+                        }
+                        var company = $("#company");
+                        if (company.length > 0) {
+                            company = company.val();
+                            if (!company) {
+                                toastr.error("请先选择<strong>所属公司</strong>", "错误");
+                            }
+                            params.company = parseInt(company);
+                        } else {
+                            toastr.error("没有公司选项", "错误");
                         }
                         var xsrf = $("input[name ='_xsrf']");
                         if (xsrf.length > 0) {

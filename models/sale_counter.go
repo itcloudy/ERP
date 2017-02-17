@@ -19,14 +19,14 @@ type SaleCounter struct {
 	CreateDate     time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate     time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Company        *Company  `orm:"rel(fk);null" json:"-"`                //公司
-	Name           string    `orm:"unique"  json:"Name"`                  //产品属性名称
+	Name           string    `json:"Name"`                                //产品属性名称
 	Description    string    `orm:"type(text);null"  json:"Description"`  //描述
 	ProductsCount  int       `orm:"-"`                                    //产品规格数量
 	TemplatesCount int       `orm:"-"`                                    //产品款式数量
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
-
+	CompanyID    int64    `orm:"-" json:"Company"`
 }
 
 func init() {
@@ -44,7 +44,9 @@ func AddSaleCounter(obj *SaleCounter, addUser *User) (id int64, errs []error) {
 	if err != nil {
 		errs = append(errs, err)
 	}
-
+	if obj.CompanyID > 0 {
+		obj.Company, _ = GetCompanyByID(obj.CompanyID)
+	}
 	id, err = o.Insert(obj)
 	if err != nil {
 		errs = append(errs, err)
@@ -67,6 +69,9 @@ func GetSaleCounterByID(id int64) (obj *SaleCounter, err error) {
 	o := orm.NewOrm()
 	obj = &SaleCounter{ID: id}
 	if err = o.Read(obj); err == nil {
+		if obj.Company != nil {
+			o.Read(obj.Company)
+		}
 		return obj, nil
 	}
 	return nil, err
@@ -104,6 +109,7 @@ func GetAllSaleCounter(query map[string]interface{}, exclude map[string]interfac
 			cond = cond.Or(k, v)
 		}
 	}
+
 	qs = qs.SetCond(cond)
 	// query k=v
 	for k, v := range query {
@@ -111,6 +117,7 @@ func GetAllSaleCounter(query map[string]interface{}, exclude map[string]interfac
 		k = strings.Replace(k, ".", "__", -1)
 		qs = qs.Filter(k, v)
 	}
+
 	//exclude k=v
 	for k, v := range exclude {
 		// rewrite dot-notation to Object__Attribute
@@ -191,6 +198,9 @@ func GetSaleCounterByName(name string) (obj *SaleCounter, err error) {
 	o := orm.NewOrm()
 	obj = &SaleCounter{Name: name}
 	if err = o.Read(obj); err == nil {
+		if obj.Company != nil {
+			o.Read(obj.Company)
+		}
 		return obj, nil
 	}
 	return nil, err

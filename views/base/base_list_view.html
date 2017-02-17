@@ -28,12 +28,6 @@
                     <a href="{{.URL}}?action=table" class="btn btn-default fa fa-list-ul list-button active" data-view-type="list"></a>
                     <a href="{{.URL}}?action=kanban" class="btn btn-default fa fa-th-large list-button " data-view-type="kanban"></a>
                 </div>
-                <!--<div class="btn-group btn-group-sm pull-right">-->
-                <!--<button class="btn btn-default fa fa-list-ul list-button active" data-view-type="list"></button>-->
-                <!--<button class="btn btn-default fa fa-th-large list-button" data-view-type="kanban"></button>-->
-                <!--<button class="btn btn-default fa fa-edit list-button" data-view-type="form"></button>
-                    <button class="btn btn-default fa fa-tree" tdata-view-type="graph"></button>-->
-                <!--</div>-->
             </div>
             <div class="row search-action">
                 <div class="panel-group panel-list-info" id="accordion" role="tablist" aria-multiselectable="false">
@@ -55,11 +49,9 @@
                     </div>
                 </div>
             </div>
-            {{if .ViewType}} {{if eq .ViewType "table"}}
             <div class="row" id="display-table">
                 <table id='{{.tableId}}' class="table-diplay-info table table-bordered table-hover table-condensed table-striped"></table>
             </div>
-            {{end}} {{end}}
             <!-- Modal -->
             <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel" aria-hidden="true">
                 <div class="modal-dialog">

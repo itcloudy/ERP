@@ -3,6 +3,7 @@ package sale
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"goERP/controllers/base"
 	md "goERP/models"
 	"strconv"
@@ -52,8 +53,12 @@ func (ctl *SaleCounterController) Get() {
 		ctl.Edit()
 	case "detail":
 		ctl.Detail()
-	default:
+	case "table":
 		ctl.GetList()
+	case "kanban":
+		ctl.GetKanban()
+	default:
+		ctl.GetKanban()
 	}
 	// 标题合成
 	b := bytes.Buffer{}
@@ -64,6 +69,12 @@ func (ctl *SaleCounterController) Get() {
 	ctl.URL = "/sale/counter/"
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuSaleCounterActive"] = "active"
+}
+func (ctl *SaleCounterController) GetKanban() {
+
+	ctl.PageAction = "看板"
+	ctl.Data["KanbanId"] = "kanban-sale-counter"
+	ctl.TplName = "base/base_kanban_view.html"
 }
 func (ctl *SaleCounterController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
@@ -133,26 +144,36 @@ func (ctl *SaleCounterController) Create() {
 	ctl.TplName = "sale/sale_counter_form.html"
 }
 func (ctl *SaleCounterController) Validator() {
-	name := ctl.GetString("name")
+	name := ctl.GetString("Name")
+
 	recordID, _ := ctl.GetInt64("recordID")
 	name = strings.TrimSpace(name)
 	result := make(map[string]bool)
-	obj, err := md.GetSaleCounterByName(name)
-	if err != nil {
-		result["valid"] = true
-	} else {
-		if obj.Name == name {
-			if recordID == obj.ID {
+	query := make(map[string]interface{})
+	exclude := make(map[string]interface{})
+	cond := make(map[string]map[string]interface{})
+	fields := make([]string, 0, 0)
+	sortby := make([]string, 0, 0)
+	order := make([]string, 0, 0)
+	query["Name"] = name
+	if company, err := ctl.GetInt64("company"); err == nil {
+		query["Company.Id"] = company
+	}
+	if _, arrs, err := md.GetAllSaleCounter(query, exclude, cond, fields, sortby, order, 0, 2); err == nil {
+		if len(arrs) == 1 {
+			if arrs[0].ID == recordID {
 				result["valid"] = true
 			} else {
 				result["valid"] = false
 			}
-
 		} else {
 			result["valid"] = true
 		}
-
+	} else {
+		fmt.Println(err)
+		result["valid"] = true
 	}
+
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
@@ -175,6 +196,12 @@ func (ctl *SaleCounterController) SaleCounterList(query map[string]interface{}, 
 			oneLine["Description"] = line.Description
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			if line.Company != nil {
+				company := make(map[string]interface{})
+				company["id"] = line.Company.ID
+				company["name"] = line.Company.Name
+				oneLine["Company"] = company
+			}
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
@@ -212,28 +239,6 @@ func (ctl *SaleCounterController) PostList() {
 }
 
 func (ctl *SaleCounterController) GetList() {
-	viewType := ctl.Input().Get("view")
-	if viewType == "" {
-		viewType = "table"
-	}
-	ctl.Data["ViewType"] = viewType
-	switch viewType {
-	case "table":
-		ctl.table()
-	case "kanban":
-		ctl.kanban()
-	default:
-		ctl.table()
-	}
-
-}
-func (ctl *SaleCounterController) kanban() {
-	ctl.PageAction = "看板"
-	ctl.Layout = "base/base_list_view.html"
-	ctl.TplName = "sale/sale_counter_list_search.html"
-
-}
-func (ctl *SaleCounterController) table() {
 	ctl.PageAction = "列表"
 	ctl.Data["tableId"] = "table-sale-counter"
 	ctl.Layout = "base/base_list_view.html"
