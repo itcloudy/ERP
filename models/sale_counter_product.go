@@ -19,7 +19,7 @@ type SaleCounterProduct struct {
 	UpdateDate       time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	SaleCounter      *SaleCounter     `orm:"rel(fk)"`                              //柜台
 	ProductProducts  *ProductProduct  `orm:"rel(fk);null"`                         //产品规格
-	ProductTemplates *ProductTemplate `orm:"rel(fk)"`                              //产品款式
+	ProductTemplates *ProductTemplate `orm:"rel(fk);null"`                         //产品款式
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时

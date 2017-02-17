@@ -66,7 +66,6 @@ $(function() {
         });
     }
     var displaySaleCounterKanban = function(el, dataArr) {
-        console.log(dataArr);
         var innerHtml = "";
         for (var i = 0, len = dataArr.length; i < len; i++) {
 
