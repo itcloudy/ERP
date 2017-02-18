@@ -41,13 +41,17 @@ $.extend($.fn.bootstrapTable.defaults, {
     //     $element.css("background-color", "green");
     // }, //单击row事件
     onCheck: function(row, $el) {
-        console.log($el[0].parentNode);
+        $($el[0].parentNode.parentNode).addClass("danger");
     },
-    onUncheck: function(row) {
-
+    onUncheck: function(row, $el) {
+        $($el[0].parentNode.parentNode).removeClass("danger");
     },
-    onCheckAll: function(rows) {},
-    onUncheckAll: function(rows) {}
+    onCheckAll: function(rows) {
+        $("#display-table tbody>tr").addClass("danger");
+    },
+    onUncheckAll: function(rows) {
+        $("#display-table tbody>tr").removeClass("danger");
+    }
 });
 var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
     var $tableNode = $(selectId);
