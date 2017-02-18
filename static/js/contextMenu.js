@@ -41,6 +41,11 @@ $(function() {
                                         toastr.error("修改失败", "错误");
                                         return;
                                     } else {
+                                        if (key == "activeTrue") {
+                                            $("#table-product-product tr.selected td.data-active .fa-remove").removeClass("fa-remove").addClass("fa-check");
+                                        } else {
+                                            $("#table-product-product tr.selected td.data-active .fa-check").removeClass("fa-check").addClass("fa-remove");
+                                        }
                                         toastr.success("请刷新页面更新数据", "修改成功");
                                         return;
                                     }
@@ -56,8 +61,6 @@ $(function() {
                     } else {
                         $selector.tableExport({
                             type: key,
-                            tableName: "asdf",
-                            ignoreColumn: ["action", "操作"],
                             escape: false
                         });
                     }
@@ -67,8 +70,8 @@ $(function() {
                         icon: "edit",
                         name: "修改",
                         items: {
-                            "activeFalse": { name: "下架" },
                             "activeTrue": { name: "上架" },
+                            "activeFalse": { name: "下架" }
                         }
                     },
                     "export": {

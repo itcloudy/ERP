@@ -158,6 +158,7 @@ displayTable("#table-user", "/user/", [
         title: "有效",
         field: 'Active',
         sortable: true,
+        class: "data-active",
         order: "desc",
         align: "center",
         formatter: function cellStyle(value, row, index) {
@@ -204,11 +205,6 @@ displayTable("#table-user", "/user/", [
         formatter: function cellStyle(value, row, index) {
             var html = '';
             var url = "/user/";
-            if (row.Active) {
-                html += "<a href='" + url + row.ID + "?action=invalid' class='btn btn-xs btn-default table-action '><i class='fa fa-close'>无效</i></a>";
-            } else {
-                html += "<a href='" + url + row.ID + "?action=active' class='btn btn-xs btn-default table-action '><i class='fa fa-check'>有效</i></a>";
-            }
             html += "<a href='" + url + row.ID + "?action=edit' class='btn btn-xs btn-default table-action '><i class='fa fa-pencil'>编辑</i></a>";
             html += "<a href='" + url + row.ID + "?action=detail' class='btn btn-xs btn-default table-action '><i class='fa fa-external-link'>详情</i></a>";
             return html;
@@ -603,6 +599,7 @@ displayTable("#table-sequence", "/sequence", [
         field: 'Active',
         sortable: true,
         order: "desc",
+        class: "data-active",
         align: "center",
         formatter: function cellStyle(value, row, index) {
             var html = "";
@@ -883,6 +880,7 @@ displayTable("#table-product-template", "/product/template/", [
         sortable: true,
         order: "desc",
         align: "center",
+        class: "data-active",
         formatter: function cellStyle(value, row, index) {
             var html = "";
             if (row.Active) {
@@ -1049,6 +1047,7 @@ displayTable("#table-product-product", "/product/product/", [
         field: 'Active',
         sortable: true,
         order: "desc",
+        class: "data-active",
         align: "center",
         formatter: function cellStyle(value, row, index) {
             var html = "";
