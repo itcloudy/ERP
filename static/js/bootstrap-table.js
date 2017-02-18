@@ -39,7 +39,15 @@ $.extend($.fn.bootstrapTable.defaults, {
     // onClickRow: function(row, $element) {
     //     //$element是当前tr的jquery对象
     //     $element.css("background-color", "green");
-    // },//单击row事件
+    // }, //单击row事件
+    onCheck: function(row, $el) {
+        console.log($el[0].parentNode);
+    },
+    onUncheck: function(row) {
+
+    },
+    onCheckAll: function(rows) {},
+    onUncheckAll: function(rows) {}
 });
 var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
     var $tableNode = $(selectId);
@@ -123,7 +131,12 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
         options.detailView = true;
         options.onExpandRow = onExpandRow;
     }
+
     $tableNode.bootstrapTable(options);
+    // 选中行颜色变化
+    // $("#display-table .bs-checkbox").on('click', function(e) {
+    //     console.log(e);
+    // });
 };
 //用户表
 displayTable("#table-user", "/user/", [

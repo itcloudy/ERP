@@ -70,12 +70,12 @@ $(function() {
                         icon: "edit",
                         name: "修改",
                         items: {
-                            "activeTrue": { name: "上架" },
-                            "activeFalse": { name: "下架" }
+                            "activeTrue": { icon: "fa-arrow-up", name: "上架" },
+                            "activeFalse": { icon: "fa-arrow-down", name: "下架" }
                         }
                     },
                     "export": {
-                        icon: "fa-chevron-right",
+                        icon: "fa-download",
                         name: "导出",
                         items: {
                             "excel": { icon: "fa-file-excel-o", name: "Excel" },

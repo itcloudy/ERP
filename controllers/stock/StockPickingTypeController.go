@@ -43,6 +43,8 @@ func (ctl *StockPickingTypeController) Get() {
 		ctl.GetList()
 	case "kanban":
 		ctl.GetKanban()
+	case "flowChart":
+		ctl.GetFlowChart()
 	default:
 		ctl.GetKanban()
 	}
@@ -55,6 +57,13 @@ func (ctl *StockPickingTypeController) Get() {
 	ctl.URL = "/stock/picking/type/"
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuStockPickingTypeActive"] = "active"
+
+}
+func (ctl *StockPickingTypeController) GetFlowChart() {
+
+	ctl.PageAction = "流程图"
+	ctl.Data["flowChartId"] = "flow-chart-stock-picking-type"
+	ctl.TplName = "base/base_flow_view.html"
 
 }
 func (ctl *StockPickingTypeController) GetKanban() {

@@ -27,6 +27,9 @@
                 <div class="btn-group btn-group-sm pull-right">
                     <a href="{{.URL}}?action=table" class="btn btn-default fa fa-list-ul list-button active" data-view-type="list"></a>
                     <a href="{{.URL}}?action=kanban" class="btn btn-default fa fa-th-large list-button " data-view-type="kanban"></a>
+                    {{if eq .URL "/stock/picking/type/"}}
+                    <a href="{{.URL}}?action=flowChart" class="btn btn-default fa fa-exchange list-button" data-view-type="flowChart"></a>
+                    {{end}}
                 </div>
             </div>
             <div class="row search-action">
