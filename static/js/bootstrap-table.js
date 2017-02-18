@@ -105,7 +105,6 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
                     }
                 } else {
                     var val = $(self).val();
-                    console.log(self.name + ":" + val);
                     if (val != "") {
                         // 若为null跳出此次循环
                         if (val === null) {
@@ -128,7 +127,7 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
 };
 //用户表
 displayTable("#table-user", "/user/", [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "用户名", field: 'Name', sortable: true, order: "desc" },
     { title: "中文名称", field: 'NameZh', sortable: true, order: "desc" },
     { title: "部门", field: 'Department', sortable: true, order: "desc", filter: { type: "select", data: [] } },
@@ -246,7 +245,7 @@ displayTable("#table-user", "/user/", [
 });
 // 公司
 displayTable("#table-company", '/company/', [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "公司名称", field: 'Name', sortable: true, order: "desc" },
     { title: "公司编码", field: 'Code', sortable: true, order: "desc" },
     { title: "母公司", field: 'Parent', sortable: true, order: "desc" },
@@ -266,7 +265,7 @@ displayTable("#table-company", '/company/', [
 ]);
 // 部门
 displayTable("#table-department", '/department/', [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "部门名称", field: 'Name', sortable: true, order: "desc" },
     {
         title: "负责人",
@@ -296,7 +295,7 @@ displayTable("#table-department", '/department/', [
 ]);
 // 团队
 displayTable("#table-team", '/team/', [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "团队名称", field: 'Name', sortable: true, order: "desc" },
     {
         title: "负责人",
@@ -340,7 +339,7 @@ displayTable("#table-team", '/team/', [
 ]);
 // 职位
 displayTable("#table-position", '/position/', [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "职位名称", field: 'Name', sortable: true, order: "desc" },
     { title: "职位描述", field: 'Description' },
     {
@@ -359,7 +358,7 @@ displayTable("#table-position", '/position/', [
 ]);
 //系统资源
 displayTable("#table-source", "/source/", [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "资源名称", field: 'Name', sortable: true, order: "desc" },
     { title: "Model名称", field: 'ModelName', sortable: true, order: "desc" },
     {
@@ -377,7 +376,7 @@ displayTable("#table-source", "/source/", [
 ]);
 //角色
 displayTable("#table-role", "/role/", [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "角色名称", field: 'Name', sortable: true, order: "desc" },
     {
         title: "角色用户",
@@ -420,7 +419,7 @@ displayTable("#table-role", "/role/", [
 ]);
 //权限
 displayTable("#table-permission", "/permission/", [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "权限名称", field: 'Name', sortable: true, order: "desc" },
     { title: "资源名称", field: 'Source', sortable: true, order: "desc" },
     {
@@ -535,7 +534,7 @@ displayTable("#table-permission", "/permission/", [
     }
 ]);
 displayTable("#table-menu", '/menu/', [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "菜单名", field: 'Name', sortable: true, order: "desc" },
     { title: "菜单唯一标识", field: 'Identity', sortable: true, order: "desc" },
     {
@@ -567,7 +566,7 @@ displayTable("#table-menu", '/menu/', [
 ]);
 //登录记录表
 displayTable("#table-record", "/record/", [
-    { title: "全选", field: 'Id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "用户名", field: 'Name', sortable: true, order: "desc" },
     { title: "邮箱", field: 'Email', sortable: true, order: "desc" },
     { title: "手机号码", field: 'Mobile', sortable: true, order: "desc" },
@@ -593,7 +592,7 @@ displayTable("#table-record", "/record/", [
 ]);
 // 序号管理
 displayTable("#table-sequence", "/sequence", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "序号名称", field: 'Name', sortable: true, order: "desc" },
     { title: "表名称", field: "StructName", sortable: true, order: "desc" },
     { title: "前缀", field: "Prefix", sortable: true, order: "desc" },
@@ -645,7 +644,7 @@ displayTable("#table-sequence", "/sequence", [
 ]);
 //国家表
 displayTable("#table-address-country", "/address/country/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "国家", field: 'Name', sortable: true, order: "desc" },
     {
         title: "操作",
@@ -662,7 +661,7 @@ displayTable("#table-address-country", "/address/country/", [
 ]);
 //省份表
 displayTable("#table-address-province", "/address/province/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "省份", field: 'Name', sortable: true, order: "desc" },
     { title: "国家", field: 'Country', sortable: true, order: "desc" },
     {
@@ -681,7 +680,7 @@ displayTable("#table-address-province", "/address/province/", [
 
 //城市表
 displayTable("#table-address-city", "/address/city/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "城市", field: 'Name', sortable: true, order: "desc" },
     { title: "省份", field: 'Province', sortable: true, order: "desc" },
     { title: "国家", field: 'Country', sortable: true, order: "desc" },
@@ -700,7 +699,7 @@ displayTable("#table-address-city", "/address/city/", [
 ]);
 //区县表
 displayTable("#table-address-district", "/address/district/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "区县", field: 'Name', sortable: true, order: "desc" },
     { title: "城市", field: 'City', sortable: true, order: "desc" },
     { title: "省份", field: 'Province', sortable: true, order: "desc" },
@@ -720,7 +719,7 @@ displayTable("#table-address-district", "/address/district/", [
 ]);
 // 合作伙伴管理
 displayTable("#table-partner", '/partner/', [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "名称", field: 'Name', sortable: true, order: "desc" },
     {
         title: "是公司",
@@ -790,7 +789,7 @@ displayTable("#table-partner", '/partner/', [
 ]);
 //产品属性
 displayTable("#table-product-attribute", "/product/attribute/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "属性名", field: 'Name', sortable: true, order: "desc" },
     { title: "属性编码", field: 'Code', sortable: true, order: "desc" },
     { title: "属性序号", field: 'Sequence', sortable: true, order: "desc" },
@@ -825,7 +824,7 @@ displayTable("#table-product-attribute", "/product/attribute/", [
 ]);
 // 产品柜台
 displayTable("#table-sale-counter", "/sale/counter/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "柜台名称", field: 'Name', sortable: true, order: "desc" },
     { title: "产品款式数量", field: 'TemplatesCount', align: "center" },
     { title: "产品规格数量", field: 'ProductsCount', align: "center" },
@@ -845,7 +844,7 @@ displayTable("#table-sale-counter", "/sale/counter/", [
 ]);
 //产品类别
 displayTable("#table-product-category", "/product/category/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "类别名", field: 'name', sortable: true, order: "desc" },
     { title: "上级", field: 'parent', sortable: true, order: "desc" },
     { title: "上级路径", field: 'path', sortable: true, order: "desc" },
@@ -865,7 +864,7 @@ displayTable("#table-product-category", "/product/category/", [
 
 //产品款式
 displayTable("#table-product-template", "/product/template/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "款式编码", field: 'DefaultCode', sortable: true, order: "desc" },
     { title: "款式名称", field: 'Name', sortable: true, order: "desc" },
     {
@@ -984,7 +983,7 @@ displayTable("#table-product-template", "/product/template/", [
 ]);
 //产品款式属性明细
 displayTable("#table-product-attribute-line", "/product/attributeline/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "款式编码", field: 'ProductTemplate.DefaultCode', sortable: true, order: "desc" },
     { title: "产品款式", field: 'ProductTemplate', sortable: true, order: "desc" },
     { title: "属性", field: 'Attribute', align: "center", sortable: true, order: "desc" },
@@ -1009,7 +1008,7 @@ displayTable("#table-product-attribute-line", "/product/attributeline/", [
 
 //产品规格
 displayTable("#table-product-product", "/product/product/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "规格编码", field: 'DefaultCode', sortable: true, order: "desc" },
     { title: "规格名称", field: 'Name', sortable: true, order: "desc" },
     {
@@ -1133,7 +1132,7 @@ displayTable("#table-product-product", "/product/product/", [
 
 //产品属性值
 displayTable("#table-product-attributevalue", "/product/attributevalue/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "属性", field: 'Attribute', sortable: true, order: "desc" },
     { title: "属性值", field: 'Name', align: "center", sortable: true, order: "desc" },
     { title: "产品规格数量", field: 'ProductsCount', align: "center", sortable: true, order: "desc" },
@@ -1152,7 +1151,7 @@ displayTable("#table-product-attributevalue", "/product/attributevalue/", [
 ]);
 //产品单位类别
 displayTable("#table-product-uom-categ", "/product/uomcateg/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "计量单位类别", field: 'name', sortable: true, order: "desc" },
     {
         title: "计量单位",
@@ -1183,7 +1182,7 @@ displayTable("#table-product-uom-categ", "/product/uomcateg/", [
 ]);
 //产品单位
 displayTable("#table-product-uom", "/product/uom/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "计量单位类别", field: 'category', sortable: true, order: "desc" },
     { title: "计量单位", field: 'name', align: "center", sortable: true, order: "desc" },
     { title: "符号", field: 'symbol', align: "center", },
@@ -1227,7 +1226,7 @@ displayTable("#table-product-uom", "/product/uom/", [
     }
 ]);
 displayTable("#table-stock-warehouse", "/stock/warehouse/", [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "所属公司", field: 'Company', sortable: true, order: "desc" },
     { title: "仓库名称", field: 'Name', sortable: true, order: "desc" },
     { title: "仓库编码", field: 'Code', align: "center", sortable: true, order: "desc" },
@@ -1247,7 +1246,7 @@ displayTable("#table-stock-warehouse", "/stock/warehouse/", [
     }
 ]);
 displayTable("#table-stock-picking-type", '/stock/picking/type/', [
-    { title: "全选", field: 'id', checkbox: true, align: "center", valign: "middle" },
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "库位类型", field: 'Name', align: "center", sortable: true, order: "desc" },
     {
         title: "所属仓库",

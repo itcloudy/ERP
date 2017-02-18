@@ -224,7 +224,6 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         if (method.length > 0) {
             requestParams._method = method.val();
         }
-        console.log(12342);
         $.ajax({
             type: httpMethod,
             url: $form.action,

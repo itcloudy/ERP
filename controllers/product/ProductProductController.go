@@ -23,6 +23,8 @@ func (ctl *ProductProductController) Post() {
 		ctl.PostList()
 	case "create":
 		ctl.PostCreate()
+	case "batchUpdate":
+		ctl.PostBatchUpdate()
 	default:
 		ctl.PostList()
 	}
@@ -52,6 +54,44 @@ func (ctl *ProductProductController) Get() {
 	ctl.Data["URL"] = ctl.URL
 	ctl.Data["MenuProductProductActive"] = "active"
 
+}
+
+// PostBatchUpdate 批量操作
+func (ctl *ProductProductController) PostBatchUpdate() {
+	result := make(map[string]interface{})
+	field := ctl.GetString("field")
+	updateFields := make(map[string]interface{})
+	result["code"] = "failed"
+	var ids []int64
+	switch field {
+	case "Active":
+		if active, err := ctl.GetBool("value"); err == nil {
+			updateFields["Active"] = active
+		} else {
+			result["debug"] = err.Error()
+		}
+	}
+	if len(updateFields) > 0 {
+		idsStr := ctl.GetStrings("ids[]")
+		for _, idStr := range idsStr {
+			if id, err := strconv.ParseInt(idStr, 10, 64); err == nil {
+				ids = append(ids, id)
+			}
+		}
+		if len(ids) > 0 {
+			query := make(map[string]interface{})
+			query["Id.in"] = ids
+			if err := md.BatchUpdateProductProduct(query, updateFields); err == nil {
+				result["code"] = "success"
+			} else {
+				result["debug"] = err.Error()
+			}
+		}
+	} else {
+		result["debug"] = "参数不正确，没有可更新的信息"
+	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 }
 func (ctl *ProductProductController) PostCreate() {
 	result := make(map[string]interface{})

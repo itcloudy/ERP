@@ -333,3 +333,17 @@ func DeleteProductProduct(id int64) (err error) {
 	}
 	return
 }
+
+// BatchUpdate 批量更新
+func BatchUpdateProductProduct(query map[string]interface{}, fields map[string]interface{}) (err error) {
+	o := orm.NewOrm()
+	qs := o.QueryTable(new(ProductProduct))
+	// query k=v
+	for k, v := range query {
+		// rewrite dot-notation to Object__Attribute
+		k = strings.Replace(k, ".", "__", -1)
+		qs = qs.Filter(k, v)
+	}
+	_, err = qs.Update(fields)
+	return err
+}
