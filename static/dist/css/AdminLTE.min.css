@@ -54,7 +54,7 @@
      -moz-transition: -moz-transform .3s ease-in-out, margin .3s ease-in-out;
      -o-transition: -o-transform .3s ease-in-out, margin .3s ease-in-out;
      transition: transform .3s ease-in-out, margin .3s ease-in-out;
-     margin-left: 230px;
+     margin-left: 180px;
      z-index: 820
  }
  
@@ -84,10 +84,10 @@
      .sidebar-open .content-wrapper,
      .sidebar-open .right-side,
      .sidebar-open .main-footer {
-         -webkit-transform: translate(230px, 0);
-         -ms-transform: translate(230px, 0);
-         -o-transform: translate(230px, 0);
-         transform: translate(230px, 0)
+         -webkit-transform: translate(180px, 0);
+         -ms-transform: translate(180px, 0);
+         -o-transform: translate(180px, 0);
+         transform: translate(180px, 0)
      }
  }
  
@@ -203,7 +203,7 @@
      -o-transition: margin-left .3s ease-in-out;
      transition: margin-left .3s ease-in-out;
      margin-bottom: 0;
-     margin-left: 230px;
+     margin-left: 180px;
      border: none;
      min-height: 50px;
      border-radius: 0
@@ -314,7 +314,7 @@
      font-size: 20px;
      line-height: 50px;
      text-align: center;
-     width: 230px;
+     width: 180px;
      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
      padding: 0 15px;
      font-weight: 300;
@@ -452,7 +452,7 @@
      left: 0;
      padding-top: 50px;
      min-height: 100%;
-     width: 230px;
+     width: 180px;
      z-index: 810;
      -webkit-transition: -webkit-transform .3s ease-in-out, width .3s ease-in-out;
      -moz-transition: -moz-transform .3s ease-in-out, width .3s ease-in-out;
@@ -470,20 +470,20 @@
  @media (max-width:767px) {
      .main-sidebar,
      .left-side {
-         -webkit-transform: translate(-230px, 0);
-         -ms-transform: translate(-230px, 0);
-         -o-transform: translate(-230px, 0);
-         transform: translate(-230px, 0)
+         -webkit-transform: translate(-180px, 0);
+         -ms-transform: translate(-180px, 0);
+         -o-transform: translate(-180px, 0);
+         transform: translate(-180px, 0)
      }
  }
  
  @media (min-width:768px) {
      .sidebar-collapse .main-sidebar,
      .sidebar-collapse .left-side {
-         -webkit-transform: translate(-230px, 0);
-         -ms-transform: translate(-230px, 0);
-         -o-transform: translate(-230px, 0);
-         transform: translate(-230px, 0)
+         -webkit-transform: translate(-180px, 0);
+         -ms-transform: translate(-180px, 0);
+         -o-transform: translate(-180px, 0);
+         transform: translate(-180px, 0)
      }
  }
  
@@ -692,7 +692,7 @@
      .sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>a>.pull-right-container {
          float: right;
          width: auto!important;
-         left: 200px!important;
+         left: 180px!important;
          top: 10px!important
      }
      .sidebar-mini.sidebar-collapse .sidebar-menu>li:hover>a>.pull-right-container>.label:not(:first-of-type) {
@@ -765,8 +765,8 @@
  .control-sidebar-bg,
  .control-sidebar {
      top: 0;
-     right: -230px;
-     width: 230px;
+     right: -180px;
+     width: 180px;
      -webkit-transition: right .3s ease-in-out;
      -o-transition: right .3s ease-in-out;
      transition: right .3s ease-in-out
@@ -802,7 +802,7 @@
      .control-sidebar-open .content-wrapper,
      .control-sidebar-open .right-side,
      .control-sidebar-open .main-footer {
-         margin-right: 230px
+         margin-right: 180px
      }
  }
  
@@ -1111,7 +1111,7 @@
  .navbar-nav>.notifications-menu>.dropdown-menu>li .menu,
  .navbar-nav>.messages-menu>.dropdown-menu>li .menu,
  .navbar-nav>.tasks-menu>.dropdown-menu>li .menu {
-     max-height: 200px;
+     max-height: 180px;
      margin: 0;
      padding: 0;
      list-style: none;
@@ -1540,7 +1540,7 @@
  .progress.vertical {
      position: relative;
      width: 30px;
-     height: 200px;
+     height: 180px;
      display: inline-block;
      margin-right: 10px
  }
@@ -2299,7 +2299,7 @@
  }
  
  .box-input {
-     max-width: 200px
+     max-width: 180px
  }
  
  .modal .panel-body {
@@ -3549,7 +3549,7 @@
  
  .mailbox-attachments li {
      float: left;
-     width: 200px;
+     width: 180px;
      border: 1px solid #eee;
      margin-bottom: 10px;
      margin-right: 10px

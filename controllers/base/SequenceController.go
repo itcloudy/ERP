@@ -162,6 +162,9 @@ func (ctl *SequenceController) sequenceList(query map[string]interface{}, exclud
 			oneLine["Current"] = line.Current
 			oneLine["Padding"] = line.Padding
 			oneLine["StructName"] = line.StructName
+			if line.Company != nil {
+				oneLine["Company"] = line.Company.Name
+			}
 			oneLine["Active"] = line.Active
 			oneLine["IsDefault"] = line.IsDefault
 			tableLines = append(tableLines, oneLine)

@@ -113,7 +113,7 @@ func AddProductTemplate(obj *ProductTemplate, addUser *User) (id int64, err erro
 		obj.SecondPurchaseUom, _ = GetProductUomByID(obj.SecondPurchaseUomID)
 	}
 	// 获得款式产品编码
-	obj.DefaultCode, _ = GetNextSequece(reflect.Indirect(reflect.ValueOf(obj)).Type().Name())
+	obj.DefaultCode, _ = GetNextSequece(reflect.Indirect(reflect.ValueOf(obj)).Type().Name(), addUser.Company.ID)
 	if id, err = o.Insert(obj); err == nil {
 		obj.ID = id
 		if len(obj.ProductAttributeLines) > 0 {

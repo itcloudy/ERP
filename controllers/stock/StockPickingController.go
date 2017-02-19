@@ -3,6 +3,7 @@ package stock
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"goERP/controllers/base"
 	md "goERP/models"
 	"strconv"
@@ -28,14 +29,18 @@ func (ctl *StockPickingController) Post() {
 }
 func (ctl *StockPickingController) Get() {
 	direction := ctl.Input().Get("direction")
+	fmt.Println(direction)
 	ctl.Data["Direction"] = direction
 	switch direction {
-	case "in":
-		ctl.PageName = "入库管理"
-		ctl.Data["MenuStockPickingInActive"] = "active"
-	case "out":
-		ctl.PageName = "出库管理"
-		ctl.Data["MenuStockPickingOutActive"] = "active"
+	case "incoming":
+		ctl.PageName = "入库单管理"
+		ctl.Data["MenuStockPickingIncomingActive"] = "active"
+	case "outgoing":
+		ctl.PageName = "出库单管理"
+		ctl.Data["MenuStockPickingOutgoingActive"] = "active"
+	case "internal":
+		ctl.PageName = "调拨单管理"
+		ctl.Data["MenuStockPickingInternalActive"] = "active"
 	}
 	ctl.URL = "/stock/picking/"
 	ctl.Data["URL"] = ctl.URL

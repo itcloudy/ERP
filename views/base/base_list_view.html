@@ -22,7 +22,7 @@
             </div>
             {{.xsrf}}
             <div class="row title-action">
-                <a href="{{.URL}}?action=create" type="buttom" class="btn btn-success fa fa-plus pull-left">&nbsp新建</a>
+                <a href="{{.URL}}?action=create&direction={{.Direction}}" type="buttom" class="btn btn-success fa fa-plus pull-left">&nbsp新建</a>
                 <a type="button" data-toggle="modal" data-target="#importModal" class="btn btn-warning fa fa-mail-reply pull-left">&nbsp导入</a>
                 <div class="btn-group btn-group-sm pull-right">
                     <a href="{{.URL}}?action=table" class="btn btn-default fa fa-list-ul list-button active" data-view-type="list"></a>

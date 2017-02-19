@@ -19,6 +19,7 @@ type Sequence struct {
 	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Company    *Company  `orm:"rel(fk)"`                              //公司
 	Name       string    `orm:"unique" json:"Name"`                   //序号名称
 	Prefix     string    `orm:"unique" json:"Prefix"`                 //序号前缀
 	Current    int64     `json:"Current"`                             //当前序号
@@ -29,7 +30,7 @@ type Sequence struct {
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
-
+	CompanyID    int64    `orm:"-" json:"Company"`
 }
 
 func init() {
@@ -40,14 +41,14 @@ func (u *Sequence) TableName() string {
 }
 
 // GetNextSequece获得下一个序号
-func GetNextSequece(structName string) (stStr string, errs []error) {
+func GetNextSequece(structName string, companyId int64) (stStr string, errs []error) {
 	o := orm.NewOrm()
 	var (
 		err      error
 		sequence Sequence
 	)
 	cond := orm.NewCondition()
-	cond = cond.And("StructName", structName).And("active", true).And("IsDefault", true)
+	cond = cond.And("StructName", structName).And("active", true).And("IsDefault", true).And("company__id", companyId)
 	qs := o.QueryTable(&sequence)
 	qs = qs.SetCond(cond)
 	if err = qs.One(&sequence); err == nil {

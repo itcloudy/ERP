@@ -224,13 +224,12 @@ func (ctl *UserController) userList(query map[string]interface{}, exclude map[st
 			oneLine["NameZh"] = user.NameZh
 			if user.Department != nil {
 				oneLine["Department"] = user.Department.Name
-			} else {
-				oneLine["Department"] = "-"
 			}
 			if user.Position != nil {
 				oneLine["Position"] = user.Position.Name
-			} else {
-				oneLine["Position"] = "-"
+			}
+			if user.Company != nil {
+				oneLine["Company"] = user.Company.Name
 			}
 			roleMapValues := make(map[int64]string)
 			roles := user.Roles

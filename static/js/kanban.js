@@ -12,7 +12,7 @@ $(function() {
             } else if (dataArr[i].Code == "internal") {
                 type = "内部调拨";
             }
-            innerHtml += '<div class="col-md-3">';
+            innerHtml += '<div class="col-md-4">';
             innerHtml += '<div class="box box-success">';
             innerHtml += '<div class="box-header with-border">';
             innerHtml += '<h3 class="box-title pull-left"><a class="text-primary" href="/stock/warehouse/' + dataArr[i].WareHouse.id + '?action=detail">' + dataArr[i].WareHouse.name + '[' + type + ']' + ':</a></h3>';

@@ -9,10 +9,8 @@
             <div class="pull-left info">
                 {{if .LastLogin}}
                 <p>{{i18n .Lang "global.lastLoginTime"}}</p>
-                <p>{{dateformat .LastLogin "2006-01-02 15:04:05"}}</p>
-                {{else}}
-                <p>{{i18n .Lang "global.firstLogin"}}</p>
-                {{end}}
+                <a href="#">{{dateformat .LastLogin "2006-01-02 15:04:05"}}</a> {{else}}
+                <a href="#">{{i18n .Lang "global.firstLogin"}}</a> {{end}}
             </div>
         </div>
         <!-- sidebar menu: : style can be found in sidebar.less -->
@@ -127,8 +125,9 @@
                 <ul class="treeview-menu">
                     <li class="{{.MenuStockWarehouseActive}}"><a href="/stock/warehouse/"><i class="fa fa-bars"></i>仓库管理</a></li>
                     <li class="{{.MenuStockPickingTypeActive}}"><a href="/stock/picking/type/"><i class="fa fa-bars"></i>库位类型</a></li>
-                    <!--<li class="{{.MenuStockPickingInActive}}"><a href="/stock/picking/?direction=out"><i class="fa fa-bars"></i>出库单</a></li>-->
-                    <!--<li class="{{.MenuStockPickingOutActive}}"><a href="/stock/picking/?direction=in"><i class="fa fa-bars"></i>入库单</a></li>-->
+                    <li class="{{.MenuStockPickingOutgoingActive}}"><a href="/stock/picking/?direction=outgoing"><i class="fa fa-bars"></i>出库单</a></li>
+                    <li class="{{.MenuStockPickingIncomingActive}}"><a href="/stock/picking/?direction=incoming"><i class="fa fa-bars"></i>入库单</a></li>
+                    <li class="{{.MenuStockPickingInternalActive}}"><a href="/stock/picking/?direction=internal"><i class="fa fa-bars"></i>调拨单</a></li>
                     <li class="{{.MenuStockReportActive}}"><a href="#"><i class="fa fa-pie-chart"></i>库存报表</a></li>
                 </ul>
             </li>

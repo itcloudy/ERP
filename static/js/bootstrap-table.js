@@ -147,6 +147,7 @@ displayTable("#table-user", "/user/", [
     { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "用户名", field: 'Name', sortable: true, order: "desc" },
     { title: "中文名称", field: 'NameZh', sortable: true, order: "desc" },
+    { title: "所属公司", field: 'Company', sortable: true, order: "desc" },
     { title: "部门", field: 'Department', sortable: true, order: "desc", filter: { type: "select", data: [] } },
     { title: "职位", field: 'Position', sortable: true, order: "desc", filter: { type: "select", data: [] } },
     { title: "邮箱", field: 'Email', sortable: true, order: "desc" },
@@ -184,32 +185,6 @@ displayTable("#table-user", "/user/", [
                 html = '<i class="fa fa-check"></i><span style="display:none;">是<span>';
             } else {
                 html = '<i class="fa fa-remove"></i><span style="display:none;">否<span>';
-            }
-            return html;
-        }
-    },
-    {
-        title: "角色",
-        field: 'Roles',
-        formatter: function cellStyle(value, row, index) {
-            var datas = row.Roles;
-            var html = "";
-            var url = "/role/";
-            for (key in datas) {
-                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + '<span style="display:none;">;<span>' + "</a>";
-            }
-            return html;
-        }
-    },
-    {
-        title: "团队",
-        field: 'Teams',
-        formatter: function cellStyle(value, row, index) {
-            var datas = row.Teams;
-            var html = "";
-            var url = "/team/";
-            for (key in datas) {
-                html += "<a  class='display-block label label-success' href='" + url + key + "?action=detail'>" + datas[key] + '<span style="display:none;">;<span>' + "</a>";
             }
             return html;
         }
@@ -606,6 +581,7 @@ displayTable("#table-record", "/record/", [
 // 序号管理
 displayTable("#table-sequence", "/sequence", [
     { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
+    { title: "所属公司", field: 'Company', sortable: true, order: "desc" },
     { title: "序号名称", field: 'Name', sortable: true, order: "desc" },
     { title: "表名称", field: "StructName", sortable: true, order: "desc" },
     { title: "前缀", field: "Prefix", sortable: true, order: "desc" },
