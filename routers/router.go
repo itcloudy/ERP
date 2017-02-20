@@ -111,5 +111,7 @@ func init() {
 	beego.Router("/stock/picking/type/?:id", &stock.StockPickingTypeController{})
 	//  仓库单据管理
 	beego.Router("/stock/picking/?:id", &stock.StockPickingController{})
+	// 库位管理
+	beego.Router("/stock/location/?:id", &stock.StockLocationController{})
 
 }

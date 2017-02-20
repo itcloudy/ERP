@@ -18,6 +18,7 @@ type StockPickingType struct {
 	CreateDate time.Time         `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time         `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Name       string            `orm:"unique" json:"Name"`                   //分拣类型名称
+	Active     bool              `orm:"default(true)" json:"Active"`          //是否有效
 	Code       string            `json:"Code"`                                //移库类型 incoming/outgoing/internal
 	WareHouse  *StockWarehouse   `orm:"rel(fk)"`                              //仓库
 	NextStep   *StockPickingType `orm:"null;rel(one)"`                        //下一步

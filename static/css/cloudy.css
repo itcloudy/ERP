@@ -13,7 +13,6 @@
 }
 
 
-
 /*form表单状态*/
 
 .navbar-form-top {
@@ -95,6 +94,16 @@
 
 .step li a:before {
     content: "";
+}
+
+.title-action div {
+    width: auto;
+    display: inline-block !important;
+    display: inline;
+}
+
+.title-action .text-center {
+    margin: 0 auto
 }
 
 

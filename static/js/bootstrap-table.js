@@ -197,8 +197,8 @@ displayTable("#table-user", "/user/", [
         formatter: function cellStyle(value, row, index) {
             var html = '';
             var url = "/user/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='btn btn-xs btn-default table-action '><i class='fa fa-pencil'>编辑</i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='btn btn-xs btn-default table-action '><i class='fa fa-external-link'>详情</i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='btn btn-xs btn-default table-action '><i class='fa fa-pencil'>编辑</i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='btn btn-xs btn-default table-action '><i class='fa fa-external-link'>详情</i></a>";
             return html;
         }
     }
@@ -245,8 +245,8 @@ displayTable("#table-company", '/company/', [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/company/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -275,8 +275,8 @@ displayTable("#table-department", '/department/', [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/department/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -319,8 +319,8 @@ displayTable("#table-team", '/team/', [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/team/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -337,8 +337,8 @@ displayTable("#table-position", '/position/', [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/position/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -356,8 +356,8 @@ displayTable("#table-source", "/source/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/source/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -399,8 +399,8 @@ displayTable("#table-role", "/role/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/role/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -515,8 +515,8 @@ displayTable("#table-permission", "/permission/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/permission/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -546,8 +546,8 @@ displayTable("#table-menu", '/menu/', [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/menu/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -626,8 +626,8 @@ displayTable("#table-sequence", "/sequence", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/sequence/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -643,8 +643,8 @@ displayTable("#table-address-country", "/address/country/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/address/country/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -661,8 +661,8 @@ displayTable("#table-address-province", "/address/province/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/address/province/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -681,8 +681,8 @@ displayTable("#table-address-city", "/address/city/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/address/city/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -701,8 +701,8 @@ displayTable("#table-address-district", "/address/district/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/address/district/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -771,8 +771,8 @@ displayTable("#table-partner", '/partner/', [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/partner/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -806,8 +806,8 @@ displayTable("#table-product-attribute", "/product/attribute/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/product/attribute/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -826,8 +826,8 @@ displayTable("#table-sale-counter", "/sale/counter/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/sale/counter/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -845,8 +845,8 @@ displayTable("#table-product-category", "/product/category/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/product/category/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -965,8 +965,8 @@ displayTable("#table-product-template", "/product/template/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/product/template/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -1115,8 +1115,8 @@ displayTable("#table-product-product", "/product/product/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/product/product/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -1135,8 +1135,8 @@ displayTable("#table-product-attributevalue", "/product/attributevalue/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/product/attributevalue/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -1166,8 +1166,8 @@ displayTable("#table-product-uom-categ", "/product/uomcateg/", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/product/uomcateg/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -1207,12 +1207,12 @@ displayTable("#table-product-uom", "/product/uom/", [
             var html = "";
             var url = "/product/uom/";
             if (row.active) {
-                html += "<a href='" + url + row.ID + "?action=invalid' class='table-action btn btn-xs btn-default'>无效<i class='fa fa-close'></i></a>";
+                html += "<a href='" + url + row.id + "?action=invalid' class='table-action btn btn-xs btn-default'>无效<i class='fa fa-close'></i></a>";
             } else {
-                html += "<a href='" + url + row.ID + "?action=active' class='table-action btn btn-xs btn-default'>有效<i class='fa fa-check'></i></a>";
+                html += "<a href='" + url + row.id + "?action=active' class='table-action btn btn-xs btn-default'>有效<i class='fa fa-check'></i></a>";
             }
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -1228,11 +1228,11 @@ displayTable("#table-stock-warehouse", "/stock/warehouse/", [
         align: "center",
         field: 'action',
         formatter: function cellStyle(value, row, index) {
-
+            console.log(row);
             var html = "";
             var url = "/stock/warehouse/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
@@ -1343,8 +1343,8 @@ displayTable("#table-stock-picking-type", '/stock/picking/type/', [
 
             var html = "";
             var url = "/stock/picking/type/";
-            html += "<a href='" + url + row.ID + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
-            html += "<a href='" + url + row.ID + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;
         }
     }
