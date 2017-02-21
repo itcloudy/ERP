@@ -31,7 +31,7 @@ $(function() {
             radioClass: 'iradio_square-green',
             increaseArea: '20%',
         });
-        if ($(el).data("oldvalue") === false) {
+        if ($(el).data("oldvalue") === "false" || $(el).data("oldvalue") === "" || $(el).data("oldvalue") == undefined) {
             $(el).iCheck("uncheck");
         } else {
             $(el).iCheck("check");

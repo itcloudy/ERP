@@ -33,6 +33,10 @@
     margin-bottom: 0px;
 }
 
+.form-control {
+    border-radius: 4px 4px;
+}
+
 
 /*form页面状态控制*/
 

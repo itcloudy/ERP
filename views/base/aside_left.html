@@ -25,7 +25,7 @@
                     <li class="treeview">
                         <a href="#"><i class="fa fa-child" aria-hidden="true"></i></i>个人资料</a>
                         <ul class="treeview-menu">
-                            <li class="{{.MenuSelfInfoActive}}"><a href="/user/{{.user.ID}}?action=detail"><i class="fa fa-user-secret" aria-hidden="true"></i>个人信息</a></li>
+                            <li class="{{.MenuSelfInfoActive}}"><a href="/user/{{.LoginUser.ID}}?action=detail"><i class="fa fa-user-secret" aria-hidden="true"></i>个人信息</a></li>
                             <li class="{{.MenuChangePwdActive}}"><a href="/user/{{.user.ID}}?action=changepasswd"><i class="fa fa-unlock"></i>密码修改</a></li>
                             <li class="{{.MenuRecordActive}}"><a href="/record/"><i class="fa fa-list-ol"></i>登录记录</a></li>
                         </ul>

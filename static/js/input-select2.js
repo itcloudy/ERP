@@ -119,8 +119,10 @@ $(function() {
     selectStaticData(".select-product-type", [{ id: "stock", name: '库存商品' }, { id: "consume", name: '消耗品' }, { id: "service", name: '服务' }]); // 产品类型
     select2AjaxData(".select-product-uom", "/product/uom/?action=search"); // 选择产品单位
     select2AjaxData(".select-product-uom-category", "/product/uomcateg/?action=search"); //计量单位类别
-    select2AjaxData(".select-stock-picking-type", '/stock/picking/type/?action=search');
-    select2AjaxData(".select-stock-warehouse", '/stock/warehouse/?action=search');
+    select2AjaxData(".select-stock-picking-type", '/stock/picking/type/?action=search'); //库位类型
+    select2AjaxData(".select-stock-warehouse", '/stock/warehouse/?action=search'); //仓库
+    select2AjaxData(".select-stock-location", '/stock/location/?action=search'); //库位
+
 
     selectStaticData(".select-stock-picking-type-code", [{ id: 'outgoing', name: '出库' }, { id: 'incoming', name: '入库' }, { id: 'internal', name: '内部调拨' }]); // 产品类型
     selectStaticData(".select-product-uom-category-type", [{ id: 1, name: '小于参考计量单位' }, { id: 2, name: '参考计量单位' }, { id: 3, name: '大于参考计量单位' }]); // 产品类型
