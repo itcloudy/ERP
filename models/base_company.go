@@ -26,7 +26,7 @@ type Company struct {
 	Province   *AddressProvince `orm:"rel(fk);null" json:"-"`                //省份
 	City       *AddressCity     `orm:"rel(fk);null" json:"-"`                //城市
 	District   *AddressDistrict `orm:"rel(fk);null" json:"-"`                //区县
-	Street     string           `orm:"default(\"\")" json:"Street"`          //街道
+	Street     string           `orm:"default()" json:"Street"`          //街道
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时

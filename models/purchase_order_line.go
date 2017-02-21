@@ -18,7 +18,7 @@ type PurchaseOrderLine struct {
 	UpdateUser        *User           `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate        time.Time       `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate        time.Time       `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name              string          `orm:"default(\"\")" json:"name"`            //订单明细号
+	Name              string          `orm:"default()" json:"name"`                //订单明细号
 	Company           *Company        `orm:"rel(fk)"`                              //公司
 	PurchaseOrder     *PurchaseOrder  `orm:"rel(fk);null" `                        //销售订单
 	Partner           *Partner        `orm:"rel(fk)"`                              //客户

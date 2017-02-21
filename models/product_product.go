@@ -33,8 +33,8 @@ type ProductProduct struct {
 	DefaultCode           string                   `orm:"unique"`                               //产品编码
 	ProductTemplate       *ProductTemplate         `orm:"rel(fk)"`                              //产品款式
 	AttributeValues       []*ProductAttributeValue `orm:"reverse(many)"`                        //产品属性值
-	ProductType           string                   `orm:"default(\"stock\")"`                   //产品类型
-	AttributeValuesString string                   `orm:"index;default(\"\")"`                  //产品属性值ID编码，用于修改和增加时对应的产品是否已经存在
+	ProductType           string                   `orm:"default(stock)"`                   //产品类型
+	AttributeValuesString string                   `orm:"index;default()"`                  //产品属性值ID编码，用于修改和增加时对应的产品是否已经存在
 	FirstSaleUom          *ProductUom              `orm:"rel(fk)"`                              //第一销售单位
 	SecondSaleUom         *ProductUom              `orm:"rel(fk);null"`                         //第二销售单位
 	FirstPurchaseUom      *ProductUom              `orm:"rel(fk)"`                              //第一采购单位

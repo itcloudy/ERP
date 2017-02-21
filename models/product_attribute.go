@@ -19,7 +19,7 @@ type ProductAttribute struct {
 	CreateDate     time.Time                `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate     time.Time                `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Name           string                   `orm:"unique" form:"name"`                   //产品属性名称
-	Code           string                   `orm:"default(\"\")" json:"Code"`            //产品属性编码
+	Code           string                   `orm:"default()" json:"Code"`            //产品属性编码
 	Sequence       int32                    `json:"Sequence"`                            //序列
 	ValueIDs       []*ProductAttributeValue `orm:"reverse(many)"`                        //属性值
 	AttributeLines []*ProductAttributeLine  `orm:"reverse(many)"`                        //产品属性明细行

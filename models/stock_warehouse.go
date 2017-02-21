@@ -24,7 +24,7 @@ type StockWarehouse struct {
 	Province   *AddressProvince `orm:"rel(fk);null" json:"-"`                //省份
 	City       *AddressCity     `orm:"rel(fk);null" json:"-"`                //城市
 	District   *AddressDistrict `orm:"rel(fk);null" json:"-"`                //区县
-	Street     string           `orm:"default(\"\")" json:"Street"`          //街道
+	Street     string           `orm:"default()" json:"Street"`          //街道
 	Location   *StockLocation   `orm:"rel(fk);null"`                         //库存库位
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改

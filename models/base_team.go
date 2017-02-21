@@ -23,7 +23,7 @@ type Team struct {
 	Department  *Department `orm:"rel(fk);null"`                         //所属
 	Members     []*User     `orm:"reverse(many)"`                        //组员
 	Active      bool        `orm:"default(true)"`                        //是否有效
-	Description string      `orm:"default(\"\")" json:"Description"`     //描述
+	Description string      `orm:"default()" json:"Description"`     //描述
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时

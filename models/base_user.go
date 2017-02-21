@@ -31,8 +31,8 @@ type User struct {
 	Groups          []*Group    `orm:"rel(m2m)"`                                          //用户组
 	IsAdmin         bool        `orm:"default(false)" xml:"isAdmin" json:"IsAdmin"`       //是否为超级用户
 	Active          bool        `orm:"default(true)" xml:"active" json:"Active"`          //有效
-	Qq              string      `orm:"default(\"\")" xml:"qq" json:"Qq"`                  //QQ
-	WeChat          string      `orm:"default(\"\")" xml:"wechat" json:"WeChat"`          //微信
+	Qq              string      `orm:"default()" xml:"qq" json:"Qq"`                  //QQ
+	WeChat          string      `orm:"default()" xml:"wechat" json:"WeChat"`          //微信
 	Position        *Position   `orm:"rel(fk);null;" json:"-" `                           //职位
 
 	FormAction   string             `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改

@@ -26,7 +26,7 @@ type PurchaseOrder struct {
 	Province     *AddressProvince     `orm:"rel(fk);null" json:"province"`         //省份
 	City         *AddressCity         `orm:"rel(fk);null" json:"city"`             //城市
 	District     *AddressDistrict     `orm:"rel(fk);null" json:"district"`         //区县
-	Street       string               `orm:"default(\"\")" json:"street"`          //街道
+	Street       string               `orm:"default()" json:"street"`          //街道
 	OrderLine    []*PurchaseOrderLine `orm:"reverse(many)"`                        //订单明细
 	State        *PurchaseOrderState  `orm:"rel(fk)"`                              //订单状态
 

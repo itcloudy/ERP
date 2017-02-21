@@ -45,8 +45,8 @@ type ProductTemplate struct {
 	BigImages           []*ProductImage         `orm:"reverse(many)"`                          //产品款式图片
 	MidImages           []*ProductImage         `orm:"reverse(many)"`                          //产品款式图片
 	SmallImages         []*ProductImage         `orm:"reverse(many)"`                          //产品款式图片
-	ProductType         string                  `orm:"default(\"stock\")"`                     //产品类型
-	ProductMethod       string                  `orm:"default(\"hand\")" json:"ProductMethod"` //产品规格创建方式
+	ProductType         string                  `orm:"default()"`                     //产品类型
+	ProductMethod       string                  `orm:"default()" json:"ProductMethod"` //产品规格创建方式
 	PackagingDependTemp bool                    `orm:"default(true)"`                          //根据款式打包
 	PurchaseDependTemp  bool                    `orm:"default(true)"`                          //根据款式采购，ture一个供应商可以供应所有的款式
 
