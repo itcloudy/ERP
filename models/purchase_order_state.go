@@ -19,6 +19,7 @@ type PurchaseOrderState struct {
 	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Name       string    `orm:"default(\"\")" json:"name"`            //状态名称
+	Active     bool      `orm:"default(true)" json:"Active"`          //是否有效
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时

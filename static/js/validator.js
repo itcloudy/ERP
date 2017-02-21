@@ -561,14 +561,7 @@ $(function() {
                 }
             }
         },
-        District: {
-            message: "该值无效",
-            validators: {
-                notEmpty: {
-                    message: "区县不能为空"
-                }
-            }
-        },
+
         Street: {
             message: "该值无效",
             validators: {
@@ -928,14 +921,7 @@ $(function() {
                 }
             }
         },
-        District: {
-            message: "该值无效",
-            validators: {
-                notEmpty: {
-                    message: "区县不能为空"
-                }
-            }
-        },
+
         Street: {
             message: "该值无效",
             validators: {
@@ -1535,14 +1521,7 @@ $(function() {
                 }
             }
         },
-        District: {
-            message: "该值无效",
-            validators: {
-                notEmpty: {
-                    message: "区县不能为空"
-                }
-            }
-        },
+
         Street: {
             message: "该值无效",
             validators: {
@@ -1589,6 +1568,80 @@ $(function() {
                 notEmpty: {
                     message: "仓库名称不能为空"
                 }
+            }
+        }
+    });
+    BootstrapValidator("#stockLocationForm", {
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "库位名称不能为空"
+                },
+                remote: {
+                    url: "/stock/location/",
+                    message: "库位名称已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+                        var params = {
+                            action: "validator",
+                        }
+                        var xsrf = $("input[name ='_xsrf']")
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                },
+            },
+        },
+        Company: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "所属公司不能为空"
+                },
+            }
+        },
+        Usage: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "库位类型不能为空"
+                },
+            }
+        },
+        Posx: {
+            message: "该值无效",
+            validators: {
+                regexp: {
+                    regexp: /[1-9]+$/,
+                    message: '通道(X)应为大于0的整数'
+                },
+            }
+        },
+        Posy: {
+            message: "该值无效",
+            validators: {
+                regexp: {
+                    regexp: /[1-9]+$/,
+                    message: '货架(Y)应为大于0的整数'
+                },
+            }
+        },
+        Posz: {
+            message: "该值无效",
+            validators: {
+                regexp: {
+                    regexp: /[1-9]+$/,
+                    message: '层应为大于0的整数'
+                },
             }
         }
     });

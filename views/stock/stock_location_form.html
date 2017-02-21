@@ -46,7 +46,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="Barcode" class="col-md-4 control-label label-start">库位编码<span class="required-input">&nbsp*</span></label>
+                            <label for="Barcode" class="col-md-4 control-label label-start">库位编码</label>
                             <div class="col-md-8">
                                 <p class="p-form-control">{{if .Location}} {{.Location.Barcode}} {{end}}</p>
                                 <input data-type="string" class="{{.FormField}} form-control" name="Barcode" type="text" {{if .Location}} value="{{.Location.Barcode}}" {{end}} />
@@ -67,6 +67,29 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Usage" class="col-md-4 control-label label-start">库位类型<span class="required-input">&nbsp*</span></label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if .Location}} {{.Location.Usage}}{{end}}</p>
+                                <select data-type="string" name="Usage" id="Usage" class="{{.FormField}} form-control select-stock-location-usage">
+                             {{if .Location}} 
+                            <option value="{{.Location.Usage}}" selected="selected">{{.Location.Usage}}</option>
+                            {{else}}<option value="internal" selected="selected">内部库位</option>{{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="active" class="col-md-4 control-label ">有效</label>
+                            <div class="col-md-8 ">
+                                <input data-type="bool" name="Active" id="active" class="form-control form-checkbox {{.FormField}}" {{if and .Location .Location.Active}} {{if eq .Location.Active true }}data-oldValue="{{.Location.Active}}" {{end}}{{else}} checked="checked" {{end}} type="checkbox">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </fieldset>
         </div>
         <div class="col-md-6">
@@ -77,8 +100,8 @@
                         <div class="form-group">
                             <label for="ReturnLocation" class="col-md-4 control-label ">退货库位</label>
                             <div class="col-md-8 ">
-                                <input data-type="bool" name="ReturnLocation" data-oldvalue="{{.StockLocation.ReturnLocation}}" id="ReturnLocation" class="form-control form-checkbox {{.FormField}}" {{if and .StockLocation .StockLocation.ReturnLocation}}{{if eq .StockLocation.ReturnLocation
-                                    true}}checked="checked" {{end}} {{end}}type="checkbox">
+                                <input data-type="bool" name="ReturnLocation" {{if .StockLocation}} data-oldvalue="{{.StockLocation.ReturnLocation}}" {{if eq .StockLocation.ReturnLocation true}}checked="checked" {{end}} {{end}} id="ReturnLocation" class="form-control form-checkbox {{.FormField}}"
+                                    type="checkbox">
                             </div>
                         </div>
                     </div>
@@ -86,14 +109,42 @@
                         <div class="form-group">
                             <label for="ScrapLocation" class="col-md-4 control-label ">废料库位</label>
                             <div class="col-md-8 ">
-                                <input data-type="bool" name="ScrapLocation" data-oldvalue="{{.StockLocation.ScrapLocation}}" id="ScrapLocation" class="form-control form-checkbox {{.FormField}}" {{if and .StockLocation .StockLocation.ScrapLocation}}{{if eq .StockLocation.ScrapLocation
-                                    true}}checked="checked" {{end}} {{else}}checked="checked" {{end}}type="checkbox">
+                                <input data-type="bool" name="ScrapLocation" {{if .StockLocation}} data-oldvalue="{{.StockLocation.ReturnLocation}}" {{if eq .StockLocation.ScrapLocation true}}checked="checked" {{end}}{{end}} id="ScrapLocation" class="form-control form-checkbox {{.FormField}}"
+                                    type="checkbox">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="row">
-
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Posx" class="col-md-4 control-label label-start">通道(X)</label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Location}} {{.Location.Posx}} {{end}}</p>
+                                <input data-type="int" class="{{.FormField}} form-control" name="Posx" type="text" {{if .Location}} value="{{.Location.Posx}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Posy" class="col-md-4 control-label label-start">货架(Y)</label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Location}} {{.Location.Posy}} {{end}}</p>
+                                <input data-type="int" class="{{.FormField}} form-control" name="Posy" type="text" {{if .Location}} value="{{.Location.Posy}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Posz" class="col-md-4 control-label label-start">层</label>
+                            <div class="col-md-8">
+                                <p class="p-form-control">{{if .Location}} {{.Location.Posz}} {{end}}</p>
+                                <input data-type="int" class="{{.FormField}} form-control" name="Posz" type="text" {{if .Location}} value="{{.Location.Posz}}" {{end}} />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </fieldset>
         </div>

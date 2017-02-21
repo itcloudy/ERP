@@ -53,6 +53,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Location" class="col-md-4 control-label label-start">发货库位</label>
+                            <div class="col-md-8">
+                                <p class="p-form-control"> {{if and .Warehouse .Warehouse.Location}} {{.Warehouse.Location.Name}}{{end}}</p>
+                                <select data-type="int" name="Location" id="Location" class="{{.FormField}} form-control select-stock-location">
+                             {{if and .Warehouse .Warehouse.Location}}
+                            <option value="{{.Warehouse.Location.ID}}" selected="selected">{{.Warehouse.Location.Name}}</option>
+                             {{end}} 
+                        </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </fieldset>
         </div>
@@ -103,7 +116,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="district" class="col-md-4 control-label label-start">区县<span class="required-input">&nbsp*</span></label>
+                            <label for="district" class="col-md-4 control-label label-start">区县</label>
                             <div class="col-md-8">
                                 <p class="p-form-control"> {{if and .Warehouse .Warehouse.District}} {{.Warehouse.District.Name}}{{end}}</p>
                                 <select data-type="int" name="District" id="district" class="{{.FormField}} form-control select-address-district">

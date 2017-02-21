@@ -190,6 +190,9 @@ func (ctl *StockWarehouseController) stockWarehouseList(query map[string]interfa
 			if line.Company != nil {
 				oneLine["Company"] = line.Company.Name
 			}
+			if line.Location != nil {
+				oneLine["Location"] = line.Location.Name
+			}
 			b := bytes.Buffer{}
 			if line.Country != nil {
 				b.WriteString(line.Country.Name)

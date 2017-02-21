@@ -25,6 +25,7 @@ type StockWarehouse struct {
 	City       *AddressCity     `orm:"rel(fk);null" json:"-"`                //城市
 	District   *AddressDistrict `orm:"rel(fk);null" json:"-"`                //区县
 	Street     string           `orm:"default(\"\")" json:"Street"`          //街道
+	Location   *StockLocation   `orm:"rel(fk);null"`                         //库存库位
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
@@ -33,6 +34,7 @@ type StockWarehouse struct {
 	ProvinceID   int64    `orm:"-" json:"Province"`     //地址省份
 	CityID       int64    `orm:"-" json:"City"`         //地址城市
 	DistrictID   int64    `orm:"-" json:"District"`     //公司
+	LocationID   int64    `orm:"-" json:"Location"`
 }
 
 func init() {
@@ -65,6 +67,9 @@ func AddStockWarehouse(obj *StockWarehouse, addUser *User) (id int64, errs []err
 	if obj.DistrictID > 0 {
 		obj.District, _ = GetAddressDistrictByID(obj.DistrictID)
 	}
+	if obj.LocationID > 0 {
+		obj.Location, _ = GetStockLocationByID(obj.LocationID)
+	}
 	id, err = o.Insert(obj)
 	if err != nil {
 		errs = append(errs, err)
@@ -92,6 +97,7 @@ func GetStockWarehouseByID(id int64) (obj *StockWarehouse, err error) {
 		o.LoadRelated(obj, "Province")
 		o.LoadRelated(obj, "City")
 		o.LoadRelated(obj, "District")
+		o.LoadRelated(obj, "Location")
 		return obj, nil
 	}
 	return nil, err
@@ -108,6 +114,7 @@ func GetStockWarehouseByName(name string) (obj *StockWarehouse, err error) {
 		o.LoadRelated(obj, "Province")
 		o.LoadRelated(obj, "City")
 		o.LoadRelated(obj, "District")
+		o.LoadRelated(obj, "Location")
 		return obj, nil
 	}
 	return nil, err

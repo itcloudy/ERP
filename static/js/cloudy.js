@@ -31,11 +31,16 @@ $(function() {
             radioClass: 'iradio_square-green',
             increaseArea: '20%',
         });
-        if ($(el).data("oldvalue") === "false" || $(el).data("oldvalue") === "" || $(el).data("oldvalue") == undefined) {
-            $(el).iCheck("uncheck");
-        } else {
+        if ($(el).attr('checked') == 'checked') {
             $(el).iCheck("check");
+        } else {
+            if ($(el).data("oldvalue") === "false" || $(el).data("oldvalue") === "" || $(el).data("oldvalue") == undefined) {
+                $(el).iCheck("uncheck");
+            } else {
+                $(el).iCheck("check");
+            }
         }
+
         var form = $(el)[0].form;
         if (form != undefined) {
             if ($(form).hasClass("form-disabled")) {

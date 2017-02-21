@@ -1221,6 +1221,7 @@ displayTable("#table-stock-warehouse", "/stock/warehouse/", [
     { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
     { title: "所属公司", field: 'Company', sortable: true, order: "desc" },
     { title: "仓库名称", field: 'Name', sortable: true, order: "desc" },
+    { title: "发货库位", field: 'Location', sortable: true, order: "desc" },
     { title: "仓库编码", field: 'Code', align: "center", sortable: true, order: "desc" },
     { title: "仓库地址", field: 'Address' },
     {
