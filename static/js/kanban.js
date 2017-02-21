@@ -69,11 +69,11 @@ $(function() {
         var innerHtml = "";
         for (var i = 0, len = dataArr.length; i < len; i++) {
 
-            innerHtml += '<div class="col-md-3">';
+            innerHtml += '<div class="col-md-4">';
             innerHtml += '<div class="box box-success">';
             innerHtml += '<div class="box-header with-border">';
             innerHtml += '<h3 class="box-title pull-left"><a class="text-primary" href="/company/' + dataArr[i].Company.id + '?action=detail">' + dataArr[i].Company.name + ':</a></h3>';
-            innerHtml += '<h3 class="box-title">&nbsp&nbsp&nbsp<a class="text-danger" href="/stock/picking/type/' + dataArr[i].id + '?action=detail">' + dataArr[i].Name + '</a></h3>';
+            innerHtml += '<h3 class="box-title">&nbsp&nbsp&nbsp<a class="text-danger" href="/sale/counter/' + dataArr[i].id + '?action=detail">' + dataArr[i].Name + '</a></h3>';
             innerHtml += '<div class="box-tools pull-right">';
             innerHtml += '<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>';
             innerHtml += '<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>';

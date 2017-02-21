@@ -34,6 +34,8 @@ type StockLocation struct {
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	CompanyID    int64    `orm:"-" json:"Company"`
+	ParentID     int64    `orm:"-" json:"Parent"`
 }
 
 func init() {
@@ -50,6 +52,12 @@ func AddStockLocation(obj *StockLocation, addUser *User) (id int64, errs []error
 	err = o.Begin()
 	if err != nil {
 		errs = append(errs, err)
+	}
+	if obj.CompanyID > 0 {
+		obj.Company, _ = GetCompanyByID(obj.CompanyID)
+	}
+	if obj.ParentID > 0 {
+		obj.Parent, _ = GetStockLocationByID(obj.ParentID)
 	}
 	id, err = o.Insert(obj)
 	if err != nil {

@@ -60,10 +60,14 @@ func (ctl *PartnerController) Get() {
 	switch style {
 	case "customer":
 		ctl.PageName = "客户管理"
+		ctl.Data["MenuCustomerActive"] = "active"
 		ctl.Data["IsCustomer"] = true
+
 	case "supplier":
 		ctl.PageName = "供应商管理"
+		ctl.Data["MenuSupplierActive"] = "active"
 		ctl.Data["IsCustomer"] = false
+
 	}
 	action := ctl.Input().Get("action")
 	switch action {
@@ -84,13 +88,11 @@ func (ctl *PartnerController) Get() {
 	ctl.Data["PageName"] = b.String()
 	ctl.URL = "/partner/"
 	ctl.Data["URL"] = ctl.URL
-	ctl.Data["MenuPartnerActive"] = "active"
 }
 func (ctl *PartnerController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
-
 			if partner, err := md.GetPartnerByID(idInt64); err == nil {
 				ctl.PageAction = partner.Name
 				ctl.Data["Partner"] = partner

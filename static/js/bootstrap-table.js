@@ -1219,7 +1219,19 @@ displayTable("#table-product-uom", "/product/uom/", [
 ]);
 displayTable("#table-stock-warehouse", "/stock/warehouse/", [
     { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
-    { title: "所属公司", field: 'Company', sortable: true, order: "desc" },
+    {
+        title: "所属公司",
+        field: 'Company',
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.Company) {
+                html = row.Company.name + "<a class='pull-right' href='/company/" + row.Company.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            }
+            return html;
+        }
+    },
     { title: "仓库名称", field: 'Name', sortable: true, order: "desc" },
     { title: "发货库位", field: 'Location', sortable: true, order: "desc" },
     { title: "仓库编码", field: 'Code', align: "center", sortable: true, order: "desc" },
@@ -1229,7 +1241,6 @@ displayTable("#table-stock-warehouse", "/stock/warehouse/", [
         align: "center",
         field: 'action',
         formatter: function cellStyle(value, row, index) {
-            console.log(row);
             var html = "";
             var url = "/stock/warehouse/";
             html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
@@ -1349,5 +1360,25 @@ displayTable("#table-stock-picking-type", '/stock/picking/type/', [
             return html;
         }
     }
+
+]);
+displayTable("#table-stock-location", '/stock/location/', [
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
+    {
+        title: "所属公司",
+        field: 'Company',
+        align: "center",
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.Company) {
+                html = row.Company.name + "<a class='pull-right' href='/company/" + row.Company.id + "?action=detail'><i class='fa fa-external-link'></i></a>";
+            }
+            return html;
+        }
+    },
+    { title: "库位名称", field: 'Name', align: "center", sortable: true, order: "desc" },
+    { title: "库位类型", field: 'Usage', align: "center", sortable: true, order: "desc" },
 
 ]);

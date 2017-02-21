@@ -188,10 +188,16 @@ func (ctl *StockWarehouseController) stockWarehouseList(query map[string]interfa
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
 			if line.Company != nil {
-				oneLine["Company"] = line.Company.Name
+				company := make(map[string]interface{})
+				company["id"] = line.Company.ID
+				company["name"] = line.Company.Name
+				oneLine["Company"] = company
 			}
 			if line.Location != nil {
-				oneLine["Location"] = line.Location.Name
+				location := make(map[string]interface{})
+				location["id"] = line.Location.ID
+				location["name"] = line.Location.Name
+				oneLine["Location"] = location
 			}
 			b := bytes.Buffer{}
 			if line.Country != nil {

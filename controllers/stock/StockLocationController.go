@@ -186,6 +186,27 @@ func (ctl *StockLocationController) stockLocationList(query map[string]interface
 			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			oneLine["Usage"] = line.Usage
+			oneLine["Active"] = line.Active
+			oneLine["Barcode"] = line.Barcode
+			oneLine["ReturnLocation"] = line.ReturnLocation
+			oneLine["ScrapLocation"] = line.ScrapLocation
+			oneLine["Posx"] = line.Posx
+			oneLine["Posy"] = line.Posy
+			oneLine["Posz"] = line.Posz
+
+			if line.Company != nil {
+				company := make(map[string]interface{})
+				company["id"] = line.Company.ID
+				company["name"] = line.Company.Name
+				oneLine["Company"] = company
+			}
+			if line.Parent != nil {
+				parent := make(map[string]interface{})
+				parent["id"] = line.Parent.ID
+				parent["name"] = line.Parent.Name
+				oneLine["Parent"] = parent
+			}
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines

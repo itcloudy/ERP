@@ -32,7 +32,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="parent" class="col-md-4 control-label label-start">上级</label>
+                            <label for="parent" class="col-md-4 control-label label-start">上级(母公司)</label>
                             <div class="col-md-8">
                                 <p class="p-form-control">{{if and .Partner .Partner.Parent}} {{.Partner.Parent.Name}}{{else}} - {{end}}</p>
                                 <select name="Parent" data-type="int" id="parent" {{if and .Partner .Partner.Parent}} data-oldvalue="{{.Partner.Parent.ID}}" {{end}} class="form-control select-partner {{.FormField}}">
@@ -49,8 +49,7 @@
                         <div class="form-group">
                             <label for="IsSupplier" class="col-md-4 control-label ">是供应商</label>
                             <div class="col-md-8 ">
-                                <input data-type="bool" name="IsSupplier" data-oldvalue="{{.Partner.IsSupplier}}" id="IsCompany" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsSupplier}}{{if eq .Partner.IsSupplier true}}checked="checked" {{end}} {{else}}checked="checked"
-                                    {{end}}type="checkbox">
+                                <input data-type="bool" name="IsSupplier" id="IsSupplier" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsSupplier}} {{if eq .Partner.IsSupplier true }}data-oldValue="{{.Partner.IsSupplier}}" {{end}} {{end}} type="checkbox">
                             </div>
                         </div>
                     </div>
@@ -58,8 +57,7 @@
                         <div class="form-group">
                             <label for="IsCustomer" class="col-md-4 control-label ">是客户</label>
                             <div class="col-md-8 ">
-                                <input data-type="bool" name="IsCustomer" data-oldvalue="{{.Partner.IsCustomer}}" id="IsCustomer" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsCustomer}}{{if eq .Partner.IsCustomer true}}checked="checked" {{end}} {{else}}checked="checked"
-                                    {{end}}type="checkbox">
+                                <input data-type="bool" name="IsCustomer" id="IsCustomer" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsCustomer}} {{if eq .Partner.IsCustomer true }}data-oldValue="{{.Partner.IsCustomer}}" {{end}} {{end}} type="checkbox">
                             </div>
                         </div>
                     </div>
@@ -69,8 +67,8 @@
                         <div class="form-group">
                             <label for="IsCompany" class="col-md-4 control-label ">是公司</label>
                             <div class="col-md-8 ">
-                                <input data-type="bool" name="IsCompany" data-oldvalue="{{.Partner.IsCompany}}" id="IsCompany" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsCompany}}{{if eq .Partner.IsCompany true}}checked="checked" {{end}} {{else}}checked="checked"
-                                    {{end}}type="checkbox">
+                                <input data-type="bool" name="IsCompany" id="IsCompany" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.IsCompany}} {{if eq .Partner.IsCompany true }}data-oldValue="{{.Partner.IsCompany}}" {{end}}{{else}} checked="checked"
+                                    {{end}} type="checkbox">
                             </div>
                         </div>
                     </div>
@@ -78,8 +76,7 @@
                         <div class="form-group">
                             <label for="active" class="col-md-4 control-label ">有效</label>
                             <div class="col-md-8 ">
-                                <input data-type="bool" name="Active" data-oldvalue="{{.Partner.Active}}" id="active" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.Active}}{{if eq .Partner.Active true}}checked="checked" {{end}} {{else}}checked="checked"
-                                    {{end}}type="checkbox">
+                                <input data-type="bool" name="Active" id="active" class="form-control form-checkbox {{.FormField}}" {{if and .Partner .Partner.Active}} {{if eq .Partner.Active true }}data-oldValue="{{.Partner.Active}}" {{end}}{{else}} checked="checked" {{end}} type="checkbox">
                             </div>
                         </div>
                     </div>
