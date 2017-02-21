@@ -1379,6 +1379,102 @@ displayTable("#table-stock-location", '/stock/location/', [
         }
     },
     { title: "库位名称", field: 'Name', align: "center", sortable: true, order: "desc" },
-    { title: "库位类型", field: 'Usage', align: "center", sortable: true, order: "desc" },
+    {
+        title: "库位类型",
+        field: 'Usage',
+        align: "center",
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var usage = row.Usage;
+            if ("supplier" == usage) {
+                html = "供应商库位";
+            } else if ("view" == usage) {
+                html = "视图";
+            } else if ("internal" == usage) {
+                html = "内部库位";
+            } else if ("customer" == usage) {
+                html = "客户库位";
+            } else if ("inventory" == usage) {
+                html = "盘点库位";
+            } else if ("procurement" == usage) {
+                html = "补货库位";
+            } else if ("production" == usage) {
+                html = "生产库位";
+            } else if ("transit" == usage) {
+                html = "转移库位";
+            } else {
+                html = "状态未知";
+            }
+            return html;
+        }
+    },
+    { title: "库位编码", field: 'Barcode', align: "center", sortable: true, order: "desc" },
+    {
+        title: "有效",
+        field: 'Active',
+        align: "center",
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.Active) {
+                html = '<i class="fa fa-check"></i><span style="display:none;">是<span>';
+            } else {
+                html = '<i class="fa fa-remove"></i><span style="display:none;">否<span>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "退货库位",
+        field: 'ReturnLocation',
+        align: "center",
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.ReturnLocation) {
+                html = '<i class="fa fa-check"></i><span style="display:none;">是<span>';
+            } else {
+                html = '<i class="fa fa-remove"></i><span style="display:none;">否<span>';
+            }
+            return html;
+        }
+    },
+    {
+        title: "废料库位",
+        field: 'ScrapLocation',
+        align: "center",
+        sortable: true,
+        order: "desc",
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            if (row.ScrapLocation) {
+                html = '<i class="fa fa-check"></i><span style="display:none;">是<span>';
+            } else {
+                html = '<i class="fa fa-remove"></i><span style="display:none;">否<span>';
+            }
+            return html;
+        }
+    },
 
+    { title: "通道(X)", field: 'Posx', align: "center", sortable: true, order: "desc" },
+    { title: "货架(Y)", field: 'Posy', align: "center", sortable: true, order: "desc" },
+    { title: "层", field: 'Posz', align: "center", sortable: true, order: "desc" },
+
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+
+            var html = "";
+            var url = "/stock/location/";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
 ]);
