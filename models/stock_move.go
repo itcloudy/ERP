@@ -12,33 +12,56 @@ import (
 
 // StockMove  	移动明细
 type StockMove struct {
-	ID           int64           `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser   *User           `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser   *User           `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate   time.Time       `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate   time.Time       `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name         string          `json:"Name"`                                //明细产品名称
-	Quants       []*StockQuant   `orm:"rel(m2m)"`                             //迁移数量
-	Picking      *StockPicking   `orm:"rel(fk)"`                              //调拨单
-	Sequence     int64           `orm:"default(0)" json:"Sequence"`           //序列号
-	Priority     string          `orm:"default(normal)" json:"Priority"`      //优先级
-	Product      *ProductProduct `orm:"rel(fk)"`                              //产品规格
-	FirstUomQty  float64         `orm:"default(0)"`                           //第一单位数量
-	SecondUomQty float64         `orm:"default(0)"`                           //第二单位数量
-	FirstUom     *ProductUom     `orm:"rel(fk)"`                              //第一单位
-	SecondUom    *ProductUom     `orm:"rel(fk);null"`                         //第二单位
-	State        string          `orm:"default(draft)" json:"State"`          //状态
-
-	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
-	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
-	PickingID    int64    `orm:"-" json:"Picking"`      //
-	FirstUomID   int64    `orm:"-" json:"FirstUom"`     //
-	SecondUomID  int64    `orm:"-" json:"SecondUom"`    //
+	ID                 int64             `orm:"column(id);pk;auto" json:"id"`                //主键
+	CreateUser         *User             `orm:"rel(fk);null" json:"-"`                       //创建者
+	UpdateUser         *User             `orm:"rel(fk);null" json:"-"`                       //最后更新者
+	CreateDate         time.Time         `orm:"auto_now_add;type(datetime)" json:"-"`        //创建时间
+	UpdateDate         time.Time         `orm:"auto_now;type(datetime)" json:"-"`            //最后更新时间
+	Sequence           int64             `orm:"default(0)" json:"Sequence"`                  //序列号
+	Name               string            `json:"Name"`                                       //明细产品名称
+	Priority           int64             `orm:"default(1)" json:"Priority"`                  //优先级
+	Date               time.Time         `orm:" type(datetime)"`                             //预定日期
+	DateExpected       time.Time         `orm:" type(datetime)"`                             //预定日期
+	Product            *ProductProduct   `orm:"rel(fk)"`                                     //产品规格
+	FirstUomQty        float64           `orm:"default(0)"`                                  //第一单位数量
+	SecondUomQty       float64           `orm:"default(0)"`                                  //第二单位数量
+	FirstUom           *ProductUom       `orm:"rel(fk)"`                                     //第一单位
+	SecondUom          *ProductUom       `orm:"rel(fk);null"`                                //第二单位
+	ProductTemplate    *ProductTemplate  `orm:"rel(fk);null"`                                //产品款式
+	ProductPackaging   *ProductPackaging `orm:"rel(fk);null"`                                //包装类型、包装数量等属性
+	LocationSrc        *StockLocation    `orm:"rel(fk);null"`                                //源库位
+	LocationDest       *StockLocation    `orm:"rel(fk);null"`                                //目标库位
+	Partner            *Partner          `orm:"rel(fk);null"`                                //合作伙伴
+	Picking            *StockPicking     `orm:"rel(fk)"`                                     //调拨单
+	State              string            `orm:"default(draft)" json:"State"`                 //状态
+	Note               string            `json:"Note"`                                       //备注
+	PartiallyAvailable bool              `orm:"default(false)"`                              //部分出货
+	PriceUnit          float64           `orm:"default(0)" json:"PriceUnit"`                 //单价
+	Company            *Company          `orm:"rel(fk)"`                                     //所属公司
+	BackOrder          *StockPicking     `orm:"rel(fk);null"`                                //退货单
+	Origin             string            `json:"Origin"`                                     //源数据
+	ProcureMethod      string            `orm:"default(make_to_order)" json:"ProcureMethod"` //单据来源:make_to_stock/make_to_order
+	Scrapped           bool              `orm:"default(false)" json:"Scrapped"`              //报废，跟LocationDest的类型一致
+	Quants             []*StockQuant     `orm:"rel(m2m);rel_table(stock_quant_move_rel)"`    //迁移数量
+	ReservedQuant      []*StockQuant     `orm:"reverse(many)"`                               //保留数量
+	Inventory          *StockInventory   `orm:"rel(fk);null"`                                //盘点单
+	WareHouse          *StockWarehouse   `orm:"rel(fk);null"`                                //仓库
+	FormAction         string            `orm:"-" json:"FormAction"`                         //非数据库字段，用于表示记录的增加，修改
+	ActionFields       []string          `orm:"-" json:"ActionFields"`                       //需要操作的字段,用于update时
+	PickingID          int64             `orm:"-" json:"Picking"`                            //
+	FirstUomID         int64             `orm:"-" json:"FirstUom"`                           //
+	SecondUomID        int64             `orm:"-" json:"SecondUom"`                          //
 
 }
 
 func init() {
 	orm.RegisterModel(new(StockMove))
+}
+func FirstRemainingQty(obj *StockMove) int {
+	return 0
+}
+func SecondRemainingQty(obj *StockMove) int {
+	return 0
 }
 
 // AddStockMove insert a new StockMove into database and returns

@@ -127,8 +127,25 @@ $(function() {
     selectStaticData(".select-stock-picking-type-code", [{ id: 'outgoing', name: '出库' }, { id: 'incoming', name: '入库' }, { id: 'internal', name: '内部调拨' }]); // 产品类型
     selectStaticData(".select-product-uom-category-type", [{ id: 1, name: '小于参考计量单位' }, { id: 2, name: '参考计量单位' }, { id: 3, name: '大于参考计量单位' }]); // 产品类型
     // 库位类型
-    selectStaticData(".select-stock-location-usage", [{ id: "supplier", name: '供应商库位' }, { id: "view", name: '视图' }, { id: "internal", name: '内部库位' }, { id: "customer", name: '客户库位' }, { id: "inventory", name: '盘点库位' }, { id: "procurement", name: '补货库位' }, { id: "production", name: '生产库位' }, { id: "transit", name: '转移库位' }]);
-
+    selectStaticData(".select-stock-location-usage", [
+        { id: "supplier", name: '供应商库位' },
+        { id: "view", name: '视图' },
+        { id: "internal", name: '内部库位' },
+        { id: "customer", name: '客户库位' },
+        { id: "inventory", name: '盘点库位' },
+        { id: "procurement", name: '补货库位' },
+        { id: "production", name: '生产库位' },
+        { id: "transit", name: '转移库位' },
+    ]);
+    // 盘点对象
+    selectStaticData(".select-stock-inventory-filter", [
+        { id: "all", name: '所有产品' },
+        { id: "product", name: '按规格' },
+        { id: "template", name: '按款式' },
+        { id: "pack", name: '按包' },
+        { id: "lot", name: '按批次' },
+        { id: "partial", name: '手动添加规格' }
+    ]);
     //地址选择
     var addressSelectData = function(selectClass, ajaxUrl) {
         $(selectClass).select2({
