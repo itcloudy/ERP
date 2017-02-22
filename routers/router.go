@@ -109,5 +109,7 @@ func init() {
 	beego.Router("/stock/picking/?:id", &stock.StockPickingController{})
 	// 库位管理
 	beego.Router("/stock/location/?:id", &stock.StockLocationController{})
+	// 盘点管理
+	beego.Router("/stock/inventory/?:id", &stock.StockInventoryController{})
 
 }
