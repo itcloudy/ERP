@@ -96,24 +96,19 @@ func (ctl *ProductSupplierController) PostCreate() {
 	postData := ctl.GetString("postData")
 	supplier := new(md.ProductSupplier)
 	var (
-		err  error
-		id   int64
-		errs []error
+		err error
+		id  int64
 	)
 	if err = json.Unmarshal([]byte(postData), supplier); err == nil {
 		// 获得struct表名
 		// structName := reflect.Indirect(reflect.ValueOf(supplier)).Type().Name()
-		if id, errs = md.AddProductSupplier(supplier, &ctl.User); len(errs) == 0 {
+		if id, err = md.AddProductSupplier(supplier, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
 			result["code"] = "failed"
 			result["message"] = "数据创建失败"
-			var debugs []string
-			for _, item := range errs {
-				debugs = append(debugs, item.Error())
-			}
-			result["debug"] = debugs
+			result["debug"] = err.Error()
 		}
 	} else {
 		result["code"] = "failed"

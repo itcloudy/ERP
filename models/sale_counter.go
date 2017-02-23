@@ -35,32 +35,32 @@ func init() {
 
 // AddSaleCounter insert a new SaleCounter into database and returns
 // last inserted ID on success.
-func AddSaleCounter(obj *SaleCounter, addUser *User) (id int64, errs []error) {
+func AddSaleCounter(obj *SaleCounter, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
 	obj.CreateUser = addUser
 	obj.UpdateUser = addUser
-	var err error
-	err = o.Begin()
-	if err != nil {
-		errs = append(errs, err)
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
 	}
 	if obj.CompanyID > 0 {
 		obj.Company, _ = GetCompanyByID(obj.CompanyID)
 	}
 	id, err = o.Insert(obj)
-	if err != nil {
-		errs = append(errs, err)
-		err = o.Rollback()
-		if err != nil {
-			errs = append(errs, err)
-		}
-	} else {
-		err = o.Commit()
-		if err != nil {
-			errs = append(errs, err)
+	if err == nil {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
 		}
 	}
-	return id, errs
+	return id, err
 }
 
 // GetSaleCounterByID retrieves SaleCounter by ID. Returns error if

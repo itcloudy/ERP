@@ -106,24 +106,19 @@ func (ctl *ProductAttributeValueController) PostCreate() {
 	attrValue := new(md.ProductAttributeValue)
 
 	var (
-		err  error
-		id   int64
-		errs []error
+		err error
+		id  int64
 	)
 	if err = json.Unmarshal([]byte(postData), attrValue); err == nil {
 		// 获得struct表名
 		// structName := reflect.Indirect(reflect.ValueOf(attrValue)).Type().Name()
-		if id, errs = md.AddProductAttributeValue(attrValue, &ctl.User); len(errs) == 0 {
+		if id, err = md.AddProductAttributeValue(attrValue, &ctl.User); err == nil {
 			result["code"] = "success"
 			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
 			result["code"] = "failed"
 			result["message"] = "数据创建失败"
-			var debugs []string
-			for _, item := range errs {
-				debugs = append(debugs, item.Error())
-			}
-			result["debug"] = debugs
+			result["debug"] = err.Error()
 		}
 	} else {
 		result["code"] = "failed"

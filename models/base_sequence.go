@@ -41,12 +41,22 @@ func (u *Sequence) TableName() string {
 }
 
 // GetNextSequece获得下一个序号
-func GetNextSequece(structName string, companyId int64) (stStr string, errs []error) {
+func GetNextSequece(structName string, companyId int64) (stStr string, err error) {
 	o := orm.NewOrm()
 	var (
-		err      error
 		sequence Sequence
 	)
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return "", errBegin
+	}
 	cond := orm.NewCondition()
 	cond = cond.And("StructName", structName).And("active", true).And("IsDefault", true).And("company__id", companyId)
 	qs := o.QueryTable(&sequence)
@@ -60,40 +70,42 @@ func GetNextSequece(structName string, companyId int64) (stStr string, errs []er
 		fmtStr := b.String()
 		sequence.Current++
 		stStr = fmt.Sprintf(fmtStr, strconv.Itoa(int(sequence.Current)))
-		if _, err = o.Update(&sequence); err != nil {
-			errs = append(errs, err)
-		}
-	} else {
-		errs = append(errs, err)
+		_, err = o.Update(&sequence)
 	}
-	return stStr, errs
+	if err == nil {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return "", errCommit
+		}
+	}
+	return stStr, err
 }
 
 // AddSequence insert a new Sequence into database and returns
 // last inserted ID on success.
-func AddSequence(obj *Sequence, addUser *User) (id int64, errs []error) {
+func AddSequence(obj *Sequence, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
 	obj.CreateUser = addUser
 	obj.UpdateUser = addUser
-	var err error
-	err = o.Begin()
-	if err != nil {
-		errs = append(errs, err)
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
 	}
 	id, err = o.Insert(obj)
-	if err != nil {
-		errs = append(errs, err)
-		err = o.Rollback()
-		if err != nil {
-			errs = append(errs, err)
-		}
-	} else {
-		err = o.Commit()
-		if err != nil {
-			errs = append(errs, err)
+	if err == nil {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
 		}
 	}
-	return id, errs
+	return id, err
 }
 
 // GetSequenceByID retrieves Sequence by ID. Returns error if

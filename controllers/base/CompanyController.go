@@ -58,10 +58,8 @@ func (ctl *CompanyController) Put() {
 	postData := ctl.GetString("postData")
 	company := new(md.Company)
 	var (
-		err    error
-		id     int64
-		errs   []error
-		debugs []string
+		err error
+		id  int64
 	)
 	if err = json.Unmarshal([]byte(postData), company); err == nil {
 		// 获得struct表名
@@ -72,16 +70,12 @@ func (ctl *CompanyController) Put() {
 		} else {
 			result["code"] = "failed"
 			result["message"] = "数据创建失败"
-			for _, item := range errs {
-				debugs = append(debugs, item.Error())
-			}
-			result["debug"] = debugs
+			result["debug"] = err.Error()
 		}
 	}
 	if err != nil {
 		result["code"] = "failed"
-		debugs = append(debugs, err.Error())
-		result["debug"] = debugs
+		result["debug"] = err.Error()
 	}
 	ctl.Data["json"] = result
 	ctl.ServeJSON()

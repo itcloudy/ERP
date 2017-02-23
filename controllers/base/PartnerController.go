@@ -121,9 +121,8 @@ func (ctl *PartnerController) PostCreate() {
 	fmt.Println(postData)
 	partner := new(md.Partner)
 	var (
-		err  error
-		id   int64
-		errs []error
+		err error
+		id  int64
 	)
 	if err = json.Unmarshal([]byte(postData), partner); err == nil {
 		// 获得struct表名
@@ -134,11 +133,7 @@ func (ctl *PartnerController) PostCreate() {
 		} else {
 			result["code"] = "failed"
 			result["message"] = "数据创建失败"
-			var debugs []string
-			for _, item := range errs {
-				debugs = append(debugs, item.Error())
-			}
-			result["debug"] = debugs
+			result["debug"] = err.Error()
 		}
 	} else {
 		result["code"] = "failed"
