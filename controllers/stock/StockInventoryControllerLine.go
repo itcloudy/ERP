@@ -81,8 +81,8 @@ func (ctl *StockInventoryLineController) Edit() {
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if inventory, err := md.GetStockInventoryLineByID(idInt64); err == nil {
-				ctl.PageAction = inventory.Name
-				inventoryInfo["name"] = inventory.Name
+				ctl.PageAction = inventory.ProductName
+				inventoryInfo["name"] = inventory.ProductName
 
 			}
 		}
@@ -130,24 +130,24 @@ func (ctl *StockInventoryLineController) PostCreate() {
 func (ctl *StockInventoryLineController) Validator() {
 	name := ctl.GetString("name")
 	name = strings.TrimSpace(name)
-	recordID, _ := ctl.GetInt64("recordID")
+	// recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
-	obj, err := md.GetStockInventoryLineByName(name)
-	if err != nil {
-		result["valid"] = true
-	} else {
-		if obj.Name == name {
-			if recordID == obj.ID {
-				result["valid"] = true
-			} else {
-				result["valid"] = false
-			}
+	// obj, err := md.GetStockInventoryLineByName(name)
+	// if err != nil {
+	// 	result["valid"] = true
+	// } else {
+	// 	if obj.Name == name {
+	// 		if recordID == obj.ID {
+	// 			result["valid"] = true
+	// 		} else {
+	// 			result["valid"] = false
+	// 		}
 
-		} else {
-			result["valid"] = true
-		}
+	// 	} else {
+	// 		result["valid"] = true
+	// 	}
 
-	}
+	// }
 	ctl.Data["json"] = result
 	ctl.ServeJSON()
 }
@@ -164,7 +164,7 @@ func (ctl *StockInventoryLineController) StockInventoryLineList(query map[string
 		tableLines := make([]interface{}, 0, 4)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["name"] = line.Name
+			oneLine["name"] = line.ProductName
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
 
