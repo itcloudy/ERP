@@ -2,6 +2,11 @@
     padding: 10px 30px;
 }
 
+.control-sidebar .tab-content {
+    padding-top: 2px;
+    margin-top: 2px;
+}
+
 .title-action {
     border-bottom: 1px solid grey;
     padding-bottom: 2px;
