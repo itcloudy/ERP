@@ -282,6 +282,16 @@ a[aria-expanded="false"]>.icon-minus {
     margin-bottom: 0px;
 }
 
+.p-form-line-control {
+    font-size: 14px;
+    height: 34px;
+    line-height: 1.42857;
+    padding: 6px 12px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
 
 /*form表单中只读时input/select等标签隐藏
 form表单中可编辑时input/select等标签隐藏，form表单只读是保存编辑按钮隐藏
@@ -329,6 +339,7 @@ form表单中可编辑时input/select等标签显示
 
 .form-edit .p-form-tree-disabled,
 .form-edit .p-form-control,
+.form-edit .p-form-line-control,
 .form-edit .form-tree-edit,
 .form-edit .form-create-btn,
 .form-edit .form-edit-btn {

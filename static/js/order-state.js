@@ -1,7 +1,6 @@
 $(function() {
     var saleOrderState = $(".sale-order-state");
     if (saleOrderState.length > 0) {
-        console.log(saleOrderState);
         var params = {};
         var xsrf = $("input[name ='_xsrf']");
         if (xsrf.length > 0) {
@@ -19,15 +18,12 @@ $(function() {
         if (stockWarehouseID.length > 0) {
             params.StockWarehouseID = stockWarehouseID[0].value;
         }
-        console.log(params);
         $.ajax({
             type: "POST",
             dataType: "json",
             url: "/sale/order/state/?action=search",
             data: params,
-            success: function(result) {
-                console.log(result);
-            },
+            success: function(result) {},
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log(XMLHttpRequest.status);
                 console.log(XMLHttpRequest.readyState);

@@ -53,7 +53,7 @@ $.extend($.fn.bootstrapTable.defaults, {
         $("#display-table tbody>tr").removeClass("danger");
     }
 });
-var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
+var displayTable = function(selectId, ajaxUrl, columns, onExpandRow, onPostBody) {
     var $tableNode = $(selectId);
     //根据数据类型获得正确的数据,默认string
     var getCurrentDataType = function(val, dataType) {
@@ -134,6 +134,9 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
     if (onExpandRow != undefined) {
         options.detailView = true;
         options.onExpandRow = onExpandRow;
+    }
+    if (onPostBody != undefined) {
+        options.onPostBody = onPostBody;
     }
 
     $tableNode.bootstrapTable(options);

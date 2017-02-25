@@ -18,19 +18,26 @@ type SaleOrderLine struct {
 	UpdateUser    *User           `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate    time.Time       `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate    time.Time       `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name          string          `orm:"default()" json:"name"`            //订单明细号
+	Name          string          `orm:"default()" json:"Name"`                //订单明细号
 	Company       *Company        `orm:"rel(fk)"`                              //公司
-	SaleOrder     *SaleOrder      `orm:"rel(fk);null" `                        //销售订单
+	SaleOrder     *SaleOrder      `orm:"rel(fk)"`                              //销售订单
 	Partner       *Partner        `orm:"rel(fk)"`                              //客户
 	Product       *ProductProduct `orm:"rel(fk)"`                              //产品
+	ProductName   string          `json:"ProductName"`                         //产品名称
+	ProductCode   string          `json:"ProductCode"`                         //产品编码
 	FirstSaleUom  *ProductUom     `orm:"rel(fk)"`                              //第一销售单位
-	SecondSaleUom *ProductUom     `orm:"rel(fk)"`                              //第二销售单位
-	FirstSaleQty  float32         `orm:"default(1)"`                           //第一销售单位
-	SecondSaleQty float32         `orm:"default(0)"`                           //第二销售单位
+	SecondSaleUom *ProductUom     `orm:"rel(fk);null"`                         //第二销售单位
+	FirstSaleQty  float32         `orm:"default(1)" json:"FirstSaleQty"`       //第一销售单位
+	SecondSaleQty float32         `orm:"default(0)" json:"SecondSaleQty"`      //第二销售单位
 	State         string          `orm:"default(draft)"`                       //订单明细状态:draft/confirm/process/done/cancel
+	PriceUnit     float32         `orm:"default(0)" json:"PriceUnit"`          //单价
+	Total         float32         `orm:"default(0)" json:"Total"`              //小计
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	CompanyID    int64    `orm:"-" json:"Company"`
+	SaleOrderID  int64    `orm:"-" json:"SaleOrder"`
+	ProductID    int64    `orm:"-" json:"Product"`
 }
 
 func init() {

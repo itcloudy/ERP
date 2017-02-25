@@ -77,18 +77,16 @@ func (ctl *SaleOrderLineController) Get() {
 // Edit edit sale orde line
 func (ctl *SaleOrderLineController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	orderLineInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if orderLine, err := md.GetSaleOrderLineByID(idInt64); err == nil {
 				ctl.PageAction = orderLine.Name
-				orderLineInfo["name"] = orderLine.Name
+				ctl.Data["orderLine"] = orderLine
 			}
 		}
 	}
 	ctl.Data["Action"] = "edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["orderLine"] = orderLineInfo
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "sale/sale_order_ine_form.html"
 }
@@ -163,9 +161,22 @@ func (ctl *SaleOrderLineController) SaleOrderLineList(query map[string]interface
 		tableLines := make([]interface{}, 0, 4)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["name"] = line.Name
+			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			if line.Product != nil {
+				product := make(map[string]interface{})
+				product["id"] = line.Product.ID
+				product["name"] = line.Product.Name
+				product["defaultCode"] = line.Product.DefaultCode
+				oneLine["Product"] = product
+			}
+			oneLine["ProductName"] = line.ProductName
+			oneLine["ProductCode"] = line.ProductCode
+			oneLine["FirstSaleQty"] = line.FirstSaleQty
+			oneLine["SecondSaleQty"] = line.SecondSaleQty
+			oneLine["PriceUnit"] = line.PriceUnit
+			oneLine["Total"] = line.Total
 			tableLines = append(tableLines, oneLine)
 		}
 		result["data"] = tableLines
