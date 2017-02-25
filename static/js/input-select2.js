@@ -102,7 +102,7 @@ $(function() {
         });
 
     };
-    select2AjaxData(".select-partner", "/partner/?action=search"); // 选择上级合伙伙伴
+    // select2AjaxData(".select-partner", "/partner/?action=search"); // 选择上级合伙伙伴
     select2AjaxData(".select-permission", "/permission/?action=search"); // 选择权限
     select2AjaxData(".select-role", "/role/?action=search"); // 选择角色
     select2AjaxData(".select-source", "/source/?action=search"); // 选择菜单
@@ -146,6 +146,8 @@ $(function() {
         { id: "lot", name: '按批次' },
         { id: "partial", name: '手动添加规格' }
     ]);
+    // 发货策略
+    selectStaticData(".select-picking-policy", [{ id: 'one', name: '一次发货' }, { id: 'mult', name: '分批发货' }]);
     //地址选择
     var addressSelectData = function(selectClass, ajaxUrl) {
         $(selectClass).select2({
@@ -446,4 +448,138 @@ $(function() {
         });
     };
     selectProductProductAttributeValue(".select-product-product-attribute-value");
+    $(".select-partner").select2({
+        width: "off",
+        ajax: {
+            url: '/partner/?action=search',
+            dataType: 'json',
+            delay: 250,
+            type: "POST",
+            data: function(params) {
+                var selectParams = {
+                    name: params.term || "", // search term
+                    offset: (params.page || 0) * LIMIT,
+                    limit: 5
+                };
+                if ($(this).hasClass("is-customer")) {
+                    selectParams.IsCustomer = true;
+                }
+                if ($(this).hasClass("is-supplier")) {
+                    selectParams.IsSupplier = true;
+                }
+                var xsrf = $("input[name ='_xsrf']");
+                if (xsrf.length > 0) {
+                    selectParams._xsrf = xsrf[0].value;
+                }
+                return selectParams;
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 0;
+                var paginator = JSON.parse(data.paginator);
+                var data = data.data;
+                return {
+                    results: data,
+                    pagination: {
+                        more: paginator.totalPage > paginator.currentPage
+                    }
+                };
+            }
+        },
+        escapeMarkup: function(markup) {
+            return markup;
+        }, // let our custom formatter work
+        minimumInputLength: 0,
+        templateResult: formatRepo,
+        templateSelection: formatRepoSelection
+    }).on("change", function(e) {
+        var partnerId = parseInt(e.currentTarget.value);
+        $.ajax({
+            type: 'POST',
+            url: "/partner/?action=search",
+            data: (function() {
+                var params = { Id: partnerId };
+                var xsrf = $("input[name ='_xsrf']");
+                if (xsrf.length > 0) {
+                    params._xsrf = xsrf[0].value;
+                }
+                return params;
+            })(),
+            success: function(result) {
+                if (result.data && result.data.length > 0) {
+                    var Pdata = result.data[0];
+                    if (Pdata.Country != undefined) {
+                        $("#Country").empty().append("<option value='" + Pdata.Country.id + "' selected='selected'>" + Pdata.Country.name + "</option>");
+                    }
+                    if (Pdata.Province != undefined) {
+                        $("#Province").empty().append("<option value='" + Pdata.Province.id + "' selected='selected'>" + Pdata.Province.name + "</option>");
+                    }
+                    if (Pdata.City != undefined) {
+                        $("#City").empty().append("<option value='" + Pdata.City.id + "' selected='selected'>" + Pdata.City.name + "</option>");
+                    }
+                    if (Pdata.District != undefined) {
+                        $("#District").empty().append("<option value='" + Pdata.District.id + "' selected='selected'>" + Pdata.District.name + "</option>");
+                    }
+                    if (Pdata.Street != undefined) {
+                        $("#Street").val(Pdata.Street);
+                    }
+                }
+            },
+            dataType: "json"
+        });
+    });
+
+    var selectCompanyStockWarehouse = function(selector) {
+        $(selector).select2({
+            width: "off",
+            ajax: {
+                url: '/stock/warehouse/?action=search',
+                dataType: 'json',
+                delay: 250,
+                type: "POST",
+                data: function(params) {
+                    var selectParams = {
+                        name: params.term || "", // search term
+                        offset: (params.page || 0) * LIMIT,
+                        limit: 5
+                    };
+                    var company = $("#Company");
+                    if (company.length < 1) {
+                        toastr.error("没有<strong>公司</strong>选项", "错误");
+                        return;
+                    } else {
+                        company = company.val();
+                        if (company == null || company == undefined) {
+                            toastr.error("请先选择公司", "错误");
+                            return;
+                        } else {
+                            selectParams.CompanyID = parseInt(company);
+                        }
+                    }
+                    var xsrf = $("input[name ='_xsrf']");
+                    if (xsrf.length > 0) {
+                        selectParams._xsrf = xsrf[0].value;
+                    }
+                    return selectParams;
+                },
+                processResults: function(data, params) {
+                    params.page = params.page || 0;
+                    var paginator = JSON.parse(data.paginator);
+                    var data = data.data;
+                    return {
+                        results: data,
+                        pagination: {
+                            more: paginator.totalPage > paginator.currentPage
+                        }
+                    };
+                }
+            },
+            escapeMarkup: function(markup) {
+                return markup;
+            }, // let our custom formatter work
+            minimumInputLength: 0,
+            templateResult: formatRepo,
+            templateSelection: formatRepoSelection
+        });
+    };
+    selectCompanyStockWarehouse(".select-company-stock-warehouse");
 });

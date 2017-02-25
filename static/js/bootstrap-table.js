@@ -1478,3 +1478,106 @@ displayTable("#table-stock-location", '/stock/location/', [
         }
     }
 ]);
+displayTable("#table-sale-order", "/sale/order", [
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
+    { title: "订单号", field: 'Name', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "创建时间", field: 'CreateDate', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "客户", field: 'Partner', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "业务员", field: 'SalesMan', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "所属公司", field: 'Company', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "发货仓库", field: 'StockWarehouse', align: "left", sortable: true, order: "desc", valign: "middle" },
+    {
+        title: "发货策略",
+        field: 'PickingPolicy',
+        align: "left",
+        sortable: true,
+        order: "desc",
+        valign: "middle",
+        formatter: function cellStyle(value, row, index) {
+            var html = "-";
+            if (row.PickingPolicy == "one") {
+                html = "一次发货";
+            } else if (row.state == 'mult') {
+                html = "分批发货";
+            }
+            return html;
+        }
+    },
+    {
+        title: "状态",
+        field: 'State',
+        align: "left",
+        sortable: true,
+        order: "desc",
+        valign: "middle",
+        formatter: function cellStyle(value, row, index) {
+            var html = "-";
+            if (row.State == "draft") {
+                html = "草稿";
+            } else if (row.state == 'confirm') {
+                html = "确认";
+            } else if (row.state == 'cancel') {
+                html = "取消";
+            } else if (row.state == 'done') {
+                html = "完成";
+            }
+            return html;
+        }
+    },
+
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/sale/order/";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
+displayTable("#table-purchase-order", "/purchase/order", [
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
+    { title: "订单号", field: 'Name', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "创建时间", field: 'CreateDate', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "供应商", field: 'Partner', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "采购员", field: 'PurchasesMan', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "所属公司", field: 'Company', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "发货仓库", field: 'StockWarehouse', align: "left", sortable: true, order: "desc", valign: "middle" },
+    {
+        title: "状态",
+        field: 'State',
+        align: "left",
+        sortable: true,
+        order: "desc",
+        valign: "middle",
+        formatter: function cellStyle(value, row, index) {
+            var html = "-";
+            if (row.State == "draft") {
+                html = "草稿";
+            } else if (row.state == 'confirm') {
+                html = "确认";
+            } else if (row.state == 'cancel') {
+                html = "取消";
+            } else if (row.state == 'done') {
+                html = "完成";
+            }
+            return html;
+        }
+    },
+
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/purchase/order/";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);

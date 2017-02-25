@@ -205,17 +205,34 @@ func (ctl *PartnerController) partnerList(query map[string]interface{}, exclude 
 			}
 			b := bytes.Buffer{}
 			if line.Country != nil {
+				country := make(map[string]interface{})
+				country["id"] = line.Country.ID
+				country["name"] = line.Country.Name
+				oneLine["Country"] = country
 				b.WriteString(line.Country.Name)
 			}
 			if line.Province != nil {
+				province := make(map[string]interface{})
+				province["id"] = line.Province.ID
+				province["name"] = line.Province.Name
+				oneLine["Country"] = province
 				b.WriteString(line.Province.Name)
 			}
 			if line.City != nil {
+				city := make(map[string]interface{})
+				city["id"] = line.City.ID
+				city["name"] = line.City.Name
+				oneLine["City"] = city
 				b.WriteString(line.City.Name)
 			}
 			if line.District != nil {
+				district := make(map[string]interface{})
+				district["id"] = line.District.ID
+				district["name"] = line.District.Name
+				oneLine["District"] = district
 				b.WriteString(line.District.Name)
 			}
+			oneLine["Street"] = line.Street
 			b.WriteString(line.Street)
 			oneLine["Address"] = b.String()
 
@@ -235,6 +252,8 @@ func (ctl *PartnerController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
+	condAnd := make(map[string]interface{})
+	condOr := make(map[string]interface{})
 
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 0, 1)
@@ -243,12 +262,27 @@ func (ctl *PartnerController) PostList() {
 	limit, _ := ctl.GetInt64("limit")
 	orderStr := ctl.GetString("order")
 	sortStr := ctl.GetString("sort")
+	if name := strings.TrimSpace(ctl.GetString("Name")); name != "" {
+		condAnd["Name.icontains"] = name
+	}
+	if isCustomer, err := ctl.GetBool("IsCustomer"); err == nil {
+		condAnd["IsCustomer"] = isCustomer
+	}
+	if isSupplier, err := ctl.GetBool("IsSupplier"); err == nil {
+		condAnd["IsSupplier"] = isSupplier
+	}
 	if orderStr != "" && sortStr != "" {
 		sortby = append(sortby, sortStr)
 		order = append(order, orderStr)
 	} else {
 		sortby = append(sortby, "Id")
 		order = append(order, "desc")
+	}
+	if len(condAnd) > 0 {
+		cond["and"] = condAnd
+	}
+	if len(condOr) > 0 {
+		cond["or"] = condOr
 	}
 	if result, err := ctl.partnerList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result

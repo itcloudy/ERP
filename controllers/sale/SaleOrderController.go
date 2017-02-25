@@ -88,6 +88,7 @@ func (ctl *SaleOrderController) Edit() {
 		}
 	}
 	ctl.Data["Action"] = "edit"
+	ctl.Data["FormField"] = "form-edit"
 	ctl.Data["RecordID"] = id
 	ctl.Data["order"] = orderInfo
 	ctl.Layout = "base/base.html"
@@ -97,6 +98,7 @@ func (ctl *SaleOrderController) Edit() {
 // Create display sale order create page
 func (ctl *SaleOrderController) Create() {
 	ctl.Data["Action"] = "create"
+	ctl.Data["FormField"] = "form-create"
 	ctl.Data["Readonly"] = false
 	ctl.PageAction = "创建"
 	ctl.Layout = "base/base.html"
@@ -113,17 +115,31 @@ func (ctl *SaleOrderController) Detail() {
 
 // PostCreate post request create sale order
 func (ctl *SaleOrderController) PostCreate() {
-	order := new(md.SaleOrder)
-	if err := ctl.ParseForm(order); err == nil {
-
-		if id, err := md.AddSaleOrder(order); err == nil {
-			ctl.Redirect("/sale/order/"+strconv.FormatInt(id, 10)+"?action=detail", 302)
+	result := make(map[string]interface{})
+	postData := ctl.GetString("postData")
+	saleOrder := new(md.SaleOrder)
+	var (
+		err error
+		id  int64
+	)
+	if err = json.Unmarshal([]byte(postData), saleOrder); err == nil {
+		// 获得struct表名
+		// structName := reflect.Indirect(reflect.ValueOf(category)).Type().Name()
+		if id, err = md.AddSaleOrder(saleOrder, &ctl.User); err == nil {
+			result["code"] = "success"
+			result["location"] = ctl.URL + strconv.FormatInt(id, 10) + "?action=detail"
 		} else {
-			ctl.Get()
+			result["code"] = "failed"
+			result["message"] = "数据创建失败"
+			result["debug"] = err.Error()
 		}
 	} else {
-		ctl.Get()
+		result["code"] = "failed"
+		result["message"] = "请求数据解析失败"
+		result["debug"] = err.Error()
 	}
+	ctl.Data["json"] = result
+	ctl.ServeJSON()
 }
 
 // Validator js valid
@@ -164,9 +180,26 @@ func (ctl *SaleOrderController) SaleOrderList(query map[string]interface{}, excl
 		tableLines := make([]interface{}, 0, 4)
 		for _, line := range arrs {
 			oneLine := make(map[string]interface{})
-			oneLine["name"] = line.Name
+			oneLine["Name"] = line.Name
 			oneLine["ID"] = line.ID
 			oneLine["id"] = line.ID
+			oneLine["CreateDate"] = line.CreateDate.Format("2006-01-02 15:04:05")
+			if line.SalesMan != nil {
+				oneLine["SalesMan"] = line.SalesMan.NameZh
+			}
+			if line.Partner != nil {
+				oneLine["Partner"] = line.Partner.Name
+			}
+			if line.StockWarehouse != nil {
+				oneLine["StockWarehouse"] = line.StockWarehouse.Name
+			}
+			if line.Company != nil {
+				oneLine["Company"] = line.Company.Name
+			}
+			if line.State != nil {
+				oneLine["State"] = line.State.Name
+			}
+			oneLine["PickingPolicy"] = line.PickingPolicy
 
 			tableLines = append(tableLines, oneLine)
 		}

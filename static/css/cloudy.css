@@ -38,6 +38,11 @@
     margin-bottom: 0px;
 }
 
+.navbar {
+    margin-bottom: 5px;
+    min-height: 5px;
+}
+
 .form-control {
     border-radius: 4px 4px;
 }

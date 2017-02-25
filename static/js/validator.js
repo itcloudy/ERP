@@ -232,9 +232,9 @@ var BootstrapValidator = function(selector, needValidatorFields) {
             success: function(response) {
                 if (response.code == 'failed') {
                     if (formData.FormAction == "update") {
-                        toastr.error("修改失败", "错误");
+                        toastr.error("修改失败<br>" + response.debug, "错误");
                     } else {
-                        toastr.error("创建失败", "错误");
+                        toastr.error("创建失败<br>" + response.debug, "错误");
                     }
                     return;
                 } else {
@@ -1571,6 +1571,7 @@ $(function() {
             }
         }
     });
+    // 库位
     BootstrapValidator("#stockLocationForm", {
         Name: {
             message: "该值无效",
@@ -1641,6 +1642,49 @@ $(function() {
                 regexp: {
                     regexp: /[1-9]+$/,
                     message: '层应为大于0的整数'
+                },
+            }
+        }
+    });
+    // 销售订单
+    BootstrapValidator("#saleOrderForm", {
+        Partner: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "客户不能为空"
+                }
+            }
+        },
+        Company: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "所属公司不能为空"
+                },
+            }
+        },
+        StockWarehouse: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "发货仓库不能为空"
+                },
+            }
+        },
+        SalesMan: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "业务员不能为空"
+                },
+            }
+        },
+        PickingPolicy: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "发货策略不能为空"
                 },
             }
         }

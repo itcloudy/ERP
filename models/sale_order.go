@@ -3,6 +3,7 @@ package models
 import (
 	"errors"
 	"fmt"
+	"reflect"
 	"strings"
 	"time"
 
@@ -13,25 +14,35 @@ import (
 
 // SaleOrder 产品分类
 type SaleOrder struct {
-	ID         int64            `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser *User            `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name       string           `orm:"unique" json:"name"`                   //订单号
-	Partner    *Partner         `orm:"rel(fk)"`                              //客户
-	SalesMan   *User            `orm:"rel(fk)"`                              //业务员
-	Company    *Company         `orm:"rel(fk)"`                              //公司
-	Country    *AddressCountry  `orm:"rel(fk);null" json:"country"`          //国家
-	Province   *AddressProvince `orm:"rel(fk);null" json:"province"`         //省份
-	City       *AddressCity     `orm:"rel(fk);null" json:"city"`             //城市
-	District   *AddressDistrict `orm:"rel(fk);null" json:"district"`         //区县
-	Street     string           `orm:"default()" json:"street"`          //街道
-	OrderLine  []*SaleOrderLine `orm:"reverse(many)"`                        //订单明细
-	State      *SaleOrderState  `orm:"rel(fk)"`                              //订单状态
+	ID             int64            `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser     *User            `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser     *User            `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate     time.Time        `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate     time.Time        `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Name           string           `orm:"unique" json:"name"`                   //订单号
+	Partner        *Partner         `orm:"rel(fk)"`                              //客户
+	SalesMan       *User            `orm:"rel(fk)"`                              //业务员
+	Company        *Company         `orm:"rel(fk)"`                              //公司
+	Country        *AddressCountry  `orm:"rel(fk);null" json:"-"`                //国家
+	Province       *AddressProvince `orm:"rel(fk);null" json:"-"`                //省份
+	City           *AddressCity     `orm:"rel(fk);null" json:"-"`                //城市
+	District       *AddressDistrict `orm:"rel(fk);null" json:"-"`                //区县
+	Street         string           `orm:"default()" json:"Street"`              //街道
+	OrderLine      []*SaleOrderLine `orm:"reverse(many)"`                        //订单明细
+	State          *SaleOrderState  `orm:"rel(fk)"`                              //订单状态
+	StockWarehouse *StockWarehouse  `orm:"rel(fk)"`                              //仓库
+	PickingPolicy  string           `orm:"default(one)" json:"PickingPolicy"`    //发货策略one/mult
 
-	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
-	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	FormAction       string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
+	ActionFields     []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
+	CompanyID        int64    `orm:"-" json:"Company"`
+	PartnerID        int64    `orm:"-" json:"Partner"`
+	SalesManID       int64    `orm:"-" json:"SalesMan"`
+	CountryID        int64    `orm:"-" json:"Country"`
+	ProvinceID       int64    `orm:"-" json:"Province"`
+	CityID           int64    `orm:"-" json:"City"`
+	DistrictID       int64    `orm:"-" json:"District"`
+	StockWarehouseID int64    `orm:"-" json:"StockWarehouse"`
 }
 
 func init() {
@@ -40,10 +51,59 @@ func init() {
 
 // AddSaleOrder insert a new SaleOrder into database and returns
 // last inserted ID on success.
-func AddSaleOrder(obj *SaleOrder) (id int64, err error) {
+func AddSaleOrder(obj *SaleOrder, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
+	obj.CreateUser = addUser
+	obj.UpdateUser = addUser
+	errBegin := o.Begin()
+	defer func() {
+		if err != nil {
+			if errRollback := o.Rollback(); errRollback != nil {
+				err = errRollback
+			}
+		}
+	}()
+	if errBegin != nil {
+		return 0, errBegin
+	}
+	if obj.SalesManID > 0 {
+		obj.SalesMan, _ = GetUserByID(obj.SalesManID)
 
+	}
+
+	if obj.CompanyID > 0 {
+		obj.Company, _ = GetCompanyByID(obj.CompanyID)
+	}
+	if obj.CountryID > 0 {
+		obj.Country, _ = GetAddressCountryByID(obj.CountryID)
+	}
+	if obj.ProvinceID > 0 {
+		obj.Province, _ = GetAddressProvinceByID(obj.ProvinceID)
+	}
+	if obj.CityID > 0 {
+		obj.City, _ = GetAddressCityByID(obj.CityID)
+	}
+	if obj.DistrictID > 0 {
+		obj.District, _ = GetAddressDistrictByID(obj.DistrictID)
+	}
+	if obj.StockWarehouseID > 0 {
+		obj.StockWarehouse, _ = GetStockWarehouseByID(obj.StockWarehouseID)
+	}
+	if obj.StockWarehouse != nil && obj.Company != nil {
+		obj.State, _ = GetSaleOrderStateByCompanyStock(obj.Company, obj.StockWarehouse, nil)
+	}
+	if obj.PartnerID > 0 {
+		obj.Partner, _ = GetPartnerByID(obj.PartnerID)
+	}
+	// 获得款式产品编码
+	obj.Name, _ = GetNextSequece(reflect.Indirect(reflect.ValueOf(obj)).Type().Name(), obj.Company.ID)
 	id, err = o.Insert(obj)
+	if err == nil {
+		errCommit := o.Commit()
+		if errCommit != nil {
+			return 0, errCommit
+		}
+	}
 	return id, err
 }
 

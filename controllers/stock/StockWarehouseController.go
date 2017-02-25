@@ -228,7 +228,8 @@ func (ctl *StockWarehouseController) PostList() {
 	sortby := make([]string, 0, 1)
 	order := make([]string, 0, 1)
 	cond := make(map[string]map[string]interface{})
-
+	condAnd := make(map[string]interface{})
+	condOr := make(map[string]interface{})
 	excludeIdsStr := ctl.GetStrings("exclude[]")
 	var excludeIds []int64
 	for _, v := range excludeIdsStr {
@@ -239,7 +240,12 @@ func (ctl *StockWarehouseController) PostList() {
 	if len(excludeIds) > 0 {
 		exclude["Id.in"] = excludeIds
 	}
-
+	if name := strings.TrimSpace(ctl.GetString("Name")); name != "" {
+		condAnd["Name.icontains"] = name
+	}
+	if companyId, err := ctl.GetInt64("CompanyID"); err == nil {
+		condAnd["Company.Id"] = companyId
+	}
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
 	orderStr := ctl.GetString("order")
@@ -250,6 +256,12 @@ func (ctl *StockWarehouseController) PostList() {
 	} else {
 		sortby = append(sortby, "Id")
 		order = append(order, "desc")
+	}
+	if len(condAnd) > 0 {
+		cond["and"] = condAnd
+	}
+	if len(condOr) > 0 {
+		cond["or"] = condOr
 	}
 	if result, err := ctl.stockWarehouseList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result
