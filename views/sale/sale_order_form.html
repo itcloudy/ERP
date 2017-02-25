@@ -14,12 +14,15 @@
     </div>
     <div class="row">
         <nav class="navbar navbar-default navbar-form-state" role="navigation">
-            <div class="form-button-action pull-left">
-                <button class="btn btn-primary">确认</button>
-                <button class="btn btn-default">取消</button>
+            {{if .RecordID}}
+            <div class="pull-left">
+                {{if eq .Order.State.Name "draft"}}
+                <button class="btn btn-primary btn-sm">订单确认</button> {{end}}
+                <button class="btn btn-default btn-sm">取消</button>
             </div>
+            {{end}}
             <div class="pull-right">
-                <ul class="nav nav-pills nav-justified step step-arrow">
+                <ul class="nav nav-pills nav-justified sale-order-state step step-arrow ">
                     <li class="active">
                         <a>&nbsp&nbsp草稿</a>
                     </li>
@@ -43,6 +46,7 @@
         </nav>
     </div>
     {{ .xsrf }} {{if .RecordID}}
+    <p id="form-sale-order-state" style="display: none;">{{.Order.State.Name}}</p>
     <input type="hidden" name="recordID" id="record-id" value="{{.RecordID}}"> {{end}}
     <div class="row">
         <div class="col-md-6">

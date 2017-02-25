@@ -24,6 +24,7 @@ type SaleOrderState struct {
 	StockWarehouse   *StockWarehouse `orm:"rel(fk)"`                              //仓库
 	NextStep         *SaleOrderState `orm:"null;rel(one)"`                        //下一步
 	PrevStep         *SaleOrderState `orm:"null;rel(one)"`                        //上一步
+	Sequence         int64           `orm:"default(1)" json:"Sequence"`           //序号
 	FormAction       string          `orm:"-" json:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
 	ActionFields     []string        `orm:"-" json:"ActionFields"`                //需要操作的字段,用于update时
 	CompanyID        int64           `orm:"-" json:"Company"`

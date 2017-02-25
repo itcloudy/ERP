@@ -78,8 +78,6 @@ func GetNextSequece(structName string, companyId int64) (stStr string, err error
 			return "", errCommit
 		}
 	}
-	fmt.Println(stStr)
-	fmt.Println(err)
 	return stStr, err
 }
 

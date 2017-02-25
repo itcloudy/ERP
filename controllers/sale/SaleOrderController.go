@@ -77,12 +77,11 @@ func (ctl *SaleOrderController) Get() {
 // Edit edit sale order
 func (ctl *SaleOrderController) Edit() {
 	id := ctl.Ctx.Input.Param(":id")
-	orderInfo := make(map[string]interface{})
 	if id != "" {
 		if idInt64, e := strconv.ParseInt(id, 10, 64); e == nil {
 			if order, err := md.GetSaleOrderByID(idInt64); err == nil {
 				ctl.PageAction = order.Name
-				orderInfo["name"] = order.Name
+				ctl.Data["Order"] = order
 
 			}
 		}
@@ -90,7 +89,6 @@ func (ctl *SaleOrderController) Edit() {
 	ctl.Data["Action"] = "edit"
 	ctl.Data["FormField"] = "form-edit"
 	ctl.Data["RecordID"] = id
-	ctl.Data["order"] = orderInfo
 	ctl.Layout = "base/base.html"
 	ctl.TplName = "sale/sale_order_form.html"
 }

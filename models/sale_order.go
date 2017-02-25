@@ -113,6 +113,30 @@ func GetSaleOrderByID(id int64) (obj *SaleOrder, err error) {
 	o := orm.NewOrm()
 	obj = &SaleOrder{ID: id}
 	if err = o.Read(obj); err == nil {
+		if obj.Partner != nil {
+			o.Read(obj.Partner)
+		}
+		if obj.SalesMan != nil {
+			o.Read(obj.SalesMan)
+		}
+		if obj.Company != nil {
+			o.Read(obj.Company)
+		}
+		if obj.Country != nil {
+			o.Read(obj.Country)
+		}
+		if obj.Province != nil {
+			o.Read(obj.Province)
+		}
+		if obj.City != nil {
+			o.Read(obj.City)
+		}
+		if obj.StockWarehouse != nil {
+			o.Read(obj.StockWarehouse)
+		}
+		if obj.State != nil {
+			o.Read(obj.State)
+		}
 		return obj, nil
 	}
 	return nil, err

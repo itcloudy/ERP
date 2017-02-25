@@ -47,18 +47,14 @@
     border-radius: 4px 4px;
 }
 
-
-/*form页面状态控制*/
-
-.form-button-action>button {
-    margin-bottom: 0px;
+.post-form label,
+.post-form .p-form-control {
+    padding-left: 1px;
+    padding-right: 1px;
 }
 
-
-/*form表单按钮显示控制，非权限*/
-
-.form-edit .form-button-action button {
-    display: none;
+.post-form label::after {
+    content: ":";
 }
 
 .step-arrow li a::before {

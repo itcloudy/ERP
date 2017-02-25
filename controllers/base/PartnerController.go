@@ -215,7 +215,7 @@ func (ctl *PartnerController) partnerList(query map[string]interface{}, exclude 
 				province := make(map[string]interface{})
 				province["id"] = line.Province.ID
 				province["name"] = line.Province.Name
-				oneLine["Country"] = province
+				oneLine["Province"] = province
 				b.WriteString(line.Province.Name)
 			}
 			if line.City != nil {
