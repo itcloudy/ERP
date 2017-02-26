@@ -99,9 +99,15 @@ function defaultQueryParams(params) {
 var displayTable = function(selectId, ajaxUrl, columns, bootstrapTableFunctionDict) {
     var $tableNode = $(selectId);
     var queryParams = defaultQueryParams;
+    var onExpandRow = undefined;
+    var onPostBody = undefined;
     if (bootstrapTableFunctionDict != undefined) {
-        var onExpandRow = bootstrapTableFunctionDict.onExpandRow;
-        var onPostBody = bootstrapTableFunctionDict.onPostBody;
+        if (bootstrapTableFunctionDict.onExpandRow != undefined) {
+            onExpandRow = bootstrapTableFunctionDict.onExpandRow;
+        }
+        if (bootstrapTableFunctionDict.onPostBody != undefined) {
+            onPostBody = bootstrapTableFunctionDict.onPostBody;
+        }
         if (bootstrapTableFunctionDict.queryParams) {
             queryParams = bootstrapTableFunctionDict.queryParams;
         }
