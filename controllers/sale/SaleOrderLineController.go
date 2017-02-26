@@ -174,6 +174,10 @@ func (ctl *SaleOrderLineController) SaleOrderLineList(query map[string]interface
 			oneLine["ProductName"] = line.ProductName
 			oneLine["ProductCode"] = line.ProductCode
 			oneLine["FirstSaleQty"] = line.FirstSaleQty
+			oneLine["FirstUomStep"] = line.FirstSaleUom.Rounding
+			oneLine["SecondUomStep"] = line.SecondSaleUom.Rounding
+			oneLine["FirstUomName"] = line.FirstSaleUom.Name
+			oneLine["SecondUomName"] = line.SecondSaleUom.Name
 			oneLine["SecondSaleQty"] = line.SecondSaleQty
 			oneLine["PriceUnit"] = line.PriceUnit
 			oneLine["Total"] = line.Total

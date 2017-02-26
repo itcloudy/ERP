@@ -11,8 +11,8 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
         formatter: function cellStyle(value, row, index) {
             var html = '';
             if (row.Product) {
-                html = "<p class='p-form-line-control'>" + "[" + row.Product.defaultCode + "]" + row.Product.name + "<a class='pull-right' href='/product/product/" + row.Product.id + "?action=detail'><i class='fa fa-external-link'></i></a></p>";
-                html += '<select data-type="int" data-oldValue="' + row.Product.id + '" name="ProductProduct-' + row.id + '" id="ProductProduct-' + row.id + '" class="form-control select-sale-order-product-product">';
+                html = "<p class='p-form-line-control'>" + "[" + row.Product.defaultCode + "]" + row.Product.name + "<a class='pull-right' target='_blank' href='/product/product/" + row.Product.id + "?action=detail'><i class='fa fa-external-link'></i></a></p>";
+                html += '<select data-type="int" data-oldvalue="' + row.Product.id + '" name="ProductProduct-' + row.id + '" id="ProductProduct-' + row.id + '" class="form-control select-sale-order-product-product">';
                 html += '<option value="' + row.Product.id + '"  selected="selected">' + '[' + row.Product.defaultCode + ']' + row.Product.name + '</option>'
                 html += '</select>';
             }
@@ -52,30 +52,42 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
     {
         title: "第一单位数量",
         field: 'FirstSaleQty',
-        align: "left",
+        align: "center",
         sortable: true,
         order: "desc",
         valign: "middle",
         formatter: function cellStyle(value, row, index) {
             var html = '';
-            if (row.FirstSaleQty) {
-                html = "<p class='p-form-line-control'>" + row.FirstSaleQty + "</p>";
+            var firstSaleQty = row.FirstSaleQty || 1;
+            var firstUomStep = row.FirstUomStep || 1;
+            var firstUomName = row.FirstUomName;
+            var firstUomNameStr = "";
+            if (firstUomName != undefined || firstUomName != "") {
+                firstUomNameStr = "<span class='pull-right'>(" + firstUomName + ")</span>";
             }
+            html = "<p class='p-form-line-control'>" + firstSaleQty + firstUomNameStr + "</p>";
+            html += '<input data-type="float" data-oldvalue=' + firstSaleQty + '" class="form-control " id="FirstSaleQty-' + row.id + ' name="FirstSaleQty-' + row.id + '" type="number" min="0" step="' + firstUomStep + '" value="' + firstSaleQty + '"/>';
             return html;
         }
     },
     {
         title: "第二单位数量",
         field: 'SecondSaleQty',
-        align: "left",
+        align: "center",
         sortable: true,
         order: "desc",
         valign: "middle",
         formatter: function cellStyle(value, row, index) {
             var html = '';
-            if (row.SecondSaleQty) {
-                html = "<p class='p-form-line-control'>" + row.SecondSaleQty + "</p>";
+            var secondSaleQty = row.SecondSaleQty || 0;
+            var secondUomStep = row.SecondUomStep || 1;
+            var secondUomName = row.SecondUomName;
+            var secondUomNameStr = "";
+            if (secondUomName != undefined || secondUomName != "") {
+                secondUomNameStr = "<span class='pull-right'>(" + secondUomName + ")</span>";
             }
+            html = "<p class='p-form-line-control'>" + secondSaleQty + secondUomNameStr + "</p>";
+            html += '<input data-type="float" data-oldvalue=' + secondSaleQty + '" class="form-control " id="SecondSaleQty-' + row.id + ' name="SecondSaleQty-' + row.id + '" type="number" min="0" step="' + secondUomStep + '" value="' + secondSaleQty + '"/>';
             return html;
         }
     },
@@ -120,8 +132,31 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
             return html;
         }
     }
-], undefined, function() {
-    select2AjaxData(".select-sale-order-product-product", '/product/product/', function(event) {});
+], {
+    onPostBody: function() {
+        select2AjaxData(".select-sale-order-product-product", '/product/product/', {
+            changeFunction: function(event) {},
+            formatRepo: function(repo) {
+                'use strict';
+                var name = repo.name || '[' + repo.DefaultCode + ']' + repo.Name;
+                if (repo.loading) { return repo.text; }
+                var html = "";
+                html = "<p>" + name + "</p>";
+                return html;
+            },
+            formatRepoSelection: function(repo) {
+                'use strict';
+                var html = "";
+                var name = repo.name || repo.Name;
+                if (name) {
+                    html = "<p>" + '[' + repo.DefaultCode + ']' + name + "</p>";
+                } else {
+                    html = repo.text;
+                }
+                return html;
+            }
+        });
+    }
 });
 // 增加一行销售订单明细
 $("#add-one-sale-order-line").on("click", function(e) {

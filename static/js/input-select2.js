@@ -3,7 +3,7 @@
  $.fn.select2.defaults.set("theme", "bootstrap");
  var LIMIT = 5;
 
- function formatRepo(repo) {
+ function defaultFormatRepo(repo) {
      'use strict';
      var name = repo.name || repo.Name;
      if (repo.loading) { return repo.text; }
@@ -12,10 +12,9 @@
      return html;
  }
 
- function formatRepoSelection(repo) {
+ function defaultFormatRepoSelection(repo) {
      'use strict';
      var html = "";
-     console.log(repo);
      var name = repo.name || repo.Name;
      if (name) {
          html = "<p>" + name + "</p>";
@@ -23,6 +22,20 @@
          html = repo.text;
      }
      return html;
+ }
+
+ function defaultProcessResults(data, params) {
+     params.page = params.page || 0;
+     var paginator = JSON.parse(data.paginator);
+     if (data.data == undefined || data.data.length < 1) {
+         toastr.warning("没有更多可选数据", "警告");
+     }
+     return {
+         results: data.data,
+         pagination: {
+             more: paginator.totalPage > paginator.currentPage
+         }
+     };
  }
  var selectStaticData = function(selectClass, data) {
      'use strict';
@@ -46,8 +59,14 @@
      });
  };
  //selct2 Ajax 请求 
- var select2AjaxData = function(selectClass, ajaxUrl, changeFunction) {
+ var select2AjaxData = function(selectClass, ajaxUrl, select2FunctionDict) {
      'use strict';
+     if (select2FunctionDict != undefined) {
+         var changeFunction = select2FunctionDict.changeFunction;
+         var formatRepo = select2FunctionDict.formatRepo || defaultFormatRepo;
+         var formatRepoSelection = select2FunctionDict.formatRepoSelection || defaultFormatRepoSelection;
+         var processResults = select2FunctionDict.processResults || defaultProcessResults
+     }
      $(selectClass).select2({
          width: "off",
          ajax: {
@@ -70,19 +89,7 @@
                  }
                  return selectParams
              },
-             processResults: function(data, params) {
-                 params.page = params.page || 0;
-                 var paginator = JSON.parse(data.paginator);
-                 if (data.data == undefined || data.data.length < 1) {
-                     toastr.warning("没有更多可选数据", "警告");
-                 }
-                 return {
-                     results: data.data,
-                     pagination: {
-                         more: paginator.totalPage > paginator.currentPage
-                     }
-                 };
-             }
+             processResults: processResults
          },
          escapeMarkup: function(markup) {
              return markup;
@@ -479,8 +486,8 @@
          return markup;
      }, // let our custom formatter work
      minimumInputLength: 0,
-     templateResult: formatRepo,
-     templateSelection: formatRepoSelection
+     templateResult: defaultFormatRepo,
+     templateSelection: defaultFormatRepoSelection
  }).on("change", function(e) {
      var partnerId = parseInt(e.currentTarget.value);
      $.ajax({
@@ -567,8 +574,8 @@
              return markup;
          }, // let our custom formatter work
          minimumInputLength: 0,
-         templateResult: formatRepo,
-         templateSelection: formatRepoSelection
+         templateResult: defaultFormatRepo,
+         templateSelection: defaultFormatRepoSelection
      });
  };
  selectCompanyStockWarehouse(".select-company-stock-warehouse");

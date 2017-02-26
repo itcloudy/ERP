@@ -53,8 +53,59 @@ $.extend($.fn.bootstrapTable.defaults, {
         $("#display-table tbody>tr").removeClass("danger");
     }
 });
-var displayTable = function(selectId, ajaxUrl, columns, onExpandRow, onPostBody) {
+
+function defaultQueryParams(params) {
+    var xsrf = $("input[name ='_xsrf']");
+    if (xsrf != undefined) {
+        params._xsrf = xsrf[0].value;
+    }
+    params.action = 'table';
+    var filterCond = $("#listViewSearch .filter-condition");
+    var filter = {};
+    // console.log(filterCond);
+    //获得过滤条件
+    for (var i = 0, len = filterCond.length; i < len; i++) {
+        var self = filterCond[i];
+        // 处理radio数据
+        if (self.type == "radio") {
+            if ($(self).data("type") == "string") {
+                var nodeName = $("input[name ='" + self.name + "']:checked");
+                if (nodeName != undefined) {
+                    filter[self.name] = nodeName.val();
+                }
+            } else {
+                console.log("data  type is not string");
+            }
+        } else if (self.type == "checkbox") {
+            if (self.checked) {
+                filter[self.name] = true;
+            } else {
+                filter[self.name] = false;
+            }
+        } else {
+            var val = $(self).val();
+            if (val != "") {
+                // 若为null跳出此次循环
+                if (val === null) {
+                    continue;
+                }
+                filter[self.name] = getCurrentDataType(val, $(self).data("type"))
+            }
+        }
+    }
+    params.filter = JSON.stringify(filter);
+    return params;
+};
+var displayTable = function(selectId, ajaxUrl, columns, bootstrapTableFunctionDict) {
     var $tableNode = $(selectId);
+    var queryParams = defaultQueryParams;
+    if (bootstrapTableFunctionDict != undefined) {
+        var onExpandRow = bootstrapTableFunctionDict.onExpandRow;
+        var onPostBody = bootstrapTableFunctionDict.onPostBody;
+        if (bootstrapTableFunctionDict.defaultQueryParams) {
+            queryParams = bootstrapTableFunctionDict.queryParams;
+        }
+    }
     //根据数据类型获得正确的数据,默认string
     var getCurrentDataType = function(val, dataType) {
         if (dataType == "" || dataType === undefined || dataType === null) {
@@ -84,51 +135,10 @@ var displayTable = function(selectId, ajaxUrl, columns, onExpandRow, onPostBody)
         }
         return val
     };
+
     var options = {
         url: ajaxUrl,
-        queryParams: function(params) {
-            // console.log(params);
-            var xsrf = $("input[name ='_xsrf']");
-            if (xsrf != undefined) {
-                params._xsrf = xsrf[0].value;
-            }
-            params.action = 'table';
-            var filterCond = $("#listViewSearch .filter-condition");
-            var filter = {};
-            // console.log(filterCond);
-            //获得过滤条件
-            for (var i = 0, len = filterCond.length; i < len; i++) {
-                var self = filterCond[i];
-                // 处理radio数据
-                if (self.type == "radio") {
-                    if ($(self).data("type") == "string") {
-                        var nodeName = $("input[name ='" + self.name + "']:checked");
-                        if (nodeName != undefined) {
-                            filter[self.name] = nodeName.val();
-                        }
-                    } else {
-                        console.log("data  type is not string");
-                    }
-                } else if (self.type == "checkbox") {
-                    if (self.checked) {
-                        filter[self.name] = true;
-                    } else {
-                        filter[self.name] = false;
-                    }
-                } else {
-                    var val = $(self).val();
-                    if (val != "") {
-                        // 若为null跳出此次循环
-                        if (val === null) {
-                            continue;
-                        }
-                        filter[self.name] = getCurrentDataType(val, $(self).data("type"))
-                    }
-                }
-            }
-            params.filter = JSON.stringify(filter);
-            return params;
-        },
+        queryParams: queryParams,
         columns: columns
     }
     if (onExpandRow != undefined) {
@@ -205,34 +215,36 @@ displayTable("#table-user", "/user/", [
             return html;
         }
     }
-], function(index, row, $detail) {
-    var params = (function() {
-        var params = {};
-        var xsrf = $("input[name ='_xsrf']");
-        if (xsrf != undefined) {
-            params._xsrf = xsrf[0].value;
-        }
-        params.action = 'table';
-        params.offset = 0;
-        params.limit = 5;
-        return params;
-    })();
-    $.ajax({
-        url: "/user/",
-        dataType: "json",
-        type: "POST",
-        async: false,
-        data: params,
-        success: function(data) {
-            html = "ok";
-            $detail.html(data.total);
-        },
-        error: function(error) {
+], {
+    onExpandRow: function(index, row, $detail) {
+        var params = (function() {
+            var params = {};
+            var xsrf = $("input[name ='_xsrf']");
+            if (xsrf != undefined) {
+                params._xsrf = xsrf[0].value;
+            }
+            params.action = 'table';
+            params.offset = 0;
+            params.limit = 5;
+            return params;
+        })();
+        $.ajax({
+            url: "/user/",
+            dataType: "json",
+            type: "POST",
+            async: false,
+            data: params,
+            success: function(data) {
+                html = "ok";
+                $detail.html(data.total);
+            },
+            error: function(error) {
 
-            html = error;
-            $detail.html(html);
-        }
-    });
+                html = error;
+                $detail.html(html);
+            }
+        });
+    }
 });
 // 公司
 displayTable("#table-company", '/company/', [
