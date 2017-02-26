@@ -53,29 +53,24 @@
      }
      return selectParams
  }
- var selectStaticData = function(selectClass, data) {
+ var selectStaticData = function(selector, data) {
      'use strict';
-     $(selectClass).each(function(index, el) {
-         if (el.id != undefined && el.id != "") {
-             var $selectNode = $("#" + el.id);
-             $selectNode.select2({
-                 width: "off",
-                 data: data,
-                 escapeMarkup: function(markup) { return markup; },
-                 // minimumInputLength: 1,
-                 templateResult: function(repo) {
-                     if (repo.loading) { return repo.text; }
-                     return repo.name;
-                 },
-                 templateSelection: function(repo) {
-                     return repo.name;
-                 }
-             });
+     $(selector).select2({
+         width: "off",
+         data: data,
+         escapeMarkup: function(markup) { return markup; },
+         // minimumInputLength: 1,
+         templateResult: function(repo) {
+             if (repo.loading) { return repo.text; }
+             return repo.name;
+         },
+         templateSelection: function(repo) {
+             return repo.name;
          }
      });
  };
  //selct2 Ajax 请求 
- var select2AjaxData = function(selectClass, ajaxUrl, select2FunctionDict) {
+ var select2AjaxData = function(selector, ajaxUrl, select2FunctionDict) {
      'use strict';
      var selectPostParams = defaultSelectPostParams;
      var changeFunction = undefined;
@@ -99,7 +94,7 @@
              selectPostParams = select2FunctionDict.selectPostParams;
          }
      }
-     $(selectClass).select2({
+     $(selector).select2({
          width: "off",
          ajax: {
              url: ajaxUrl,

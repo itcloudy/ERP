@@ -11,7 +11,6 @@ $("#clearListSearchCond-table").click(function() {
     $(".table-diplay-info").bootstrapTable('refresh');
 });
 $("#listViewSearch input").on("change", function(e) { console.log(e); });
-
 //tabel视图中使用bootstrap-table来显示数据
 $.extend($.fn.bootstrapTable.defaults, {
     method: "post",

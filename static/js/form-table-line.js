@@ -8,6 +8,7 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
         sortable: true,
         order: "desc",
         valign: "middle",
+        cellStyle: { css: { "min-width": "200px" } },
         formatter: function cellStyle(value, row, index) {
             var html = '';
             if (row.Product) {
@@ -56,6 +57,7 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
         sortable: true,
         order: "desc",
         valign: "middle",
+        cellStyle: { css: { "max-width": "40px" } },
         formatter: function cellStyle(value, row, index) {
             var html = '';
             var firstSaleQty = row.FirstSaleQty || 1;
@@ -77,6 +79,7 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
         sortable: true,
         order: "desc",
         valign: "middle",
+        cellStyle: { css: { "max-width": "40px" } },
         formatter: function cellStyle(value, row, index) {
             var html = '';
             var secondSaleQty = row.SecondSaleQty || 0;
@@ -128,7 +131,7 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
         formatter: function cellStyle(value, row, index) {
             var html = "";
             var url = "/sale/order/line/";
-            html += "<i class='fa fa-trash-o'></i>";
+            html += "<a class='form-tree-line-action-remove' href='#'><i class='fa fa-trash-o'></i></a>";
             return html;
         }
     }
@@ -138,22 +141,26 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
             changeFunction: function(event) {},
             formatRepo: function(repo) {
                 'use strict';
-                var name = repo.name || '[' + repo.DefaultCode + ']' + repo.Name;
                 if (repo.loading) { return repo.text; }
-                var html = "";
-                html = "<p>" + name + "</p>";
-                return html;
+                var name = repo.name || "";
+                if (repo.DefaultCode != undefined) {
+                    name += '[' + repo.DefaultCode + ']';
+                }
+                if (repo.Name != undefined) {
+                    name += repo.Name;
+                }
+                return "<p>" + name + "</p>";
             },
             formatRepoSelection: function(repo) {
                 'use strict';
-                var html = "";
-                var name = repo.name || repo.Name;
-                if (name) {
-                    html = "<p>" + '[' + repo.DefaultCode + ']' + name + "</p>";
-                } else {
-                    html = repo.text;
+                var name = repo.name || "";
+                if (repo.DefaultCode != undefined) {
+                    name += '[' + repo.DefaultCode + ']';
                 }
-                return html;
+                if (repo.Name != undefined) {
+                    name += repo.Name;
+                }
+                return "<p>" + name + "</p>";
             }
         });
     },
@@ -167,6 +174,8 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
         var saleOrderId = $("input[name ='recordID']");
         if (saleOrderId.length > 0) {
             params.saleOrderId = parseInt(saleOrderId[0].value);
+        } else {
+            params.saleOrderId = 0;
         }
         return params;
     }
