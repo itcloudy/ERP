@@ -197,11 +197,16 @@ func (ctl *SaleOrderLineController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
 	cond := make(map[string]map[string]interface{})
+	condAnd := make(map[string]interface{})
+	condOr := make(map[string]interface{})
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 0, 1)
 	order := make([]string, 0, 1)
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
+	if saleOrderID, err := ctl.GetInt64("saleOrderId"); err == nil {
+		condAnd["SaleOrder.Id"] = saleOrderID
+	}
 	orderStr := ctl.GetString("order")
 	sortStr := ctl.GetString("sort")
 	if orderStr != "" && sortStr != "" {
@@ -210,6 +215,12 @@ func (ctl *SaleOrderLineController) PostList() {
 	} else {
 		sortby = append(sortby, "Id")
 		order = append(order, "desc")
+	}
+	if len(condAnd) > 0 {
+		cond["and"] = condAnd
+	}
+	if len(condOr) > 0 {
+		cond["or"] = condOr
 	}
 	if result, err := ctl.SaleOrderLineList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result

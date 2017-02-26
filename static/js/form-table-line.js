@@ -156,6 +156,19 @@ displayTable("#form-table-sale-order-line", "/sale/order/line", [
                 return html;
             }
         });
+    },
+    queryParams: function(params) {
+        var xsrf = $("input[name ='_xsrf']");
+        if (xsrf.length > 0) {
+            params._xsrf = xsrf[0].value;
+        }
+        params.action = 'table';
+
+        var saleOrderId = $("input[name ='recordID']");
+        if (saleOrderId.length > 0) {
+            params.saleOrderId = parseInt(saleOrderId[0].value);
+        }
+        return params;
     }
 });
 // 增加一行销售订单明细

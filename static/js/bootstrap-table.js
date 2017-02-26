@@ -102,7 +102,7 @@ var displayTable = function(selectId, ajaxUrl, columns, bootstrapTableFunctionDi
     if (bootstrapTableFunctionDict != undefined) {
         var onExpandRow = bootstrapTableFunctionDict.onExpandRow;
         var onPostBody = bootstrapTableFunctionDict.onPostBody;
-        if (bootstrapTableFunctionDict.defaultQueryParams) {
+        if (bootstrapTableFunctionDict.queryParams) {
             queryParams = bootstrapTableFunctionDict.queryParams;
         }
     }
