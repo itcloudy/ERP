@@ -10,4 +10,4 @@ debug
 debug~
 .idea
 logs/*.log
-conf/app.conf
+/conf/app.conf

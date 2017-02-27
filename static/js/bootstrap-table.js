@@ -53,6 +53,36 @@ $.extend($.fn.bootstrapTable.defaults, {
     }
 });
 
+//根据数据类型获得正确的数据,默认string
+function getCurrentDataType(val, dataType) {
+    if (dataType == "" || dataType === undefined || dataType === null) {
+        dataType = "string";
+    }
+    switch (dataType) {
+        case "int": // 整形
+            val = parseInt(val);
+            break;
+        case "float": // 浮点型
+            val = parseFloat(val);
+            break;
+        case "array_int": // 整形数组
+            var a_arr = [];
+            for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                a_arr.push(parseInt(val[a_i]));
+            }
+            val = a_arr;
+            break;
+        case "arrar_float": //  浮点型数组
+            var a_arr = [];
+            for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                a_arr.push(parseFloat(val[a_i]));
+            }
+            val = a_arr;
+            break;
+    }
+    return val
+};
+
 function defaultQueryParams(params) {
     var xsrf = $("input[name ='_xsrf']");
     if (xsrf != undefined) {
@@ -111,35 +141,7 @@ var displayTable = function(selectId, ajaxUrl, columns, bootstrapTableFunctionDi
             queryParams = bootstrapTableFunctionDict.queryParams;
         }
     }
-    //根据数据类型获得正确的数据,默认string
-    var getCurrentDataType = function(val, dataType) {
-        if (dataType == "" || dataType === undefined || dataType === null) {
-            dataType = "string";
-        }
-        switch (dataType) {
-            case "int": // 整形
-                val = parseInt(val);
-                break;
-            case "float": // 浮点型
-                val = parseFloat(val);
-                break;
-            case "array_int": // 整形数组
-                var a_arr = [];
-                for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
-                    a_arr.push(parseInt(val[a_i]));
-                }
-                val = a_arr;
-                break;
-            case "arrar_float": //  浮点型数组
-                var a_arr = [];
-                for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
-                    a_arr.push(parseFloat(val[a_i]));
-                }
-                val = a_arr;
-                break;
-        }
-        return val
-    };
+
 
     var options = {
         url: ajaxUrl,
