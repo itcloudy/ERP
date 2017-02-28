@@ -141,8 +141,8 @@ func GetAllProductAttributeLine(query map[string]interface{}, exclude map[string
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
-				for i, _ := range objArrs {
-					o.LoadRelated(&objArrs[i], "AttributeValues")
+				for obj := range objArrs {
+					o.LoadRelated(&obj, "AttributeValues")
 				}
 			}
 		}

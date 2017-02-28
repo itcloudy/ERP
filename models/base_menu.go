@@ -28,11 +28,13 @@ type Menu struct {
 func init() {
 	orm.RegisterModel(new(Menu))
 }
+
+// TableName 表名
 func (u *Menu) TableName() string {
 	return "base_menu"
 }
 
-// Menu insert a new Menu into database and returns
+// AddMenu insert a new Menu into database and returns
 // last inserted ID on success.
 func AddMenu(obj *Menu, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
@@ -191,8 +193,8 @@ func GetAllMenu(query map[string]interface{}, exclude map[string]interface{}, co
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
-				for i, _ := range objArrs {
-					o.LoadRelated(&objArrs[i], "Roles")
+				for _, obj := range objArrs {
+					o.LoadRelated(&obj, "Roles")
 				}
 			}
 		}

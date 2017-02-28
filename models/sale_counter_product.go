@@ -49,11 +49,11 @@ func AddSaleCounterProduct(obj *SaleCounterProduct, addUser *User) (id int64, er
 
 	if id, err = o.Insert(obj); err != nil {
 		return 0, err
-	} else {
-		errCommit := o.Commit()
-		if errCommit != nil {
-			return 0, errCommit
-		}
+	}
+	errCommit := o.Commit()
+	if errCommit != nil {
+		return 0, errCommit
+
 	}
 	return id, err
 }

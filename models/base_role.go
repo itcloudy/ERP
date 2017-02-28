@@ -32,11 +32,13 @@ type Role struct {
 func init() {
 	orm.RegisterModel(new(Role))
 }
+
+// TableName 表名
 func (u *Role) TableName() string {
 	return "base_role"
 }
 
-// Role insert a new Role into database and returns
+// AddRole insert a new Role into database and returns
 // last inserted ID on success.
 func AddRole(obj *Role, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()

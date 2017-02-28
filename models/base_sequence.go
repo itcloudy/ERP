@@ -36,12 +36,14 @@ type Sequence struct {
 func init() {
 	orm.RegisterModel(new(Sequence))
 }
+
+// TableName 表名
 func (u *Sequence) TableName() string {
 	return "base_sequence"
 }
 
-// GetNextSequece获得下一个序号
-func GetNextSequece(structName string, companyId int64) (stStr string, err error) {
+//GetNextSequece 获得下一个序号
+func GetNextSequece(structName string, companyID int64) (stStr string, err error) {
 	o := orm.NewOrm()
 	var (
 		sequence Sequence
@@ -58,7 +60,7 @@ func GetNextSequece(structName string, companyId int64) (stStr string, err error
 		return "", errBegin
 	}
 	cond := orm.NewCondition()
-	cond = cond.And("StructName", structName).And("active", true).And("IsDefault", true).And("company__id", companyId)
+	cond = cond.And("StructName", structName).And("active", true).And("IsDefault", true).And("company__id", companyID)
 	qs := o.QueryTable(&sequence)
 	qs = qs.SetCond(cond)
 	if err = qs.One(&sequence); err == nil {

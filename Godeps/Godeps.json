@@ -1,60 +1,90 @@
 {
 	"ImportPath": "goERP",
-	"GoVersion": "go1.7",
-	"GodepVersion": "v76",
+	"GoVersion": "go1.8",
+	"GodepVersion": "v79",
 	"Deps": [
 		{
 			"ImportPath": "github.com/Unknwon/goconfig",
-			"Rev": "5aa4f8cd5a472c2411c778b4680f59f2223f1966"
+			"Rev": "87a46d97951ee1ea20ed3b24c25646a79e87ba5d"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego",
-			"Comment": "v1.7.2",
-			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/cache",
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/cache/memcache",
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
+		},
+		{
+			"ImportPath": "github.com/astaxie/beego/cache/redis",
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/config",
-			"Comment": "v1.7.2",
-			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/context",
-			"Comment": "v1.7.2",
-			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/grace",
-			"Comment": "v1.7.2",
-			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/logs",
-			"Comment": "v1.7.2",
-			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/orm",
-			"Comment": "v1.7.2",
-			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/session",
-			"Comment": "v1.7.2",
-			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/toolbox",
-			"Comment": "v1.7.2",
-			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
 		},
 		{
 			"ImportPath": "github.com/astaxie/beego/utils",
-			"Comment": "v1.7.2",
-			"Rev": "90999717dda6193c6f970eec52e289b0a9e74998"
+			"Comment": "v1.7.2-2-gb55e20a",
+			"Rev": "b55e20ac60c5c2f4ec9612ec68a48cb94cfaab42"
 		},
 		{
 			"ImportPath": "github.com/beego/i18n",
-			"Rev": "e87155e8f0c05bf323d0b13470e1b97af0cb5652"
+			"Rev": "e9308947f407a24aaa1e7dbe35a01931e99cb255"
+		},
+		{
+			"ImportPath": "github.com/bradfitz/gomemcache/memcache",
+			"Comment": "release.r60-46-g1952afa",
+			"Rev": "1952afaa557dc08e8e0d89eafab110fb501c1a2b"
+		},
+		{
+			"ImportPath": "github.com/garyburd/redigo/internal",
+			"Comment": "v1.0.0-20-g4854517",
+			"Rev": "48545177e92ae3e7bcdbd50b42f7a139e6a268da"
+		},
+		{
+			"ImportPath": "github.com/garyburd/redigo/redis",
+			"Comment": "v1.0.0-20-g4854517",
+			"Rev": "48545177e92ae3e7bcdbd50b42f7a139e6a268da"
 		},
 		{
 			"ImportPath": "github.com/go-sql-driver/mysql",

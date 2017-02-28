@@ -275,32 +275,7 @@
         </div>
     </div>
 </div>
-{{end}}
-<div class="row">
-    <div class="col-md-4">
-        <fieldset>
-            <legend>一般描述</legend>
-            <p class="p-form-control">{{if .Tp}} {{.Tp.Description}} {{end}}</p>
-            <textarea data-type="string" class="form-control" name="Description" rows="5" placeholder="请输入一般描述信息">{{if .Tp}}  {{.Tp.Description}} {{end}}</textarea>
-        </fieldset>
-    </div>
-    <div class="col-md-4">
-        <fieldset>
-            <legend>采购描述</legend>
-            <p class="p-form-control">{{if .Tp}} {{.Tp.DescriptionPurchase}} {{end}}</p>
-            <textarea data-type="string" class="form-control" name="DescriptionPurchase" rows="5" placeholder="请输入采购描述信息">{{if .Tp}}  {{.Tp.DescriptionPurchase}} {{end}}</textarea>
-        </fieldset>
-    </div>
-    <div class="col-md-4">
-        <fieldset>
-            <legend>销售描述</legend>
-            <p class="p-form-control">{{if .Tp}} {{.Tp.DescriptionSale}} {{end}}</p>
-            <textarea data-type="string" class="form-control" name="DescriptionSale" rows="5" placeholder="请输入销售描述信息">{{if .Tp}}  {{.Tp.DescriptionSale}} {{end}}</textarea>
-        </fieldset>
-    </div>
-</div>
-</div>
-{{if .RecordID}}
+{{end}} {{if .RecordID}}
 <div class="tab-pane fade" id="productImages">
     <!--显示已经有的图片-->
     {{if and .Tp .Tp.BigImages}} {{range .Tp.BigImages}}

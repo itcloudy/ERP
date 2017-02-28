@@ -18,7 +18,7 @@ type TemplateFile struct {
 	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
 	Name       string    `orm:"unique" json:"Name"`                   //模版名称
-	Desc       string    ` json:"Desc"`                               //描述
+	Desc       string    `json:"Desc"`                                //描述
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
@@ -28,6 +28,7 @@ func init() {
 	orm.RegisterModel(new(TemplateFile))
 }
 
+// TableName 表名
 func (u *TemplateFile) TableName() string {
 	return "base_template_file"
 }
