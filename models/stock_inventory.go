@@ -17,7 +17,7 @@ type StockInventory struct {
 	UpdateUser *User                 `orm:"rel(fk);null" json:"-"`                //最后更新者
 	CreateDate time.Time             `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
 	UpdateDate time.Time             `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name       string                `orm:"Name"`                                 //盘点名称
+	Name       string                `orm:"unique"`                               //盘点名称
 	Date       time.Time             `orm:"auto_now;type(datetime)" json:"Date"`  //盘点日期
 	Lines      []*StockInventoryLine `orm:"reverse(many)"`                        //盘点明细
 	Moves      []*StockMove          `orm:"reverse(many)"`                        //移动明细

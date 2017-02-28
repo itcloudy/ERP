@@ -3,6 +3,7 @@ package address
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	cb "goERP/controllers/base"
 	md "goERP/models"
 	"strconv"
@@ -140,10 +141,13 @@ func (ctl *AddressCityController) Create() {
 	ctl.TplName = "address/address_city_form.html"
 }
 
+// Validator 用于验证
 func (ctl *AddressCityController) Validator() {
 	name := strings.TrimSpace(ctl.GetString("Name"))
 	recordID, _ := ctl.GetInt64("recordID")
 	result := make(map[string]bool)
+	provinceID, _ := ctl.GetInt64("ProvinceID")
+	fmt.Println(provinceID)
 	obj, err := md.GetAddressCityByName(name)
 	if err != nil {
 		result["valid"] = true
@@ -191,6 +195,8 @@ func (ctl *AddressCityController) addressTemplateList(query map[string]interface
 	}
 	return result, err
 }
+
+// PostList post请求list
 func (ctl *AddressCityController) PostList() {
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})

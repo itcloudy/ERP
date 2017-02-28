@@ -14,7 +14,7 @@ import (
 	"github.com/beego/i18n"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
-	// _ "github.com/mattn/go-sqlite3"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 //初始化函数，会在main之前执行，可用于初始化数据，连接数据库等操作

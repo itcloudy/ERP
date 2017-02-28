@@ -55,7 +55,7 @@ var BootstrapValidator = function(selector, needValidatorFields) {
         submitButtons: 'button[type="submit"]',
         trigger: null,
         fields: needValidatorFields
-    }).on('success.form.bv', function(e) {
+    }).on('1231success.form.bv', function(e) {
         // Prevent form submission
         e.preventDefault();
         // 默认为表单数据创建
@@ -278,6 +278,72 @@ var BootstrapValidator = function(selector, needValidatorFields) {
 
 $(function() {
     'use strict';
+    //城市
+    BootstrapValidator("#cityForm", {
+        Country: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "国家不能为空"
+                }
+            }
+        },
+        Province: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "省份不能为空"
+                },
+            }
+        },
+        Name: {
+            message: "该值无效",
+            validators: {
+                notEmpty: {
+                    message: "城市不能为空"
+                },
+                remote: {
+                    url: "/address/city/",
+                    message: "城市已经存在",
+                    dataType: "json",
+                    delay: 200,
+                    type: "POST",
+                    data: function() {
+
+                        var params = {
+                            action: "validator"
+                        }
+                        var province = $("#province");
+                        if (province.length < 1) {
+                            toastr.error("没有<strong>省份</strong>选项", "错误");
+                            return;
+                        } else {
+                            province = province.val();
+                            if (province == null || province == undefined) {
+                                toastr.error("请按照<strong>国家->省份</strong>的顺序选择", "错误");
+                                return;
+                            } else {
+                                params.ProvinceID = parseInt(province);
+                            }
+                        }
+                        var xsrf = $("input[name ='_xsrf']");
+                        if (xsrf.length > 0) {
+                            params._xsrf = xsrf[0].value;
+                        }
+                        var name = $('input[name="name"]');
+                        if (name.length > 0) {
+                            params.name = name[0].value;
+                        }
+                        var recordID = $("input[name ='recordID']");
+                        if (recordID.length > 0) {
+                            params.recordID = recordID[0].value;
+                        }
+                        return params
+                    },
+                }
+            }
+        }
+    });
     // 用户form
     BootstrapValidator("#userForm", {
         Name: {
