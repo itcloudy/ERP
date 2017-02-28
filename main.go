@@ -17,10 +17,6 @@ import (
 	// _ "github.com/mattn/go-sqlite3"
 )
 
-const (
-	APP_VER = "1.0.0"
-)
-
 //初始化函数，会在main之前执行，可用于初始化数据，连接数据库等操作
 func init() {
 	dbType := beego.AppConfig.String("db_type")
