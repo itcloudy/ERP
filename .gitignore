@@ -11,3 +11,4 @@ debug~
 .idea
 logs/*.log
 /conf/app.conf
+goERP.sqlite3
