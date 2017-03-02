@@ -48,6 +48,7 @@ $(function() {
             }
         }
     });
+
     $('.input-radio').each(function(index, el) {
         $(el).iCheck({
             checkboxClass: 'icheckbox_square-green',

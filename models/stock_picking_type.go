@@ -67,12 +67,12 @@ func AddStockPickingType(obj *StockPickingType, addUser *User) (id int64, err er
 	id, err = o.Insert(obj)
 	if err != nil {
 		return 0, err
-	} else {
-		errCommit := o.Commit()
-		if errCommit != nil {
-			return 0, errCommit
-		}
 	}
+	errCommit := o.Commit()
+	if errCommit != nil {
+		return 0, errCommit
+	}
+
 	return id, err
 }
 

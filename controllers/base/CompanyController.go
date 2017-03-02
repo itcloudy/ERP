@@ -235,12 +235,7 @@ func (ctl *CompanyController) PostList() {
 			condAnd["Name.icontains"] = filterName
 		}
 	}
-	if len(condAnd) > 0 {
-		cond["and"] = condAnd
-	}
-	if len(condOr) > 0 {
-		cond["or"] = condOr
-	}
+
 	offset, _ := ctl.GetInt64("offset")
 	limit, _ := ctl.GetInt64("limit")
 	orderStr := ctl.GetString("order")
@@ -252,6 +247,12 @@ func (ctl *CompanyController) PostList() {
 		sortby = append(sortby, "Id")
 		order = append(order, "desc")
 
+	}
+	if len(condAnd) > 0 {
+		cond["and"] = condAnd
+	}
+	if len(condOr) > 0 {
+		cond["or"] = condOr
 	}
 	if result, err := ctl.addressTemplateList(query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 		ctl.Data["json"] = result

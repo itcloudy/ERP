@@ -144,4 +144,11 @@ $(function() {
         formTreeSelect2ProductAttributeValues("#" + AttributeValueId);
     });
 
+    //前面的代码需要重构
+
+    // form表单中明细table行action
+    $(".form-tree-line-action-remove").on('click', function(e) {
+        console.log(e);
+    });
+
 });

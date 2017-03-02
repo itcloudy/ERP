@@ -20,8 +20,8 @@ type StockPicking struct {
 	Name         string            `orm:"unique" json:"Name"`                   //单据名称
 	Origin       string            `json:"Origin"`                              //源单据
 	Note         string            `orm:"type(text)" json:"Note"`               //备注
-	MoveType     string            `orm:"default(one)" json:"MoveType"`     //移动类型:one partial
-	State        string            `orm:"default(draft)" json:"-"`          //状态 draft confirm process done cancel
+	MoveType     string            `orm:"default(one)" json:"MoveType"`         //移动类型:one partial
+	State        string            `orm:"default(draft)" json:"-"`              //状态 draft confirm process done cancel
 	Company      *Company          `orm:"rel(fk)"`                              //公司
 	LocationDest *StockLocation    `orm:"rel(fk)"`                              //目标库位
 	LocationSrc  *StockLocation    `orm:"rel(fk)"`                              //源库位
@@ -61,12 +61,12 @@ func AddStockPicking(obj *StockPicking, addUser *User) (id int64, err error) {
 	id, err = o.Insert(obj)
 	if err != nil {
 		return 0, err
-	} else {
-		errCommit := o.Commit()
-		if errCommit != nil {
-			return 0, errCommit
-		}
 	}
+	errCommit := o.Commit()
+	if errCommit != nil {
+		return 0, errCommit
+	}
+
 	return id, err
 }
 

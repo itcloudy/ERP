@@ -34,6 +34,8 @@ type Department struct {
 func init() {
 	orm.RegisterModel(new(Department))
 }
+
+// TableName 表名
 func (u *Department) TableName() string {
 	return "base_department"
 }
@@ -67,11 +69,10 @@ func AddDepartment(obj *Department, addUser *User) (id int64, err error) {
 	id, err = o.Insert(obj)
 	if err != nil {
 		return 0, err
-	} else {
-		errCommit := o.Commit()
-		if errCommit != nil {
-			return 0, errCommit
-		}
+	}
+	errCommit := o.Commit()
+	if errCommit != nil {
+		return 0, errCommit
 	}
 	return id, err
 }

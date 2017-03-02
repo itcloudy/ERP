@@ -11,7 +11,6 @@ $("#clearListSearchCond-table").click(function() {
     $(".table-diplay-info").bootstrapTable('refresh');
 });
 $("#listViewSearch input").on("change", function(e) { console.log(e); });
-
 //tabel视图中使用bootstrap-table来显示数据
 $.extend($.fn.bootstrapTable.defaults, {
     method: "post",
@@ -53,87 +52,108 @@ $.extend($.fn.bootstrapTable.defaults, {
         $("#display-table tbody>tr").removeClass("danger");
     }
 });
-var displayTable = function(selectId, ajaxUrl, columns, onExpandRow) {
+
+//根据数据类型获得正确的数据,默认string
+function getCurrentDataType(val, dataType) {
+    if (dataType == "" || dataType === undefined || dataType === null) {
+        dataType = "string";
+    }
+    switch (dataType) {
+        case "int": // 整形
+            val = parseInt(val);
+            break;
+        case "float": // 浮点型
+            val = parseFloat(val);
+            break;
+        case "array_int": // 整形数组
+            var a_arr = [];
+            for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                a_arr.push(parseInt(val[a_i]));
+            }
+            val = a_arr;
+            break;
+        case "arrar_float": //  浮点型数组
+            var a_arr = [];
+            for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
+                a_arr.push(parseFloat(val[a_i]));
+            }
+            val = a_arr;
+            break;
+    }
+    return val
+};
+
+function defaultQueryParams(params) {
+    var xsrf = $("input[name ='_xsrf']");
+    if (xsrf != undefined) {
+        params._xsrf = xsrf[0].value;
+    }
+    params.action = 'table';
+    var filterCond = $("#listViewSearch .filter-condition");
+    var filter = {};
+    // console.log(filterCond);
+    //获得过滤条件
+    for (var i = 0, len = filterCond.length; i < len; i++) {
+        var self = filterCond[i];
+        // 处理radio数据
+        if (self.type == "radio") {
+            if ($(self).data("type") == "string") {
+                var nodeName = $("input[name ='" + self.name + "']:checked");
+                if (nodeName != undefined) {
+                    filter[self.name] = nodeName.val();
+                }
+            } else {
+                console.log("data  type is not string");
+            }
+        } else if (self.type == "checkbox") {
+            if (self.checked) {
+                filter[self.name] = true;
+            } else {
+                filter[self.name] = false;
+            }
+        } else {
+            var val = $(self).val();
+            if (val != "") {
+                // 若为null跳出此次循环
+                if (val === null) {
+                    continue;
+                }
+                filter[self.name] = getCurrentDataType(val, $(self).data("type"))
+            }
+        }
+    }
+    params.filter = JSON.stringify(filter);
+    return params;
+};
+var displayTable = function(selectId, ajaxUrl, columns, bootstrapTableFunctionDict) {
     var $tableNode = $(selectId);
-    //根据数据类型获得正确的数据,默认string
-    var getCurrentDataType = function(val, dataType) {
-        if (dataType == "" || dataType === undefined || dataType === null) {
-            dataType = "string";
+    var queryParams = defaultQueryParams;
+    var onExpandRow = undefined;
+    var onPostBody = undefined;
+    if (bootstrapTableFunctionDict != undefined) {
+        if (bootstrapTableFunctionDict.onExpandRow != undefined) {
+            onExpandRow = bootstrapTableFunctionDict.onExpandRow;
         }
-        switch (dataType) {
-            case "int": // 整形
-                val = parseInt(val);
-                break;
-            case "float": // 浮点型
-                val = parseFloat(val);
-                break;
-            case "array_int": // 整形数组
-                var a_arr = [];
-                for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
-                    a_arr.push(parseInt(val[a_i]));
-                }
-                val = a_arr;
-                break;
-            case "arrar_float": //  浮点型数组
-                var a_arr = [];
-                for (var a_i = 0, a_l = val.length; a_i < a_l; a_i++) {
-                    a_arr.push(parseFloat(val[a_i]));
-                }
-                val = a_arr;
-                break;
+        if (bootstrapTableFunctionDict.onPostBody != undefined) {
+            onPostBody = bootstrapTableFunctionDict.onPostBody;
         }
-        return val
-    };
+        if (bootstrapTableFunctionDict.queryParams) {
+            queryParams = bootstrapTableFunctionDict.queryParams;
+        }
+    }
+
+
     var options = {
         url: ajaxUrl,
-        queryParams: function(params) {
-            // console.log(params);
-            var xsrf = $("input[name ='_xsrf']");
-            if (xsrf != undefined) {
-                params._xsrf = xsrf[0].value;
-            }
-            params.action = 'table';
-            var filterCond = $("#listViewSearch .filter-condition");
-            var filter = {};
-            // console.log(filterCond);
-            //获得过滤条件
-            for (var i = 0, len = filterCond.length; i < len; i++) {
-                var self = filterCond[i];
-                // 处理radio数据
-                if (self.type == "radio") {
-                    if ($(self).data("type") == "string") {
-                        var nodeName = $("input[name ='" + self.name + "']:checked");
-                        if (nodeName != undefined) {
-                            filter[self.name] = nodeName.val();
-                        }
-                    } else {
-                        console.log("data  type is not string");
-                    }
-                } else if (self.type == "checkbox") {
-                    if (self.checked) {
-                        filter[self.name] = true;
-                    } else {
-                        filter[self.name] = false;
-                    }
-                } else {
-                    var val = $(self).val();
-                    if (val != "") {
-                        // 若为null跳出此次循环
-                        if (val === null) {
-                            continue;
-                        }
-                        filter[self.name] = getCurrentDataType(val, $(self).data("type"))
-                    }
-                }
-            }
-            params.filter = JSON.stringify(filter);
-            return params;
-        },
+        queryParams: queryParams,
         columns: columns
     }
     if (onExpandRow != undefined) {
         options.detailView = true;
         options.onExpandRow = onExpandRow;
+    }
+    if (onPostBody != undefined) {
+        options.onPostBody = onPostBody;
     }
 
     $tableNode.bootstrapTable(options);
@@ -202,34 +222,36 @@ displayTable("#table-user", "/user/", [
             return html;
         }
     }
-], function(index, row, $detail) {
-    var params = (function() {
-        var params = {};
-        var xsrf = $("input[name ='_xsrf']");
-        if (xsrf != undefined) {
-            params._xsrf = xsrf[0].value;
-        }
-        params.action = 'table';
-        params.offset = 0;
-        params.limit = 5;
-        return params;
-    })();
-    $.ajax({
-        url: "/user/",
-        dataType: "json",
-        type: "POST",
-        async: false,
-        data: params,
-        success: function(data) {
-            html = "ok";
-            $detail.html(data.total);
-        },
-        error: function(error) {
+], {
+    onExpandRow: function(index, row, $detail) {
+        var params = (function() {
+            var params = {};
+            var xsrf = $("input[name ='_xsrf']");
+            if (xsrf != undefined) {
+                params._xsrf = xsrf[0].value;
+            }
+            params.action = 'table';
+            params.offset = 0;
+            params.limit = 5;
+            return params;
+        })();
+        $.ajax({
+            url: "/user/",
+            dataType: "json",
+            type: "POST",
+            async: false,
+            data: params,
+            success: function(data) {
+                html = "ok";
+                $detail.html(data.total);
+            },
+            error: function(error) {
 
-            html = error;
-            $detail.html(html);
-        }
-    });
+                html = error;
+                $detail.html(html);
+            }
+        });
+    }
 });
 // 公司
 displayTable("#table-company", '/company/', [
@@ -1472,6 +1494,109 @@ displayTable("#table-stock-location", '/stock/location/', [
 
             var html = "";
             var url = "/stock/location/";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
+displayTable("#table-sale-order", "/sale/order", [
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
+    { title: "订单号", field: 'Name', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "创建时间", field: 'CreateDate', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "客户", field: 'Partner', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "业务员", field: 'SalesMan', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "所属公司", field: 'Company', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "发货仓库", field: 'StockWarehouse', align: "left", sortable: true, order: "desc", valign: "middle" },
+    {
+        title: "发货策略",
+        field: 'PickingPolicy',
+        align: "left",
+        sortable: true,
+        order: "desc",
+        valign: "middle",
+        formatter: function cellStyle(value, row, index) {
+            var html = "-";
+            if (row.PickingPolicy == "one") {
+                html = "一次发货";
+            } else if (row.state == 'mult') {
+                html = "分批发货";
+            }
+            return html;
+        }
+    },
+    {
+        title: "状态",
+        field: 'State',
+        align: "left",
+        sortable: true,
+        order: "desc",
+        valign: "middle",
+        formatter: function cellStyle(value, row, index) {
+            var html = "-";
+            if (row.State == "draft") {
+                html = "草稿";
+            } else if (row.state == 'confirm') {
+                html = "确认";
+            } else if (row.state == 'cancel') {
+                html = "取消";
+            } else if (row.state == 'done') {
+                html = "完成";
+            }
+            return html;
+        }
+    },
+
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/sale/order/";
+            html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
+            html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
+            return html;
+        }
+    }
+]);
+displayTable("#table-purchase-order", "/purchase/order", [
+    { title: "全选", field: 'ID', checkbox: true, align: "center", valign: "middle" },
+    { title: "订单号", field: 'Name', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "创建时间", field: 'CreateDate', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "供应商", field: 'Partner', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "采购员", field: 'PurchasesMan', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "所属公司", field: 'Company', align: "left", sortable: true, order: "desc", valign: "middle" },
+    { title: "发货仓库", field: 'StockWarehouse', align: "left", sortable: true, order: "desc", valign: "middle" },
+    {
+        title: "状态",
+        field: 'State',
+        align: "left",
+        sortable: true,
+        order: "desc",
+        valign: "middle",
+        formatter: function cellStyle(value, row, index) {
+            var html = "-";
+            if (row.State == "draft") {
+                html = "草稿";
+            } else if (row.state == 'confirm') {
+                html = "确认";
+            } else if (row.state == 'cancel') {
+                html = "取消";
+            } else if (row.state == 'done') {
+                html = "完成";
+            }
+            return html;
+        }
+    },
+
+    {
+        title: "操作",
+        align: "center",
+        field: 'action',
+        formatter: function cellStyle(value, row, index) {
+            var html = "";
+            var url = "/purchase/order/";
             html += "<a href='" + url + row.id + "?action=edit' class='table-action btn btn-xs btn-default'>编辑<i class='fa fa-pencil'></i></a>";
             html += "<a href='" + url + row.id + "?action=detail' class='table-action btn btn-xs btn-default'>详情<i class='fa fa-external-link'></i></a>";
             return html;

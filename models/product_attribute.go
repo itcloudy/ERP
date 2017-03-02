@@ -200,8 +200,8 @@ func GetAllProductAttribute(query map[string]interface{}, exclude map[string]int
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
-				for i, _ := range objArrs {
-					o.LoadRelated(&objArrs[i], "ValueIDs")
+				for obj := range objArrs {
+					o.LoadRelated(&obj, "ValueIDs")
 				}
 			}
 		}

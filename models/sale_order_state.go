@@ -13,17 +13,22 @@ import (
 
 // SaleOrderState 订单状态
 type SaleOrderState struct {
-	ID         int64     `orm:"column(id);pk;auto" json:"id"`         //主键
-	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
-	UpdateUser *User     `orm:"rel(fk);null" json:"-"`                //最后更新者
-	CreateDate time.Time `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
-	UpdateDate time.Time `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
-	Name       string    `orm:"default()" json:"name"`            //状态名称
-	Active     bool      `orm:"default(true)" json:"Active"`          //是否有效
-
-	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
-	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
-
+	ID               int64           `orm:"column(id);pk;auto" json:"id"`         //主键
+	CreateUser       *User           `orm:"rel(fk);null" json:"-"`                //创建者
+	UpdateUser       *User           `orm:"rel(fk);null" json:"-"`                //最后更新者
+	CreateDate       time.Time       `orm:"auto_now_add;type(datetime)" json:"-"` //创建时间
+	UpdateDate       time.Time       `orm:"auto_now;type(datetime)" json:"-"`     //最后更新时间
+	Name             string          `orm:"default()" json:"name"`                //状态名称
+	Active           bool            `orm:"default(true)" json:"Active"`          //是否有效
+	Company          *Company        `orm:"rel(fk)"`                              //公司
+	StockWarehouse   *StockWarehouse `orm:"rel(fk)"`                              //仓库
+	NextStep         *SaleOrderState `orm:"null;rel(one)"`                        //下一步
+	PrevStep         *SaleOrderState `orm:"null;rel(one)"`                        //上一步
+	Sequence         int64           `orm:"default(1)" json:"Sequence"`           //序号
+	FormAction       string          `orm:"-" json:"FormAction"`                  //非数据库字段，用于表示记录的增加，修改
+	ActionFields     []string        `orm:"-" json:"ActionFields"`                //需要操作的字段,用于update时
+	CompanyID        int64           `orm:"-" json:"Company"`
+	StockWarehouseID int64           `orm:"-" json:"StockWarehouse"`
 }
 
 func init() {
@@ -48,6 +53,30 @@ func GetSaleOrderStateByID(id int64) (obj *SaleOrderState, err error) {
 		return obj, nil
 	}
 	return nil, err
+}
+
+// GetSaleOrderStateByCompanyStock  根据公司和参考获得状态
+func GetSaleOrderStateByCompanyStock(company *Company, stock *StockWarehouse, nextStep *SaleOrderState) (obj *SaleOrderState, err error) {
+	var (
+		num     int64
+		objArrs []SaleOrderState
+	)
+
+	o := orm.NewOrm()
+	qs := o.QueryTable(new(SaleOrderState))
+	cond := orm.NewCondition()
+	cond.And("Active", true)
+	cond.And("Company.Id", company.ID)
+	cond.And("StockWarehouse.Id", stock.ID)
+	if nextStep == nil {
+		cond.And("Name", "draft")
+	}
+	if num, err = qs.Limit(2, 0).All(&objArrs); err == nil {
+		if num == 1 {
+			obj = &objArrs[0]
+		}
+	}
+	return obj, err
 }
 
 // GetAllSaleOrderState retrieves all SaleOrderState matches certain condition. Returns empty list if

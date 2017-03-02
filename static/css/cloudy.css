@@ -2,6 +2,11 @@
     padding: 10px 30px;
 }
 
+.control-sidebar .tab-content {
+    padding-top: 2px;
+    margin-top: 2px;
+}
+
 .title-action {
     border-bottom: 1px solid grey;
     padding-bottom: 2px;
@@ -33,22 +38,23 @@
     margin-bottom: 0px;
 }
 
+.navbar {
+    margin-bottom: 5px;
+    min-height: 5px;
+}
+
 .form-control {
     border-radius: 4px 4px;
 }
 
-
-/*form页面状态控制*/
-
-.form-button-action>button {
-    margin-bottom: 0px;
+.post-form label,
+.post-form .p-form-control {
+    padding-left: 1px;
+    padding-right: 1px;
 }
 
-
-/*form表单按钮显示控制，非权限*/
-
-.form-edit .form-button-action button {
-    display: none;
+.post-form label::after {
+    content: ":";
 }
 
 .step-arrow li a::before {
@@ -276,6 +282,16 @@ a[aria-expanded="false"]>.icon-minus {
     margin-bottom: 0px;
 }
 
+.p-form-line-control {
+    font-size: 14px;
+    height: 34px;
+    line-height: 1.42857;
+    padding: 6px 12px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    width: 100%;
+    margin-bottom: 0px;
+}
+
 
 /*form表单中只读时input/select等标签隐藏
 form表单中可编辑时input/select等标签隐藏，form表单只读是保存编辑按钮隐藏
@@ -323,6 +339,7 @@ form表单中可编辑时input/select等标签显示
 
 .form-edit .p-form-tree-disabled,
 .form-edit .p-form-control,
+.form-edit .p-form-line-control,
 .form-edit .form-tree-edit,
 .form-edit .form-create-btn,
 .form-edit .form-edit-btn {

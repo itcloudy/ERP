@@ -10,6 +10,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// Group 组
 type Group struct {
 	ID         int64     `orm:"column(id);pk;auto" json:"id"`         //主键
 	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
@@ -29,11 +30,12 @@ func init() {
 	orm.RegisterModel(new(Group))
 }
 
+// TableName 表名
 func (u *Group) TableName() string {
 	return "base_group"
 }
 
-// Group insert a new Group into database and returns
+// AddGroup insert a new Group into database and returns
 // last inserted ID on success.
 func AddGroup(obj *Group, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()

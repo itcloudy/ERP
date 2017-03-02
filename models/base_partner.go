@@ -48,6 +48,8 @@ type Partner struct {
 func init() {
 	orm.RegisterModel(new(Partner))
 }
+
+// TableName 表名
 func (u *Partner) TableName() string {
 	return "base_partner"
 }
@@ -87,12 +89,12 @@ func AddPartner(obj *Partner, addUser *User) (id int64, err error) {
 	id, err = o.Insert(obj)
 	if err != nil {
 		return 0, err
-	} else {
-		errCommit := o.Commit()
-		if errCommit != nil {
-			return 0, errCommit
-		}
 	}
+	errCommit := o.Commit()
+	if errCommit != nil {
+		return 0, errCommit
+	}
+
 	return id, err
 }
 

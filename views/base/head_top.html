@@ -214,16 +214,18 @@
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <img src="/static/dist/img/user2-160x160.jpg" class="user-image" alt="User Image"> {{if .user.NameZh}}
-                        <span class="hidden-xs">{{.user.NameZh}}</span> {{else}}
-                        <span class="hidden-xs">{{.user.Name}}</span> {{end}}
+                        <img src="/static/dist/img/user2-160x160.jpg" class="user-image" alt="User Image"> {{if .LoginUser.NameZh}}
+                        <span class="hidden-xs">{{.LoginUser.NameZh}}</span> {{else}}
+                        <span class="hidden-xs">{{.LoginUser.Name}}</span> {{end}}
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
-                        <li class="user-header ">
+                        <li class="user-header">
                             <img src="/static/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image"> {{if .LastLogin}}
-                            <p class="text-left">{{i18n .Lang "global.lastIp"}}:{{.LastIp}}</p>
-                            <p class="text-left">{{i18n .Lang "global.lastLoginTime"}}:{{dateformat .LastLogin "2006-01-02 15:04:05"}}</p>
+                        </li>
+                        <li>
+                            <p class="pull-left">{{i18n .Lang "global.lastIp"}}:{{.LastIp}}</p>
+                            <p class="pull-left">{{i18n .Lang "global.lastLoginTime"}}:{{dateformat .LastLogin "2006-01-02 15:04:05"}}</p>
                             {{else}}
                             <p>{{i18n .Lang "global.firstLogin"}}</p>
                             {{end}}
@@ -245,7 +247,7 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-primary btn-flat">{{i18n .Lang "global.personlData"}}</a>
+                                <a href="/user/{{.LoginUser.ID}}?action=detail" class="btn btn-primary btn-flat">{{i18n .Lang "global.personlData"}}</a>
                             </div>
                             <div class="pull-right">
                                 <a href="/login/out" class="btn btn-danger btn-flat">{{i18n .Lang "global.signOut"}}</a>
@@ -254,9 +256,9 @@
                     </ul>
                 </li>
                 <!-- Control Sidebar Toggle Button -->
-                <!--<li>
-            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-          </li>-->
+                <li>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                </li>
             </ul>
         </div>
     </nav>

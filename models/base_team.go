@@ -23,7 +23,7 @@ type Team struct {
 	Department  *Department `orm:"rel(fk);null"`                         //所属
 	Members     []*User     `orm:"reverse(many)"`                        //组员
 	Active      bool        `orm:"default(true)"`                        //是否有效
-	Description string      `orm:"default()" json:"Description"`     //描述
+	Description string      `orm:"default()" json:"Description"`         //描述
 
 	FormAction   string   `orm:"-" json:"FormAction"`   //非数据库字段，用于表示记录的增加，修改
 	ActionFields []string `orm:"-" json:"ActionFields"` //需要操作的字段,用于update时
@@ -36,6 +36,8 @@ type Team struct {
 func init() {
 	orm.RegisterModel(new(Team))
 }
+
+// TableName 表名
 func (u *Team) TableName() string {
 	return "base_team"
 }
@@ -71,12 +73,12 @@ func AddTeam(obj *Team, addUser *User) (id int64, err error) {
 	id, err = o.Insert(obj)
 	if err != nil {
 		return 0, err
-	} else {
-		errCommit := o.Commit()
-		if errCommit != nil {
-			return 0, errCommit
-		}
 	}
+	errCommit := o.Commit()
+	if errCommit != nil {
+		return 0, errCommit
+	}
+
 	return id, err
 }
 
@@ -205,8 +207,8 @@ func GetAllTeam(query map[string]interface{}, exclude map[string]interface{}, co
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
-				for i, _ := range objArrs {
-					o.LoadRelated(&objArrs[i], "Members")
+				for obj := range objArrs {
+					o.LoadRelated(&obj, "Members")
 				}
 			}
 		}

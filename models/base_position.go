@@ -27,11 +27,13 @@ type Position struct {
 func init() {
 	orm.RegisterModel(new(Position))
 }
+
+// TableName 表名
 func (u *Position) TableName() string {
 	return "base_position"
 }
 
-// Position insert a new Position into database and returns
+// AddPosition insert a new Position into database and returns
 // last inserted ID on success.
 func AddPosition(obj *Position, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()

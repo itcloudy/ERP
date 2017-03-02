@@ -11,7 +11,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// 系统资源
+//Source 系统资源
 type Source struct {
 	ID          int64         `orm:"column(id);pk;auto" json:"id"`                  //主键
 	CreateUser  *User         `orm:"rel(fk);null" json:"-"`                         //创建者
@@ -29,11 +29,13 @@ type Source struct {
 func init() {
 	orm.RegisterModel(new(Source))
 }
+
+// TableName 表名
 func (u *Source) TableName() string {
 	return "base_source"
 }
 
-// Source insert a new Source into database and returns
+// AddSource insert a new Source into database and returns
 // last inserted ID on success.
 func AddSource(obj *Source, addUser *User) (id int64, err error) {
 	o := orm.NewOrm()
@@ -195,8 +197,8 @@ func GetAllSource(query map[string]interface{}, exclude map[string]interface{}, 
 			paginator = utils.GenPaginator(limit, offset, cnt)
 			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
 				paginator.CurrentPageSize = num
-				for i, _ := range objArrs {
-					o.LoadRelated(&objArrs[i], "Permissions")
+				for obj := range objArrs {
+					o.LoadRelated(&obj, "Permissions")
 				}
 			}
 		}

@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+// StockProductionLot ..
 type StockProductionLot struct {
 	ID         int64     `orm:"column(id);pk;auto" json:"id"`         //主键
 	CreateUser *User     `orm:"rel(fk);null" json:"-"`                //创建者
