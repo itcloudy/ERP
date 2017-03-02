@@ -12,3 +12,4 @@ debug~
 logs/*.log
 /conf/app.conf
 goERP.sqlite3
+goERP

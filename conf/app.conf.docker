@@ -1,0 +1,46 @@
+appname = goERP
+httpport = 8888
+runmode = dev
+copyrequestbody = true
+sessionon = true
+
+#开启监控
+EnableAdmin = true
+
+pageoffset = 20
+#防止跨站请求伪造
+enablexsrf = true
+xsrfkey = 61oETzKXQAGaYdkL5gEmGeJJFuYh7EQnp2XdTP1o
+xsrfexpire = 3600 
+
+#重新运行时是否覆盖原表创建
+cover_db = false
+
+#数据库类型：postgres/mysql/sqlite3
+db_type = "postgres"
+
+#postgreSQL配置
+[postgres]
+db_alias = "default"
+db_name = "ERP"
+db_user = "postgres"
+db_pwd = ""
+db_host = "db"
+db_port = 5432
+db_sslmode = "disable"
+#sqlite3
+[sqlite3]
+db_alias = "default"
+db_name = "goERP.sqlite3"
+
+[lang]
+types=en-US|zh-CN
+names=English|简体中文
+#日志配置
+[log]
+#cache配置
+[cache]
+cache = redis
+#redis 的默认端口为6379
+redis_host = "cache:6379"
+cache_expire = 10
