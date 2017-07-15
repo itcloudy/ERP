@@ -13,7 +13,7 @@ type ModelAccess struct {
 	UpdateUserID int64             `orm:"column(update_user_id);null" json:"-"`         //最后更新者
 	CreateDate   time.Time         `orm:"auto_now_add;type(datetime)" json:"-"`         //创建时间
 	UpdateDate   time.Time         `orm:"auto_now;type(datetime)" json:"-"`             //最后更新时间
-	Module       *ModuleTable      `orm:"rel(fk)"`                                      //模块(表)
+	Module       *ModuleModule     `orm:"rel(fk)"`                                      //模块(表)
 	Permission   *ModulePermission `orm:"rel(fk)"`                                      //权限组
 	PermCreate   bool              `orm:"default(true)"`                                //创建权限
 	PermUnlink   bool              `orm:"default(false)"`                               //删除权限

@@ -1,0 +1,17 @@
+#ignore compile file
+
+
+.project
+*.exe
+*.exe~
+.vscode/
+ goPSI.*
+debug
+debug~
+.idea
+logs/*.log
+/conf/app.conf
+#vue2+webpack2生成的文件
+static
+views
+web/node_modules

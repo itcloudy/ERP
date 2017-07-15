@@ -19,4 +19,5 @@ type AddressCountry struct {
 
 func init() {
 	orm.RegisterModel(new(AddressCountry))
+
 }

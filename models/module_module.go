@@ -1,10 +1,13 @@
 package models
 
-import "time"
-import "github.com/astaxie/beego/orm"
+import (
+	"time"
 
-// ModuleTable 模块(表)名称
-type ModuleTable struct {
+	"github.com/astaxie/beego/orm"
+)
+
+// ModuleModule 模块(表)名称
+type ModuleModule struct {
 	ID           int64           `orm:"column(id);pk;auto" json:"id" form:"recordID"` //主键
 	CreateUserID int64           `orm:"column(create_user_id);null" json:"-"`         //创建者
 	UpdateUserID int64           `orm:"column(update_user_id);null" json:"-"`         //最后更新者
@@ -15,12 +18,12 @@ type ModuleTable struct {
 }
 
 func init() {
-	orm.RegisterModel(new(ModuleTable))
+	orm.RegisterModel(new(ModuleModule))
 }
 
-// AddModuleTable insert a new ModuleTable into database and returns
+// AddModuleModule insert a new ModuleModule into database and returns
 // last inserted Id on success.
-func AddModuleTable(m *ModuleTable, ormObj orm.Ormer) (id int64, err error) {
+func AddModuleModule(m *ModuleModule, ormObj orm.Ormer) (id int64, err error) {
 	id, err = ormObj.Insert(m)
 	return
 }
