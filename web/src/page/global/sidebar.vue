@@ -57,7 +57,7 @@
         .left-top{
             background-color: #20A0FF;
             line-height:3rem;
-            font-size:150%;
+            font-size:x-large;
             text-align:center;
         }
     }

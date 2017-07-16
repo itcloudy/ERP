@@ -1,6 +1,6 @@
 <template>
     <div class="navbar-container">
-        <span class="el-icon-d-arrow-left"/>
+        <span :class="'el-icon-d-arrow-'+expandType" @click="changeExpandType"/>
         <div class="navbar-right">
             <el-dropdown trigger="click">
                 <el-button type="primary" class="el-dropdown-link">
@@ -19,7 +19,16 @@
         name:"navbar",
         data(){
             return{
-
+                expandType:"left",
+            }
+        },
+        methods:{
+            changeExpandType:function(){
+                if (this.expandType =="left"){
+                    this.expandType = "right"
+                }else if(this.expandType == "right"){
+                    this.expandType = "left"
+                }
             }
         }
     }
