@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-// 全局信息
-import global from './modules/global';
+
 // 合作伙伴信息
 import partner from './modules/partner';
 // 权限管理
@@ -25,7 +24,6 @@ const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
     modules: {
-        global, //全局
         partner, //合作伙伴
         permission, //权限
         product, //产品
