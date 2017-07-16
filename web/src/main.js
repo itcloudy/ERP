@@ -9,6 +9,7 @@ import Vuex from 'vuex'
 
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import localStore from 'utils/local_store';
 
 // import 'font-awesome/css/font-awesome.min.css'
 import 'styles/index.scss'
@@ -22,9 +23,9 @@ NProgress.configure({ showSpinner: false })
 // router.beforeEach((to, from, next) => {
 //     NProgress.start();
 //     if (to.path == '/login') {
-//         sessionStorage.removeItem('user');
+//         localStore.remove('user');
 //     }
-//     let user = JSON.parse(sessionStorage.getItem('user'));
+//     let user = JSON.parse(localStore.get('user'));
 //     if (!user && to.path != '/login') {
 //         next({ path: '/login' })
 //     } else {

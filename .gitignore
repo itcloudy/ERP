@@ -5,7 +5,7 @@
 *.exe
 *.exe~
 .vscode/
- goPSI.*
+ golangERP.*
 debug
 debug~
 .idea
