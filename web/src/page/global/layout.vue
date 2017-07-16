@@ -1,6 +1,5 @@
 <template>
     <el-row>
-         
         <div v-show="leftShow" class="el-col" :class="'el-col-'+leftCol">
             <Sidebar/>
         </div>

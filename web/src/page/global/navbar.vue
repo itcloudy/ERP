@@ -1,9 +1,16 @@
 <template>
     <div class="navbar-container">
-        <div class="navbar-left">
-            <span class="el-icon-d-arrow-left"/>
-        </div>
+        <span class="el-icon-d-arrow-left"/>
         <div class="navbar-right">
+            <el-dropdown trigger="click">
+                <el-button type="primary" class="el-dropdown-link">
+                    系统管理员<i class="el-icon-caret-bottom el-icon--right"></i>
+                </el-button>
+                <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item>个人信息</el-dropdown-item>
+                    <el-dropdown-item>注销</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
         </div>
     </div>
 </template>
@@ -23,6 +30,9 @@
         color: white;
         height:3rem;
         line-height:3rem;
-        
+        .navbar-right{
+            display:inline-block;
+            float:right;
+        }
     }
 </style>
