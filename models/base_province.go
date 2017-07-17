@@ -21,3 +21,17 @@ type AddressProvince struct {
 func init() {
 	orm.RegisterModel(new(AddressProvince))
 }
+
+// AddAddressProvince insert a new AddressProvince into database and returns last inserted Id on success.
+func AddAddressProvince(m *AddressProvince, ormObj orm.Ormer) (id int64, err error) {
+	id, err = ormObj.Insert(m)
+	return
+}
+
+// UpdateAddressProvince update AddressProvince into database and returns id on success
+func UpdateAddressProvince(m *AddressProvince, ormObj orm.Ormer) (id int64, err error) {
+	if _, err = ormObj.Update(m); err == nil {
+		id = m.ID
+	}
+	return
+}

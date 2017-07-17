@@ -20,3 +20,9 @@ type AddressDistrict struct {
 func init() {
 	orm.RegisterModel(new(AddressDistrict))
 }
+
+// AddAddressDistrict insert a new AddressDistrict into database and returns last inserted Id on success.
+func AddAddressDistrict(m *AddressDistrict, ormObj orm.Ormer) (id int64, err error) {
+	id, err = ormObj.Insert(m)
+	return
+}

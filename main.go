@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	. "golangERP/inital_action"
 	_ "golangERP/routers"
 	"golangERP/utils"
 
@@ -50,6 +51,7 @@ func init() {
 	// LoadSecurity()
 	// 初始化cache
 	utils.InitCache()
+	InitApp()
 }
 func main() {
 	beego.Run()

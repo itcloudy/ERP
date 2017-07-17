@@ -27,3 +27,9 @@ type Company struct {
 func init() {
 	orm.RegisterModel(new(Company))
 }
+
+// AddCompany insert a new Company into database and returns last inserted Id on success.
+func AddCompany(m *Company, ormObj orm.Ormer) (id int64, err error) {
+	id, err = ormObj.Insert(m)
+	return
+}

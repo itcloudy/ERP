@@ -23,3 +23,9 @@ type ModuleData struct {
 func init() {
 	orm.RegisterModel(new(ModuleData))
 }
+
+// AddModuleData insert a new ModuleData into database and returns last inserted Id on success.
+func AddModuleData(m *ModuleData, ormObj orm.Ormer) (id int64, err error) {
+	id, err = ormObj.Insert(m)
+	return
+}

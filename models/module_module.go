@@ -21,9 +21,16 @@ func init() {
 	orm.RegisterModel(new(ModuleModule))
 }
 
-// AddModuleModule insert a new ModuleModule into database and returns
-// last inserted Id on success.
+// AddModuleModule insert a new ModuleModule into database and returns last inserted Id on success.
 func AddModuleModule(m *ModuleModule, ormObj orm.Ormer) (id int64, err error) {
 	id, err = ormObj.Insert(m)
+	return
+}
+
+// UpdateModuleModule update ModuleModule into database and returns id on success
+func UpdateModuleModule(m *ModuleModule, ormObj orm.Ormer) (id int64, err error) {
+	if _, err = ormObj.Update(m); err == nil {
+		id = m.ID
+	}
 	return
 }

@@ -21,3 +21,9 @@ type AddressCity struct {
 func init() {
 	orm.RegisterModel(new(AddressCity))
 }
+
+// AddAddressCity insert a new AddressCity into database and returns last inserted Id on success.
+func AddAddressCity(m *AddressCity, ormObj orm.Ormer) (id int64, err error) {
+	id, err = ormObj.Insert(m)
+	return
+}
