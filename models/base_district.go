@@ -26,3 +26,11 @@ func AddAddressDistrict(m *AddressDistrict, ormObj orm.Ormer) (id int64, err err
 	id, err = ormObj.Insert(m)
 	return
 }
+
+// UpdateAddressDistrict update AddressDistrict into database and returns id on success
+func UpdateAddressDistrict(m *AddressDistrict, ormObj orm.Ormer) (id int64, err error) {
+	if _, err = ormObj.Update(m); err == nil {
+		id = m.ID
+	}
+	return
+}

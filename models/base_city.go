@@ -27,3 +27,11 @@ func AddAddressCity(m *AddressCity, ormObj orm.Ormer) (id int64, err error) {
 	id, err = ormObj.Insert(m)
 	return
 }
+
+// UpdateAddressCity update AddressCity into database and returns id on success
+func UpdateAddressCity(m *AddressCity, ormObj orm.Ormer) (id int64, err error) {
+	if _, err = ormObj.Update(m); err == nil {
+		id = m.ID
+	}
+	return
+}

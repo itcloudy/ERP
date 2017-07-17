@@ -25,8 +25,13 @@ func InitApp() {
 		b.WriteString("xml")
 		xmlBase := b.String()
 		countryXML := xmlBase + split + "address" + split + "Countries.xml"
-		InitCountry2DB(countryXML)
+		go InitCountry2DB(countryXML)
 		provinceXML := xmlBase + split + "address" + split + "Provinces.xml"
-		InitProvince2DB(provinceXML)
+		go InitProvince2DB(provinceXML)
+		cityXML := xmlBase + split + "address" + split + "Cities.xml"
+		go InitCity2DB(cityXML)
+		districtXML := xmlBase + split + "address" + split + "Districts.xml"
+		go InitDistrict2DB(districtXML)
+
 	}
 }
