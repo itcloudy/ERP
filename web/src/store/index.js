@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-
+// 根级state、actions、getters、mutations
+import state from './state';
+import actions from './actions';
+import getters from './getters';
+import mutations from './mutations';
 // 合作伙伴信息
 import partner from './modules/partner';
 // 权限管理
@@ -23,6 +27,10 @@ Vue.use(Vuex)
 const debug = process.env.NODE_ENV !== 'production'
 
 export default new Vuex.Store({
+    state,
+    actions,
+    getters,
+    mutations,
     modules: {
         partner, //合作伙伴
         permission, //权限

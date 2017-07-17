@@ -1,6 +1,8 @@
 <template>
-    <div class="main-container">
-        main
+    <div class="right-main" :style="mainContentStyles">
+        <div class="main-container" >
+            main
+        </div>
     </div>
 </template>
 <script>
@@ -8,14 +10,17 @@
         name:"main",
         data(){
             return{
-
+                mainContentStyles: this.$store.state.windowStyles.rightMainStyles
             }
         },
     }
 </script>
 <style lang="scss" scoped>
-    .main-container{
-        padding:0.5rem;
+    .right-main{
+        background-color: rgb(240,238,238);
+        .main-container{
+            padding:0.5rem;
+        }
     }
     
 </style>

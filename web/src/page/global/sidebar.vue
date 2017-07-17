@@ -1,5 +1,5 @@
 <template>
-    <div class="left-sidebar" :style="leftSidebarHeight">
+    <div class="left-sidebar" :style="sidebarStyles">
         <div class="left-top">
              golangERP 
         </div>
@@ -35,18 +35,9 @@
         name:"sidebar",
         data(){
             return{
-                leftSidebarHeight:{
-                    height:"",
-                }
+                sidebarStyles: this.$store.state.windowStyles.leftSidebarStyles,
+                
             }
-        },
-        methods:{
-            setleftSidebarHeight(){
-                this.leftSidebarHeight.height = window.innerHeight +'px' ;
-            }
-        },
-        created(){
-            this.setleftSidebarHeight()
         }
     }
 </script>
@@ -56,7 +47,7 @@
         color: white;
         .left-top{
             background-color: #20A0FF;
-            line-height:3rem;
+            line-height:50px;
             font-size:x-large;
             text-align:center;
         }

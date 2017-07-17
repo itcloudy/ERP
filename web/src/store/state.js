@@ -1,5 +1,5 @@
 import localStore from 'utils/local_store';
-const store = {
+const state = {
     //登录成功后的用户信息
     userinfo: localStore.get('userinfo') || {},
 
@@ -12,5 +12,19 @@ const store = {
             token: ''
         }
     },
+    //显示左侧菜单栏
+    showLeftSidebar: true,
+    //窗口样式
+    windowStyles: {
+        leftSidebarStyles: {
+            display: "block",
+            height: ""
+        },
+        rightMainStyles: {
+            display: "block",
+            height: "",
+            backgroundColor: "transparent"
+        }
+    },
 };
-export default store
+export default state

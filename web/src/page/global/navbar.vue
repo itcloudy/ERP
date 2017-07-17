@@ -1,6 +1,6 @@
 <template>
-    <div class="navbar-container">
-        <span :class="'el-icon-d-arrow-'+expandType" @click="changeExpandType"/>
+    <div  class="navbar-container">
+        <span  @click="showLeftSidebarClick"><img src="/static/images/menu.png" alt="菜单显示切换"></span>
         <div class="navbar-right">
             <el-dropdown trigger="click">
                 <el-button type="primary" class="el-dropdown-link">
@@ -15,33 +15,33 @@
     </div>
 </template>
 <script>
+    import { mapState } from 'vuex'
     export default{
         name:"navbar",
         data(){
             return{
-                expandType:"left",
+               
             }
         },
         methods:{
-            changeExpandType:function(){
-                if (this.expandType =="left"){
-                    this.expandType = "right"
-                }else if(this.expandType == "right"){
-                    this.expandType = "left"
-                }
+            showLeftSidebarClick:function(){
+                 this.$store.dispatch('GLOBAL_TOGGLE_LEFT_SIDEBAR');
             }
-        }
+        },
+        computed:{
+           
+        },
     }
 </script>
 <style lang="scss" scoped>
     .navbar-container{
         background-color: #20A0FF;
         color: white;
-        height:3rem;
-        line-height:3rem;
+        height:50px;
+        line-height:50px;
         .navbar-right{
             display:inline-block;
-            float:right;
+            float: right;
         }
     }
 </style>
