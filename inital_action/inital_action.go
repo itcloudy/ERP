@@ -32,6 +32,8 @@ func InitApp() {
 		go InitCity2DB(cityXML)
 		districtXML := xmlBase + split + "address" + split + "Districts.xml"
 		go InitDistrict2DB(districtXML)
+		userXML := xmlBase + split + "Users.xml"
+		go InitUser2DB(userXML)
 
 	}
 }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Users version="1">
+	<user>
+		<name>admin</name>
+		<email>272685110@qq.com</email>
+		<mobile>18129971403</mobile>
+		<password>cloudy</password>
+		<isAdmin>1</isAdmin>
+		<NameZh>系统管理员</NameZh>
+		<active>1</active>
+		<qq>272685110</qq>
+		<wechat>18129971403</wechat>
+	</user>
+
+</Users>

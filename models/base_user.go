@@ -30,3 +30,17 @@ type User struct {
 func init() {
 	orm.RegisterModel(new(User))
 }
+
+// AddUser insert a new User into database and returns last inserted Id on success.
+func AddUser(m *User, ormObj orm.Ormer) (id int64, err error) {
+	id, err = ormObj.Insert(m)
+	return
+}
+
+// UpdateUser update User into database and returns id on success
+func UpdateUser(m *User, ormObj orm.Ormer) (id int64, err error) {
+	if _, err = ormObj.Update(m); err == nil {
+		id = m.ID
+	}
+	return
+}
