@@ -27,6 +27,20 @@ func AddAddressDistrict(m *AddressDistrict, ormObj orm.Ormer) (id int64, err err
 	return
 }
 
+// BatchAddAddressDistrict insert  list of  Country into database and returns  number of  success.
+func BatchAddAddressDistrict(districtes []*AddressDistrict, ormObj orm.Ormer) (num int64, err error) {
+	qs := ormObj.QueryTable(&AddressDistrict{})
+	if i, err := qs.PrepareInsert(); err == nil {
+		defer i.Close()
+		for _, district := range districtes {
+			if _, err = i.Insert(district); err == nil {
+				num = num + 1
+			}
+		}
+	}
+	return
+}
+
 // UpdateAddressDistrict update AddressDistrict into database and returns id on success
 func UpdateAddressDistrict(m *AddressDistrict, ormObj orm.Ormer) (id int64, err error) {
 	if _, err = ormObj.Update(m); err == nil {

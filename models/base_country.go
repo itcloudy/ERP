@@ -35,3 +35,17 @@ func UpdateAddressCountry(m *AddressCountry, ormObj orm.Ormer) (id int64, err er
 	}
 	return
 }
+
+// BatchAddAddressCountry insert  list of  Country into database and returns  number of  success.
+func BatchAddAddressCountry(countries []*AddressCountry, ormObj orm.Ormer) (num int64, err error) {
+	qs := ormObj.QueryTable(&AddressCountry{})
+	if i, err := qs.PrepareInsert(); err == nil {
+		defer i.Close()
+		for _, country := range countries {
+			if _, err = i.Insert(country); err == nil {
+				num = num + 1
+			}
+		}
+	}
+	return
+}

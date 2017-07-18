@@ -12,6 +12,6 @@ debug~
 logs/*.log
 /conf/app.conf
 #vue2+webpack2生成的文件
-static
+static/
 views
 web/node_modules

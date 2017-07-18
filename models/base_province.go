@@ -28,6 +28,20 @@ func AddAddressProvince(m *AddressProvince, ormObj orm.Ormer) (id int64, err err
 	return
 }
 
+// BatchAddAddressProvince insert  list of  Country into database and returns  number of  success.
+func BatchAddAddressProvince(privinces []*AddressProvince, ormObj orm.Ormer) (num int64, err error) {
+	qs := ormObj.QueryTable(&AddressProvince{})
+	if i, err := qs.PrepareInsert(); err == nil {
+		defer i.Close()
+		for _, province := range privinces {
+			if _, err = i.Insert(province); err == nil {
+				num = num + 1
+			}
+		}
+	}
+	return
+}
+
 // UpdateAddressProvince update AddressProvince into database and returns id on success
 func UpdateAddressProvince(m *AddressProvince, ormObj orm.Ormer) (id int64, err error) {
 	if _, err = ormObj.Update(m); err == nil {

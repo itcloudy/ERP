@@ -33,3 +33,17 @@ func AddCompany(m *Company, ormObj orm.Ormer) (id int64, err error) {
 	id, err = ormObj.Insert(m)
 	return
 }
+
+// BatchAddCompany insert  list of  Company into database and returns  number of  success.
+func BatchAddCompany(companies []*Company, ormObj orm.Ormer) (num int64, err error) {
+	qs := ormObj.QueryTable(&Company{})
+	if i, err := qs.PrepareInsert(); err == nil {
+		defer i.Close()
+		for _, company := range companies {
+			if _, err = i.Insert(company); err == nil {
+				num = num + 1
+			}
+		}
+	}
+	return
+}

@@ -28,6 +28,20 @@ func AddAddressCity(m *AddressCity, ormObj orm.Ormer) (id int64, err error) {
 	return
 }
 
+// BatchAddAddressCity insert  list of  AddressCity into database and returns  number of  success.
+func BatchAddAddressCity(cities []*AddressCity, ormObj orm.Ormer) (num int64, err error) {
+	qs := ormObj.QueryTable(&AddressCity{})
+	if i, err := qs.PrepareInsert(); err == nil {
+		defer i.Close()
+		for _, city := range cities {
+			if _, err = i.Insert(city); err == nil {
+				num = num + 1
+			}
+		}
+	}
+	return
+}
+
 // UpdateAddressCity update AddressCity into database and returns id on success
 func UpdateAddressCity(m *AddressCity, ormObj orm.Ormer) (id int64, err error) {
 	if _, err = ormObj.Update(m); err == nil {

@@ -1,5 +1,6 @@
 <template>
     <div  class="navbar-container">
+        
         <span  @click="showLeftSidebarClick"><img src="/static/images/menu.png" alt="菜单显示切换"></span>
         <div class="navbar-right">
             <el-dropdown trigger="click">
