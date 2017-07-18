@@ -18,6 +18,7 @@ type ModuleData struct {
 	Descrition   string    `orm:"null"`                                         //记录描述
 	InsertID     int64     `orm:"column(insert_id)"`                            //插入记录的ID
 	ModuleName   string    `orm:""`                                             //模块(表)的名称
+
 }
 
 func init() {

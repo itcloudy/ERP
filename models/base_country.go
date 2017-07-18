@@ -15,6 +15,7 @@ type AddressCountry struct {
 	UpdateDate   time.Time          `orm:"auto_now;type(datetime)" json:"-"`             //最后更新时间
 	Name         string             `orm:"unique;size(50)" xml:"name" form:"Name"`       //国家名称
 	Provinces    []*AddressProvince `orm:"reverse(many)"`                                //省份
+	XMLID        string             `orm:"-"`                                            //xml初始化数据的ID，数据库中不保存
 }
 
 func init() {

@@ -15,6 +15,8 @@ type ModuleModule struct {
 	UpdateDate   time.Time       `orm:"auto_now;type(datetime)" json:"-"`             //最后更新时间
 	Name         string          `orm:"unique;size(50)" json:"name" form:"Name"`      //表名称
 	Category     *ModuleCategory `orm:"rel(fk);null"`                                 //模块分类
+	XMLID        string          `orm:"-"`                                            //xml初始化数据的ID，数据库中不保存
+
 }
 
 func init() {

@@ -16,6 +16,7 @@ type AddressCity struct {
 	Name         string             `orm:"size(50)" json:"name" form:"Name"`             //城市名称
 	Province     *AddressProvince   `orm:"rel(fk)" json:"province" form:"-"`             //省份
 	Districts    []*AddressDistrict `orm:"reverse(many)" json:"districts"`               //区县
+	XMLID        string             `orm:"-"`                                            //xml初始化数据的ID，数据库中不保存
 }
 
 func init() {
