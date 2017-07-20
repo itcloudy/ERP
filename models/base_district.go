@@ -15,7 +15,6 @@ type AddressDistrict struct {
 	UpdateDate   time.Time    `orm:"auto_now;type(datetime)" json:"-"`             //最后更新时间
 	Name         string       `json:"Name" form:"Name"`                            //区县名称
 	City         *AddressCity `orm:"rel(fk)" form:"-"`                             //城市
-	XMLID        string       `orm:"-"`                                            //xml初始化数据的ID，数据库中不保存
 }
 
 func init() {

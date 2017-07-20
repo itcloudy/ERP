@@ -19,7 +19,6 @@ type BaseGroup struct {
 	Child         *BaseGroup     `orm:"rel(fk);null"`                                 //
 	ParenLeft     int64          `orm:"unique"`                                       //左边界
 	ParenRight    int64          `orm:"unique"`                                       //右边界
-	XMLID         string         `orm:"-"`                                            //xml初始化数据的ID，数据库中不保存
 }
 
 func init() {

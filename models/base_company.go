@@ -22,7 +22,6 @@ type Company struct {
 	City         *AddressCity     `orm:"rel(fk);null" json:"-" form:"-"`               //城市
 	District     *AddressDistrict `orm:"rel(fk);null" json:"-" form:"-"`               //区县
 	Street       string           `orm:"default()" json:"Street" form:"Street"`        //街道
-	XMLID        string           `orm:"-"`                                            //xml初始化数据的ID，数据库中不保存
 }
 
 func init() {

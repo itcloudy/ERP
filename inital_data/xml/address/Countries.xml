@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Countries version="1">
-	<country>
+	<country xml_id="china">
 		<name>中国</name>	
 	</country>
 </Countries>

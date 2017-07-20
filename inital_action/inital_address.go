@@ -9,10 +9,17 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// InitCountries 国家数据解析
+// InitCountry  国家数据解析
+type InitCountry struct {
+	ID    uint   `xml:"ID,attr"`
+	Name  string `xml:"name"`
+	XMLID uint   `xml:"xml_id,attr"`
+}
+
+// InitCountries 国家数据列表
 type InitCountries struct {
-	XMLName   xml.Name            `xml:"Countries"`
-	Countries []md.AddressCountry `xml:"country"`
+	XMLName   xml.Name      `xml:"Countries"`
+	Countries []InitCountry `xml:"country"`
 }
 
 // InitCountry2DB 初始化国家数据
@@ -23,14 +30,11 @@ func InitCountry2DB(filePath string) {
 			var initCountries InitCountries
 			if xml.Unmarshal(data, &initCountries) == nil {
 				ormObj := orm.NewOrm()
-				countries := make([]*md.AddressCountry, 5)
-				var lastIndex int
-				for i, country := range initCountries.Countries {
-					countries[i] = &country
-					lastIndex = i
+				for _, countryXML := range initCountries.Countries {
+					var country md.AddressCountry
+					country.Name = countryXML.Name
+					md.AddAddressCountry(&country, ormObj)
 				}
-				countries = countries[0:lastIndex]
-				md.BatchAddAddressCountry(countries, ormObj)
 			}
 		}
 	}
@@ -38,9 +42,10 @@ func InitCountry2DB(filePath string) {
 
 // InitProvince  省份数据解析
 type InitProvince struct {
-	ID   uint   `xml:"ID,attr"`
-	Name string `xml:"ProvinceName,attr"`
-	PID  uint   `xml:"PID,attr"`
+	ID    uint   `xml:"ID,attr"`
+	Name  string `xml:"ProvinceName,attr"`
+	PID   uint   `xml:"PID,attr"`
+	XMLID uint   `xml:"xml_id,attr"`
 }
 
 // InitProvinces 省份数据列表
@@ -57,21 +62,17 @@ func InitProvince2DB(filePath string) {
 			var initProvinces InitProvinces
 			if xml.Unmarshal(data, &initProvinces) == nil {
 				ormObj := orm.NewOrm()
-				provinces := make([]*md.AddressProvince, 50)
-				var lastIndex int
-				for i, provinceXML := range initProvinces.Provinces {
-					lastIndex = i
+				for _, provinceXML := range initProvinces.Provinces {
+					fmt.println(provinceXML)
 					var province md.AddressProvince
 					var country md.AddressCountry
 					pid := int64(provinceXML.PID)
 					country.ID = pid
 					province.Country = &country
 					province.Name = provinceXML.Name
-					provinces[i] = &province
+					md.AddAddressProvince(&province, ormObj)
 				}
 
-				provinces = provinces[0:lastIndex]
-				md.BatchAddAddressProvince(provinces, ormObj)
 			}
 		}
 	}
@@ -79,9 +80,10 @@ func InitProvince2DB(filePath string) {
 
 // InitCity 初始化城市数据
 type InitCity struct {
-	ID   uint   `xml:"ID,attr"`
-	Name string `xml:"CityName,attr"`
-	PID  uint   `xml:"PID,attr"`
+	ID    uint   `xml:"ID,attr"`
+	Name  string `xml:"CityName,attr"`
+	PID   uint   `xml:"PID,attr"`
+	XMLID uint   `xml:"xml_id,attr"`
 }
 
 // InitCities 初始化城市数据列表
@@ -98,8 +100,6 @@ func InitCity2DB(filePath string) {
 			var initCities InitCities
 			if xml.Unmarshal(data, &initCities) == nil {
 				ormObj := orm.NewOrm()
-				cities := make([]*md.AddressCity, 1000)
-				var lastIndex int
 				for i, cityXML := range initCities.Cities {
 					var city md.AddressCity
 					var province md.AddressProvince
@@ -107,11 +107,8 @@ func InitCity2DB(filePath string) {
 					province.ID = pid
 					city.Province = &province
 					city.Name = cityXML.Name
-					cities[i] = &city
-					lastIndex = i
+					md.AddAddressCity(&city, ormObj)
 				}
-				cities = cities[0:lastIndex]
-				md.BatchAddAddressCity(cities, ormObj)
 			}
 		}
 	}
@@ -119,9 +116,10 @@ func InitCity2DB(filePath string) {
 
 // InitDistrict 初始化区县数据
 type InitDistrict struct {
-	ID   uint   `xml:"ID,attr"`
-	Name string `xml:"DistrictName,attr"`
-	PID  uint   `xml:"CID,attr"`
+	ID    uint   `xml:"ID,attr"`
+	Name  string `xml:"DistrictName,attr"`
+	PID   uint   `xml:"CID,attr"`
+	XMLID uint   `xml:"xml_id,attr"`
 }
 
 // InitDistricts 初始化区县数据列表
@@ -138,8 +136,6 @@ func InitDistrict2DB(filePath string) {
 			var initDistricts InitDistricts
 			if xml.Unmarshal(data, &initDistricts) == nil {
 				ormObj := orm.NewOrm()
-				districtes := make([]*md.AddressDistrict, 10000)
-				var lastIndex int
 				for i, districtXML := range initDistricts.Districts {
 					var district md.AddressDistrict
 					var city md.AddressCity
@@ -147,11 +143,8 @@ func InitDistrict2DB(filePath string) {
 					city.ID = pid
 					district.City = &city
 					district.Name = districtXML.Name
-					districtes[i] = &district
-					lastIndex = i
+					md.AddAddressDistrict(district, ormObj)
 				}
-				districtes = districtes[0:lastIndex]
-				md.BatchAddAddressDistrict(districtes, ormObj)
 			}
 		}
 	}

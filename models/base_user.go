@@ -25,7 +25,6 @@ type User struct {
 	Active          bool      `orm:"default(true)" xml:"active" json:"Active" form:"Active"`                //有效
 	Qq              string    `orm:"default()" xml:"qq" json:"Qq" form:"Qq"`                                //QQ
 	WeChat          string    `orm:"default()" xml:"wechat" json:"WeChat" form:"WeChat"`                    //微信
-	XMLID           string    `orm:"-"`                                                                     //xml初始化数据的ID，数据库中不保存
 }
 
 func init() {

@@ -24,7 +24,6 @@ type BaseMenu struct {
 	Path         string      `orm:"unique"`                                       //菜单路径
 	Component    string      `orm:""`                                             //组件名称
 	Meta         string      `orm:""`                                             //额外参数
-	XMLID        string      `orm:"-"`                                            //xml初始化数据的ID，数据库中不保存
 }
 
 func init() {

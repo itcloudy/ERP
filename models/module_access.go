@@ -19,7 +19,6 @@ type ModelAccess struct {
 	PermUnlink   bool          `orm:"default(false)"`                               //删除权限
 	PermWrite    bool          `orm:"default(true)"`                                //修改权限
 	PermRead     bool          `orm:"default(true)"`                                //读权限
-	XMLID        string        `orm:"-"`                                            //xml初始化数据的ID，数据库中不保存
 
 }
 
