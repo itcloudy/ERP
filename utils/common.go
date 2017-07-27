@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"bytes"
 	"crypto/md5"
 	"encoding/hex"
 )
@@ -17,4 +18,20 @@ func PasswordMD5(passwd, salt string) string {
 	cipherStr := h.Sum(nil)
 	result := hex.EncodeToString(cipherStr)
 	return result
+}
+
+// StringsJoin 字符串拼接
+func StringsJoin(strs ...string) string {
+	var str string
+	var b bytes.Buffer
+	strsLen := len(strs)
+	if strsLen == 0 {
+		return str
+	}
+	for i := 0; i < strsLen; i++ {
+		b.WriteString(strs[i])
+	}
+	str = b.String()
+	return str
+
 }

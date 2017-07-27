@@ -1,4 +1,4 @@
-package inital_action
+package initalActions
 
 import (
 	"encoding/xml"

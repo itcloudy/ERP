@@ -1,7 +1,8 @@
-package inital_action
+package initalActions
 
 import (
 	"bytes"
+	"golangERP/utils"
 	"os"
 	"runtime"
 )
@@ -24,15 +25,15 @@ func InitApp() {
 		b.WriteString(split)
 		b.WriteString("xml")
 		xmlBase := b.String()
-		countryXML := xmlBase + split + "address" + split + "Countries.xml"
+		countryXML := utils.StringsJoin(xmlBase, split, "address", split, "Countries.xml")
 		go InitCountry2DB(countryXML)
-		provinceXML := xmlBase + split + "address" + split + "Provinces.xml"
+		provinceXML := utils.StringsJoin(xmlBase, split, "address", split, "Provinces.xml")
 		go InitProvince2DB(provinceXML)
-		cityXML := xmlBase + split + "address" + split + "Cities.xml"
+		cityXML := utils.StringsJoin(xmlBase, split, "address", split, "Cities.xml")
 		go InitCity2DB(cityXML)
-		districtXML := xmlBase + split + "address" + split + "Districts.xml"
+		districtXML := utils.StringsJoin(xmlBase, split, "address", split, "Districts.xml")
 		go InitDistrict2DB(districtXML)
-		userXML := xmlBase + split + "Users.xml"
+		userXML := utils.StringsJoin(xmlBase, split, "Users.xml")
 		go InitUser2DB(userXML)
 
 	}

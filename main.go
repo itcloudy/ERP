@@ -1,8 +1,7 @@
 package main
 
 import (
-	"fmt"
-	. "golangERP/inital_action"
+	"golangERP/initalActions"
 	_ "golangERP/routers"
 	"golangERP/utils"
 
@@ -14,7 +13,6 @@ import (
 
 func init() {
 	dbType := beego.AppConfig.String("db_type")
-	fmt.Println(dbType)
 	//获得数据库参数，不同数据库可能存在没有值的情况没有的值nil
 	dbAlias := beego.AppConfig.String(dbType + "::db_alias")
 	dbName := beego.AppConfig.String(dbType + "::db_name")
@@ -29,7 +27,6 @@ func init() {
 
 		dbSslmode := beego.AppConfig.String(dbType + "::db_sslmode")
 		dataSource := "user=" + dbUser + " password=" + dbPwd + " dbname=" + dbName + " host=" + dbHost + " port=" + dbPort + " sslmode=" + dbSslmode
-		fmt.Print(dataSource)
 		orm.RegisterDataBase(dbAlias, dbType, dataSource)
 
 	case "mysql":
@@ -51,7 +48,7 @@ func init() {
 	// LoadSecurity()
 	// 初始化cache
 	utils.InitCache()
-	InitApp()
+	initalActions.InitApp()
 }
 func main() {
 	beego.Run()
