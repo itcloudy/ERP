@@ -14,14 +14,14 @@ type BaseMenu struct {
 	CreateDate   time.Time   `orm:"auto_now_add;type(datetime)" json:"-"`         //创建时间
 	UpdateDate   time.Time   `orm:"auto_now;type(datetime)" json:"-"`             //最后更新时间
 	Name         string      `orm:"size(50)" json:"name" form:"Name"`             //菜单名称
-	Parent       *BaseMenu   `orm:"rel(fk)" json:"province" form:"-"`             //上级菜单
-	Childs       []*BaseMenu `orm:"reverse(many)" json:"districts"`               //子菜单
+	Parent       *BaseMenu   `orm:"rel(fk);null" json:"parent" form:"-"`          //上级菜单
+	Childs       []*BaseMenu `orm:"reverse(many)" json:"childs"`                  //子菜单
 	ParenLeft    int64       `orm:"unique"`                                       //菜单左
 	ParenRight   int64       `orm:"unique"`                                       //菜单右
 	Sequence     int64       `orm:"default(1)"`                                   //序列号，决定同级菜单显示先后顺序
 	Icon         string      `orm:""`                                             //菜单图标样式
-	Group        *BaseGroup  `orm:"rel(fk)"`                                      //权限组
-	Path         string      `orm:"unique"`                                       //菜单路径
+	Group        *BaseGroup  `orm:"rel(fk);null"`                                 //权限组
+	Path         string      `orm:""`                                             //菜单路径
 	Component    string      `orm:""`                                             //组件名称
 	Meta         string      `orm:""`                                             //额外参数
 }
@@ -56,4 +56,11 @@ func UpdateBaseMenu(m *BaseMenu, ormObj orm.Ormer) (id int64, err error) {
 		id = m.ID
 	}
 	return
+}
+
+// GetBaseMenuByID retrieves BaseMenu by ID. Returns error if ID doesn't exist
+func GetBaseMenuByID(id int64, ormObj orm.Ormer) (obj *BaseMenu, err error) {
+	obj = &BaseMenu{ID: id}
+	err = ormObj.Read(obj)
+	return obj, err
 }

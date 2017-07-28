@@ -1,7 +1,6 @@
 package initalActions
 
 import (
-	"bytes"
 	"golangERP/utils"
 	"os"
 	"runtime"
@@ -18,13 +17,7 @@ func InitApp() {
 		split = "/"
 	}
 	if xmlDir, err := os.Getwd(); err == nil {
-		b := bytes.Buffer{}
-		b.WriteString(xmlDir)
-		b.WriteString(split)
-		b.WriteString("inital_data")
-		b.WriteString(split)
-		b.WriteString("xml")
-		xmlBase := b.String()
+		xmlBase := utils.StringsJoin(xmlDir, split, "inital_data", split, "xml")
 		countryXML := utils.StringsJoin(xmlBase, split, "address", split, "Countries.xml")
 		go InitCountry2DB(countryXML)
 		provinceXML := utils.StringsJoin(xmlBase, split, "address", split, "Provinces.xml")
@@ -35,6 +28,8 @@ func InitApp() {
 		go InitDistrict2DB(districtXML)
 		userXML := utils.StringsJoin(xmlBase, split, "Users.xml")
 		go InitUser2DB(userXML)
+		//菜单初始化
+		go InitMenus2DB(split)
 
 	}
 }

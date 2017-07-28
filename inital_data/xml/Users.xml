@@ -11,5 +11,15 @@
 		<qq>272685110</qq>
 		<wechat>18129971403</wechat>
 	</user>
-
+	<user>
+		<name>admin1</name>
+		<email>2726851120@qq.com</email>
+		<mobile>181299271403</mobile>
+		<password>c2loudy</password>
+		<isAdmin>1</isAdmin>
+		<NameZh>系统管理员</NameZh>
+		<active>1</active>
+		<qq>2726852110</qq>
+		<wechat>181229971403</wechat>
+	</user>
 </Users>
