@@ -16,8 +16,8 @@ type BaseMenu struct {
 	Name         string      `orm:"size(50)" json:"name" form:"Name"`             //菜单名称
 	Parent       *BaseMenu   `orm:"rel(fk);null" json:"parent" form:"-"`          //上级菜单
 	Childs       []*BaseMenu `orm:"reverse(many)" json:"childs"`                  //子菜单
-	ParenLeft    int64       `orm:"unique"`                                       //菜单左
-	ParenRight   int64       `orm:"unique"`                                       //菜单右
+	ParentLeft   int64       `orm:"unique"`                                       //菜单左
+	ParentRight  int64       `orm:"unique"`                                       //菜单右
 	Sequence     int64       `orm:"default(1)"`                                   //序列号，决定同级菜单显示先后顺序
 	Icon         string      `orm:""`                                             //菜单图标样式
 	Group        *BaseGroup  `orm:"rel(fk);null"`                                 //权限组

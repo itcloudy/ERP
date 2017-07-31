@@ -32,13 +32,12 @@ func AddModuleData(m *ModuleData, ormObj orm.Ormer) (id int64, err error) {
 }
 
 // GetModuleDataByXMLID get moduledata by xmlid
-func GetModuleDataByXMLID(xmlid string, ormObj orm.Ormer) (obj *ModuleData, err error) {
-	// cond := orm.NewCondition()
-	// cond = cond.And("XMLID", xmlid)
-	// qs := ormObj.QueryTable(&obj)
-	// qs.SetCond(cond)
-	// err = qs.One(obj)
-	// fmt.Println(123333333333333333)
-	// fmt.Printf("%v", err)
-	return
+func GetModuleDataByXMLID(xmlid string, ormObj orm.Ormer) (*ModuleData, error) {
+	cond := orm.NewCondition()
+	var obj ModuleData
+	cond = cond.And("XMLID", xmlid)
+	qs := ormObj.QueryTable(&obj)
+	qs.SetCond(cond)
+	err := qs.One(&obj)
+	return &obj, err
 }

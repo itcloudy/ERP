@@ -20,7 +20,7 @@
         <icon>el-icon-menu</icon>
         <sequence>2</sequence>
     </menu>
-    <menu parent_id="address_manage_top" id="address_city_manage">
+     <menu parent_id="address_manage_top" id="address_city_manage">
         <name>城市管理</name>
         <path>city</path>
         <component>AddressCity</component>
@@ -33,5 +33,5 @@
         <component>AddressDistrict</component>
         <icon>el-icon-menu</icon>
         <sequence>4</sequence>
-    </menu>
+    </menu>   
 </Menus>

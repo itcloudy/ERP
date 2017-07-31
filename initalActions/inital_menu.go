@@ -43,8 +43,8 @@ func InitMenus2DB(split string) {
 					if data, err := ioutil.ReadAll(file); err == nil {
 						var initMenus InitMenus
 						if xml.Unmarshal(data, &initMenus) == nil {
-							ormObj := orm.NewOrm()
 							for _, menuXML := range initMenus.Menus {
+								ormObj := orm.NewOrm()
 								var menu md.BaseMenu
 								var parent md.BaseMenu
 								menu.Name = menuXML.Name
@@ -56,7 +56,6 @@ func InitMenus2DB(split string) {
 								if parentIDStr != "" {
 									if mobuleData, err := md.GetModuleDataByXMLID(utils.StringsJoin("BaseMenu.", parentIDStr), ormObj); err == nil {
 										parent.ID = mobuleData.InsertID
-										fmt.Print(mobuleData)
 										menu.Parent = &parent
 									}
 								}
@@ -68,10 +67,8 @@ func InitMenus2DB(split string) {
 									moduleData.ModuleName = "BaseMenu"
 									md.AddModuleData(&moduleData, ormObj)
 								} else {
-									fmt.Println("service create result ")
 									fmt.Println(err)
 								}
-
 							}
 						}
 					}
