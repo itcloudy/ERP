@@ -13,6 +13,8 @@ type LoginContriller struct {
 // Post 登录请求
 func (ctl *LoginContriller) Post() {
 	response := make(map[string]interface{})
+	var code, msg string
+
 	var requestBody map[string]interface{}
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 	username := requestBody["username"]
@@ -20,6 +22,9 @@ func (ctl *LoginContriller) Post() {
 	fmt.Println(username)
 	fmt.Println(password)
 	fmt.Printf("%v\n", requestBody)
+	response["code"] = code
+	response["msg"] = msg
+
 	ctl.Data["json"] = response
 	ctl.ServeJSON()
 }

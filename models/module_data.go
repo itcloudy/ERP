@@ -13,7 +13,7 @@ type ModuleData struct {
 	UpdateUserID int64     `orm:"column(update_user_id);null" json:"-"`         //最后更新者
 	CreateDate   time.Time `orm:"auto_now_add;type(datetime)" json:"-"`         //创建时间
 	UpdateDate   time.Time `orm:"auto_now;type(datetime)" json:"-"`             //最后更新时间
-	XMLID        string    `orm:"column(xml_id);unique"`                        //xml文件中的id
+	XMLID        string    `orm:"column(xml_id);unique;index"`                  //xml文件中的id
 	Data         string    `orm:"null"`                                         //数据内容
 	Descrition   string    `orm:"null"`                                         //记录描述
 	InsertID     int64     `orm:"column(insert_id)"`                            //插入记录的ID
@@ -33,11 +33,10 @@ func AddModuleData(m *ModuleData, ormObj orm.Ormer) (id int64, err error) {
 
 // GetModuleDataByXMLID get moduledata by xmlid
 func GetModuleDataByXMLID(xmlid string, ormObj orm.Ormer) (*ModuleData, error) {
-	cond := orm.NewCondition()
 	var obj ModuleData
-	cond = cond.And("XMLID", xmlid)
+	var err error
 	qs := ormObj.QueryTable(&obj)
-	qs.SetCond(cond)
-	err := qs.One(&obj)
+	err = qs.Filter("xml_id", xmlid).One(&obj)
 	return &obj, err
+
 }

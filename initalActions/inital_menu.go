@@ -2,7 +2,6 @@ package initalActions
 
 import (
 	"encoding/xml"
-	"fmt"
 	md "golangERP/models"
 	service "golangERP/services"
 	"golangERP/utils"
@@ -42,32 +41,35 @@ func InitMenus2DB(split string) {
 					defer file.Close()
 					if data, err := ioutil.ReadAll(file); err == nil {
 						var initMenus InitMenus
+						var moduleName = "BaseMenu"
 						if xml.Unmarshal(data, &initMenus) == nil {
 							for _, menuXML := range initMenus.Menus {
 								ormObj := orm.NewOrm()
-								var menu md.BaseMenu
-								var parent md.BaseMenu
-								menu.Name = menuXML.Name
-								menu.Path = menuXML.Path
-								menu.Component = menuXML.Component
-								menu.Icon = menuXML.Icon
-								menu.Sequence = menuXML.Sequence
-								parentIDStr := menuXML.ParentID
-								if parentIDStr != "" {
-									if mobuleData, err := md.GetModuleDataByXMLID(utils.StringsJoin("BaseMenu.", parentIDStr), ormObj); err == nil {
-										parent.ID = mobuleData.InsertID
-										menu.Parent = &parent
+								var xmlid = utils.StringsJoin(moduleName, ".", menuXML.XMLID)
+								// 检查在系统中是否已经存在
+								if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
+									var menu md.BaseMenu
+									var parent md.BaseMenu
+									menu.Name = menuXML.Name
+									menu.Path = menuXML.Path
+									menu.Component = menuXML.Component
+									menu.Icon = menuXML.Icon
+									menu.Sequence = menuXML.Sequence
+									parentIDStr := menuXML.ParentID
+									if parentIDStr != "" {
+										if mobuleData, err := md.GetModuleDataByXMLID(utils.StringsJoin(moduleName, ".", parentIDStr), ormObj); err == nil {
+											parent.ID = mobuleData.InsertID
+											menu.Parent = &parent
+										}
 									}
-								}
-								if insertID, err := service.ServiceCreateBaseMenu(&menu); err == nil {
-									var moduleData md.ModuleData
-									moduleData.InsertID = insertID
-									moduleData.XMLID = utils.StringsJoin("BaseMenu.", menuXML.XMLID)
-									moduleData.Descrition = menu.Name
-									moduleData.ModuleName = "BaseMenu"
-									md.AddModuleData(&moduleData, ormObj)
-								} else {
-									fmt.Println(err)
+									if insertID, err := service.ServiceCreateBaseMenu(&menu); err == nil {
+										var moduleData md.ModuleData
+										moduleData.InsertID = insertID
+										moduleData.XMLID = xmlid
+										moduleData.Descrition = menu.Name
+										moduleData.ModuleName = moduleName
+										md.AddModuleData(&moduleData, ormObj)
+									}
 								}
 							}
 						}

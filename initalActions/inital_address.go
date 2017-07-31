@@ -32,17 +32,25 @@ func InitCountry2DB(filePath string) {
 			var initCountries InitCountries
 			if xml.Unmarshal(data, &initCountries) == nil {
 				ormObj := orm.NewOrm()
+				var moduleName = "AddressCountry"
 				for _, countryXML := range initCountries.Countries {
-					var country md.AddressCountry
-					country.Name = countryXML.Name
-					if insertID, err := md.AddAddressCountry(&country, ormObj); err == nil {
-						var moduleData md.ModuleData
-						moduleData.InsertID = insertID
-						moduleData.XMLID = utils.StringsJoin("AddressCountry.", countryXML.XMLID)
-						moduleData.Descrition = country.Name
-						// moduleData.ModuleName = reflect.Indirect(reflect.ValueOf(country)).Type().Name()
-						moduleData.ModuleName = "AddressCountry"
-						md.AddModuleData(&moduleData, ormObj)
+					var xmlid = utils.StringsJoin(moduleName, ".", countryXML.XMLID)
+					// 检查在系统中是否已经存在
+					if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
+						var country md.AddressCountry
+						country.Name = countryXML.Name
+						var xmlid = utils.StringsJoin(moduleName, ".", countryXML.XMLID)
+						if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
+							if insertID, err := md.AddAddressCountry(&country, ormObj); err == nil {
+								var moduleData md.ModuleData
+								moduleData.InsertID = insertID
+								moduleData.XMLID = xmlid
+								moduleData.Descrition = country.Name
+								// moduleData.ModuleName = reflect.Indirect(reflect.ValueOf(country)).Type().Name()
+								moduleData.ModuleName = moduleName
+								md.AddModuleData(&moduleData, ormObj)
+							}
+						}
 					}
 				}
 			}
@@ -72,24 +80,28 @@ func InitProvince2DB(filePath string) {
 			var initProvinces InitProvinces
 			if xml.Unmarshal(data, &initProvinces) == nil {
 				ormObj := orm.NewOrm()
+				var moduleName = "AddressProvince"
 				for _, provinceXML := range initProvinces.Provinces {
-					var province md.AddressProvince
-					var country md.AddressCountry
-					pid := int64(provinceXML.PID)
-					country.ID = pid
-					province.Country = &country
-					province.Name = provinceXML.Name
-					if insertID, err := md.AddAddressProvince(&province, ormObj); err == nil {
-						var moduleData md.ModuleData
-						moduleData.InsertID = insertID
-						moduleData.XMLID = utils.StringsJoin("AddressProvince.", provinceXML.XMLID)
-						moduleData.Descrition = province.Name
-						// moduleData.ModuleName = reflect.Indirect(reflect.ValueOf(province)).Type().Name()
-						moduleData.ModuleName = "AddressProvince"
-						md.AddModuleData(&moduleData, ormObj)
+					var xmlid = utils.StringsJoin(moduleName, ".", provinceXML.XMLID)
+					// 检查在系统中是否已经存在
+					if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
+						var province md.AddressProvince
+						var country md.AddressCountry
+						pid := int64(provinceXML.PID)
+						country.ID = pid
+						province.Country = &country
+						province.Name = provinceXML.Name
+						if insertID, err := md.AddAddressProvince(&province, ormObj); err == nil {
+							var moduleData md.ModuleData
+							moduleData.InsertID = insertID
+							moduleData.XMLID = xmlid
+							moduleData.Descrition = province.Name
+							// moduleData.ModuleName = reflect.Indirect(reflect.ValueOf(province)).Type().Name()
+							moduleData.ModuleName = moduleName
+							md.AddModuleData(&moduleData, ormObj)
+						}
 					}
 				}
-
 			}
 		}
 	}
@@ -117,21 +129,26 @@ func InitCity2DB(filePath string) {
 			var initCities InitCities
 			if xml.Unmarshal(data, &initCities) == nil {
 				ormObj := orm.NewOrm()
+				var moduleName = "AddressCity"
 				for _, cityXML := range initCities.Cities {
-					var city md.AddressCity
-					var province md.AddressProvince
-					pid := int64(cityXML.PID)
-					province.ID = pid
-					city.Province = &province
-					city.Name = cityXML.Name
-					if insertID, err := md.AddAddressCity(&city, ormObj); err == nil {
-						var moduleData md.ModuleData
-						moduleData.InsertID = insertID
-						moduleData.XMLID = utils.StringsJoin("AddressCity.", cityXML.XMLID)
-						moduleData.Descrition = city.Name
-						// moduleData.ModuleName = reflect.Indirect(reflect.ValueOf(city)).Type().Name()
-						moduleData.ModuleName = "AddressCity"
-						md.AddModuleData(&moduleData, ormObj)
+					var xmlid = utils.StringsJoin(moduleName, ".", cityXML.XMLID)
+					// 检查在系统中是否已经存在
+					if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
+						var city md.AddressCity
+						var province md.AddressProvince
+						pid := int64(cityXML.PID)
+						province.ID = pid
+						city.Province = &province
+						city.Name = cityXML.Name
+						if insertID, err := md.AddAddressCity(&city, ormObj); err == nil {
+							var moduleData md.ModuleData
+							moduleData.InsertID = insertID
+							moduleData.XMLID = xmlid
+							moduleData.Descrition = city.Name
+							// moduleData.ModuleName = reflect.Indirect(reflect.ValueOf(city)).Type().Name()
+							moduleData.ModuleName = moduleName
+							md.AddModuleData(&moduleData, ormObj)
+						}
 					}
 				}
 			}
@@ -161,21 +178,26 @@ func InitDistrict2DB(filePath string) {
 			var initDistricts InitDistricts
 			if xml.Unmarshal(data, &initDistricts) == nil {
 				ormObj := orm.NewOrm()
+				var moduleName = "AddressDistrict"
 				for _, districtXML := range initDistricts.Districts {
-					var district md.AddressDistrict
-					var city md.AddressCity
-					pid := int64(districtXML.PID)
-					city.ID = pid
-					district.City = &city
-					district.Name = districtXML.Name
-					if insertID, err := md.AddAddressDistrict(&district, ormObj); err == nil {
-						var moduleData md.ModuleData
-						moduleData.InsertID = insertID
-						moduleData.XMLID = utils.StringsJoin("AddressDistrict.", districtXML.XMLID)
-						moduleData.Descrition = district.Name
-						// moduleData.ModuleName = reflect.Indirect(reflect.ValueOf(district)).Type().Name()
-						moduleData.ModuleName = "AddressDistrict"
-						md.AddModuleData(&moduleData, ormObj)
+					var xmlid = utils.StringsJoin(moduleName, ".", districtXML.XMLID)
+					// 检查在系统中是否已经存在
+					if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
+						var district md.AddressDistrict
+						var city md.AddressCity
+						pid := int64(districtXML.PID)
+						city.ID = pid
+						district.City = &city
+						district.Name = districtXML.Name
+						if insertID, err := md.AddAddressDistrict(&district, ormObj); err == nil {
+							var moduleData md.ModuleData
+							moduleData.InsertID = insertID
+							moduleData.XMLID = xmlid
+							moduleData.Descrition = district.Name
+							// moduleData.ModuleName = reflect.Indirect(reflect.ValueOf(district)).Type().Name()
+							moduleData.ModuleName = moduleName
+							md.AddModuleData(&moduleData, ormObj)
+						}
 					}
 				}
 			}

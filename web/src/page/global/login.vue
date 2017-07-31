@@ -36,6 +36,7 @@
         name: 'login',
         data() {
             return {
+                logining:false,
                 winSize: {
                     width: '',
                     height: ''
@@ -69,20 +70,20 @@
                         trigger: 'blur'
                     }],
                     password: [{
-					validator:(rule, value, callback)=>{
-						if (value === '') {
-							callback(new Error('请输入密码'));
-						} else {
-						    if(!(/^[a-zA-Z0-9_-]{6,16}$/.test(value))){
-								callback(new Error('密码至少6位,由大小写字母和数字,-,_组成'));
-							}else{
-								callback();
-                            }
+                        validator:(rule, value, callback)=>{
+                            if (value === '') {
+                                callback(new Error('请输入密码'));
+                            } else {
+                                if(!(/^[a-zA-Z0-9_-]{6,16}$/.test(value))){
+                                    callback(new Error('密码至少6位,由大小写字母和数字,-,_组成'));
+                                }else{
+                                    callback();
+                                }
 
-						}
-                    },
-                    trigger: 'blur'
-                }]
+                            }
+                        },
+                        trigger: 'blur'
+                    }]
                 },
             }
         },
@@ -98,13 +99,35 @@
                 this.$refs[ref].validate((valid)=>{
                     console.log(valid);
                     if(valid){
+                        this.logining = true;
                         let params = {
                             username: this.data.username,
                             password: this.data.password
                         };
-                        this.$ajax.post('/login',params);
-                        //登录成功跳转到首页
-                        this.$router.push('/');
+                        this.$ajax.post('/login',params).then(response=>{
+                            this.logining = false;
+                            console.log(response);
+                            let {code,msg,data} = response;
+                            if (code=='success'){
+                                // 本地缓存用户信息
+                                localStorage('user',JSON.stringify(data.user));
+                                // 本地缓存权限信息
+                                localStorage('permissions',JSON.stringify(data.permissions));
+                                // 验证通过，获得菜单
+                                let params = {
+                                    permissions:data.permissions,
+                                    isAdmin:data.user.isAdmin
+                                }
+                                this.$ajax.post("/menu",params).then(response=>{
+                                    //登录成功跳转到首页
+                                    this.$router.push('/');
+                                });
+                                
+                            }else{
+
+                            }
+                        });
+                        
                     }
                 });
             },
