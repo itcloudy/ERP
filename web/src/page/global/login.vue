@@ -32,6 +32,8 @@
 </template>
 <script>
     import {axiosAjaxLogin} from '../../api/global';
+    import {localStore} from '../../utils/local_store';
+    console.log(localStorage);
     export default {
         name: 'login',
         data() {
@@ -50,8 +52,8 @@
                     disabled: false
                 },
                 data: {
-                    username: '',
-                    password: '',
+                    username: 'admin',
+                    password: 'cloudy',
                     token: ''
                 },
                 rule_data:{
@@ -60,7 +62,7 @@
                             if (value === '') {
                                 callback(new Error('请输入用户名'));
                             } else {
-                                if(/^[a-zA-Z0-9_-]{6,16}$/.test(value)){
+                                if(/^[a-zA-Z0-9_-]{2,16}$/.test(value)){
                                     callback();
                                 }else{
                                     callback(new Error('用户名至少6位,由大小写字母和数字,-,_,组成'));
@@ -107,10 +109,16 @@
                         this.$ajax.post('/login',params).then(response=>{
                             this.logining = false;
                             console.log(response);
-                            let {code,msg,data} = response;
+                            let {code,msg,data} = response.data;
+                           
                             if (code=='success'){
+                                //提示
+                                this.$message({
+                                    message:msg,
+                                    type: 'success'
+                                });
                                 // 本地缓存用户信息
-                                localStorage('user',JSON.stringify(data.user));
+                                localStorage('user',data.user);
                                 // 本地缓存权限信息
                                 localStorage('permissions',JSON.stringify(data.permissions));
                                 // 验证通过，获得菜单
@@ -118,13 +126,17 @@
                                     permissions:data.permissions,
                                     isAdmin:data.user.isAdmin
                                 }
+                                console.log(params);
                                 this.$ajax.post("/menu",params).then(response=>{
                                     //登录成功跳转到首页
                                     this.$router.push('/');
                                 });
                                 
                             }else{
-
+                                this.$message({
+                                    message:msg,
+                                    type: 'error'
+                                });
                             }
                         });
                         

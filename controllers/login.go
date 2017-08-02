@@ -3,6 +3,8 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	service "golangERP/services"
+	"golangERP/utils"
 )
 
 // LoginContriller 登录模块
@@ -13,18 +15,21 @@ type LoginContriller struct {
 // Post 登录请求
 func (ctl *LoginContriller) Post() {
 	response := make(map[string]interface{})
-	var code, msg string
-
-	var requestBody map[string]interface{}
+	var requestBody map[string]string
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 	username := requestBody["username"]
 	password := requestBody["password"]
-	fmt.Println(username)
-	fmt.Println(password)
-	fmt.Printf("%v\n", requestBody)
-	response["code"] = code
-	response["msg"] = msg
-
+	if user, ok := service.ServiceUserLogin(username, password); ok {
+		user.Password = ""
+		response["code"] = utils.SuccessCode
+		response["msg"] = "验证通过"
+		data := make(map[string]interface{})
+		data["user"], _ = json.Marshal(user)
+		response["data"] = data
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = "验证失败"
+	}
 	ctl.Data["json"] = response
 	ctl.ServeJSON()
 }

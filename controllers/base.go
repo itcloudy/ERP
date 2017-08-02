@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	md "golangERP/models"
 	"time"
 
@@ -25,7 +24,4 @@ func (ctl *BaseController) Prepare() {
 	ctl.StartSession()
 	ctl.Data["PageStartTime"] = time.Now()
 
-}
-func (ctl *BaseController) Post() {
-	fmt.Println(12312313)
 }
