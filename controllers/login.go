@@ -24,7 +24,7 @@ func (ctl *LoginContriller) Post() {
 		response["code"] = utils.SuccessCode
 		response["msg"] = "验证通过"
 		data := make(map[string]interface{})
-		data["user"], _ = json.Marshal(user)
+		data["user"] = &user
 		response["data"] = data
 	} else {
 		response["code"] = utils.FailedCode

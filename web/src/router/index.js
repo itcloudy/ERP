@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-console.log(Router);
 import * as global from './global';
 const Login = resolve => require(['../page/global/login'], resolve);
 const Home = resolve => require(['../page/global/layout'], resolve);

@@ -33,7 +33,6 @@
 <script>
     import {axiosAjaxLogin} from '../../api/global';
     import {localStore} from '../../utils/local_store';
-    console.log(localStorage);
     export default {
         name: 'login',
         data() {
@@ -99,7 +98,6 @@
             },
             onLogin(ref){
                 this.$refs[ref].validate((valid)=>{
-                    console.log(valid);
                     if(valid){
                         this.logining = true;
                         let params = {
@@ -108,23 +106,23 @@
                         };
                         this.$ajax.post('/login',params).then(response=>{
                             this.logining = false;
-                            console.log(response);
                             let {code,msg,data} = response.data;
-                           
                             if (code=='success'){
+                                let user = data.user;
                                 //提示
                                 this.$message({
                                     message:msg,
                                     type: 'success'
                                 });
+                                console.log(data.user);
                                 // 本地缓存用户信息
-                                localStorage('user',data.user);
+                                localStorage.setItem('user',user);
                                 // 本地缓存权限信息
-                                localStorage('permissions',JSON.stringify(data.permissions));
+                                localStorage.setItem('groups',JSON.stringify(data.groups));
                                 // 验证通过，获得菜单
                                 let params = {
-                                    permissions:data.permissions,
-                                    isAdmin:data.user.isAdmin
+                                    groups:data.groups,
+                                    isAdmin:user.IsAdmin
                                 }
                                 console.log(params);
                                 this.$ajax.post("/menu",params).then(response=>{

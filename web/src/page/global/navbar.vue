@@ -21,7 +21,7 @@
         name:"navbar",
         data(){
             return{
-               
+                
             }
         },
         methods:{
