@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Users version="1">
-	<user>
+	<user id="admin">
 		<name>admin</name>
 		<email>272685110@qq.com</email>
 		<mobile>18129971403</mobile>
@@ -11,7 +11,7 @@
 		<qq>272685110</qq>
 		<wechat>18129971403</wechat>
 	</user>
-	<user>
+	<user id="admin1">
 		<name>admin1</name>
 		<email>2726851120@qq.com</email>
 		<mobile>181299271403</mobile>

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"goCMS/utils"
 	md "golangERP/models"
 
 	"github.com/astaxie/beego/orm"
@@ -11,20 +12,19 @@ func ServiceCreateUser(obj *md.User) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
-		if err != nil {
-			if errRollback := o.Rollback(); errRollback != nil {
-				err = errRollback
+		if err == nil {
+			if o.Commit() != nil {
+				if errRollback := o.Rollback(); errRollback != nil {
+					err = errRollback
+				}
 			}
 		}
 	}()
 	if err != nil {
 		return
 	}
+	obj.Password = utils.PasswordMD5(obj.Password, obj.Mobile)
 	id, err = md.AddUser(obj, o)
-	err = o.Commit()
-	if err != nil {
-		return
-	}
 	return
 }
 
@@ -33,9 +33,11 @@ func ServiceUpdateUser(obj *md.User) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
-		if err != nil {
-			if errRollback := o.Rollback(); errRollback != nil {
-				err = errRollback
+		if err == nil {
+			if o.Commit() != nil {
+				if errRollback := o.Rollback(); errRollback != nil {
+					err = errRollback
+				}
 			}
 		}
 	}()
@@ -43,10 +45,7 @@ func ServiceUpdateUser(obj *md.User) (id int64, err error) {
 		return
 	}
 	id, err = md.UpdateUser(obj, o)
-	err = o.Commit()
-	if err != nil {
-		return
-	}
+
 	return
 }
 
@@ -55,9 +54,11 @@ func ServiceUpdateUserPassWord(obj *md.User) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
-		if err != nil {
-			if errRollback := o.Rollback(); errRollback != nil {
-				err = errRollback
+		if err == nil {
+			if o.Commit() != nil {
+				if errRollback := o.Rollback(); errRollback != nil {
+					err = errRollback
+				}
 			}
 		}
 	}()
@@ -65,9 +66,33 @@ func ServiceUpdateUserPassWord(obj *md.User) (id int64, err error) {
 		return
 	}
 	id, err = md.UpdateUser(obj, o)
-	err = o.Commit()
-	if err != nil {
-		return
+
+	return
+}
+
+// ServiceUserLogin 用户登录
+func ServiceUserLogin(username string, password string) (*md.User, bool) {
+	o := orm.NewOrm()
+	var (
+		user md.User
+		err  error
+	)
+	ok := false
+	o.Using("default")
+	cond := orm.NewCondition()
+	cond = cond.And("active", true).And("Name", username).Or("Email", username).Or("Mobile", username)
+	qs := o.QueryTable(&user)
+	qs = qs.SetCond(cond)
+	if err = qs.One(&user); err == nil {
+		if user.Password == utils.PasswordMD5(password, user.Mobile) {
+			ok = true
+
+		}
 	}
+	return &user, ok
+}
+
+// ServiceUserLogout 用户登出
+func ServiceUserLogout(id int64) (ok bool, err error) {
 	return
 }

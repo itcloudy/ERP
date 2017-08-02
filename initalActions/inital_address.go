@@ -39,7 +39,6 @@ func InitCountry2DB(filePath string) {
 					if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
 						var country md.AddressCountry
 						country.Name = countryXML.Name
-						var xmlid = utils.StringsJoin(moduleName, ".", countryXML.XMLID)
 						if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
 							if insertID, err := md.AddAddressCountry(&country, ormObj); err == nil {
 								var moduleData md.ModuleData

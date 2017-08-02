@@ -11,9 +11,11 @@ func ServiceCreateModuleModule(obj *md.ModuleModule) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
-		if err != nil {
-			if errRollback := o.Rollback(); errRollback != nil {
-				err = errRollback
+		if err == nil {
+			if o.Commit() != nil {
+				if errRollback := o.Rollback(); errRollback != nil {
+					err = errRollback
+				}
 			}
 		}
 	}()
@@ -21,10 +23,7 @@ func ServiceCreateModuleModule(obj *md.ModuleModule) (id int64, err error) {
 		return
 	}
 	id, err = md.AddModuleModule(obj, o)
-	err = o.Commit()
-	if err != nil {
-		return
-	}
+
 	return
 }
 
@@ -33,9 +32,11 @@ func ServiceUpdateModuleModule(obj *md.ModuleModule) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
-		if err != nil {
-			if errRollback := o.Rollback(); errRollback != nil {
-				err = errRollback
+		if err == nil {
+			if o.Commit() != nil {
+				if errRollback := o.Rollback(); errRollback != nil {
+					err = errRollback
+				}
 			}
 		}
 	}()
@@ -43,9 +44,6 @@ func ServiceUpdateModuleModule(obj *md.ModuleModule) (id int64, err error) {
 		return
 	}
 	id, err = md.UpdateModuleModule(obj, o)
-	err = o.Commit()
-	if err != nil {
-		return
-	}
+
 	return
 }

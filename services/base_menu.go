@@ -11,9 +11,11 @@ func ServiceCreateBaseMenu(obj *md.BaseMenu) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
-		if err != nil {
-			if errRollback := o.Rollback(); errRollback != nil {
-				err = errRollback
+		if err == nil {
+			if o.Commit() != nil {
+				if errRollback := o.Rollback(); errRollback != nil {
+					err = errRollback
+				}
 			}
 		}
 	}()
@@ -58,9 +60,6 @@ func ServiceCreateBaseMenu(obj *md.BaseMenu) (id int64, err error) {
 		}
 	}
 	id, err = md.AddBaseMenu(obj, o)
-	err = o.Commit()
-	if err != nil {
-		return
-	}
+
 	return
 }
