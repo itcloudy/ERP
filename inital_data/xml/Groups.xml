@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Groups version="1">
+	<group id="salemanager">
+		<name>销售经理</name>
+		<parent></parent>
+	</group>
+	<group id="saleman">
+		<name>销售员</name>
+		<parent>salemanager</parent>
+	</group>
+	<group id="purchasemanager">
+		<name>采购经理</name>
+		<parent></parent>
+	</group>
+    <group id="purchaseman">
+		<name>采购</name>
+		<parent>purchasemanager</parent>
+	</group>
+	
+</Groups>

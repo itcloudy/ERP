@@ -22,7 +22,7 @@ type InitMenu struct {
 	ParentID  string `xml:"parent_id,attr"`
 }
 
-// InitMenus 国家数据列表
+// InitMenus 菜单数据列表
 type InitMenus struct {
 	XMLName xml.Name   `xml:"Menus"`
 	Menus   []InitMenu `xml:"menu"`

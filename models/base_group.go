@@ -15,12 +15,47 @@ type BaseGroup struct {
 	UpdateDate    time.Time      `orm:"auto_now;type(datetime)" json:"-"`             //最后更新时间
 	Name          string         `orm:"unique;size(50)" json:"name" form:"Name"`      //权限组名称
 	ModelAccesses []*ModelAccess `orm:"reverse(many)"`                                //模块(表)
-	Inherits      []*BaseGroup   `orm:"reverse(many)" json:"-" form:"-"`              //继承权限
-	Child         *BaseGroup     `orm:"rel(fk);null"`                                 //
-	ParenLeft     int64          `orm:"unique"`                                       //左边界
-	ParenRight    int64          `orm:"unique"`                                       //右边界
+	Childs        []*BaseGroup   `orm:"reverse(many)" json:"-" form:"-"`              //继承权限
+	Parent        *BaseGroup     `orm:"rel(fk);null"`                                 //
+	ParentLeft    int64          `orm:"unique"`                                       //左边界
+	ParentRight   int64          `orm:"unique"`                                       //右边界
 }
 
 func init() {
 	orm.RegisterModel(new(BaseGroup))
+}
+
+// AddBaseGroup insert a new BaseGroup into database and returns last inserted Id on success.
+func AddBaseGroup(m *BaseGroup, ormObj orm.Ormer) (id int64, err error) {
+	id, err = ormObj.Insert(m)
+	return
+}
+
+// BatchAddBaseGroup insert  list of  BaseGroup into database and returns  number of  success.
+func BatchAddBaseGroup(groups []*BaseGroup, ormObj orm.Ormer) (num int64, err error) {
+	qs := ormObj.QueryTable(&BaseGroup{})
+	if i, err := qs.PrepareInsert(); err == nil {
+		defer i.Close()
+		for _, group := range groups {
+			if _, err = i.Insert(group); err == nil {
+				num = num + 1
+			}
+		}
+	}
+	return
+}
+
+// UpdateBaseGroup update BaseGroup into database and returns id on success
+func UpdateBaseGroup(m *BaseGroup, ormObj orm.Ormer) (id int64, err error) {
+	if _, err = ormObj.Update(m); err == nil {
+		id = m.ID
+	}
+	return
+}
+
+// GetBaseGroupByID retrieves BaseGroup by ID. Returns error if ID doesn't exist
+func GetBaseGroupByID(id int64, ormObj orm.Ormer) (obj *BaseGroup, err error) {
+	obj = &BaseGroup{ID: id}
+	err = ormObj.Read(obj)
+	return obj, err
 }

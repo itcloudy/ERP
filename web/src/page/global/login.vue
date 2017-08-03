@@ -31,8 +31,8 @@
     </div>
 </template>
 <script>
-    import {axiosAjaxLogin} from '../../api/global';
-    import {localStore} from '../../utils/local_store';
+    import localStore from '../../utils/local_store';
+    import { mapMutations } from 'vuex'
     export default {
         name: 'login',
         data() {
@@ -114,17 +114,17 @@
                                     message:msg,
                                     type: 'success'
                                 });
-                                console.log(data.user);
                                 // 本地缓存用户信息
-                                localStorage.setItem('user',user);
+                                localStore.set('userinfo',JSON.stringify(user));
+                                //更新store中的userinfo
+                                this.setGlobalUserInfo(user)
                                 // 本地缓存权限信息
-                                localStorage.setItem('groups',JSON.stringify(data.groups));
+                                localStore.set('groups',JSON.stringify(data.groups));
                                 // 验证通过，获得菜单
                                 let params = {
                                     groups:data.groups,
                                     isAdmin:user.IsAdmin
                                 }
-                                console.log(params);
                                 this.$ajax.post("/menu",params).then(response=>{
                                     //登录成功跳转到首页
                                     this.$router.push('/');
@@ -141,6 +141,9 @@
                     }
                 });
             },
+            ...mapMutations({
+                setGlobalUserInfo:"GLOBAL_SET_USERINFO"
+            })
         },
         created() {
             this.setSize();

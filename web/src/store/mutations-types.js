@@ -2,3 +2,4 @@ export const GLOBAL_TOGGLE_LEFT_SIDEBAR = "GLOBAL_TOGGLE_LEFT_SIDEBAR" //左侧�
 export const GLOBAL_SET_WINDOW_HRIGHT = 'GLOBAL_SET_WINDOW_HRIGHT' //设置窗口高度
 export const GLOBAL_ADD_MENU = 'GLOBAL_ADD_MENU' //添加菜单
 export const GLOBAL_LOAD_ROUTES = 'GLOBAL_LOAD_ROUTES' //加载路由
+export const GLOBAL_SET_USERINFO = 'GLOBAL_SET_USERINFO' // 设置用户信息

@@ -11,6 +11,9 @@ export default {
             state.showLeftSidebar = false
         else
             state.showLeftSidebar = true
+    },
+    [types.GLOBAL_SET_USERINFO](state, userinfo) {
+        state.userinfo = userinfo
     }
 
 }
