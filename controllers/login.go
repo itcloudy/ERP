@@ -26,6 +26,7 @@ func (ctl *LoginContriller) Post() {
 		data := make(map[string]interface{})
 		data["user"] = &user
 		response["data"] = data
+		service.ServiceGetGroups(true, 0)
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg

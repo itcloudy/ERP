@@ -83,3 +83,31 @@ func ServiceUpdateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
 	id, err = md.UpdateBaseGroup(obj, o)
 	return
 }
+
+// ServiceGetGroups 获得权限组信息
+func ServiceGetGroups(isAdmin bool, userID int64) ([]md.BaseGroup, error) {
+	var (
+		groups []md.BaseGroup
+		err    error
+	)
+	query := make(map[string]interface{})
+	exclude := make(map[string]interface{})
+	cond := make(map[string]map[string]interface{})
+	condAnd := make(map[string]interface{})
+	fields := make([]string, 0, 0)
+	sortby := make([]string, 0, 1)
+	order := make([]string, 0, 1)
+
+	if isAdmin {
+		condAnd["Parent__isnull"] = true
+		if len(condAnd) > 0 {
+			cond["and"] = condAnd
+		}
+		if _, groups, err = md.GetAllBaseGroup(query, exclude, cond, fields, sortby, order, 0, 0); err == nil {
+		}
+
+	} else {
+
+	}
+	return groups, err
+}
