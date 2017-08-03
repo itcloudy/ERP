@@ -25,3 +25,17 @@ type ModelAccess struct {
 func init() {
 	orm.RegisterModel(new(ModelAccess))
 }
+
+// AddModelAccess insert a new ModelAccess into database and returns last inserted Id on success.
+func AddModelAccess(m *ModelAccess, ormObj orm.Ormer) (id int64, err error) {
+	id, err = ormObj.Insert(m)
+	return
+}
+
+// UpdateModelAccess update ModelAccess into database and returns id on success
+func UpdateModelAccess(m *ModelAccess, ormObj orm.Ormer) (id int64, err error) {
+	if _, err = ormObj.Update(m); err == nil {
+		id = m.ID
+	}
+	return
+}

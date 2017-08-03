@@ -5,4 +5,9 @@
         <description>采购订单</description>
         <category>purchase</category>
     </module>
+    <module id="purchase_order_line">
+        <name>PurchaseOrderLine</name>
+        <description>采购订单明细</description>
+        <category>purchase</category>
+    </module>
 </Modules>

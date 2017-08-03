@@ -36,3 +36,12 @@ func UpdateModuleModule(m *ModuleModule, ormObj orm.Ormer) (id int64, err error)
 	}
 	return
 }
+
+// GetModuleModuleByName retrieves ModuleModule by ID. Returns error if ID doesn't exist
+func GetModuleModuleByName(name string, ormObj orm.Ormer) (*ModuleModule, error) {
+	var obj ModuleModule
+	var err error
+	qs := ormObj.QueryTable(&obj)
+	err = qs.Filter("Name", name).One(&obj)
+	return &obj, err
+}

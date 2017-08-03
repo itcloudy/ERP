@@ -20,6 +20,7 @@ type BaseGroup struct {
 	ParentLeft    int64          `orm:"unique"`                                       //左边界
 	ParentRight   int64          `orm:"unique"`                                       //右边界
 	Category      string         `orm:""`                                             //分类
+	Description   string         ``                                                   //说明
 }
 
 func init() {
@@ -59,4 +60,13 @@ func GetBaseGroupByID(id int64, ormObj orm.Ormer) (obj *BaseGroup, err error) {
 	obj = &BaseGroup{ID: id}
 	err = ormObj.Read(obj)
 	return obj, err
+}
+
+// GetBaseGroupByName retrieves BaseGroup by ID. Returns error if ID doesn't exist
+func GetBaseGroupByName(name string, ormObj orm.Ormer) (*BaseGroup, error) {
+	var obj BaseGroup
+	var err error
+	qs := ormObj.QueryTable(&obj)
+	err = qs.Filter("Name", name).One(&obj)
+	return &obj, err
 }

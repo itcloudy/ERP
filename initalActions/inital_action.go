@@ -30,14 +30,17 @@ func InitApp() {
 		// 地区信息
 		districtXML := utils.StringsJoin(xmlBase, split, "address", split, "Districts.xml")
 		InitDistrict2DB(districtXML)
+		// group初始化要在用户和菜单之前
+		groupXML := utils.StringsJoin(xmlBase, split, "Groups.xml")
+		InitGroup2DB(groupXML)
 		// 模块分类
 		moduleCategoryXML := utils.StringsJoin(xmlBase, split, "module_category.xml")
 		InitModuleCategory2DB(moduleCategoryXML)
 		// 模块信息
 		InitModuleModule2DB(split)
-		groupXML := utils.StringsJoin(xmlBase, split, "Groups.xml")
-		// group初始化要在用户和菜单之前
-		InitGroup2DB(groupXML)
+		//模块权限信息
+		InitModelAccess2DB(split)
+
 		//用户初始化
 		userXML := utils.StringsJoin(xmlBase, split, "Users.xml")
 		InitUser2DB(userXML)
