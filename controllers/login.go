@@ -26,7 +26,15 @@ func (ctl *LoginContriller) Post() {
 		data := make(map[string]interface{})
 		data["user"] = &user
 		response["data"] = data
-		service.ServiceGetGroups(true, 0)
+		if groups, err := service.ServiceGetGroups(user.IsAdmin, user.ID); err == nil {
+			leng := len(groups)
+			groupIDs := make([]int64, leng, leng)
+			for index, group := range groups {
+				groupIDs[index] = group.ID
+			}
+			data["groups"] = groupIDs
+
+		}
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg

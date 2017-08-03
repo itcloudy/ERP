@@ -123,7 +123,8 @@
                                 // 验证通过，获得菜单
                                 let params = {
                                     groups:data.groups,
-                                    isAdmin:user.IsAdmin
+                                    isAdmin:user.IsAdmin,
+                                    userID:user.ID
                                 }
                                 this.$ajax.post("/menu",params).then(response=>{
                                     //登录成功跳转到首页
