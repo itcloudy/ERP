@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"goCMS/utils"
 	"strings"
 	"time"
 
@@ -75,12 +74,11 @@ func GetBaseGroupByName(name string, ormObj orm.Ormer) (*BaseGroup, error) {
 }
 
 // GetAllBaseGroup retrieves all BaseGroup matches certain condition. Returns empty list if no records exist
-func GetAllBaseGroup(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []BaseGroup, error) {
+func GetAllBaseGroup(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
+	fields []string, sortby []string, order []string, offset int64, limit int64) ([]BaseGroup, error) {
 	var (
-		objArrs   []BaseGroup
-		paginator utils.Paginator
-		num       int64
-		err       error
+		objArrs []BaseGroup
+		err     error
 	)
 	if limit == 0 {
 		limit = 200
@@ -131,7 +129,7 @@ func GetAllBaseGroup(query map[string]interface{}, exclude map[string]interface{
 				} else if order[i] == "asc" {
 					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
-					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
@@ -145,28 +143,25 @@ func GetAllBaseGroup(query map[string]interface{}, exclude map[string]interface{
 				} else if order[0] == "asc" {
 					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
-					return paginator, nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
 				}
 				sortFields = append(sortFields, orderby)
 			}
 		} else if len(sortby) != len(order) && len(order) != 1 {
-			return paginator, nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
+			return nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
 		}
 	} else {
 		if len(order) != 0 {
-			return paginator, nil, errors.New("Error: unused 'order' fields")
+			return nil, errors.New("Error: unused 'order' fields")
 		}
 	}
 
 	qs = qs.OrderBy(sortFields...)
 	if cnt, err := qs.Count(); err == nil {
 		if cnt > 0 {
-			paginator = utils.GenPaginator(limit, offset, cnt)
-			if num, err = qs.Limit(limit, offset).All(&objArrs, fields...); err == nil {
-				paginator.CurrentPageSize = num
-			}
+			_, err = qs.All(&objArrs, fields...)
 		}
 	}
 
-	return paginator, objArrs, err
+	return objArrs, err
 }

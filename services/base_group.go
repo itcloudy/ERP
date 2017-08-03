@@ -1,6 +1,7 @@
 package services
 
 import (
+	"fmt"
 	md "golangERP/models"
 
 	"github.com/astaxie/beego/orm"
@@ -85,10 +86,9 @@ func ServiceUpdateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
 }
 
 // ServiceGetGroups 获得权限组信息
-func ServiceGetGroups(isAdmin bool, userID int64) ([]md.BaseGroup, error) {
+func ServiceGetGroups(isAdmin bool, userID int64) (groups []*md.BaseGroup, err error) {
 	var (
-		groups []md.BaseGroup
-		err    error
+		tGroups []md.BaseGroup
 	)
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
@@ -97,17 +97,25 @@ func ServiceGetGroups(isAdmin bool, userID int64) ([]md.BaseGroup, error) {
 	fields := make([]string, 0, 0)
 	sortby := make([]string, 0, 1)
 	order := make([]string, 0, 1)
-
+	o := orm.NewOrm()
 	if isAdmin {
 		condAnd["Parent__isnull"] = true
 		if len(condAnd) > 0 {
 			cond["and"] = condAnd
 		}
-		if _, groups, err = md.GetAllBaseGroup(query, exclude, cond, fields, sortby, order, 0, 0); err == nil {
+		if tGroups, err = md.GetAllBaseGroup(query, exclude, cond, fields, sortby, order, 0, 0); err == nil {
+			for index, group := range tGroups {
+				fmt.Println(index)
+				fmt.Printf("%+v\n", group)
+				// groups[index] = &group
+			}
 		}
 
 	} else {
-
+		if user, err := md.GetUserByID(userID, o); err == nil {
+			groups = user.Groups
+		}
 	}
-	return groups, err
+
+	return
 }
