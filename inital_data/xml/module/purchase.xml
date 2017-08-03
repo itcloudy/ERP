@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Modules>
+    <module id="purchase_order">
+        <name>PurchaseOrder</name>
+        <description>采购订单</description>
+        <category>purchase</category>
+    </module>
+</Modules>

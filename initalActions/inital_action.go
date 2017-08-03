@@ -18,21 +18,31 @@ func InitApp() {
 	}
 	if xmlDir, err := os.Getwd(); err == nil {
 		xmlBase := utils.StringsJoin(xmlDir, split, "inital_data", split, "xml")
+		// 国家信息
 		countryXML := utils.StringsJoin(xmlBase, split, "address", split, "Countries.xml")
-		go InitCountry2DB(countryXML)
+		InitCountry2DB(countryXML)
+		// 省份信息
 		provinceXML := utils.StringsJoin(xmlBase, split, "address", split, "Provinces.xml")
-		go InitProvince2DB(provinceXML)
+		InitProvince2DB(provinceXML)
+		// 城市信息
 		cityXML := utils.StringsJoin(xmlBase, split, "address", split, "Cities.xml")
-		go InitCity2DB(cityXML)
+		InitCity2DB(cityXML)
+		// 地区信息
 		districtXML := utils.StringsJoin(xmlBase, split, "address", split, "Districts.xml")
-		go InitDistrict2DB(districtXML)
+		InitDistrict2DB(districtXML)
+		// 模块分类
+		moduleCategoryXML := utils.StringsJoin(xmlBase, split, "module_category.xml")
+		InitModuleCategory2DB(moduleCategoryXML)
+		// 模块信息
+		InitModuleModule2DB(split)
 		groupXML := utils.StringsJoin(xmlBase, split, "Groups.xml")
 		// group初始化要在用户和菜单之前
-		go InitGroup2DB(groupXML)
+		InitGroup2DB(groupXML)
+		//用户初始化
 		userXML := utils.StringsJoin(xmlBase, split, "Users.xml")
-		go InitUser2DB(userXML)
+		InitUser2DB(userXML)
 		//菜单初始化
-		go InitMenus2DB(split)
+		InitMenus2DB(split)
 
 	}
 }

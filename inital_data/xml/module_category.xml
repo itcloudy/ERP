@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Categories>
+    <category id="sale">
+        <name>sale</name>
+        <description>销售</description>
+    </category>
+    <category id="purchase">
+        <name>purchase</name>
+        <description>采购</description>
+    </category>
+    <category id="stock">
+        <name>stock</name>
+        <description>仓库</description>
+    </category>
+</Categories>

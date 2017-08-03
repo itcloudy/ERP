@@ -14,10 +14,11 @@ import (
 
 // InitGroup  权限组数据解析
 type InitGroup struct {
-	Name   string `xml:"name"`
-	XMLID  string `xml:"id,attr"`
-	Childs string `xml:"childs"`
-	Parent string `xml:"parent"`
+	Name     string `xml:"name"`
+	XMLID    string `xml:"id,attr"`
+	Childs   string `xml:"childs"`
+	Parent   string `xml:"parent"`
+	Category string `xml:"category"`
 }
 
 // InitGroups 权限组数据列表
@@ -42,6 +43,7 @@ func InitGroup2DB(filePath string) {
 						var group md.BaseGroup
 						var parent md.BaseGroup
 						group.Name = groupXML.Name
+						group.Category = groupXML.Category
 						parentIDStr := groupXML.Parent
 						if parentIDStr != "" {
 							if mobuleData, err := md.GetModuleDataByXMLID(utils.StringsJoin(moduleName, ".", parentIDStr), ormObj); err == nil {
@@ -55,7 +57,6 @@ func InitGroup2DB(filePath string) {
 								moduleData.InsertID = insertID
 								moduleData.XMLID = xmlid
 								moduleData.Descrition = group.Name
-								// moduleData.ModuleName = reflect.Indirect(reflect.ValueOf(country)).Type().Name()
 								moduleData.ModuleName = moduleName
 								md.AddModuleData(&moduleData, ormObj)
 							} else {

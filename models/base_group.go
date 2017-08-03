@@ -19,6 +19,7 @@ type BaseGroup struct {
 	Parent        *BaseGroup     `orm:"rel(fk);null"`                                 //
 	ParentLeft    int64          `orm:"unique"`                                       //左边界
 	ParentRight   int64          `orm:"unique"`                                       //右边界
+	Category      string         `orm:""`                                             //分类
 }
 
 func init() {

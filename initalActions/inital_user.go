@@ -11,7 +11,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// InitUsers 用户数据雷彪
+// InitUsers 用户数据列表
 type InitUsers struct {
 	XMLName xml.Name   `xml:"Users"`
 	Users   []InitUser `xml:"user"`
