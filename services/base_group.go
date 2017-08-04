@@ -1,7 +1,6 @@
 package services
 
 import (
-	"fmt"
 	md "golangERP/models"
 
 	"github.com/astaxie/beego/orm"
@@ -104,18 +103,14 @@ func ServiceGetGroups(isAdmin bool, userID int64) (groups []*md.BaseGroup, err e
 			cond["and"] = condAnd
 		}
 		if tGroups, err = md.GetAllBaseGroup(query, exclude, cond, fields, sortby, order, 0, 0); err == nil {
-			for index, group := range tGroups {
-				fmt.Println(index)
-				fmt.Printf("%+v\n", group)
-				// groups[index] = &group
+			for _, group := range tGroups {
+				groups = append(groups, &group)
 			}
 		}
-
 	} else {
 		if user, err := md.GetUserByID(userID, o); err == nil {
 			groups = user.Groups
 		}
 	}
-
 	return
 }

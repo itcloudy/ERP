@@ -1,7 +1,12 @@
 package controllers
 
-import "encoding/json"
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	md "golangERP/models"
+	service "golangERP/services"
+	"golangERP/utils"
+)
 
 // MenuController 菜单模块
 type MenuController struct {
@@ -15,11 +20,31 @@ func (ctl *MenuController) Post() {
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 	fmt.Printf("%+v\n", requestBody)
 	// groups := requestBody["groups"].()
-	userID := int64((requestBody["userID"]).(float64))
-	isAdmin := (requestBody["isAdmin"]).(bool)
-	fmt.Println(userID)
-	fmt.Println(isAdmin)
-	response["post"] = requestBody
+	var (
+		err     error
+		isAdmin bool
+		menus   []md.BaseMenu
+		groups  []int64
+	)
+	if _, ok := requestBody["isAdmin"]; ok {
+		isAdmin = (requestBody["isAdmin"]).(bool)
+	} else {
+		isAdmin = false
+	}
+
+	if _, ok := requestBody["groups"]; ok {
+
+	}
+	data := make(map[string]interface{})
+	if menus, err = service.ServiceGetMenus(isAdmin, groups); err == nil {
+		data["menus"] = &menus
+		response["data"] = data
+	}
+	if err != nil {
+		response["code"] = utils.FailedCode
+		response["msg"] = "菜单获取失败"
+	}
+
 	ctl.Data["json"] = response
 	ctl.ServeJSON()
 }

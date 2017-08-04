@@ -63,3 +63,22 @@ func ServiceCreateBaseMenu(obj *md.BaseMenu) (id int64, err error) {
 
 	return
 }
+
+// ServiceGetMenus 获得菜单
+func ServiceGetMenus(isAdmin bool, groupIDs []int64) (menus []md.BaseMenu, err error) {
+
+	// query := make(map[string]interface{})
+	// exclude := make(map[string]interface{})
+	// cond := make(map[string]map[string]interface{})
+	// condAnd := make(map[string]interface{})
+	// fields := make([]string, 0, 0)
+	// sortby := make([]string, 0, 1)
+	// order := make([]string, 0, 1)
+	// o := orm.NewOrm()
+	if isAdmin {
+
+	} else {
+
+	}
+	return
+}

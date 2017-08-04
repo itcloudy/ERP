@@ -18,6 +18,7 @@ type InitGroup struct {
 	Parent      string `xml:"parent"`
 	Category    string `xml:"category"`
 	Description string `xml:"description"`
+	Name        string `xml:"name"`
 }
 
 // InitGroups 权限组数据列表
@@ -41,7 +42,7 @@ func InitGroup2DB(filePath string) {
 					if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
 						var group md.BaseGroup
 						var parent md.BaseGroup
-						group.Name = groupXML.XMLID
+						group.Name = groupXML.Name
 						group.Category = groupXML.Category
 						group.Description = groupXML.Description
 						parentIDStr := groupXML.Parent

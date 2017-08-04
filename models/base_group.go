@@ -23,6 +23,7 @@ type BaseGroup struct {
 	ParentRight   int64          `orm:"unique"`                                       //右边界
 	Category      string         `orm:""`                                             //分类
 	Description   string         ``                                                   //说明
+	Menus         []*BaseMenu    `orm:"reverse(many)"`                                //菜单
 }
 
 func init() {

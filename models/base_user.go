@@ -25,7 +25,7 @@ type User struct {
 	Active          bool         `orm:"default(true)" xml:"active" json:"Active" form:"Active"`                //有效
 	Qq              string       `orm:"default()" xml:"qq" json:"Qq" form:"Qq"`                                //QQ
 	WeChat          string       `orm:"default()" xml:"wechat" json:"WeChat" form:"WeChat"`                    //微信
-	Groups          []*BaseGroup `orm:"rel(m2m)"`                                                              //权限组
+	Groups          []*BaseGroup `orm:"rel(m2m);rel_through(golangERP/models.GroupUser)"`                      //权限组
 }
 
 func init() {

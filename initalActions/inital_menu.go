@@ -7,6 +7,7 @@ import (
 	"golangERP/utils"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -20,6 +21,7 @@ type InitMenu struct {
 	Component string `xml:"component"`
 	Sequence  int64  `xml:"sequence"`
 	ParentID  string `xml:"parent_id,attr"`
+	Groups    string `xml:"group"`
 }
 
 // InitMenus 菜单数据列表
@@ -69,6 +71,23 @@ func InitMenus2DB(split string) {
 										moduleData.Descrition = menu.Name
 										moduleData.ModuleName = moduleName
 										md.AddModuleData(&moduleData, ormObj)
+										//权限设置
+										groupStr := menuXML.Groups
+										if groupStr != "" {
+											groups := strings.Split(groupStr, ",")
+											for _, groupName := range groups {
+												if groupName != "" {
+													if group, err := md.GetBaseGroupByName(groupName, ormObj); err == nil {
+														var groupMenu md.GroupMenu
+														var me md.BaseMenu
+														me.ID = insertID
+														groupMenu.Menu = &me
+														groupMenu.Group = group
+														md.AddGroupMenu(&groupMenu, ormObj)
+													}
+												}
+											}
+										}
 									}
 								}
 							}

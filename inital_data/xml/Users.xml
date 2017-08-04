@@ -9,17 +9,30 @@
 		<NameZh>系统管理员</NameZh>
 		<active>1</active>
 		<qq>272685110</qq>
-		<wechat>18129971403</wechat>
+		<wechat>272685110</wechat>
 	</user>
-	<user id="admin1">
-		<name>admin1</name>
-		<email>2726851120@qq.com</email>
-		<mobile>181299271403</mobile>
-		<password>c2loudy</password>
-		<isAdmin>1</isAdmin>
-		<NameZh>系统管理员</NameZh>
+	<user id="saleman">
+		<name>saleman</name>
+		<email>272685111@qq.com</email>
+		<mobile>18129971404</mobile>
+		<password>saleman</password>
+		<isAdmin>0</isAdmin>
+		<NameZh>销售员</NameZh>
 		<active>1</active>
-		<qq>2726852110</qq>
-		<wechat>181229971403</wechat>
+		<qq>272685111</qq>
+		<wechat>272685111</wechat>
+		<group>saleman</group>
+	</user>
+	<user id="manager">
+		<name>manager</name>
+		<email>272685112@qq.com</email>
+		<mobile>18129971405</mobile>
+		<password>saleman</password>
+		<isAdmin>0</isAdmin>
+		<NameZh>经理</NameZh>
+		<active>1</active>
+		<qq>272685112</qq>
+		<wechat>272685112</wechat>
+		<group>purchasemanager,salemanager</group>
 	</user>
 </Users>

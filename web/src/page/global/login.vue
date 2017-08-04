@@ -124,9 +124,10 @@
                                 let params = {
                                     groups:data.groups,
                                     isAdmin:user.IsAdmin,
-                                    userID:user.ID
                                 }
                                 this.$ajax.post("/menu",params).then(response=>{
+                                     let {code,msg,data} = response.data;
+                                     console.log(response.data);
                                     //登录成功跳转到首页
                                     this.$router.push('/');
                                 });

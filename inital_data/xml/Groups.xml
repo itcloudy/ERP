@@ -1,21 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 请保持id和name一致 且唯一 -->
 <Groups version="1">
 	<group id="salemanager">
+		<name>salemanager</name>
 		<description>销售经理</description>
 		<category>sale</category>
 		<parent></parent>
 	</group>
 	<group id="saleman">
+		<name>saleman</name>
 		<description>销售员</description>
 		<parent>salemanager</parent>
 		<category>sale</category>
 	</group>
 	<group id="purchasemanager">
+		<name>purchasemanager</name>
 		<description>采购经理</description>
 		<parent></parent>
 		<category>purchase</category>
 	</group>
     <group id="purchaseman">
+		<name>purchaseman</name>
 		<description>采购</description>
 		<parent>purchasemanager</parent>
 		<category>purchase</category>

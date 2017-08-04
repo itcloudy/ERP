@@ -14,6 +14,9 @@ export default {
     },
     [types.GLOBAL_SET_USERINFO](state, userinfo) {
         state.userinfo = userinfo
+    },
+    [types.GLOBAL_SET_MENUS](state, menus) {
+        state.menus = menus
     }
 
 }

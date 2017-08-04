@@ -7,6 +7,7 @@ import (
 	"golangERP/utils"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -20,7 +21,8 @@ type InitUsers struct {
 // InitUser 用户数据解析
 type InitUser struct {
 	md.User
-	XMLID string `xml:"id,attr"`
+	XMLID  string `xml:"id,attr"`
+	Groups string `xml:"group"`
 }
 
 // InitUser2DB 初始化用户数据
@@ -52,6 +54,23 @@ func InitUser2DB(filePath string) {
 							moduleData.Descrition = user.Name
 							moduleData.ModuleName = moduleName
 							md.AddModuleData(&moduleData, ormObj)
+							//权限设置
+							groupStr := userXML.Groups
+							if groupStr != "" {
+								groups := strings.Split(groupStr, ",")
+								for _, groupName := range groups {
+									if groupName != "" {
+										if group, err := md.GetBaseGroupByName(groupName, ormObj); err == nil {
+											var groupUser md.GroupUser
+											var us md.User
+											us.ID = insertID
+											groupUser.User = &us
+											groupUser.Group = group
+											md.AddGroupUser(&groupUser, ormObj)
+										}
+									}
+								}
+							}
 						}
 					}
 				}
