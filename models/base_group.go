@@ -75,7 +75,7 @@ func GetBaseGroupByName(name string, ormObj orm.Ormer) (*BaseGroup, error) {
 }
 
 // GetAllBaseGroup retrieves all BaseGroup matches certain condition. Returns empty list if no records exist
-func GetAllBaseGroup(ormObj orm.Ormer, query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
+func GetAllBaseGroup(o orm.Ormer, query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
 	fields []string, sortby []string, order []string, offset int64, limit int64) ([]BaseGroup, error) {
 	var (
 		objArrs []BaseGroup
@@ -85,7 +85,6 @@ func GetAllBaseGroup(ormObj orm.Ormer, query map[string]interface{}, exclude map
 		limit = 200
 	}
 
-	o := orm.NewOrm()
 	qs := o.QueryTable(new(BaseGroup))
 	qs = qs.RelatedSel()
 

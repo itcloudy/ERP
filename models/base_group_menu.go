@@ -59,7 +59,7 @@ func GetGroupMenuByID(id int64, ormObj orm.Ormer) (obj *GroupMenu, err error) {
 }
 
 // GetAllGroupMenu retrieves all GroupMenu matches certain condition. Returns empty list if no records exist
-func GetAllGroupMenu(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
+func GetAllGroupMenu(o orm.Ormer, query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
 	fields []string, sortby []string, order []string, offset int64, limit int64) ([]GroupMenu, error) {
 	var (
 		objArrs []GroupMenu
@@ -69,7 +69,6 @@ func GetAllGroupMenu(query map[string]interface{}, exclude map[string]interface{
 		limit = 200
 	}
 
-	o := orm.NewOrm()
 	qs := o.QueryTable(new(GroupMenu))
 	qs = qs.RelatedSel()
 

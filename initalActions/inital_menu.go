@@ -57,6 +57,7 @@ func InitMenus2DB(split string) {
 									menu.Component = menuXML.Component
 									menu.Icon = menuXML.Icon
 									menu.Sequence = menuXML.Sequence
+									menu.Index = menuXML.XMLID
 									parentIDStr := menuXML.ParentID
 									if parentIDStr != "" {
 										if mobuleData, err := md.GetModuleDataByXMLID(utils.StringsJoin(moduleName, ".", parentIDStr), ormObj); err == nil {

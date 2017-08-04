@@ -16,6 +16,7 @@ type BaseMenu struct {
 	CreateDate   time.Time    `orm:"auto_now_add;type(datetime)" json:"-"`             //创建时间
 	UpdateDate   time.Time    `orm:"auto_now;type(datetime)" json:"-"`                 //最后更新时间
 	Name         string       `orm:"size(50)" json:"name" form:"Name"`                 //菜单名称
+	Index        string       `orm:"unique"`                                           //唯一标识
 	Parent       *BaseMenu    `orm:"rel(fk);null" json:"parent" form:"-"`              //上级菜单
 	Childs       []*BaseMenu  `orm:"reverse(many)" json:"childs"`                      //子菜单
 	ParentLeft   int64        `orm:"unique"`                                           //菜单左
@@ -64,11 +65,12 @@ func UpdateBaseMenu(m *BaseMenu, ormObj orm.Ormer) (id int64, err error) {
 func GetBaseMenuByID(id int64, ormObj orm.Ormer) (obj *BaseMenu, err error) {
 	obj = &BaseMenu{ID: id}
 	err = ormObj.Read(obj)
+	ormObj.LoadRelated(obj, "Childs")
 	return obj, err
 }
 
 // GetAllBaseMenu retrieves all BaseMenu matches certain condition. Returns empty list if no records exist
-func GetAllBaseMenu(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
+func GetAllBaseMenu(o orm.Ormer, query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
 	fields []string, sortby []string, order []string, offset int64, limit int64) ([]BaseMenu, error) {
 	var (
 		objArrs []BaseMenu
@@ -78,7 +80,6 @@ func GetAllBaseMenu(query map[string]interface{}, exclude map[string]interface{}
 		limit = 200
 	}
 
-	o := orm.NewOrm()
 	qs := o.QueryTable(new(BaseMenu))
 	qs = qs.RelatedSel()
 
@@ -156,6 +157,9 @@ func GetAllBaseMenu(query map[string]interface{}, exclude map[string]interface{}
 			_, err = qs.All(&objArrs, fields...)
 		}
 	}
-
+	// for i, _ := range objArrs {
+	// 	o.LoadRelated(&objArrs[i], "Groups")
+	// 	o.LoadRelated(&objArrs[i], "Childs")
+	// }
 	return objArrs, err
 }
