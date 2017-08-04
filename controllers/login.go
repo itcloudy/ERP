@@ -33,7 +33,6 @@ func (ctl *LoginContriller) Post() {
 				groupIDs[index] = group.ID
 			}
 			data["groups"] = groupIDs
-
 		}
 	} else {
 		response["code"] = utils.FailedCode
@@ -51,7 +50,6 @@ func (ctl *LoginContriller) Get() {
 		service.ServiceUserLogout(ID)
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
-
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg

@@ -48,7 +48,12 @@ func init() {
 	// LoadSecurity()
 	// 初始化cache
 	utils.InitCache()
+	// 初始化数据
 	initalActions.InitApp()
+	// 初始化权限菜单，从数据库中获取按权限组区分放到全局变量中（后期考虑放到redis中），加快访问速度
+	initalActions.InitGroupMenu()
+	// 初始化表访问权限，从数据库中获取按权限组区分放到全局变量中（后期考虑放到redis中），加快访问速度
+	initalActions.InitGroupModuleAccess()
 }
 func main() {
 	beego.Run()

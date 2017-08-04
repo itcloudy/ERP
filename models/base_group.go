@@ -17,8 +17,8 @@ type BaseGroup struct {
 	UpdateDate    time.Time      `orm:"auto_now;type(datetime)" json:"-"`             //最后更新时间
 	Name          string         `orm:"unique;size(50)" json:"name" form:"Name"`      //权限组名称
 	ModelAccesses []*ModelAccess `orm:"reverse(many)"`                                //模块(表)
-	Childs        []*BaseGroup   `orm:"reverse(many)" json:"-" form:"-"`              //继承权限
-	Parent        *BaseGroup     `orm:"rel(fk);null"`                                 //
+	Childs        []*BaseGroup   `orm:"reverse(many)" json:"-" form:"-"`              //下级
+	Parent        *BaseGroup     `orm:"rel(fk);null"`                                 //上级
 	ParentLeft    int64          `orm:"unique"`                                       //左边界
 	ParentRight   int64          `orm:"unique"`                                       //右边界
 	Category      string         `orm:""`                                             //分类
@@ -75,7 +75,7 @@ func GetBaseGroupByName(name string, ormObj orm.Ormer) (*BaseGroup, error) {
 }
 
 // GetAllBaseGroup retrieves all BaseGroup matches certain condition. Returns empty list if no records exist
-func GetAllBaseGroup(query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
+func GetAllBaseGroup(ormObj orm.Ormer, query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
 	fields []string, sortby []string, order []string, offset int64, limit int64) ([]BaseGroup, error) {
 	var (
 		objArrs []BaseGroup

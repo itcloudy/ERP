@@ -102,7 +102,7 @@ func ServiceGetGroups(isAdmin bool, userID int64) (groups []*md.BaseGroup, err e
 		if len(condAnd) > 0 {
 			cond["and"] = condAnd
 		}
-		if tGroups, err = md.GetAllBaseGroup(query, exclude, cond, fields, sortby, order, 0, 0); err == nil {
+		if tGroups, err = md.GetAllBaseGroup(o, query, exclude, cond, fields, sortby, order, 0, 0); err == nil {
 			for _, group := range tGroups {
 				groups = append(groups, &group)
 			}

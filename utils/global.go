@@ -8,11 +8,15 @@ import (
 	"github.com/astaxie/beego/session"
 )
 
+// GlobalGroupMenus 全局权限组菜单
+var GlobalGroupMenus = make(map[string]interface{})
+
 //LangType 语言
 type LangType struct {
 	Lang, Name string
 }
 
+// DefaultPageLimit 默认每页数量
 var DefaultPageLimit = 20
 
 //GlobalSessions 全局session
