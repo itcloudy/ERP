@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Menus>
+    <menu parent_id="" id="sale">
+        <name>销售管理</name>
+        <path>sale</path>
+        <component>Sale</component>
+        <icon>el-icon-menu</icon>
+        <group>saleman,salemanager</group>
+    </menu>
+    <menu parent_id="sale" id="saleorder">
+        <name>销售订单</name>
+        <path>saleorder</path>
+        <component>SaleOrder</component>
+        <icon>el-icon-menu</icon>
+        <group>saleman,salemanager</group>
+    </menu>
+       
+</Menus>

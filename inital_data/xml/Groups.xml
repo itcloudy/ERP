@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 请保持id和name一致 且唯一 -->
 <Groups version="1">
+	<group id="manager">
+		<name>manager</name>
+		<description>总经理</description>
+		<category>sale</category>
+		<parent></parent>
+	</group>
 	<group id="salemanager">
 		<name>salemanager</name>
 		<description>销售经理</description>
 		<category>sale</category>
-		<parent></parent>
+		<parent>manager</parent>
 	</group>
 	<group id="saleman">
 		<name>saleman</name>
@@ -13,10 +19,10 @@
 		<parent>salemanager</parent>
 		<category>sale</category>
 	</group>
-	<group id="purchasemanager">
+	<!-- <group id="purchasemanager">
 		<name>purchasemanager</name>
 		<description>采购经理</description>
-		<parent></parent>
+		<parent>manager</parent>
 		<category>purchase</category>
 	</group>
     <group id="purchaseman">
@@ -24,6 +30,6 @@
 		<description>采购</description>
 		<parent>purchasemanager</parent>
 		<category>purchase</category>
-	</group>
+	</group> -->
 	
 </Groups>

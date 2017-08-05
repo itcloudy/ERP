@@ -38,5 +38,13 @@
         <icon>el-icon-menu</icon>
         <sequence>4</sequence>
         <group>purchasemanager,salemanager</group>
+    </menu> 
+    <menu parent_id="address_district_manage" id="address_district_manage_sub">
+        <name>区县管理下级</name>
+        <path>district</path>
+        <component>AddressDistrict</component>
+        <icon>el-icon-menu</icon>
+        <sequence>1</sequence>
+        <group>purchasemanager,salemanager</group>
     </menu>   
 </Menus>

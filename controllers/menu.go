@@ -37,8 +37,10 @@ func (ctl *MenuController) Post() {
 	}
 	data := make(map[string]interface{})
 	if menus, err = service.ServiceGetMenus(isAdmin, groups); err == nil {
-		data["menus"] = &menus
+		data["menus"] = menus
 		response["data"] = data
+		response["code"] = utils.SuccessCode
+		response["msg"] = "菜单获取成功"
 	}
 	if err != nil {
 		response["code"] = utils.FailedCode

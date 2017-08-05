@@ -26,7 +26,9 @@ func ServiceCreateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
 	if obj.Parent != nil {
 		if parent, err := md.GetBaseGroupByID(obj.Parent.ID, o); err == nil {
 			var maxParentRight int64
+			// 获得同级最右的group
 			if err = o.QueryTable(&parent).Filter("Parent__id", parent.ID).OrderBy("-ParentRight").Limit(1).One(&groupMax); err == nil {
+
 				maxParentRight = groupMax.ParentRight
 				obj.ParentLeft = maxParentRight + 1
 				obj.ParentRight = maxParentRight + 2
@@ -41,12 +43,13 @@ func ServiceCreateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
 				maxParentRight = parent.ParentRight
 				obj.ParentLeft = parent.ParentLeft + 1
 				obj.ParentRight = parent.ParentLeft + 2
-				o.QueryTable(&parent).Filter("ParentRight__gt", maxParentRight).Exclude("ID", parent.ID).Update(orm.Params{
+				o.QueryTable(&parent).Filter("ParentRight__gt", maxParentRight).Filter("ParentLeft__gte", maxParentRight).Exclude("ID", parent.ID).Update(orm.Params{
 					"ParentLeft": orm.ColValue(orm.ColAdd, 2),
 				})
 				o.QueryTable(&parent).Filter("ParentRight__gte", maxParentRight).Update(orm.Params{
 					"ParentRight": orm.ColValue(orm.ColAdd, 2),
 				})
+
 			}
 		}
 	} else {

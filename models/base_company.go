@@ -8,20 +8,20 @@ import (
 
 // Company 公司
 type Company struct {
-	ID           int64            `orm:"column(id);pk;auto" json:"id" form:"recordID"` //主键
-	CreateUserID int64            `orm:"column(create_user_id);null" json:"-"`         //创建者
-	UpdateUserID int64            `orm:"column(update_user_id);null" json:"-"`         //最后更新者
-	CreateDate   time.Time        `orm:"auto_now_add;type(datetime)" json:"-"`         //创建时间
-	UpdateDate   time.Time        `orm:"auto_now;type(datetime)" json:"-"`             //最后更新时间
-	Name         string           `orm:"unique" json:"Name" form:"Name"`               //公司名称
-	Code         string           `orm:"unique" json:"Code" form:"Code"`               //公司编码
-	Children     []*Company       `orm:"reverse(many)" json:"-"`                       //子公司
-	Parent       *Company         `orm:"rel(fk);null" json:"-" form:"-"`               //上级公司
-	Country      *AddressCountry  `orm:"rel(fk);null" json:"-" form:"-"`               //国家
-	Province     *AddressProvince `orm:"rel(fk);null" json:"-" form:"-"`               //省份
-	City         *AddressCity     `orm:"rel(fk);null" json:"-" form:"-"`               //城市
-	District     *AddressDistrict `orm:"rel(fk);null" json:"-" form:"-"`               //区县
-	Street       string           `orm:"default()" json:"Street" form:"Street"`        //街道
+	ID           int64            `orm:"column(id);pk;auto"`          //主键
+	CreateUserID int64            `orm:"column(create_user_id);null"` //创建者
+	UpdateUserID int64            `orm:"column(update_user_id);null"` //最后更新者
+	CreateDate   time.Time        `orm:"auto_now_add;type(datetime)"` //创建时间
+	UpdateDate   time.Time        `orm:"auto_now;type(datetime)"`     //最后更新时间
+	Name         string           `orm:"unique"`                     //公司名称
+	Code         string           `orm:"unique"`                     //公司编码
+	Children     []*Company       `orm:"reverse(many)"`               //子公司
+	Parent       *Company         `orm:"rel(fk);null"`               //上级公司
+	Country      *AddressCountry  `orm:"rel(fk);null"`               //国家
+	Province     *AddressProvince `orm:"rel(fk);null"`               //省份
+	City         *AddressCity     `orm:"rel(fk);null"`               //城市
+	District     *AddressDistrict `orm:"rel(fk);null"`               //区县
+	Street       string           `orm:"default()"`                  //街道
 }
 
 func init() {

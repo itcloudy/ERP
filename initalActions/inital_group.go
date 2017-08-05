@@ -2,6 +2,7 @@ package initalActions
 
 import (
 	"encoding/xml"
+	"fmt"
 	md "golangERP/models"
 	service "golangERP/services"
 	"golangERP/utils"
@@ -60,6 +61,8 @@ func InitGroup2DB(filePath string) {
 								moduleData.Descrition = group.Name
 								moduleData.ModuleName = moduleName
 								md.AddModuleData(&moduleData, ormObj)
+							} else {
+								fmt.Println(err)
 							}
 						}
 					}

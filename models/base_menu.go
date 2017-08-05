@@ -10,15 +10,15 @@ import (
 
 // BaseMenu 城市
 type BaseMenu struct {
-	ID           int64        `orm:"column(id);pk;auto" json:"id" form:"recordID"`     //主键
-	CreateUserID int64        `orm:"column(create_user_id);null" json:"-"`             //创建者
-	UpdateUserID int64        `orm:"column(update_user_id);null" json:"-"`             //最后更新者
-	CreateDate   time.Time    `orm:"auto_now_add;type(datetime)" json:"-"`             //创建时间
-	UpdateDate   time.Time    `orm:"auto_now;type(datetime)" json:"-"`                 //最后更新时间
-	Name         string       `orm:"size(50)" json:"name" form:"Name"`                 //菜单名称
+	ID           int64        `orm:"column(id);pk;auto"`     //主键
+	CreateUserID int64        `orm:"column(create_user_id);null"`             //创建者
+	UpdateUserID int64        `orm:"column(update_user_id);null"`             //最后更新者
+	CreateDate   time.Time    `orm:"auto_now_add;type(datetime)"`             //创建时间
+	UpdateDate   time.Time    `orm:"auto_now;type(datetime)"`                 //最后更新时间
+	Name         string       `orm:"size(50)"`                 //菜单名称
 	Index        string       `orm:"unique"`                                           //唯一标识
-	Parent       *BaseMenu    `orm:"rel(fk);null" json:"parent" form:"-"`              //上级菜单
-	Childs       []*BaseMenu  `orm:"reverse(many)" json:"childs"`                      //子菜单
+	Parent       *BaseMenu    `orm:"rel(fk);null"`              //上级菜单
+	Childs       []*BaseMenu  `orm:"reverse(many)"`                      //子菜单
 	ParentLeft   int64        `orm:"unique"`                                           //菜单左
 	ParentRight  int64        `orm:"unique"`                                           //菜单右
 	Sequence     int64        `orm:"default(1)"`                                       //序列号，决定同级菜单显示先后顺序
@@ -27,6 +27,7 @@ type BaseMenu struct {
 	Path         string       `orm:""`                                                 //菜单路径
 	Component    string       `orm:""`                                                 //组件名称
 	Meta         string       `orm:""`                                                 //额外参数
+	Step         int          `orm:"-"`                                                //用于后台组合菜单使用
 }
 
 func init() {
@@ -157,9 +158,9 @@ func GetAllBaseMenu(o orm.Ormer, query map[string]interface{}, exclude map[strin
 			_, err = qs.All(&objArrs, fields...)
 		}
 	}
-	// for i, _ := range objArrs {
-	// 	o.LoadRelated(&objArrs[i], "Groups")
-	// 	o.LoadRelated(&objArrs[i], "Childs")
-	// }
+	for i, _ := range objArrs {
+		o.LoadRelated(&objArrs[i], "Groups")
+		o.LoadRelated(&objArrs[i], "Childs")
+	}
 	return objArrs, err
 }

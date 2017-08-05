@@ -82,14 +82,13 @@ func groupMenu(group md.BaseGroup) map[string]interface{} {
 				menuInfo["Mete"] = menu.Meta
 				menuInfo["Child"] = make(map[string]interface{})
 				tempMenus[menu.Index] = menuInfo
-				if menu.Parent == nil {
-					resultMenus[menu.Index] = menuInfo
-				}
+				step := menu.ParentRight - menu.ParentLeft
+				menuInfo["Step"] = step
 			}
 
 		}
 		if len(tempMenus) > 0 {
-
+			// fmt.Printf("%+v\n", tempMenus)
 		}
 
 	}
