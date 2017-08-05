@@ -6,24 +6,30 @@
         <div class="left-main">
         <el-row class="tac">
             <el-col :span="24">
-                <el-menu default-active="2" theme="dark">
-                <el-submenu index="1">
-                    <template slot="title"><i class="el-icon-message"></i>导航一</template>
-                    <el-menu-item-group>
-                        <template slot="title">分组一</template>
-                        <el-menu-item index="1-1">选项1</el-menu-item>
-                        <el-menu-item index="1-2">选项2</el-menu-item>
-                    </el-menu-item-group>
-                    <el-menu-item-group title="分组2">
-                        <el-menu-item index="1-3">选项3</el-menu-item>
-                    </el-menu-item-group>
-                    <el-submenu index="1-4">
-                        <template slot="title">选项4</template>
-                        <el-menu-item index="1-4-1">选项1</el-menu-item>
-                    </el-submenu>
-                </el-submenu>
-                <el-menu-item index="2"><i class="el-icon-menu"></i>导航二</el-menu-item>
-                <el-menu-item index="3"><i class="el-icon-setting"></i>导航三</el-menu-item>
+                <el-menu default-active="2" theme="dark" :router="true">
+                    <template theme="dark" v-for="(menu,index) in menuList" :>
+                        <el-submenu index="menu.Path" :key="menu.index">
+                            <template v-if="menu.children" >
+                                <template slot="title"><i :class="menu.Icon"></i>{{menu.Name}}</template>
+                                <template v-for="(firstMenu,index) in menu.children" >
+                                    <template v-if="firstMenu.children" >
+                                        <el-submenu >
+                                            <template slot="title"><i :class="firstMenu.Icon"></i>{{firstMenu.Name}}</template>
+                                            <template v-for="(secondMenu,index) in firstMenu.children" >
+                                                <el-menu-item v-if="!secondMenu.children" :index="secondMenu.Path" :key="secondMenu.index">{{secondMenu.Name}}</el-menu-item>
+                                            </template>
+                                        </el-submenu>
+                                    </template>
+                                    <template v-if="!firstMenu.children" >
+                                        </i><el-menu-item :index="firstMenu.Path"><i :class="firstMenu.Icon"></i>{{firstMenu.Name}}</el-menu-item>
+                                    </template>
+                                </template>
+                            </template>
+                            <template v-if="!menu.children" >
+                                <el-menu-item :class="menu.Icon" :index="menu.Path"><i :class="firstMenu.Icon"></i>{{menu.Name}}</el-menu-item>
+                            </template>
+                        </el-submenu>
+                    </template>
                 </el-menu>
             </el-col>
         </el-row>
@@ -31,6 +37,7 @@
     </div>
 </template>
 <script>
+    import { mapState } from 'vuex';
     export default{
         name:"sidebar",
         data(){
@@ -38,6 +45,11 @@
                 sidebarStyles: this.$store.state.windowStyles.leftSidebarStyles,
                 
             }
+        },
+        computed:{
+           ...mapState({
+               menuList: state => state.menus
+           })
         }
     }
 </script>

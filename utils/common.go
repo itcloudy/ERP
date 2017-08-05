@@ -5,6 +5,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"errors"
+	"reflect"
 	"strconv"
 )
 
@@ -51,4 +52,18 @@ func GetInt64(v interface{}) (re int64, err error) {
 		err = errors.New("不能转换")
 	}
 	return
+}
+
+// ToSlice 转换为数组
+func ToSlice(arr interface{}) []interface{} {
+	v := reflect.ValueOf(arr)
+	if v.Kind() != reflect.Slice {
+		panic("toslice arr not slice")
+	}
+	l := v.Len()
+	ret := make([]interface{}, l)
+	for i := 0; i < l; i++ {
+		ret[i] = v.Index(i).Interface()
+	}
+	return ret
 }

@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	md "golangERP/models"
 	service "golangERP/services"
 	"golangERP/utils"
@@ -18,8 +17,6 @@ func (ctl *MenuController) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]interface{}
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	fmt.Printf("%+v\n", requestBody)
-	// groups := requestBody["groups"].()
 	var (
 		err     error
 		isAdmin bool
@@ -33,18 +30,30 @@ func (ctl *MenuController) Post() {
 	}
 
 	if _, ok := requestBody["groups"]; ok {
+		postGroups := utils.ToSlice(requestBody["groups"])
+		for _, group := range postGroups {
+			if groupID, err := utils.GetInt64(group); err == nil {
+				groups = append(groups, groupID)
 
+			}
+		}
 	}
+	isAdmin = false
 	data := make(map[string]interface{})
-	if menus, err = service.ServiceGetMenus(isAdmin, groups); err == nil {
-		data["menus"] = menus
-		response["data"] = data
-		response["code"] = utils.SuccessCode
-		response["msg"] = "菜单获取成功"
-	}
-	if err != nil {
+	if !isAdmin && len(groups) == 0 {
 		response["code"] = utils.FailedCode
 		response["msg"] = "菜单获取失败"
+	} else {
+		if menus, err = service.ServiceGetMenus(isAdmin, groups); err == nil {
+			data["menus"] = menus
+			response["data"] = data
+			response["code"] = utils.SuccessCode
+			response["msg"] = "菜单获取成功"
+		}
+		if err != nil {
+			response["code"] = utils.FailedCode
+			response["msg"] = "菜单获取失败"
+		}
 	}
 
 	ctl.Data["json"] = response

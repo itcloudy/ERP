@@ -64,7 +64,7 @@
            ...mapState({
                userinfo: state => state.userinfo
            })
-        },
+        }
     }
 </script>
 <style lang="scss" scoped>

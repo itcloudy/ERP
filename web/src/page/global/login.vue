@@ -110,10 +110,7 @@
                             if (code=='success'){
                                 let user = data.user;
                                 //提示
-                                this.$message({
-                                    message:msg,
-                                    type: 'success'
-                                });
+                                 this.$message({ message:msg, type: 'success' });
                                 // 本地缓存用户信息
                                 localStore.set('userinfo',JSON.stringify(user));
                                 //更新store中的userinfo
@@ -126,32 +123,85 @@
                                     isAdmin:user.IsAdmin,
                                 }
                                 this.$ajax.post("/menu",params).then(response=>{
-                                     let {code,msg,data} = response.data;
-                                     console.log(response.data);
+                                    let {code,msg,data} = response.data;
+                                    if(code=='success'){
+                                        //提示
+                                        this.$message({ message:msg, type: 'success' });
+                                        let menus = this.menuList2Json(data.menus);
+                                        // 本地缓存菜单信息
+                                        localStore.set('menus',JSON.stringify(menus));
+                                        this.setGlobalUserMenu(menus);
+                                    }else{
+                                        this.$message({  message:msg,   type: 'error' });
+                                    }
                                     //登录成功跳转到首页
                                     this.$router.push('/');
                                 });
-                                
                             }else{
-                                this.$message({
-                                    message:msg,
-                                    type: 'error'
-                                });
+                                this.$message({  message:msg,   type: 'error' });
                             }
                         });
-                        
                     }
                 });
             },
+            menuList2Json(menuList){
+                let resultJson = [];
+                let stepList = [];
+                let  menuLen = menuList.length;
+                // 获得所有的步长,以及顶级才按
+                for( let i=0;i<menuLen;i++){
+                    let menu  = menuList[i];
+                    let step = menu.ParentRight - menu.ParentLeft;
+                    let hasStep = false;
+                    for(let j=0;j<stepList.length;j++){
+                        if (step==stepList[j]){
+                            hasStep = true;
+                        }
+                    }
+                    if (hasStep==false){
+                        stepList.push(step);
+                    }
+                }
+                // 对stepList排序
+                stepList.sort();
+                //循环处理menu
+                for(let j=0,len=stepList.length;j<len;j++){
+                    let step = stepList[j];
+                    for(let i=0;i<menuLen;i++){
+                        let menu = menuList[i];
+                        let menuStep = menu.ParentRight - menu.ParentLeft;
+                        // 若不相等跳过
+                        if (step!=menuStep){
+                            continue
+                        }
+                        //排除顶级菜单
+                        if (menu.Parent != null){
+                            let parentIndex = menu.Parent.Index;
+                            for(let k=0; k<menuLen;k++){
+                                if (menuList[k].Index == parentIndex){
+                                    if(!("children" in menuList[k])){
+                                        menuList[k].children = [];
+                                    } 
+                                    menuList[k].children.push(menu);
+                                }
+                            }
+                        }else{
+                            resultJson.push(menu);
+                        }
+                    }
+                }
+
+                return resultJson;
+            },
             ...mapMutations({
-                setGlobalUserInfo:"GLOBAL_SET_USERINFO"
+                setGlobalUserInfo: "GLOBAL_SET_USERINFO",
+                setGlobalUserMenu: "GLOBAL_SET_UER_MENUS"
             })
         },
         created() {
             this.setSize();
-        },
-        mounted() {
         }
+        
     }
 </script>
 <style lang="scss" scoped>

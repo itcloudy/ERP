@@ -1,9 +1,7 @@
 package services
 
 import (
-	"fmt"
 	md "golangERP/models"
-	"sort"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -69,8 +67,6 @@ func ServiceCreateBaseMenu(obj *md.BaseMenu) (id int64, err error) {
 // ServiceGetMenus 获得菜单
 func ServiceGetMenus(isAdmin bool, groupIDs []int64) (menus []md.BaseMenu, err error) {
 
-	// 临时保存没有找到上级菜单的菜单信息
-	tempMenus := make(map[string]md.BaseMenu)
 	o := orm.NewOrm()
 	query := make(map[string]interface{})
 	exclude := make(map[string]interface{})
@@ -100,65 +96,25 @@ func ServiceGetMenus(isAdmin bool, groupIDs []int64) (menus []md.BaseMenu, err e
 		}
 		// 获得权限组所有的菜单
 		menuCondAnd := make(map[string]interface{})
-		menuCondAnd["Group__id__in"] = groupIDs
+		menuCondAnd["Group__id__in"] = allGroupIDs
 		if len(menuCondAnd) > 0 {
 			cond["and"] = menuCondAnd
 		}
 		if groupMenus, err := md.GetAllGroupMenu(o, query, exclude, cond, fields, sortby, order, 0, 0); err == nil {
 			groupMenuLen := len(groupMenus)
+			// 临时保存没有找到上级菜单的菜单信息,后面是否为int类型不重要，只为tempMenus中有该index
+			tempMenus := make(map[string]int)
 			for i := 0; i < groupMenuLen; i++ {
-				menus = append(menus, *groupMenus[i].Menu)
+				menu := groupMenus[i].Menu
+				index := menu.Index
+				if _, ok := tempMenus[index]; ok {
+					continue
+				}
+				menus = append(menus, *menu)
+				tempMenus[index] = 1
 			}
 		}
 	}
-	var step int
-	var stepList []int
-	// 菜单去重，获得菜单所有步长，最低级菜单步长最小
-	menuObjLen := len(menus)
-	for i := 0; i < menuObjLen; i++ {
-		menu := menus[i]
-		// 菜单去重，Index唯一
-		if _, ok := tempMenus[menu.Index]; ok {
-			continue
-		}
-		step = int(menu.ParentRight - menu.ParentLeft)
-		menu.Step = step
-		hasStep := false
-		for j := 0; j < len(stepList); j++ {
-			if stepList[j] == step {
-				hasStep = true
-			}
-		}
-		if !hasStep {
-			stepList = append(stepList, step)
-		}
 
-		tempMenus[menu.Index] = menu
-	}
-
-	// 对stepList排序
-	sort.Ints(stepList)
-
-	// 整理菜单数据，变成tree结构
-	stepLen := len(stepList)
-	for i := 0; i < stepLen; i++ {
-		step = stepList[i]
-		for _, menu := range tempMenus {
-			if menu.Step != step {
-				continue
-			}
-			// 排除顶级菜单
-			if menu.Parent != nil {
-				parentIndex := menu.Parent.Index
-				fmt.Printf("%+v\n", tempMenus[parentIndex].Childs)
-				// childs := tempMenus[parentIndex].Childs
-				// childs = append(childs, &menu)
-				// (tempMenus[parentIndex].Childs) = childs
-			} else {
-				fmt.Println("has no parent")
-			}
-		}
-
-	}
 	return
 }
