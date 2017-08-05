@@ -182,10 +182,16 @@
                                     if(!("children" in menuList[k])){
                                         menuList[k].children = [];
                                     } 
+                                    delete menu.Parent;
+                                    delete menu.ParentLeft;
+                                    delete menu.ParentRight;
                                     menuList[k].children.push(menu);
                                 }
                             }
                         }else{
+                            delete menu.Parent;
+                            delete menu.ParentLeft;
+                            delete menu.ParentRight;
                             resultJson.push(menu);
                         }
                     }

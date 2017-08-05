@@ -1,7 +1,7 @@
 <template>
     <div class="right-main" :style="mainContentStyles">
         <div class="main-container" >
-            {{menuList}}
+            <router-view></router-view>
         </div>
     </div>
 </template>
