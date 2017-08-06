@@ -3,6 +3,9 @@
         <div class="main-container" >
             <router-view></router-view>
         </div>
+        <div>
+        {{menuList}}
+        </div>
     </div>
 </template>
 <script>

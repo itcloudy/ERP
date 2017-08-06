@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 import * as global from './global';
 const Login = resolve => require(['../page/global/login'], resolve);
 const Home = resolve => require(['../page/global/layout'], resolve);
@@ -19,10 +19,10 @@ let routes = [{
         component: Home,
         name: 'address',
         children: [
-            { path: '/country', component: notFound, name: 'country', hidden: true },
-            { path: '/province', component: notFound, name: 'province' },
-            { path: '/city', component: notFound, name: 'city' },
-            { path: '/district', component: notFound, name: 'district' },
+            { path: 'country', component: notFound, name: 'country', hidden: true },
+            { path: 'province', component: notFound, name: 'province' },
+            { path: 'city', component: notFound, name: 'city' },
+            { path: 'district', component: notFound, name: 'district' }
         ]
     },
     {
@@ -31,7 +31,7 @@ let routes = [{
         component: Home
     },
 ]
-export default new Router({
+export default new VueRouter({
     scrollBehavior: () => ({ y: 0 }),
     routes: routes
 });

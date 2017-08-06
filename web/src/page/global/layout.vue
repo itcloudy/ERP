@@ -7,9 +7,6 @@
             <transition name="sidebar">
                 <Navbar/>
             </transition>
-            <transition name="main">
-                 <router-view></router-view>>
-            </transition>
             <Main/>
         </div>
         

@@ -20,10 +20,10 @@ Vue.use(ElementUI)
 Vue.use(Vuex)
 
 
-NProgress.configure({ showSpinner: false })
+// NProgress.configure({ showSpinner: false })
 
 router.beforeEach((to, from, next) => {
-    NProgress.start();
+    // NProgress.start();
     if (to.path == '/login') {
         localStore.remove('userinfo');
         localStore.remove("groups");
@@ -35,9 +35,9 @@ router.beforeEach((to, from, next) => {
         next()
     }
 });
-router.afterEach(() => {
-    NProgress.done();
-});
+// router.afterEach(() => {
+//     NProgress.done();
+// });
 new Vue({
     router,
     store,
