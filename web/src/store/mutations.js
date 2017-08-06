@@ -8,15 +8,18 @@ export default {
     },
     [types.GLOBAL_TOGGLE_LEFT_SIDEBAR](state) {
         if (state.showLeftSidebar)
-            state.showLeftSidebar = false
+            state.showLeftSidebar = false;
         else
-            state.showLeftSidebar = true
+            state.showLeftSidebar = true;
     },
     [types.GLOBAL_SET_USERINFO](state, userinfo) {
-        state.userinfo = userinfo
+        state.userinfo = userinfo;
     },
     [types.GLOBAL_SET_UER_MENUS](state, menus) {
-        state.menus = menus
+        state.menus = menus;
+    },
+    [types.GLOBAL_LOAD_ROUTES_DONE](state, done) {
+        state.loadRoutersDone = true;
     }
 
 }

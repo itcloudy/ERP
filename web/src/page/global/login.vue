@@ -32,7 +32,9 @@
 </template>
 <script>
     import localStore from '../../utils/local_store';
-    import { mapMutations } from 'vuex'
+    import { mapMutations } from 'vuex';
+    import { mapState } from 'vuex';
+
     export default {
         name: 'login',
         data() {
@@ -130,7 +132,9 @@
                                         let menus = this.menuList2Json(data.menus);
                                         // 本地缓存菜单信息
                                         localStore.set('menus',JSON.stringify(menus));
+                                        var _this = this;
                                         this.setGlobalUserMenu(menus);
+                                        this.loadRouters(menus);
                                     }else{
                                         this.$message({  message:msg,   type: 'error' });
                                     }
@@ -199,9 +203,21 @@
 
                 return resultJson;
             },
+            loadRouters(menus){
+                if (this.loadRoutersDone==false){
+                    //动态加载路由
+                    this.setloadRoutersDone(true);
+                }
+            },
             ...mapMutations({
                 setGlobalUserInfo: "GLOBAL_SET_USERINFO",
-                setGlobalUserMenu: "GLOBAL_SET_UER_MENUS"
+                setGlobalUserMenu: "GLOBAL_SET_UER_MENUS",
+                setloadRoutersDone: "GLOBAL_LOAD_ROUTES_DONE"
+            })
+        },
+        computed:{
+           ...mapState({
+               loadRoutersDone: state => state.loadRoutersDone
             })
         },
         created() {
