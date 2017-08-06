@@ -6,6 +6,12 @@
         <div class="left-main">
         <el-row class="tac">
             <el-col :span="24">
+                <!--
+                    后台menu的Path没有“/”,
+                    需要在此增加，router=true,index作为路由，
+                    若嵌套需要手动加上上级的path，
+                    index要以“/”开头，否则为相对前一个url的地址
+                -->
                 <el-menu default-active="2" theme="dark" :router="true">
                     <template theme="dark" v-for="(menu,index) in menuList" :>
                         <template v-if="menu.children" >
