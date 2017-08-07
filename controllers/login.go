@@ -32,7 +32,11 @@ func (ctl *LoginContriller) Post() {
 			for index, group := range groups {
 				groupIDs[index] = group.ID
 			}
-			data["groups"] = groupIDs
+			if len(groupIDs) == 0 {
+				data["groups"] = make([]int, 0, 0)
+			} else {
+				data["groups"] = groupIDs
+			}
 		}
 	} else {
 		response["code"] = utils.FailedCode
