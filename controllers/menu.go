@@ -45,7 +45,11 @@ func (ctl *MenuController) Post() {
 		response["msg"] = "菜单获取失败"
 	} else {
 		if menus, err = service.ServiceGetMenus(isAdmin, groups); err == nil {
-			data["menus"] = menus
+			if len(menus) == 0 {
+				data["menus"] = make([]int, 0, 0)
+			} else {
+				data["menus"] = menus
+			}
 			response["data"] = data
 			response["code"] = utils.SuccessCode
 			response["msg"] = "菜单获取成功"

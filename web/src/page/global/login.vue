@@ -152,7 +152,7 @@
             menuList2Json(menuList){
                 let resultJson = [];
                 let stepList = [];
-                if (menuList==null){
+                if (menuList== null){
                     return resultJson;
                 }
                 let  menuLen = menuList.length;
