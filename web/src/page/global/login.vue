@@ -129,6 +129,7 @@
                                     if(code=='success'){
                                         //提示
                                         this.$message({ message:msg, type: 'success' });
+
                                         let menus = this.menuList2Json(data.menus);
                                         // 本地缓存菜单信息
                                         localStore.set('menus',JSON.stringify(menus));
@@ -151,6 +152,9 @@
             menuList2Json(menuList){
                 let resultJson = [];
                 let stepList = [];
+                if (menuList==null){
+                    return resultJson;
+                }
                 let  menuLen = menuList.length;
                 // 获得所有的步长,以及顶级才按
                 for( let i=0;i<menuLen;i++){
