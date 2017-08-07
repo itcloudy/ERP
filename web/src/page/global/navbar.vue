@@ -74,7 +74,6 @@
         height:50px;
         line-height:50px;
         .navbar-right{
-            display:inline-block;
             float: right;
         }
     }

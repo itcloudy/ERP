@@ -3,9 +3,6 @@
         <div class="main-container" >
             <router-view></router-view>
         </div>
-        <div>
-        {{menuList}}
-        </div>
     </div>
 </template>
 <script>
@@ -16,11 +13,6 @@
             return{
                 mainContentStyles: this.$store.state.windowStyles.rightMainStyles
             }
-        },
-         computed:{
-           ...mapState({
-               menuList: state => state.menus
-           })
         }
     }
 </script>

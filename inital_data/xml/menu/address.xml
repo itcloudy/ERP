@@ -6,6 +6,7 @@
         <component>Address</component>
         <icon>el-icon-menu</icon>
         <group>purchasemanager,salemanager</group>
+        <category>address</category>
     </menu>
     <menu parent_id="address_manage_top" id="address_country_manage">
         <name>国家管理</name>
@@ -14,6 +15,7 @@
         <icon>el-icon-menu</icon>
         <sequence>1</sequence>
         <group>purchasemanager,salemanager</group>
+        <category>address</category>
     </menu>
     <menu parent_id="address_manage_top" id="address_province_manage">
         <name>省份管理</name>
@@ -22,6 +24,7 @@
         <icon>el-icon-menu</icon>
         <sequence>2</sequence>
         <group>purchasemanager,salemanager</group>
+        <category>address</category>
     </menu>
      <menu parent_id="address_manage_top" id="address_city_manage">
         <name>城市管理</name>
@@ -30,6 +33,7 @@
         <icon>el-icon-menu</icon>
         <sequence>3</sequence>
         <group>purchasemanager,salemanager</group>
+        <category>address</category>
     </menu>
     <menu parent_id="address_manage_top" id="address_district_manage">
         <name>区县管理</name>
@@ -38,13 +42,7 @@
         <icon>el-icon-menu</icon>
         <sequence>4</sequence>
         <group>purchasemanager,salemanager</group>
+        <category>address</category>
     </menu> 
-    <menu parent_id="address_district_manage" id="address_district_manage_sub">
-        <name>区县管理下级</name>
-        <path>district</path>
-        <component>AddressDistrict</component>
-        <icon>el-icon-menu</icon>
-        <sequence>1</sequence>
-        <group>purchasemanager,salemanager</group>
-    </menu>   
+  
 </Menus>

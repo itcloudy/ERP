@@ -134,7 +134,7 @@
                                         localStore.set('menus',JSON.stringify(menus));
                                         var _this = this;
                                         this.setGlobalUserMenu(menus);
-                                        this.loadRouters(menus);
+                                        this.loadRouters();
                                     }else{
                                         this.$message({  message:msg,   type: 'error' });
                                     }
@@ -196,6 +196,7 @@
                             delete menu.Parent;
                             delete menu.ParentLeft;
                             delete menu.ParentRight;
+                            menu.path = "/" + menu.path;
                             resultJson.push(menu);
                         }
                     }
@@ -203,8 +204,9 @@
 
                 return resultJson;
             },
-            loadRouters(menus){
+            loadRouters(){
                 if (this.loadRoutersDone==false){
+                    this.$router.addRoutes(this.globalMenus);
                     //动态加载路由
                     this.setloadRoutersDone(true);
                 }
@@ -217,7 +219,8 @@
         },
         computed:{
            ...mapState({
-               loadRoutersDone: state => state.loadRoutersDone
+               loadRoutersDone: state => state.loadRoutersDone,
+               globalMenus: state => state.menus
             })
         },
         created() {

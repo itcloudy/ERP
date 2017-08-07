@@ -22,6 +22,7 @@ type InitMenu struct {
 	Sequence  int64  `xml:"sequence"`
 	ParentID  string `xml:"parent_id,attr"`
 	Groups    string `xml:"group"`
+	Category  string `xml:"category"`
 }
 
 // InitMenus 菜单数据列表
@@ -58,6 +59,7 @@ func InitMenus2DB(split string) {
 									menu.Icon = menuXML.Icon
 									menu.Sequence = menuXML.Sequence
 									menu.Index = menuXML.XMLID
+									menu.Category = menuXML.Category
 									parentIDStr := menuXML.ParentID
 									if parentIDStr != "" {
 										if mobuleData, err := md.GetModuleDataByXMLID(utils.StringsJoin(moduleName, ".", parentIDStr), ormObj); err == nil {

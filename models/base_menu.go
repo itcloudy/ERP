@@ -15,7 +15,7 @@ type BaseMenu struct {
 	UpdateUserID int64        `orm:"column(update_user_id);null" json:"-"`                      //最后更新者
 	CreateDate   time.Time    `orm:"auto_now_add;type(datetime)" json:"-"`                      //创建时间
 	UpdateDate   time.Time    `orm:"auto_now;type(datetime)" json:"-"`                          //最后更新时间
-	Name         string       `orm:"size(50)"`                                                  //菜单名称
+	Name         string       `orm:"size(50)" json:"name"`                                      //菜单名称
 	Index        string       `orm:"unique"`                                                    //唯一标识
 	Parent       *BaseMenu    `orm:"rel(fk);null"`                                              //上级菜单
 	Childs       []*BaseMenu  `orm:"reverse(many)"  json:"-"`                                   //子菜单
@@ -24,9 +24,10 @@ type BaseMenu struct {
 	Sequence     int64        `orm:"default(1)"`                                                //序列号，决定同级菜单显示先后顺序
 	Icon         string       `orm:""`                                                          //菜单图标样式
 	Groups       []*BaseGroup `orm:"rel(m2m);rel_through(golangERP/models.GroupMenu)" json:"-"` //权限组
-	Path         string       `orm:""`                                                          //菜单路径
+	Path         string       `orm:"" json:"path"`                                              //菜单路径
 	Component    string       `orm:""`                                                          //组件名称
 	Meta         string       `orm:""`                                                          //额外参数
+	Category     string       `orm:""`                                                          //菜单分类
 }
 
 func init() {

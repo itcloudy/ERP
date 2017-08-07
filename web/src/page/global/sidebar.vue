@@ -7,7 +7,7 @@
         <el-row class="tac">
             <el-col :span="24">
                 <!--
-                    后台menu的Path没有“/”,
+                    后台menu的path没有“/”,
                     需要在此增加，router=true,index作为路由，
                     若嵌套需要手动加上上级的path，
                     index要以“/”开头，否则为相对前一个url的地址
@@ -15,25 +15,25 @@
                 <el-menu default-active="2" theme="dark" :router="true">
                     <template theme="dark" v-for="(menu,index) in menuList" :>
                         <template v-if="menu.children" >
-                            <el-submenu index="menu.Path" :key="index">
-                                <template slot="title"><i :class="menu.Icon"></i>{{menu.Name}}</template>
+                            <el-submenu index="menu.path" :key="index">
+                                <template slot="title"><i :class="menu.Icon"></i>{{menu.name}}</template>
                                 <template v-for="(firstMenu,index) in menu.children"   >
                                     <template v-if="firstMenu.children"   >
                                         <el-submenu  >
-                                            <template slot="title"><i :class="firstMenu.Icon"></i>{{firstMenu.Name}}</template>
+                                            <template slot="title"><i :class="firstMenu.Icon"></i>{{firstMenu.name}}</template>
                                             <template v-for="(secondMenu,index) in firstMenu.children" >
-                                                <el-menu-item v-if="!secondMenu.children" :index="'/' + menu.Path + '/' + secondMenu.Path" :key="secondMenu.index">{{secondMenu.Name}}</el-menu-item>
+                                                <el-menu-item v-if="!secondMenu.children" :index="menu.path + '/' + secondMenu.path" :key="secondMenu.index">{{secondMenu.name}}</el-menu-item>
                                             </template>
                                         </el-submenu>
                                     </template>
                                     <template v-if="!firstMenu.children"  >
-                                        </i><el-menu-item :index="'/' + menu.Path + '/' + firstMenu.Path"><i :class="firstMenu.Icon"></i>{{firstMenu.Name}}</el-menu-item>
+                                        </i><el-menu-item :index="menu.path + '/' + firstMenu.path"><i :class="firstMenu.Icon"></i>{{firstMenu.name}}</el-menu-item>
                                     </template>
                                 </template>
                             </el-submenu>
                         </template>
                         <template v-if="!menu.children" >
-                            <el-menu-item :class="menu.Icon" :index="'/' + menu.Path"><i :class="menu.Icon"></i>{{menu.Name}}</el-menu-item>
+                            <el-menu-item :class="menu.Icon" :index="menu.path"><i :class="menu.Icon"></i>{{menu.name}}</el-menu-item>
                         </template>
                     </template>
                 </el-menu>

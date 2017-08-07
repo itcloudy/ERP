@@ -87,10 +87,6 @@ func groupMenu(group md.BaseGroup) map[string]interface{} {
 			}
 
 		}
-		if len(tempMenus) > 0 {
-			// fmt.Printf("%+v\n", tempMenus)
-		}
-
 	}
 	return resultMenus
 }
