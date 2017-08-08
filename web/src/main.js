@@ -10,6 +10,7 @@ import Vuex from 'vuex'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import localStore from 'utils/local_store';
+import lazyload from 'utils/lazyload';
 import axios from 'axios';
 
 Vue.prototype.$ajax = axios;
@@ -19,6 +20,14 @@ Vue.use(ElementUI)
 
 Vue.use(Vuex)
 
+let menus = JSON.parse(localStore.get("menus"));
+if (menus) {
+    store.commit("GLOBAL_SET_UER_MENUS", menus);
+    let menusRoutes = lazyload(menus);
+    router.addRoutes(menusRoutes);
+    store.commit("GLOBAL_LOAD_ROUTES_DONE");
+
+}
 
 // NProgress.configure({ showSpinner: false })
 
@@ -27,6 +36,7 @@ router.beforeEach((to, from, next) => {
     if (to.path == '/login') {
         localStore.remove('userinfo');
         localStore.remove("groups");
+        localStore.remove("menus");
     }
     let user = JSON.parse(localStore.get('userinfo'));
     if (!user && to.path != '/login') {

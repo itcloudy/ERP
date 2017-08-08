@@ -32,6 +32,7 @@
 </template>
 <script>
     import localStore from '../../utils/local_store';
+    import lazyload from '../../utils/lazyload';
     import { mapMutations } from 'vuex';
     import { mapState } from 'vuex';
 
@@ -133,7 +134,6 @@
                                         let menus = this.menuList2Json(data.menus);
                                         // 本地缓存菜单信息
                                         localStore.set('menus',JSON.stringify(menus));
-                                        var _this = this;
                                         this.setGlobalUserMenu(menus);
                                         this.loadRouters();
                                     }else{
@@ -210,7 +210,8 @@
             },
             loadRouters(){
                 if (this.loadRoutersDone==false){
-                    this.$router.addRoutes(this.globalMenus);
+                    let menusRoutes = lazyload(this.globalMenus);
+                    this.$router.addRoutes(menusRoutes);
                     //动态加载路由
                     this.setloadRoutersDone(true);
                 }
