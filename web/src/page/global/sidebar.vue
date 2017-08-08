@@ -13,7 +13,7 @@
                     index要以“/”开头，否则为相对前一个url的地址
                 -->
                 <el-menu default-active="2" theme="dark" :router="true">
-                    <template theme="dark" v-for="(menu,index) in menuList" :>
+                    <template theme="dark" v-for="(menu,index) in menuList" >
                         <template v-if="menu.children" >
                             <el-submenu index="menu.path" :key="index">
                                 <template slot="title"><i :class="menu.Icon"></i>{{menu.name}}</template>
