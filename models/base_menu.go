@@ -26,8 +26,9 @@ type BaseMenu struct {
 	Groups       []*BaseGroup `orm:"rel(m2m);rel_through(golangERP/models.GroupMenu)" json:"-"` //权限组
 	Path         string       `orm:"" json:"path"`                                              //菜单路径
 	Component    string       `orm:""`                                                          //组件名称
-	Meta         string       `orm:""`                                                          //额外参数
-	Category     string       `orm:""`                                                          //菜单分类
+	Meta         string       `orm:"null"`                                                      //额外参数
+	Category     string       `orm:"null"`                                                      //菜单分类
+	FloderPath   string       `orm:""`                                                          // 对应的vue路径
 }
 
 func init() {

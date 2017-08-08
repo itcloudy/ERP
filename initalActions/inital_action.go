@@ -20,16 +20,16 @@ func InitApp() {
 		xmlBase := utils.StringsJoin(xmlDir, split, "inital_data", split, "xml")
 		// 国家信息
 		countryXML := utils.StringsJoin(xmlBase, split, "address", split, "Countries.xml")
-		InitCountry2DB(countryXML)
+		go InitCountry2DB(countryXML)
 		// 省份信息
 		provinceXML := utils.StringsJoin(xmlBase, split, "address", split, "Provinces.xml")
-		InitProvince2DB(provinceXML)
+		go InitProvince2DB(provinceXML)
 		// 城市信息
 		cityXML := utils.StringsJoin(xmlBase, split, "address", split, "Cities.xml")
-		InitCity2DB(cityXML)
+		go InitCity2DB(cityXML)
 		// 地区信息
 		districtXML := utils.StringsJoin(xmlBase, split, "address", split, "Districts.xml")
-		InitDistrict2DB(districtXML)
+		go InitDistrict2DB(districtXML)
 		// group初始化要在用户和菜单之前
 		groupXML := utils.StringsJoin(xmlBase, split, "Groups.xml")
 		InitGroup2DB(groupXML)
