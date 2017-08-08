@@ -17,30 +17,6 @@ export default {
         state.userinfo = userinfo;
     },
     [types.GLOBAL_SET_UER_MENUS](state, menus) {
-        console.log(menus);
-        //只支持3层菜单，多层请自行采用递归或者嵌套
-        menus.map(function(menu) {
-            if (menu.children != null) {
-                menu.component = lazyload("global", "Home");
-                menu.children.map(function(item) {
-                    if (item.children != null) {
-                        item.component = lazyload("global", "Home");
-                        item.children.map(function(su) {
-                            if (su.children != null) {
-                                // su.component = lazyload("global", "Home");
-                            } else {
-                                su.component = lazyload(su.Category, su.Component);
-                            }
-                        });
-                    } else {
-                        item.component = lazyload(item.Category, item.Component);
-                    }
-                });
-            } else {
-                menu.component = lazyload(menu.Category, menu.Component);
-            }
-        });
-        console.log(menus);
         state.menus = menus;
     },
     [types.GLOBAL_LOAD_ROUTES_DONE](state, done) {

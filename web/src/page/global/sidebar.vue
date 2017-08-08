@@ -12,8 +12,8 @@
                     若嵌套需要手动加上上级的path，
                     index要以“/”开头，否则为相对前一个url的地址
                 -->
-                <el-menu default-active="2" theme="dark" :router="true">
-                    <template theme="dark" v-for="(menu,index) in menuList" :>
+                <el-menu theme="dark" :router="true">
+                    <template theme="dark" v-for="(menu,index) in menuList" >
                         <template v-if="menu.children" >
                             <el-submenu index="menu.path" :key="index">
                                 <template slot="title"><i :class="menu.Icon"></i>{{menu.name}}</template>
@@ -27,7 +27,7 @@
                                         </el-submenu>
                                     </template>
                                     <template v-if="!firstMenu.children"  >
-                                        </i><el-menu-item :index="menu.path + '/' + firstMenu.path"><i :class="firstMenu.Icon"></i>{{firstMenu.name}}</el-menu-item>
+                                        <el-menu-item :index="menu.path + '/' + firstMenu.path"><i :class="firstMenu.Icon"></i>{{firstMenu.name}}</el-menu-item>
                                     </template>
                                 </template>
                             </el-submenu>
