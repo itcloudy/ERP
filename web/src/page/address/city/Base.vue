@@ -1,6 +1,6 @@
 <template>
     <div>
-        <city-tree v-show="showTree" @changeViewType="changeViewType" :cityList="cityList"></city-tree>
+        <city-tree v-show="showTree" @changeViewType="changeViewType" :citiesData="citiesData"></city-tree>
         <city-form v-show="showForm" @changeViewType="changeViewType" :city="city"></city-form>
     </div>
     
@@ -13,9 +13,15 @@
         data() {
             
             return {
-                showTree:true,
-                showForm:false,
-                cityList:[],
+                showTree:true,//显示tree视图
+                showForm:false,//显示form视图
+                citiesData:{
+                    cityList:[],//tree视图数据
+                    pageSize:20,//每页数量
+                    total:0,//总数量
+                    currentPage:1,//当前页
+                },
+                
                 city:{}
 
             }
@@ -41,7 +47,7 @@
                 this.$ajax.get("/address/city/").then(response=>{
                    let {code,msg,data} = response.data;
                    if(code=='success'){
-                       this.cityList = data["cities"]
+                       this.citiesData.cityList = data["cities"]
                    }
                 });
             }

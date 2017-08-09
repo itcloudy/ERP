@@ -4,7 +4,7 @@
 
         <el-table
             ref="multipleTable"
-            :data="cityList"
+            :data="citiesData.cityList"
             style="width: 100%">
             <el-table-column
               type="selection"
@@ -23,7 +23,11 @@
               label="名称">
             </el-table-column>
         </el-table>
-        <pagination/> 
+        <pagination 
+        @pageInfoChange="pageInfoChange"
+        :pageSize="citiesData.pageSize" 
+        :currentPage="citiesData.currentPage"
+        :total="citiesData.total"/> 
       
     </div>
 </template>
@@ -41,10 +45,13 @@
     components: {
            Pagination,
     },
-    props:["cityList"],
+    props:["citiesData"],
     methods:{
       changeView(type){
         this.$emit("changeViewType",type);
+      },
+      pageInfoChange(pageSize,currentPage){
+        this.$emit("changeViewType",typageSize,currentPagepe);
       }
     }
      
