@@ -21,38 +21,41 @@ export default function lazyload(menus) {
                 if (item.children != null) {
                     item.component = lazyLoadComponent(item.FloderPath, item.Component.replace(/^\s+|\s+$/g, ""));
                     item.children.map(function(su) {
+                        不再支持更深菜单
                         if (su.children != null) {
                             su.component = lazyLoadComponent(su.FloderPath, su.Component.replace(/^\s+|\s+$/g, ""));
                         } else {
                             su.component = lazyLoadComponent(su.FloderPath, su.Component.replace(/^\s+|\s+$/g, ""));
                         }
+
                     });
                 } else {
+                    item.component = lazyLoadComponent(item.FloderPath, item.Component.replace(/^\s+|\s+$/g, ""));
                     //判断是否存在不同视图
-                    let components = item.component;
-                    components = components.split(",");
-                    let len = components.length;
-                    if (len > 1) {
-                        item.component = lazyLoadComponent(item.FloderPath, item.Component.replace(/^\s+|\s+$/g, ""));
-                    } else {
-                        item.children = [];
-                        for (let i = 0; i < len; i++) {
-                            let type = components[i];
-                            type = type.replace(/^\s+|\s+$/g, "");
-                            if ("tree" == type) {
-                                item.children.push({
-                                    path: "/",
-                                    component: lazyLoadComponent(item.FloderPath, "Tree"),
-                                });
-                            } else if ("form" == type) {
-                                item.children.push({
-                                    path: "/:id",
-                                    component: lazyLoadComponent(item.FloderPath, "Form"),
-                                });
-                            }
-                        }
-                    }
+                    // let components = item.Component;
+                    // components = components.split(",");
+                    // let len = components.length;
+                    // if (len == 1) {
+                    //     item.component = lazyLoadComponent(item.FloderPath, item.Component.replace(/^\s+|\s+$/g, ""));
+                    // } else {
+                    //     item.children = [];
+                    //     for (let i = 0; i < len; i++) {
+                    //         let type = components[i];
+                    //         type = type.replace(/^\s+|\s+$/g, "");
+                    //         if ("form" == type) {
+                    //             item.children.push({
+                    //                 path: "/:id",
+                    //                 component: lazyLoadComponent(item.FloderPath, "Form"),
+                    //             });
+                    //         } else {
+                    //             item.children.push({
+                    //                 path: "/",
+                    //                 component: lazyLoadComponent(item.FloderPath, "Tree"),
+                    //             });
+                    //         }
+                    //     }
 
+                    // }
                 }
             });
         } else {

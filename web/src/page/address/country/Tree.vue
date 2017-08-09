@@ -34,12 +34,11 @@
       return {
       }
     },
-    props:["cityList"],
-    methods:{
-      changeView(type){
-        this.$emit("changeViewType",type);
-      }
+    mounted:function(){
+        let _this = this;
+        _this.$ajax.get("/address/city/2").then(response=>{
+
+        });
     }
-     
   }
 </script>

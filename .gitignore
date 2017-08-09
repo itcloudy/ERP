@@ -5,7 +5,7 @@
 *.exe
 *.exe~
 .vscode/
- golangERP.*
+golangERP.*
 debug
 debug~
 .idea
