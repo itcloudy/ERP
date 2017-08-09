@@ -1,7 +1,7 @@
 <template>
     <div>
-        <city-tree v-if="showTree" @changeViewType="changeViewType" :cityList="cityList"></city-tree>
-        <city-form v-if="showForm" @changeViewType="changeViewType" :city="city"></city-form>
+        <city-tree v-show="showTree" @changeViewType="changeViewType" :cityList="cityList"></city-tree>
+        <city-form v-show="showForm" @changeViewType="changeViewType" :city="city"></city-form>
     </div>
     
 </template>
