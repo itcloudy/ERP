@@ -1,5 +1,6 @@
 <template>
    <div>
+   <button @click="changeView('tree')">Tree</button>
    <p>23424</p>
    </div>
 </template>

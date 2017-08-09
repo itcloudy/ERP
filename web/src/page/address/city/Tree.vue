@@ -1,4 +1,6 @@
 <template>
+<div>
+ <button @click="changeView('form')">Form</button>
   <el-table
     ref="multipleTable"
     :data="tableData3"
@@ -26,6 +28,7 @@
       show-overflow-tooltip>
     </el-table-column>
   </el-table>
+  </div>
 </template>
 
 <script>

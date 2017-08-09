@@ -1,9 +1,9 @@
 <template>
     <div>
-        <button @click="changeViewType('form')">Form</button>
-         <button @click="changeViewType('tree')">Tree</button>
-        <city-tree v-if="showTree" v-on:changeViewType="changeViewType" cityList="cityList"></city-tree>
-        <city-form v-if="showForm" v-on:changeViewType="changeViewType" city="city"></city-form>
+       
+         
+        <city-tree v-if="showTree" @changeViewType="changeViewType" cityList="cityList"></city-tree>
+        <city-form v-if="showForm" @changeViewType="changeViewType" city="city"></city-form>
         <div>{{showTree}}</div>
         <div>{{showForm}}</div>
         <div>{{cityTree}}</div>
