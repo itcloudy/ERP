@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// ServiceCreateBaseMenu 创建表
+// ServiceCreateBaseMenu 创建记录
 func ServiceCreateBaseMenu(obj *md.BaseMenu) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()

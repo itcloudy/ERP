@@ -9,6 +9,8 @@ const state = {
 
     //显示左侧菜单栏
     showLeftSidebar: true,
+    // 窗口高度
+    windowHeight: "",
     //窗口样式
     windowStyles: {
         leftSidebarStyles: {

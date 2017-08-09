@@ -1,41 +1,45 @@
 <template>
-<div>
- <button @click="changeView('form')">Form</button>
-  <el-table
-    ref="multipleTable"
-    :data="tableData3"
-    border
-    tooltip-effect="dark"
-    style="width: 100%"
-    @selection-change="handleSelectionChange">
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      label="日期"
-      width="120">
-      <template scope="scope">{{ scope.row.date }}</template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="姓名"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址"
-      show-overflow-tooltip>
-    </el-table-column>
-  </el-table>
-  </div>
+    <div>
+        <button @click="changeView('form')">Form</button>
+
+        <el-table
+            ref="multipleTable"
+            :data="cityList"
+            style="width: 100%">
+            <el-table-column
+              type="selection"
+              width="55">
+            </el-table-column>
+            <el-table-column
+              prop="ID"
+              label="ID">
+            </el-table-column>
+            <el-table-column
+              prop="Province"
+              label="所属省份">
+            </el-table-column>
+            <el-table-column
+              prop="Name"
+              label="名称">
+            </el-table-column>
+        </el-table>
+        <pagination/> 
+      
+    </div>
 </template>
 
 <script>
+  import  {default as Pagination} from '../../global/Pagination';
+  import { mapState } from 'vuex';
+  
   export default {
     data() {
       return {
+        treeViewHeight: this.$store.state.windowHeight-100,
       }
+    },
+    components: {
+           Pagination,
     },
     props:["cityList"],
     methods:{

@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// ServiceCreateModuleModule 创建表
+// ServiceCreateModuleModule 创建记录
 func ServiceCreateModuleModule(obj *md.ModuleModule) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
@@ -27,7 +27,7 @@ func ServiceCreateModuleModule(obj *md.ModuleModule) (id int64, err error) {
 	return
 }
 
-// ServiceUpdateModuleModule 更新表
+// ServiceUpdateModuleModule 更新记录
 func ServiceUpdateModuleModule(obj *md.ModuleModule) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()

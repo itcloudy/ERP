@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// ServiceCreateAddressDistrict 创建表
+// ServiceCreateAddressDistrict 创建记录
 func ServiceCreateAddressDistrict(obj *md.AddressDistrict) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
@@ -27,7 +27,7 @@ func ServiceCreateAddressDistrict(obj *md.AddressDistrict) (id int64, err error)
 	return
 }
 
-// ServiceUpdateAddressDistrict 更新表
+// ServiceUpdateAddressDistrict 更新记录
 func ServiceUpdateAddressDistrict(obj *md.AddressDistrict) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()

@@ -7,7 +7,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// ServiceCreateUser 创建表
+// ServiceCreateUser 创建记录
 func ServiceCreateUser(obj *md.User) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
@@ -28,7 +28,7 @@ func ServiceCreateUser(obj *md.User) (id int64, err error) {
 	return
 }
 
-// ServiceUpdateUser 更新表
+// ServiceUpdateUser 更新记录
 func ServiceUpdateUser(obj *md.User) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()

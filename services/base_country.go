@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// ServiceCreateAddressCountry 创建表
+// ServiceCreateAddressCountry 创建记录
 func ServiceCreateAddressCountry(obj *md.AddressCountry) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
@@ -27,7 +27,7 @@ func ServiceCreateAddressCountry(obj *md.AddressCountry) (id int64, err error) {
 	return
 }
 
-// ServiceUpdateAddressCountry 更新表
+// ServiceUpdateAddressCountry 更新记录
 func ServiceUpdateAddressCountry(obj *md.AddressCountry) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()

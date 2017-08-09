@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// ServiceCreateModuleCategory 创建表
+// ServiceCreateModuleCategory 创建记录
 func ServiceCreateModuleCategory(obj *md.ModuleCategory) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
@@ -27,7 +27,7 @@ func ServiceCreateModuleCategory(obj *md.ModuleCategory) (id int64, err error) {
 	return
 }
 
-// ServiceUpdateModuleCategory 更新表
+// ServiceUpdateModuleCategory 更新记录
 func ServiceUpdateModuleCategory(obj *md.ModuleCategory) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()

@@ -6,7 +6,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// ServiceCreateBaseGroup 创建表
+// ServiceCreateBaseGroup 创建记录
 func ServiceCreateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
@@ -67,7 +67,7 @@ func ServiceCreateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
 	return
 }
 
-// ServiceUpdateBaseGroup 更新表
+// ServiceUpdateBaseGroup 更新记录
 func ServiceUpdateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
