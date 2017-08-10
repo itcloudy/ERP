@@ -8,7 +8,7 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
-// BaseMenu 城市
+// BaseMenu 菜单
 type BaseMenu struct {
 	ID           int64        `orm:"column(id);pk;auto"`                                        //主键
 	CreateUserID int64        `orm:"column(create_user_id);null" json:"-"`                      //创建者
@@ -29,6 +29,7 @@ type BaseMenu struct {
 	Meta         string       `orm:"null"`                                                      //额外参数
 	Category     string       `orm:"null"`                                                      //菜单分类
 	FloderPath   string       `orm:""`                                                          // 对应的vue路径
+	ViewType     string       `orm:""`                                                          //视图类型
 }
 
 func init() {

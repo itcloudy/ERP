@@ -8,6 +8,7 @@
         <group>saleman,salemanager</group>
         <category>sale</category>
         <floderpath>sale</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu>
     <menu parent_id="sale" id="saleorder">
         <name>销售订单</name>
@@ -17,6 +18,7 @@
         <group>saleman,salemanager</group>
         <category>sale</category>
         <floderpath>sale</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu>
        
 </Menus>

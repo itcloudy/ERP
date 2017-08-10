@@ -3,6 +3,7 @@
         <div class="main-container" >
             <router-view></router-view>
         </div>
+        <div>{{globalMenus}}</div>
     </div>
 </template>
 <script>
@@ -13,7 +14,12 @@
             return{
                 mainContentStyles: this.$store.state.windowStyles.rightMainStyles
             }
-        }
+        },
+         computed:{
+           ...mapState({
+               globalMenus: state => state.menus
+            })
+        },
     }
 </script>
 <style lang="scss" scoped>

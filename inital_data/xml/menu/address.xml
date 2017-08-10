@@ -18,6 +18,7 @@
         <group>purchasemanager,salemanager</group>
         <category>address</category>
         <floderpath>address/country</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu>
     <menu parent_id="address_manage_top" id="address_province_manage">
         <name>省份管理</name>
@@ -28,6 +29,7 @@
         <group>purchasemanager,salemanager</group>
         <category>address</category>
         <floderpath>address/province</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu>
      <menu parent_id="address_manage_top" id="address_city_manage">
         <name>城市管理</name>
@@ -38,6 +40,7 @@
         <group>purchasemanager,salemanager</group>
         <category>address</category>
         <floderpath>address/city</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu>
     <menu parent_id="address_manage_top" id="address_district_manage">
         <name>区县管理</name>
@@ -48,6 +51,7 @@
         <group>purchasemanager,salemanager</group>
         <category>address</category>
         <floderpath>address/district</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu> 
   
 </Menus>

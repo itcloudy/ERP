@@ -24,6 +24,7 @@ type InitMenu struct {
 	Groups     string `xml:"group"`
 	Category   string `xml:"category"`
 	FloderPath string `xml:"floderpath"`
+	ViewType   string `xml:"viewtype"`
 }
 
 // InitMenus 菜单数据列表
@@ -62,6 +63,7 @@ func InitMenus2DB(split string) {
 									menu.Index = menuXML.XMLID
 									menu.Category = menuXML.Category
 									menu.FloderPath = menuXML.FloderPath
+									menu.ViewType = menuXML.ViewType
 									parentIDStr := menuXML.ParentID
 									if parentIDStr != "" {
 										if mobuleData, err := md.GetModuleDataByXMLID(utils.StringsJoin(moduleName, ".", parentIDStr), ormObj); err == nil {

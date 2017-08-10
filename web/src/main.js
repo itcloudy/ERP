@@ -24,6 +24,7 @@ let menus = JSON.parse(localStore.get("menus"));
 if (menus) {
     store.commit("GLOBAL_SET_UER_MENUS", menus);
     let menusRoutes = lazyload(menus);
+    console.log(localStore.get("menus"));
     router.addRoutes(menusRoutes);
     store.commit("GLOBAL_LOAD_ROUTES_DONE");
 
