@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 const Login = resolve => require(['./page/global/login'], resolve);
-const Home = resolve => require(['./page/global/Home'], resolve);
+
 const notFound = resolve => require(['./page/global/notFound'], resolve);
 let routes = [{
         path: '/login',

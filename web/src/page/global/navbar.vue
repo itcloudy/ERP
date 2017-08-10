@@ -29,9 +29,6 @@
             showLeftSidebarClick:function(){
                  this.$store.dispatch('GLOBAL_TOGGLE_LEFT_SIDEBAR');
             },
-            onLogout:function(){
-                console.log("logout");
-            },
             handleCommand(command){
                 let id =  this.userinfo.ID;
                 if (command =="self_info"){

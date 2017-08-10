@@ -1,7 +1,6 @@
 <template>
    <div>
-   <button @click="changeView('tree')">Tree</button>
-   <p>23424</p>
+ 
    <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="活动名称">
         <div style="height:36px"><p>234234</p></div>

@@ -91,6 +91,15 @@
                 },
             }
         },
+        computed:{
+           ...mapState({
+               loadRoutersDone: state => state.loadRoutersDone,
+               backgroundMenus: state => state.backgroundMenus
+            })
+        },
+        created() {
+            this.setSize();
+        },
         methods: {
             // 设置窗口大小
             setSize() {
@@ -132,7 +141,7 @@
                                         this.$message({ message:msg, type: 'success' });
                                         // 后台菜单
                                         let backgroundMenus = this.menuList2Json(data.menus);
-                                        console.log(backgroundMenus);
+                             
                                         // 本地缓存后台菜单信息
                                         localStore.set('backgroundMenus',JSON.stringify(backgroundMenus));
                                         this.setGlobalUserMenu(backgroundMenus);
@@ -141,7 +150,7 @@
                                         this.$message({  message:msg,   type: 'error' });
                                     }
                                     //登录成功跳转到后台首页
-                                    this.$router.push('/background');
+                                    this.$router.push('/admin');
                                 });
                             }else{
                                 this.$message({  message:msg,   type: 'error' });
@@ -155,9 +164,9 @@
                
                 // 后台
                 let background = {
-                    path: '/background',
-                    name: 'home',
-                    Component:"Home",
+                    path: '/admin',
+                    name: 'admin',
+                    Component:"Admin",
                     FloderPath:"global",
                     expandMenu:true,
                     children:[],
@@ -263,16 +272,8 @@
                 setGlobalUserMenu: "GLOBAL_SET_UER_MENUS",
                 setloadRoutersDone: "GLOBAL_LOAD_ROUTES_DONE"
             })
-        },
-        computed:{
-           ...mapState({
-               loadRoutersDone: state => state.loadRoutersDone,
-               backgroundMenus: state => state.backgroundMenus
-            })
-        },
-        created() {
-            this.setSize();
         }
+        
         
     }
 </script>

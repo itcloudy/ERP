@@ -1,15 +1,5 @@
-function lazyLoadComponent(path, name) {
-    let component;
-    try {
-        if (path != "") {
-            component = resolve => require(['@/page/' + path + '/' + name], resolve);
-        } else {
-            component = resolve => require(['@/page/' + name], resolve);
-        }
-    } catch (e) {
-        component = resolve => require(['@/page/global/notFound'], resolve);
-    }
-    return component;
+function lazyLoadComponent(path) {
+    return resolve => require(['@/page/' + path], resolve);
 }
 
 function expandItemPath(item) {
@@ -47,22 +37,19 @@ function expandItemPath(item) {
     }
 }
 export default function lazyload(menus) {
-    console.log(menus);
     //只支持3层菜单，多层请自行采用递归或者嵌套
     menus.map(function(menu) {
-        console.log(menu.name);
-        console.log(menu);
         if (menu.children != null) {
             menu.expandMenu = true;
-            menu.component = lazyLoadComponent("global", "Home");
+            menu.component = lazyLoadComponent("global/Admin");
             menu.children.map(function(item) {
                 if (item.children != null) {
                     item.expandMenu = true;
-                    item.component = lazyLoadComponent(item.FloderPath, item.Component.replace(/^\s+|\s+$/g, ""));
+                    item.component = lazyLoadComponent(item.Component.replace(/^\s+|\s+$/g, ""));
                     item.children.map(function(su) {
                         // 不再支持更深菜单
                         su.expandMenu = false;
-                        su.component = lazyLoadComponent(su.FloderPath, su.Component.replace(/^\s+|\s+$/g, ""));
+                        su.component = lazyLoadComponent(su.Component.replace(/^\s+|\s+$/g, ""));
                         if (su.viewTypePaths) {
                             let paths = su.viewTypePaths;
                             su.children = [];
@@ -70,14 +57,14 @@ export default function lazyload(menus) {
                                 let pathItem = paths[i];
                                 let itemCom = {};
                                 itemCom.path = pathItem.path;
-                                itemCom.component = lazyLoadComponent(su.FloderPath, pathItem.Component);
+                                itemCom.component = lazyLoadComponent(su.FloderPath + "/" + pathItem.Component);
                                 item.children.push(itemCom);
                             }
                         }
                     });
                 } else {
                     item.expandMenu = false;
-                    item.component = lazyLoadComponent(item.FloderPath, item.Component.replace(/^\s+|\s+$/g, ""));
+                    item.component = lazyLoadComponent(item.Component.replace(/^\s+|\s+$/g, ""));
                     if (item.viewTypePaths) {
                         let paths = item.viewTypePaths;
                         item.children = [];
@@ -85,7 +72,7 @@ export default function lazyload(menus) {
                             let pathItem = paths[i];
                             let itemCom = {};
                             itemCom.path = pathItem.path;
-                            itemCom.component = lazyLoadComponent(item.FloderPath, pathItem.Component);
+                            itemCom.component = lazyLoadComponent(item.FloderPath + "/" + pathItem.Component);
                             item.children.push(itemCom);
                         }
                     }
@@ -93,7 +80,7 @@ export default function lazyload(menus) {
             });
         } else {
             menu.expandMenu = false;
-            menu.component = lazyLoadComponent(menu.FloderPath, menu.Component.replace(/^\s+|\s+$/g, ""));
+            menu.component = lazyLoadComponent(menu.Component.replace(/^\s+|\s+$/g, ""));
             if (menu.viewTypePaths) {
                 let paths = menu.viewTypePaths;
                 menu.children = [];
@@ -101,7 +88,7 @@ export default function lazyload(menus) {
                     let pathItem = paths[i];
                     let itemCom = {};
                     itemCom.path = pathItem.path;
-                    itemCom.component = lazyLoadComponent(menu.FloderPath, pathItem.Component);
+                    itemCom.component = lazyLoadComponent(menu.FloderPath + "/" + pathItem.Component);
                     menu.children.push(itemCom);
                 }
             }

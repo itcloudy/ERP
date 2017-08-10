@@ -4,7 +4,7 @@
         <isbackground>true</isbackground>
         <name>销售管理</name>
         <path>sale</path>
-        <component>Sale</component>
+        <component>global/Breadcrumb</component>
         <icon>el-icon-menu</icon>
         <group>saleman,salemanager</group>
         <category>sale</category>
@@ -14,11 +14,11 @@
     <menu parent_id="sale" id="saleorder">
         <name>销售订单</name>
         <path>saleorder</path>
-        <component>SaleOrder</component>
+         <component>sale/saleorder/SaleOrder</component>
         <icon>el-icon-menu</icon>
         <group>saleman,salemanager</group>
         <category>sale</category>
-        <floderpath>sale</floderpath>
+        <floderpath>sale/saleorder</floderpath>
         <viewtype>form</viewtype>
     </menu>
        
