@@ -3,7 +3,6 @@
         <div class="main-container" >
             <router-view></router-view>
         </div>
-        <div>{{backgroundMenus}}</div>
     </div>
 </template>
 <script>

@@ -26,7 +26,7 @@ function expandItemPath(item) {
                     routesDict.form.component = lazyLoadComponent(item.FloderPath, "Tree");
                 }
             }
-
+            console.log(routesDict);
             for (let key in routesDict) {
                 if (!("children" in item)) {
                     item.children = [];
@@ -76,6 +76,7 @@ export default function lazyload(menus) {
                             item.children.push(itemCom);
                         }
                     }
+                    console.log(item);
                 }
             });
         } else {
@@ -94,5 +95,6 @@ export default function lazyload(menus) {
             }
         }
     });
+    console.log(JSON.stringify(menus));
     return menus;
 }
