@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Menus>
     <menu parent_id="" id="sale">
+        <isbackground>true</isbackground>
         <name>销售管理</name>
         <path>sale</path>
         <component>Sale</component>
@@ -8,7 +9,7 @@
         <group>saleman,salemanager</group>
         <category>sale</category>
         <floderpath>sale</floderpath>
-        <viewtype>form,tree</viewtype>
+        <viewtype></viewtype>
     </menu>
     <menu parent_id="sale" id="saleorder">
         <name>销售订单</name>
@@ -18,7 +19,7 @@
         <group>saleman,salemanager</group>
         <category>sale</category>
         <floderpath>sale</floderpath>
-        <viewtype>form,tree</viewtype>
+        <viewtype>form</viewtype>
     </menu>
        
 </Menus>

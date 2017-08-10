@@ -65,12 +65,7 @@
         }
       }
     },
-    props:["city"],
-    methods:{
-      changeView(type){
-        this.$emit("changeViewType",type);
-      }
-    }
+    
      
   }
 </script>

@@ -9,12 +9,8 @@ let routes = [{
         path: '/login',
         name: 'login',
         component: Login
-    },
-    {
-        path: '/',
-        name: 'home',
-        component: Home
-    },
+    }
+
 ];
 const scrollBehavior = (to, from, savedPosition) => {
     if (savedPosition) {

@@ -29,7 +29,8 @@ type BaseMenu struct {
 	Meta         string       `orm:"null"`                                                      //额外参数
 	Category     string       `orm:"null"`                                                      //菜单分类
 	FloderPath   string       `orm:""`                                                          // 对应的vue路径
-	ViewType     string       `orm:""`                                                          //视图类型
+	ViewType     string       `orm:"null"`                                                      //视图类型
+	IsBackground bool         `orm:"default(true)"`                                             //前台还是后台
 }
 
 func init() {

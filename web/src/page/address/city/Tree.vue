@@ -1,14 +1,10 @@
 <template>
     <div>
         <button @click="changeView('form')">Form</button>
-        <pagination 
-        @pageInfoChange="pageInfoChange"
-        :pageSize="citiesData.pageSize" 
-        :currentPage="citiesData.currentPage"
-        :total="citiesData.total"/>
+        
         <el-table
             ref="multipleTable"
-            :data="citiesData.cityList"
+            :data="citiesData"
             style="width: 100%">
             <el-table-column
               type="selection"
@@ -31,13 +27,8 @@
               label="名称">
             </el-table-column>
         </el-table>
-        <pagination 
-         v-if="showBottomPagitator"
-        @pageInfoChange="pageInfoChange"
-        :pageSize="citiesData.pageSize" 
-        :currentPage="citiesData.currentPage"
-        :total="citiesData.total"/> 
-      
+        
+      <a href="#/address/city/1">form</a>
     </div>
 </template>
 
@@ -49,25 +40,18 @@
     data() {
       return {
         treeViewHeight: this.$store.state.windowHeight-100,
+        citiesData:[],
+      }
+    },
+    methods:{
+      goFrom:function(){
+        this.$router.push("/address/city/1");
       }
     },
     components: {
            Pagination,
     },
-    props:["citiesData"],
-    methods:{
-      changeView(type){
-        this.$emit("changeViewType",type);
-      },
-      pageInfoChange(pageSize,currentPage){
-        this.$emit("pageInfoChange",pageSize,currentPage);
-      }
-    },
-    computed:{
-      showBottomPagitator:function(){
-        return this.citiesData.total/this.citiesData.pageSize > 1
-      }
-    }
+    
      
   }
 </script>
