@@ -130,17 +130,18 @@
                                     if(code=='success'){
                                         //提示
                                         this.$message({ message:msg, type: 'success' });
-
-                                        let menus = this.menuList2Json(data.menus);
-                                        // 本地缓存菜单信息
-                                        localStore.set('menus',JSON.stringify(menus));
-                                        this.setGlobalUserMenu(menus);
+                                        // 后台菜单
+                                        let backgroundMenus = this.menuList2Json(data.menus);
+                                        console.log(backgroundMenus);
+                                        // 本地缓存后台菜单信息
+                                        localStore.set('backgroundMenus',JSON.stringify(backgroundMenus));
+                                        this.setGlobalUserMenu(backgroundMenus);
                                         this.loadRouters();
                                     }else{
                                         this.$message({  message:msg,   type: 'error' });
                                     }
-                                    //登录成功跳转到首页
-                                    this.$router.push('/');
+                                    //登录成功跳转到后台首页
+                                    this.$router.push('/background');
                                 });
                             }else{
                                 this.$message({  message:msg,   type: 'error' });
@@ -150,7 +151,18 @@
                 });
             },
             menuList2Json(menuList){
-                let resultJson = [];
+                // 分前后台，暂时只考虑后台
+               
+                // 后台
+                let background = {
+                    path: '/background',
+                    name: 'home',
+                    Component:"Home",
+                    FloderPath:"global",
+                    expandMenu:true,
+                    children:[],
+                };
+               
                 let stepList = [];
                 if (menuList== null){
                     return resultJson;
@@ -172,7 +184,7 @@
                 }
                 // 对stepList排序
                 stepList.sort();
-                //循环处理menu
+                //循环处理menu,后期考虑删除已经处理的元素
                 for(let j=0,len=stepList.length;j<len;j++){
                     let step = stepList[j];
                     for(let i=0;i<menuLen;i++){
@@ -196,21 +208,51 @@
                                     menuList[k].children.push(menu);
                                 }
                             }
+                            // 对ViewType进行判断，有下级菜单的不考虑，
+                            if (menu.ViewType.length>0 && !menu.children){
+                                let type =  menu.ViewType;
+                                let viewTypes = type.split(",");
+                                let routesDict = {};
+                                for (let i = 0; i < viewTypes.length; i++) {
+                                    let viewType = viewTypes[i].replace(/^\s+|\s+$/g, "");
+                                    if (viewType.length == 0) {
+                                        continue;
+                                    }
+                                    if ("form" == viewType) {
+                                        routesDict.form = {};
+                                        routesDict.form.path = ":id";
+                                        routesDict.form.Component =  "Form";
+
+                                    } else if ('tree' == viewType) {
+                                        routesDict.tree = {};
+                                        routesDict.tree.path = "";
+                                        routesDict.tree.Component = "Tree";
+                                    }
+                                }
+                                for (let key in routesDict) {
+                                    if (!("viewTypePaths" in menu)) {
+                                        menu.viewTypePaths = [];
+                                    }
+                                    menu.viewTypePaths.push(routesDict[key]);
+                                }
+                            }
                         }else{
                             delete menu.Parent;
                             delete menu.ParentLeft;
                             delete menu.ParentRight;
-                            menu.path = "/" + menu.path;
-                            resultJson.push(menu);
+                            if (menu.IsBackground){
+                                menu.expandMenu = true;
+                                background.children.push(menu)
+                            }
                         }
                     }
                 }
-
-                return resultJson;
+                 
+                return background;
             },
             loadRouters(){
                 if (this.loadRoutersDone==false){
-                    let menusRoutes = lazyload(this.globalMenus);
+                    let menusRoutes = lazyload([this.backgroundMenus]);
                     this.$router.addRoutes(menusRoutes);
                     //动态加载路由
                     this.setloadRoutersDone(true);
@@ -225,7 +267,7 @@
         computed:{
            ...mapState({
                loadRoutersDone: state => state.loadRoutersDone,
-               globalMenus: state => state.menus
+               backgroundMenus: state => state.backgroundMenus
             })
         },
         created() {

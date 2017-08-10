@@ -1,10 +1,10 @@
 <template>
     <div>
         <button @click="changeView('form')">Form</button>
-
+        
         <el-table
             ref="multipleTable"
-            :data="citiesData.cityList"
+            :data="citiesData"
             style="width: 100%">
             <el-table-column
               type="selection"
@@ -15,7 +15,11 @@
               label="ID">
             </el-table-column>
             <el-table-column
-              prop="Province"
+              prop="Country.Name"
+              label="所属国家">
+            </el-table-column>
+            <el-table-column
+              prop="Province.Name"
               label="所属省份">
             </el-table-column>
             <el-table-column
@@ -23,12 +27,8 @@
               label="名称">
             </el-table-column>
         </el-table>
-        <pagination 
-        @pageInfoChange="pageInfoChange"
-        :pageSize="citiesData.pageSize" 
-        :currentPage="citiesData.currentPage"
-        :total="citiesData.total"/> 
-      
+        
+      <a href="#/address/city/1">form</a>
     </div>
 </template>
 
@@ -40,20 +40,18 @@
     data() {
       return {
         treeViewHeight: this.$store.state.windowHeight-100,
+        citiesData:[],
+      }
+    },
+    methods:{
+      goFrom:function(){
+        this.$router.push("/address/city/1");
       }
     },
     components: {
            Pagination,
     },
-    props:["citiesData"],
-    methods:{
-      changeView(type){
-        this.$emit("changeViewType",type);
-      },
-      pageInfoChange(pageSize,currentPage){
-        this.$emit("changeViewType",typageSize,currentPagepe);
-      }
-    }
+    
      
   }
 </script>

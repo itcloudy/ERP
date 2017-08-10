@@ -14,16 +14,18 @@ import (
 
 // InitMenu  菜单数据解析
 type InitMenu struct {
-	Name       string `xml:"name"`
-	XMLID      string `xml:"id,attr"`
-	Path       string `xml:"path"`
-	Icon       string `xml:"icon"`
-	Component  string `xml:"component"`
-	Sequence   int64  `xml:"sequence"`
-	ParentID   string `xml:"parent_id,attr"`
-	Groups     string `xml:"group"`
-	Category   string `xml:"category"`
-	FloderPath string `xml:"floderpath"`
+	Name         string `xml:"name"`
+	XMLID        string `xml:"id,attr"`
+	Path         string `xml:"path"`
+	Icon         string `xml:"icon"`
+	Component    string `xml:"component"`
+	Sequence     int64  `xml:"sequence"`
+	ParentID     string `xml:"parent_id,attr"`
+	Groups       string `xml:"group"`
+	Category     string `xml:"category"`
+	FloderPath   string `xml:"floderpath"`
+	ViewType     string `xml:"viewtype"`
+	IsBackground bool   `xml:"isbackground"`
 }
 
 // InitMenus 菜单数据列表
@@ -62,6 +64,8 @@ func InitMenus2DB(split string) {
 									menu.Index = menuXML.XMLID
 									menu.Category = menuXML.Category
 									menu.FloderPath = menuXML.FloderPath
+									menu.ViewType = menuXML.ViewType
+									menu.IsBackground = menuXML.IsBackground
 									parentIDStr := menuXML.ParentID
 									if parentIDStr != "" {
 										if mobuleData, err := md.GetModuleDataByXMLID(utils.StringsJoin(moduleName, ".", parentIDStr), ormObj); err == nil {

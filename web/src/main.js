@@ -20,10 +20,11 @@ Vue.use(ElementUI)
 
 Vue.use(Vuex)
 
-let menus = JSON.parse(localStore.get("menus"));
-if (menus) {
-    store.commit("GLOBAL_SET_UER_MENUS", menus);
-    let menusRoutes = lazyload(menus);
+let backgroundMenus = JSON.parse(localStore.get("backgroundMenus"));
+if (backgroundMenus) {
+    store.commit("GLOBAL_SET_UER_MENUS", backgroundMenus);
+    // 加载后台菜单
+    let menusRoutes = lazyload([backgroundMenus]);
     router.addRoutes(menusRoutes);
     store.commit("GLOBAL_LOAD_ROUTES_DONE");
 
@@ -36,7 +37,7 @@ router.beforeEach((to, from, next) => {
     if (to.path == '/login') {
         localStore.remove('userinfo');
         localStore.remove("groups");
-        localStore.remove("menus");
+        localStore.remove("backgroundMenus");
     }
     let user = JSON.parse(localStore.get('userinfo'));
     if (!user && to.path != '/login') {

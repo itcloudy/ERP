@@ -1,44 +1,65 @@
 <template>
-  <el-table
-    ref="multipleTable"
-    :data="tableData3"
-    border
-    tooltip-effect="dark"
-    style="width: 100%"
-    @selection-change="handleSelectionChange">
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      label="日期"
-      width="120">
-      <template scope="scope">{{ scope.row.date }}</template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="姓名"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址"
-      show-overflow-tooltip>
-    </el-table-column>
-  </el-table>
+    <div>
+        <button @click="changeView('form')">Form</button>
+        <pagination 
+        @pageInfoChange="pageInfoChange"
+        :pageSize="countriesData.pageSize" 
+        :currentPage="countriesData.currentPage"
+        :total="countriesData.total"/> 
+        <el-table
+            ref="multipleTable"
+            :data="countriesData.countryList"
+            style="width: 100%">
+            <el-table-column
+              type="selection"
+              width="55">
+            </el-table-column>
+            <el-table-column
+              prop="ID"
+              label="ID">
+            </el-table-column>
+            <el-table-column
+              prop="Name"
+              label="名称">
+            </el-table-column>
+        </el-table>
+        <pagination 
+        v-if="showBottomPagitator"
+        @pageInfoChange="pageInfoChange"
+        :pageSize="countriesData.pageSize" 
+        :currentPage="countriesData.currentPage"
+        :total="countriesData.total"/> 
+      
+    </div>
 </template>
 
 <script>
+  import  {default as Pagination} from '../../global/Pagination';
+  import { mapState } from 'vuex';
+  
   export default {
     data() {
       return {
+        treeViewHeight: this.$store.state.windowHeight-100,
       }
     },
-    mounted:function(){
-        let _this = this;
-        _this.$ajax.get("/address/city/2").then(response=>{
-
-        });
+    components: {
+           Pagination,
+    },
+    props:["countriesData"],
+    methods:{
+      changeView(type){
+        this.$emit("changeViewType",type);
+      },
+      pageInfoChange(pageSize,currentPage){
+        this.$emit("pageInfoChange",pageSize,currentPage);
+      }
+    },
+    computed:{
+      showBottomPagitator:function(){
+        return this.countriesData.total/this.countriesData.pageSize > 1
+      }
     }
+     
   }
 </script>

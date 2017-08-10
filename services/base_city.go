@@ -54,15 +54,34 @@ func ServiceGetAddressCity(userID int64, query map[string]interface{}, exclude m
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
 	var arrs []md.AddressCity
+	countryMap := make(map[int64]md.AddressCountry)
 	o := orm.NewOrm()
 	if paginator, arrs, err = md.GetAllAddressCity(o, query, exclude, condMap, fields, sortby, order, offset, limit); err == nil {
 		lenArrs := len(arrs)
+
 		for i := 0; i < lenArrs; i++ {
 			obj := arrs[i]
 			objInfo := make(map[string]interface{})
 			objInfo["Name"] = obj.Name
 			objInfo["ID"] = obj.ID
-			objInfo["Province"] = obj.Province.Name
+			countryInfo := make(map[string]interface{})
+
+			provinceInfo := make(map[string]interface{})
+			provinceInfo["ID"] = obj.Province.ID
+			provinceInfo["Name"] = obj.Province.Name
+			objInfo["Province"] = provinceInfo
+			countryID := obj.Province.Country.ID
+			if country, ok := countryMap[countryID]; ok {
+				countryInfo["Name"] = country.Name
+				countryInfo["ID"] = country.ID
+			} else {
+				if country, err := md.GetAddressCountryByID(countryID, o); err == nil {
+					countryMap[countryID] = *country
+					countryInfo["Name"] = country.Name
+					countryInfo["ID"] = country.ID
+				}
+			}
+			objInfo["Country"] = countryInfo
 			results = append(results, objInfo)
 		}
 	}

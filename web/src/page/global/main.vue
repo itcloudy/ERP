@@ -3,6 +3,7 @@
         <div class="main-container" >
             <router-view></router-view>
         </div>
+        <div>{{backgroundMenus}}</div>
     </div>
 </template>
 <script>
@@ -13,7 +14,13 @@
             return{
                 mainContentStyles: this.$store.state.windowStyles.rightMainStyles
             }
+        },
+        computed:{
+           ...mapState({
+               backgroundMenus: state => state.backgroundMenus
+           })
         }
+        
     }
 </script>
 <style lang="scss" scoped>
@@ -21,6 +28,7 @@
         background-color: rgb(240,238,238);
         .main-container{
             padding:0.5rem;
+            overflow:auto;
         }
     }
     

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Menus>
     <menu parent_id="" id="address_manage_top">
+        <isbackground>true</isbackground>
         <name>地址管理</name>
         <path>address</path>
         <component>Address</component>
@@ -12,42 +13,46 @@
     <menu parent_id="address_manage_top" id="address_country_manage">
         <name>国家管理</name>
         <path>country</path>
-        <component>Base</component>
+        <component>Address</component>
         <icon>el-icon-menu</icon>
         <sequence>1</sequence>
         <group>purchasemanager,salemanager</group>
         <category>address</category>
         <floderpath>address/country</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu>
     <menu parent_id="address_manage_top" id="address_province_manage">
         <name>省份管理</name>
         <path>province</path>
-        <component>Base</component>
+        <component>Address</component>
         <icon>el-icon-menu</icon>
         <sequence>2</sequence>
         <group>purchasemanager,salemanager</group>
         <category>address</category>
         <floderpath>address/province</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu>
      <menu parent_id="address_manage_top" id="address_city_manage">
         <name>城市管理</name>
         <path>city</path>
-        <component>Base</component>
+        <component>Address</component>
         <icon>el-icon-menu</icon>
         <sequence>3</sequence>
         <group>purchasemanager,salemanager</group>
         <category>address</category>
         <floderpath>address/city</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu>
     <menu parent_id="address_manage_top" id="address_district_manage">
         <name>区县管理</name>
         <path>district</path>
-        <component>Base</component>
+        <component>Address</component>
         <icon>el-icon-menu</icon>
         <sequence>4</sequence>
         <group>purchasemanager,salemanager</group>
         <category>address</category>
         <floderpath>address/district</floderpath>
+        <viewtype>form,tree</viewtype>
     </menu> 
   
 </Menus>

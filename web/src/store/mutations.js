@@ -1,5 +1,4 @@
 import * as types from './mutations-types'
-import { lazyload } from '../utils/lazyload'
 
 export default {
     [types.GLOBAL_SET_WINDOW_HRIGHT](state, height) {
