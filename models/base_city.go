@@ -53,6 +53,13 @@ func UpdateAddressCity(m *AddressCity, ormObj orm.Ormer) (id int64, err error) {
 	return
 }
 
+// GetAddressCityByID retrieves AddressCity by ID. Returns error if ID doesn't exist
+func GetAddressCityByID(id int64, ormObj orm.Ormer) (obj *AddressCity, err error) {
+	obj = &AddressCity{ID: id}
+	err = ormObj.Read(obj)
+	return obj, err
+}
+
 // GetAllAddressCity retrieves all AddressCity matches certain condition. Returns empty list if no records exist
 func GetAllAddressCity(o orm.Ormer, query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
 	fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []AddressCity, error) {
@@ -62,9 +69,6 @@ func GetAllAddressCity(o orm.Ormer, query map[string]interface{}, exclude map[st
 		paginator utils.Paginator
 		num       int64
 	)
-	if limit == 0 {
-		limit = 200
-	}
 	qs := o.QueryTable(new(AddressCity))
 	qs = qs.RelatedSel()
 

@@ -18,13 +18,14 @@
         this.$emit("pageInfoChange",pageSize,currentPage);
       },
       handleSizeChange(val) {
-        this.pageInfoChange(val,this.currentPage);
+        // 每页显示数量改变，从第一页开始显示
+        this.pageInfoChange(val,1);
       },
       handleCurrentChange(val) {
         this.pageInfoChange(this.pageSize,val);
       }
     },
-    props:["pageSize","currentPage","total"]
+    props:["pageSize","currentPage","total"],
     data() {
       return {
         

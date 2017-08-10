@@ -15,7 +15,11 @@
               label="ID">
             </el-table-column>
             <el-table-column
-              prop="Province"
+              prop="Country.Name"
+              label="所属国家">
+            </el-table-column>
+            <el-table-column
+              prop="Province.Name"
               label="所属省份">
             </el-table-column>
             <el-table-column
@@ -51,7 +55,7 @@
         this.$emit("changeViewType",type);
       },
       pageInfoChange(pageSize,currentPage){
-        this.$emit("changeViewType",typageSize,currentPagepe);
+        this.$emit("pageInfoChange",pageSize,currentPage);
       }
     }
      

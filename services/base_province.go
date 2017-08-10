@@ -2,6 +2,7 @@ package services
 
 import (
 	md "golangERP/models"
+	"golangERP/utils"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -45,6 +46,30 @@ func ServiceUpdateAddressProvince(obj *md.AddressProvince) (id int64, err error)
 	err = o.Commit()
 	if err != nil {
 		return
+	}
+	return
+}
+
+//ServiceGetAddressProvince 获得省份列表
+func ServiceGetAddressProvince(userID int64, query map[string]interface{}, exclude map[string]interface{},
+	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
+	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
+	var arrs []md.AddressProvince
+
+	o := orm.NewOrm()
+	if paginator, arrs, err = md.GetAllAddressProvince(o, query, exclude, condMap, fields, sortby, order, offset, limit); err == nil {
+		lenArrs := len(arrs)
+		for i := 0; i < lenArrs; i++ {
+			obj := arrs[i]
+			objInfo := make(map[string]interface{})
+			objInfo["Name"] = obj.Name
+			countryInfo := make(map[string]interface{})
+			countryInfo["ID"] = obj.Country.ID
+			countryInfo["Name"] = obj.Country.Name
+			objInfo["Country"] = countryInfo
+			objInfo["ID"] = obj.ID
+			results = append(results, objInfo)
+		}
 	}
 	return
 }

@@ -1,44 +1,74 @@
 <template>
-  <el-table
-    ref="multipleTable"
-    :data="tableData3"
-    border
-    tooltip-effect="dark"
-    style="width: 100%"
-    @selection-change="handleSelectionChange">
-    <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
-    <el-table-column
-      label="日期"
-      width="120">
-      <template scope="scope">{{ scope.row.date }}</template>
-    </el-table-column>
-    <el-table-column
-      prop="name"
-      label="姓名"
-      width="120">
-    </el-table-column>
-    <el-table-column
-      prop="address"
-      label="地址"
-      show-overflow-tooltip>
-    </el-table-column>
-  </el-table>
+    <div>
+        <province-tree v-show="showTree" @changeViewType="changeViewType" @pageInfoChange="pageInfoChange" :provincesData="provincesData"></province-tree>
+        <province-form v-show="showForm" @changeViewType="changeViewType" :province="province"></province-form>
+    </div>
+    
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-      }
-    },
-    mounted:function(){
-        let _this = this;
-        _this.$ajax.get("/address/city/2").then(response=>{
+    import  {default as provinceTree} from './Tree';
+    import  {default as provinceForm} from './Form';
+    export default {
+        data() {
+            
+            return {
+                showTree:true,//显示tree视图
+                showForm:false,//显示form视图
+                provincesData:{
+                    provinceList:[],//tree视图数据
+                    pageSize:20,//每页数量
+                    total:0,//总数量
+                    currentPage:1,//当前页
+                },
+                
+                province:{}
 
-        });
+            }
+        },
+        components: {
+            provinceTree,
+            provinceForm,
+        },
+        methods:{
+            changeViewType(type){
+                if ('form'==type){
+                    this.showTree = false
+                    this.showForm = true;
+                }else if ('tree'== type){
+                    this.showTree = true
+                    this.showForm = false;
+                }else{
+                    this.showTree = true
+                    this.showForm = false;
+                }
+            },
+            getProvinces(limit,offset){
+                this.$ajax.get("/address/province/?limit="+limit +"&offset="+offset).then(response=>{
+                   let {code,msg,data} = response.data;
+                   if(code=='success'){
+                        this.provincesData.provinceList = data["provinces"];
+                        let paginator = data.paginator;
+                        if (paginator){
+                            this.provincesData.total = paginator.totalCount;
+
+                        }
+                       
+                   }
+                });
+            },
+            pageInfoChange(pageSize,currentPage){
+                this.provincesData.pageSize = pageSize;
+                this.provincesData.currentPage = currentPage;
+                this.getProvinces(pageSize,(currentPage-1)*pageSize)
+            }
+        },
+        created:function(){
+            this.$nextTick(function(){
+                this.getProvinces(this.provincesData.pageSize,this.provincesData.currentPage-1);
+            });
+        }
+
+      
     }
-  }
 </script>

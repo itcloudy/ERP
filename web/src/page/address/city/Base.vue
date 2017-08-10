@@ -1,6 +1,6 @@
 <template>
     <div>
-        <city-tree v-show="showTree" @changeViewType="changeViewType" :citiesData="citiesData"></city-tree>
+        <city-tree v-show="showTree" @changeViewType="changeViewType" @pageInfoChange="pageInfoChange" :citiesData="citiesData"></city-tree>
         <city-form v-show="showForm" @changeViewType="changeViewType" :city="city"></city-form>
     </div>
     
@@ -43,18 +43,29 @@
                     this.showForm = false;
                 }
             },
-            getCities(){
-                this.$ajax.get("/address/city/").then(response=>{
+            getCities(limit,offset){
+                this.$ajax.get("/address/city/?limit="+limit +"&offset="+offset).then(response=>{
                    let {code,msg,data} = response.data;
                    if(code=='success'){
-                       this.citiesData.cityList = data["cities"]
+                        this.citiesData.cityList = data["cities"];
+                        let paginator = data.paginator;
+                        if (paginator){
+                            this.citiesData.total = paginator.totalCount;
+
+                        }
+                       
                    }
                 });
+            },
+            pageInfoChange(pageSize,currentPage){
+                this.citiesData.pageSize = pageSize;
+                this.citiesData.currentPage = currentPage;
+                this.getCities(pageSize,(currentPage-1)*pageSize)
             }
         },
         created:function(){
             this.$nextTick(function(){
-                this.getCities();
+                this.getCities(this.citiesData.pageSize,this.citiesData.currentPage-1);
             });
         }
 
