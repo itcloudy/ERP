@@ -1,7 +1,11 @@
 <template>
     <div>
         <button @click="changeView('form')">Form</button>
-
+        <pagination 
+        @pageInfoChange="pageInfoChange"
+        :pageSize="countriesData.pageSize" 
+        :currentPage="countriesData.currentPage"
+        :total="countriesData.total"/> 
         <el-table
             ref="multipleTable"
             :data="countriesData.countryList"
@@ -20,6 +24,7 @@
             </el-table-column>
         </el-table>
         <pagination 
+        v-if="showBottomPagitator"
         @pageInfoChange="pageInfoChange"
         :pageSize="countriesData.pageSize" 
         :currentPage="countriesData.currentPage"
@@ -48,6 +53,11 @@
       },
       pageInfoChange(pageSize,currentPage){
         this.$emit("pageInfoChange",pageSize,currentPage);
+      }
+    },
+    computed:{
+      showBottomPagitator:function(){
+        return this.countriesData.total/this.countriesData.pageSize > 1
       }
     }
      

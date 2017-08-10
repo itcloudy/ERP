@@ -36,5 +36,6 @@
 <style lang="scss" scope>
     .block{
         margin: 5px;
+        float:right;
     }
 </style>
