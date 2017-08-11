@@ -47,6 +47,7 @@ func InitUser2DB(filePath string) {
 						user.Active = userXML.Active
 						user.Qq = userXML.Qq
 						user.WeChat = userXML.WeChat
+						user.IsBackground = userXML.IsBackground
 						if insertID, err := service.ServiceCreateUser(&user); err == nil {
 							var moduleData md.ModuleData
 							moduleData.InsertID = insertID

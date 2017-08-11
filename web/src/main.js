@@ -40,8 +40,15 @@ router.beforeEach((to, from, next) => {
         localStore.remove("backgroundMenus");
     }
     let user = JSON.parse(localStore.get('userinfo'));
-    if (!user && to.path != '/admin/login') {
-        next({ path: '/admin/login' })
+    let path = to.path;
+    // 后台必须登录
+    let adminPath = path.indexOf('/admin');
+    if (adminPath == 0) {
+        if (!user && path != '/admin/login') {
+            next({ path: '/admin/login' })
+        } else {
+            next()
+        }
     } else {
         next()
     }

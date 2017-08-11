@@ -3,14 +3,20 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 const Login = resolve => require(['./views/admin/global/login'], resolve);
-
+const FrontHome = resolve => require(['./views/front/global/Home'], resolve);
 let routes = [{
         path: '/admin/login',
         name: 'adminlogin',
         component: Login
+    },
+    {
+        path: "/",
+        name: "frontHome",
+        component: FrontHome
     }
 
 ];
+console.log(routes);
 const scrollBehavior = (to, from, savedPosition) => {
     if (savedPosition) {
         // savedPosition is only available for popstate navigations.

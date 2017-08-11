@@ -15,6 +15,7 @@ export default {
     },
     [types.GLOBAL_SET_USERINFO](state, userinfo) {
         state.userinfo = userinfo;
+        state.isBackgroundUser = userinfo.isBackground;
     },
     [types.GLOBAL_SET_UER_MENUS](state, menus) {
         state.backgroundMenus = menus;

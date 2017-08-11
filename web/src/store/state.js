@@ -6,6 +6,8 @@ const state = {
     backgroundMenus: JSON.parse(localStore.get('backgroundMenus')) || {},
     // 加载路由完成
     loadRoutersDone: false,
+    //可以访问后台
+    isBackgroundUser: false,
 
     //显示左侧菜单栏
     showLeftSidebar: true,
