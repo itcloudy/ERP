@@ -1,100 +1,80 @@
 function lazyLoadComponent(path) {
-    return resolve => require(['@/page/' + path], resolve);
+    return resolve => require(['@/views/' + path], resolve);
 }
 
-function expandItemPath(item) {
-    //判断是否存在不同视图
-    let viewType = item.ViewType;
-    if (viewType.length > 0) {
-        let viewTypes = viewType.split(",");
-        if (viewTypes.length > 0) {
-            item.children = [];
-            let routesDict = {};
-            for (let i = 0; i < viewTypes.length; i++) {
-                let viewType = viewTypes[i].replace(/^\s+|\s+$/g, "");
-                if (viewType.length == 0) {
-                    continue;
-                }
-                if ("form" == viewType) {
-                    routesDict.form = {};
-                    routesDict.form.path = ":id";
-                    routesDict.form.component = lazyLoadComponent(item.FloderPath, "Form");
 
-                } else if ('tree' == viewType) {
-                    routesDict.tree = {};
-                    routesDict.form.path = "/";
-                    routesDict.form.component = lazyLoadComponent(item.FloderPath, "Tree");
-                }
-            }
-            console.log(routesDict);
-            for (let key in routesDict) {
-                if (!("children" in item)) {
-                    item.children = [];
-                }
-                item.children.push(routesDict[key]);
-            }
-        }
-    }
-}
-export default function lazyload(menus) {
-    //只支持3层菜单，多层请自行采用递归或者嵌套
+export default function lazyLoadMenusRoutes(menus) {
+
     menus.map(function(menu) {
         if (menu.children != null) {
-            menu.expandMenu = true;
-            menu.component = lazyLoadComponent("global/Admin");
+            menu.expand = true;
+            menu.component = lazyLoadComponent(menu.ComponentPath);
             menu.children.map(function(item) {
                 if (item.children != null) {
-                    item.expandMenu = true;
-                    item.component = lazyLoadComponent(item.Component.replace(/^\s+|\s+$/g, ""));
+                    item.expand = true;
+                    item.component = lazyLoadComponent(item.ComponentPath.replace(/^\s+|\s+$/g, ""));
                     item.children.map(function(su) {
-                        // 不再支持更深菜单
-                        su.expandMenu = false;
-                        su.component = lazyLoadComponent(su.Component.replace(/^\s+|\s+$/g, ""));
-                        if (su.viewTypePaths) {
-                            let paths = su.viewTypePaths;
-                            su.children = [];
-                            for (let i = 0; i < paths.length; i++) {
-                                let pathItem = paths[i];
-                                let itemCom = {};
-                                itemCom.path = pathItem.path;
-                                itemCom.component = lazyLoadComponent(su.FloderPath + "/" + pathItem.Component);
-                                item.children.push(itemCom);
+                        // 不再进一步扩展
+                        su.component = lazyLoadComponent(su.ComponentPath.replace(/^\s+|\s+$/g, ""));
+                        su.expand = false;
+                        let viewType = su.ViewType;
+                        if (viewType) {
+                            let viewTypeJsons = JSON.parse(viewType);
+                            for (let i = 0; i < viewTypeJsons.length; i++) {
+                                let n = viewTypeJsons[i];
+                                if (i == 0) {
+                                    su.children = [];
+                                }
+                                su.children.push({
+                                    path: "/admin/" + n.path,
+                                    component: lazyLoadComponent(n.componentpath),
+                                })
                             }
                         }
                     });
                 } else {
-                    item.expandMenu = false;
-                    item.component = lazyLoadComponent(item.Component.replace(/^\s+|\s+$/g, ""));
-                    if (item.viewTypePaths) {
-                        let paths = item.viewTypePaths;
-                        item.children = [];
-                        for (let i = 0; i < paths.length; i++) {
-                            let pathItem = paths[i];
-                            let itemCom = {};
-                            itemCom.path = pathItem.path;
-                            itemCom.component = lazyLoadComponent(item.FloderPath + "/" + pathItem.Component);
-                            item.children.push(itemCom);
+                    item.component = lazyLoadComponent(item.ComponentPath.replace(/^\s+|\s+$/g, ""));
+                    item.expand = false;
+                    let viewType = item.ViewType;
+                    if (viewType) {
+                        let viewTypeJsons = JSON.parse(viewType);
+                        for (let i = 0; i < viewTypeJsons.length; i++) {
+                            let n = viewTypeJsons[i];
+                            if (i == 0) {
+                                item.children = [];
+                            }
+                            item.children.push({
+                                path: "/admin/" + n.path,
+                                component: lazyLoadComponent(n.componentpath),
+                            })
                         }
                     }
-                    console.log(item);
                 }
             });
         } else {
-            menu.expandMenu = false;
-            menu.component = lazyLoadComponent(menu.Component.replace(/^\s+|\s+$/g, ""));
-            if (menu.viewTypePaths) {
-                let paths = menu.viewTypePaths;
-                menu.children = [];
-                for (let i = 0; i < paths.length; i++) {
-                    let pathItem = paths[i];
-                    let itemCom = {};
-                    itemCom.path = pathItem.path;
-                    itemCom.component = lazyLoadComponent(menu.FloderPath + "/" + pathItem.Component);
-                    menu.children.push(itemCom);
+            menu.component = lazyLoadComponent(menu.ComponentPath.replace(/^\s+|\s+$/g, ""));
+            menu.expand = false;
+            let viewType = menusu.ViewType;
+            if (viewType) {
+                let viewTypeJsons = JSON.parse(viewType);
+                for (let i = 0; i < viewTypeJsons.length; i++) {
+                    let n = viewTypeJsons[i];
+                    if (i == 0) {
+                        menu.children = [];
+                    }
+                    menu.children.push({
+                        path: "/admin/" + n.path,
+                        component: lazyLoadComponent(n.componentpath),
+                    })
                 }
             }
         }
     });
-    console.log(JSON.stringify(menus));
-    return menus;
+    //外层增加Home
+    let bootMenu = {
+        path: "/admin",
+        component: lazyLoadComponent("admin/global/Home"),
+        children: menus
+    }
+    return bootMenu;
 }

@@ -75,10 +75,9 @@ func groupMenu(group md.BaseGroup) map[string]interface{} {
 				menuInfo["ID"] = menu.ID
 				menuInfo["Name"] = menu.Name
 				menuInfo["Index"] = menu.Index
-				menuInfo["Sequence"] = menu.Sequence
 				menuInfo["Icon"] = menu.Icon
 				menuInfo["Path"] = menu.Path
-				menuInfo["Component"] = menu.Component
+				menuInfo["ComponentPath"] = menu.ComponentPath
 				menuInfo["Mete"] = menu.Meta
 				menuInfo["Child"] = make(map[string]interface{})
 				tempMenus[menu.Index] = menuInfo

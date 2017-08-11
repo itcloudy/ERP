@@ -10,7 +10,7 @@ import Vuex from 'vuex'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import localStore from 'utils/local_store';
-import lazyload from 'utils/lazyload';
+import lazyLoadMenusRoutes from 'utils/lazyload';
 import axios from 'axios';
 
 Vue.prototype.$ajax = axios;
@@ -24,8 +24,8 @@ let backgroundMenus = JSON.parse(localStore.get("backgroundMenus"));
 if (backgroundMenus) {
     store.commit("GLOBAL_SET_UER_MENUS", backgroundMenus);
     // 加载后台菜单
-    let menusRoutes = lazyload([backgroundMenus]);
-    router.addRoutes(menusRoutes);
+    let menusRoutes = lazyLoadMenusRoutes(backgroundMenus);
+    router.addRoutes([menusRoutes]);
     store.commit("GLOBAL_LOAD_ROUTES_DONE");
 
 }
@@ -34,14 +34,14 @@ if (backgroundMenus) {
 
 router.beforeEach((to, from, next) => {
     // NProgress.start();
-    if (to.path == '/login') {
+    if (to.path == '/admin/login') {
         localStore.remove('userinfo');
         localStore.remove("groups");
         localStore.remove("backgroundMenus");
     }
     let user = JSON.parse(localStore.get('userinfo'));
-    if (!user && to.path != '/login') {
-        next({ path: '/login' })
+    if (!user && to.path != '/admin/login') {
+        next({ path: '/admin/login' })
     } else {
         next()
     }

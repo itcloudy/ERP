@@ -2,12 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-const Login = resolve => require(['./page/global/login'], resolve);
+const Login = resolve => require(['./views/admin/global/login'], resolve);
 
-const notFound = resolve => require(['./page/global/notFound'], resolve);
 let routes = [{
-        path: '/login',
-        name: 'login',
+        path: '/admin/login',
+        name: 'adminlogin',
         component: Login
     }
 

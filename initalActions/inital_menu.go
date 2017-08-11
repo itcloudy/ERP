@@ -14,18 +14,16 @@ import (
 
 // InitMenu  菜单数据解析
 type InitMenu struct {
-	Name         string `xml:"name"`
-	XMLID        string `xml:"id,attr"`
-	Path         string `xml:"path"`
-	Icon         string `xml:"icon"`
-	Component    string `xml:"component"`
-	Sequence     int64  `xml:"sequence"`
-	ParentID     string `xml:"parent_id,attr"`
-	Groups       string `xml:"group"`
-	Category     string `xml:"category"`
-	FloderPath   string `xml:"floderpath"`
-	ViewType     string `xml:"viewtype"`
-	IsBackground bool   `xml:"isbackground"`
+	XMLID         string `xml:"id,attr"`
+	Name          string `xml:"name"`
+	ParentID      string `xml:"parent"`
+	Icon          string `xml:"icon"`
+	Groups        string `xml:"group"`
+	Path          string `xml:"path"`
+	ComponentPath string `xml:"componentpath"`
+	Meta          string `xml:"meta"`
+	ViewType      string `xml:"viewtype"`
+	IsBackground  bool   `xml:"isbackground"`
 }
 
 // InitMenus 菜单数据列表
@@ -58,12 +56,9 @@ func InitMenus2DB(split string) {
 									var parent md.BaseMenu
 									menu.Name = menuXML.Name
 									menu.Path = menuXML.Path
-									menu.Component = menuXML.Component
+									menu.ComponentPath = menuXML.ComponentPath
 									menu.Icon = menuXML.Icon
-									menu.Sequence = menuXML.Sequence
 									menu.Index = menuXML.XMLID
-									menu.Category = menuXML.Category
-									menu.FloderPath = menuXML.FloderPath
 									menu.ViewType = menuXML.ViewType
 									menu.IsBackground = menuXML.IsBackground
 									parentIDStr := menuXML.ParentID

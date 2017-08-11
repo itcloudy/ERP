@@ -7,19 +7,17 @@ import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
 // 合作伙伴信息
-import partner from './modules/partner';
-// 权限管理
-import permission from './modules/permission';
+import adminPartner from './admin/partner';
 // 产品管理
-import product from './modules/product';
+import adminProduct from './admin/product';
 // 采购管理
-import purchase from './modules/purchase';
+import adminPurchase from './admin/purchase';
 // 销售管理
-import sale from './modules/sale';
+import adminSale from './admin/sale';
 // 库存管理
-import stock from './modules/stock'
+import adminStock from './admin/stock'
 // 用户管理
-import user from './modules/user';
+import adminUser from './admin/user';
 
 
 
@@ -32,13 +30,12 @@ export default new Vuex.Store({
     getters,
     mutations,
     modules: {
-        partner, //合作伙伴
-        permission, //权限
-        product, //产品
-        purchase, //采购
-        sale, //销售
-        stock, //库存
-        user, //用户
+        adminPartner, //合作伙伴
+        adminProduct, //产品
+        adminPurchase, //采购
+        adminSale, //销售
+        adminStock, //库存
+        adminUser, //用户
     },
     strict: debug,
 })
