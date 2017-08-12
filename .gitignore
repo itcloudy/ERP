@@ -4,7 +4,7 @@
 .project
 *.exe
 *.exe~
-.vscode/
+.vscode
 golangERP.*
 debug
 debug~
@@ -12,6 +12,7 @@ debug~
 logs/*.log
 /conf/app.conf
 #vue2+webpack2生成的文件
-static/
-views/
+static
+views
 web/node_modules
+web_mobile/node_modules
