@@ -16,7 +16,6 @@ let routes = [{
     }
 
 ];
-console.log(routes);
 const scrollBehavior = (to, from, savedPosition) => {
     if (savedPosition) {
         // savedPosition is only available for popstate navigations.
