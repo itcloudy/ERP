@@ -15,7 +15,6 @@ import axios from 'axios';
 
 Vue.prototype.$ajax = axios;
 // import 'font-awesome/css/font-awesome.min.css'
-import 'styles/index.scss'
 Vue.use(ElementUI)
 
 Vue.use(Vuex)
