@@ -8,11 +8,13 @@
 golangERP.*
 debug
 debug~
+settings.json
 .idea
 logs/*.log
 /conf/app.conf
 #vue2+webpack2生成的文件
-./static
+static/pc
+static/mobile
 ./views
 web_pc/node_modules
 web_mobile/node_modules

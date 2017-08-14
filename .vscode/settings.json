@@ -13,6 +13,6 @@
     "go.formatTool": "goreturns",
     "go.formatFlags": [],
     "go.goroot": "C:\\Go",
-    "go.gopath": "D:\\GoPkg",
+    "go.gopath": "C:\\GoPackage",
     "go.gocodeAutoBuild": false
 }
