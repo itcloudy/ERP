@@ -24,10 +24,10 @@ func (c *IndexController) Get() {
 	}
 	switch accessType {
 	case "pc":
-		c.TplName = "index.html"
+		c.TplName = "index_pc.html"
 	case "mobile":
 		c.TplName = "index_mobile.html"
 	default:
-		c.TplName = "index.html"
+		c.TplName = "index_pc.html"
 	}
 }

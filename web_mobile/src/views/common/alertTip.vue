@@ -65,7 +65,7 @@
         border: 1px;
         border-radius: 0.25rem;
         .tip_icon{
-            @include wh(3rem, 3rem);
+            @include widthHeight(3rem, 3rem);
             border: 0.15rem solid #f8cb86;
             border-radius: 50%;
             display: flex;
@@ -73,11 +73,11 @@
             align-items: center;
             flex-direction: column;
             span:nth-of-type(1){
-                @include wh(.12rem, 1.5rem);
+                @include widthHeight(.12rem, 1.5rem);
                 background-color: #f8cb86;
             }
             span:nth-of-type(2){
-                @include wh(.2rem, .2rem);
+                @include widthHeight(.12rem, 1.5rem);
                 border: 1px;
                 border-radius: 50%;
                 margin-top: .2rem;
@@ -85,14 +85,14 @@
             }
         }
         .tip_text{
-            @include sc(.7rem, #333);
+            @include fontSizeColor(.7rem, #333);
             line-height: .9rem;
             text-align: center;
             margin-top: .8rem;
             padding: 0 .4rem;
         }
         .confrim{
-            @include sc(.8rem, #fff);
+            @include fontSizeColor(.8rem, #fff);
             font-weight: bold;
             margin-top: .8rem;
             background-color: #4cd964;

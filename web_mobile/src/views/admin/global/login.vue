@@ -34,6 +34,7 @@
 
 <script>
     import {default as headTop} from '../../common/header'
+    import {default as alertTip} from '../../common/alertTip'
     export default {
         data(){
             return {
@@ -164,7 +165,7 @@
 </script>
 
 <style lang="scss" scoped>
-    @import '../../style/mixin';
+    @import '../../../styles/mixin';
 
     .page-login{
         padding-top: 1.95rem;
@@ -174,9 +175,8 @@
     }
     .change_login{
         position: absolute;
-        @include ct;
         right: 0.75rem;
-        @include sc(.7rem, #fff);
+        @include fontSizeColor(.7rem, #fff);
     }
 
     .loginForm{
@@ -188,10 +188,10 @@
             padding: .6rem .8rem;
             border-bottom: 1px solid #f1f1f1;
             input{
-                @include sc(.7rem, #666);
+                @include fontSizeColor(.7rem, #666);
             }
             button{
-                @include sc(.65rem, #fff);
+                @include fontSizeColor(.65rem, #fff);
                 font-family: Helvetica Neue,Tahoma,Arial;
                 padding: .28rem .4rem;
                 border: 1px;
@@ -210,7 +210,7 @@
                 display: flex;
                 align-items: center;
                 img{
-                    @include wh(3.5rem, 1.5rem);
+                    @include widthHeight(3.5rem, 1.5rem);
                     margin-right: .2rem;
                 }
                 .change_img{
@@ -220,7 +220,7 @@
                     width: 2rem;
                     justify-content: center;
                     p{
-                        @include sc(.55rem, #666);
+                        @include fontSizeColor(.55rem, #666);
                     }
                     p:nth-of-type(2){
                         color: #3b95e9;
@@ -231,7 +231,7 @@
         }
     }
     .login_tips{
-        @include sc(.5rem, red);
+        @include fontSizeColor(.5rem, red);
         padding: .4rem .6rem;
         line-height: .5rem;
         a{
@@ -240,7 +240,7 @@
     }
     .login_container{
         margin: 0 .5rem 1rem;
-        @include sc(.7rem, #fff);
+        @include fontSizeColor(.7rem, #fff);
         background-color: #4cd964;
         padding: .5rem 0;
         border: 1px;
@@ -251,7 +251,7 @@
         background-color: #ccc;
         display: flex;
         justify-content: center;
-        @include wh(2rem, .7rem);
+        @include widthHeight(2rem, .7rem);
         padding: 0 .2rem;
         border: 1px;
         border-radius: 0.5rem;
@@ -262,7 +262,7 @@
             top: -0.2rem;
             z-index: 1;
             left: -0.3rem;
-            @include wh(1.2rem, 1.2rem);
+            @include widthHeight(1.2rem, 1.2rem);
             box-shadow: 0 0.026667rem 0.053333rem 0 rgba(0,0,0,.1);
             background-color: #f1f1f1;
             border-radius: 50%;
@@ -271,7 +271,7 @@
             transform: translateX(1.3rem);
         }
         span{
-            @include sc(.45rem, #fff);
+            @include fontSizeColor(.45rem, #fff);
             transform: translateY(.05rem);
             line-height: .6rem;
         }
@@ -284,7 +284,7 @@
     }
     .to_forget{
         float: right;
-        @include sc(.6rem, #3b95e9);
+        @include fontSizeColor(.6rem, #3b95e9);
         margin-right: .3rem;
     }
 </style>
