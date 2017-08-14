@@ -19,9 +19,12 @@ clone工程到go的src目录下，工程文件夹的名字必须为golangERP，�
 
 ##QQ群
 ![](http://i.imgur.com/fxfcP6k.png)
+
 ##捐赠
+
 #微信
 ![](http://i.imgur.com/ScbDcOW.jpg)
+
 #支付宝
 ![](http://i.imgur.com/3zoIh5S.jpg)
 
