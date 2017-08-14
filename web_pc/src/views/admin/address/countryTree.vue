@@ -23,12 +23,7 @@
             </el-table-column>
         </el-table>
         
-        <pagination 
-        v-if="showBottomPagitator"
-        @pageInfoChange="pageInfoChange"
-        :pageSize="countriesData.pageSize" 
-        :currentPage="countriesData.currentPage"
-        :total="countriesData.total"/> 
+        
     </div>
 </template>
 <script>

@@ -26,13 +26,7 @@
               label="省份">
             </el-table-column>
         </el-table>
-        
-        <pagination 
-        v-if="showBottomPagitator"
-        @pageInfoChange="pageInfoChange"
-        :pageSize="provincesData.pageSize" 
-        :currentPage="provincesData.currentPage"
-        :total="provincesData.total"/> 
+      
     </div>
 </template>
 <script>

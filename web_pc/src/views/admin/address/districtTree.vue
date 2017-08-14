@@ -34,13 +34,7 @@
               label="区县">
             </el-table-column>
         </el-table>
-        
-        <pagination 
-        v-if="showBottomPagitator"
-        @pageInfoChange="pageInfoChange"
-        :pageSize="districtsData.pageSize" 
-        :currentPage="districtsData.currentPage"
-        :total="districtsData.total"/> 
+       
     </div>
 </template>
 <script>

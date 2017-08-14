@@ -31,12 +31,7 @@
             </el-table-column>
         </el-table>
         
-        <pagination 
-        v-if="showBottomPagitator"
-        @pageInfoChange="pageInfoChange"
-        :pageSize="citiesData.pageSize" 
-        :currentPage="citiesData.currentPage"
-        :total="citiesData.total"/> 
+        
     </div>
 </template>
 <script>
