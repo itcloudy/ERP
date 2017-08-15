@@ -19,7 +19,7 @@
 		<parent>salemanager</parent>
 		<category>sale</category>
 	</group>
-	<!-- <group id="purchasemanager">
+	<group id="purchasemanager">
 		<name>purchasemanager</name>
 		<description>采购经理</description>
 		<parent>manager</parent>
@@ -30,6 +30,6 @@
 		<description>采购</description>
 		<parent>purchasemanager</parent>
 		<category>purchase</category>
-	</group> -->
+	</group>
 	
 </Groups>

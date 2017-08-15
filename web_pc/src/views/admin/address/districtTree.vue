@@ -27,7 +27,7 @@
             </el-table-column>
             <el-table-column
               prop="City.Name"
-              label="所属省份">
+              label="所属城市">
             </el-table-column>
             <el-table-column
               prop="Name"
