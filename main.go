@@ -10,6 +10,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
+	// "github.com/tampajohn/prerender"
 )
 
 func init() {
@@ -57,5 +58,7 @@ func init() {
 	initalActions.InitGroupModuleAccess()
 }
 func main() {
+	// m := http.NewServeMux()
+	// m.HandleFunc("/", prerender.NewOptions().NewPrerender().PreRenderHandler)
 	beego.Run()
 }
