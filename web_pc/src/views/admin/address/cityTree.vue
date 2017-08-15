@@ -1,37 +1,43 @@
 <template>
     <div>
-        <pagination 
-        @pageInfoChange="pageInfoChange"
-        :pageSize="citiesData.pageSize" 
-        :currentPage="citiesData.currentPage"
-        :total="citiesData.total"/>
-        <el-table
-            ref="multipleTable"
-            :data="citiesData.cityList"
-            style="width: 100%">
-            <el-table-column
-              type="selection"
-              width="55">
-            </el-table-column>
-            <el-table-column
-              prop="ID"
-              label="ID">
-            </el-table-column>
-            <el-table-column
-              prop="Country.Name"
-              label="所属国家">
-            </el-table-column>
-            <el-table-column
-              prop="Province.Name"
-              label="所属省份">
-            </el-table-column>
-            <el-table-column
-              prop="Name"
-              label="名称">
-            </el-table-column>
-        </el-table>
-        
-        
+        <el-breadcrumb separator="/">
+            <el-breadcrumb-item :to="{ path: '/admin' }">后台首页</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/address' }">地址管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/address/city' }">城市地址列表</el-breadcrumb-item>
+        </el-breadcrumb>
+        <div>
+            <pagination 
+            @pageInfoChange="pageInfoChange"
+            :pageSize="citiesData.pageSize" 
+            :currentPage="citiesData.currentPage"
+            :total="citiesData.total"/>
+            <el-table
+                ref="multipleTable"
+                :data="citiesData.cityList"
+                @row-dblclick = "goCityDetail"
+                style="width: 100%">
+                <el-table-column
+                type="selection"
+                width="55">
+                </el-table-column>
+                <el-table-column
+                prop="ID"
+                label="ID">
+                </el-table-column>
+                <el-table-column
+                prop="Country.Name"
+                label="所属国家">
+                </el-table-column>
+                <el-table-column
+                prop="Province.Name"
+                label="所属省份">
+                </el-table-column>
+                <el-table-column
+                prop="Name"
+                label="名称">
+                </el-table-column>
+            </el-table>
+        </div>
     </div>
 </template>
 <script>
@@ -47,11 +53,17 @@
                 total:0,//总数量
                 currentPage:1,//当前页
             },
+            urlPath:"/address/city"
         }
     },
     methods:{
         getCities(limit,offset){
-            this.$ajax.get("/address/city/?limit="+limit +"&offset="+offset).then(response=>{
+            this.$ajax.get(this.urlPath,{
+                    params:{
+                        offset:offset,
+                        limit:limit
+                    }
+                }).then(response=>{
                 let {code,msg,data} = response.data;
                 if(code=='success'){
                     this.citiesData.cityList = data["cities"];
@@ -66,6 +78,11 @@
             this.citiesData.pageSize = pageSize;
             this.citiesData.currentPage = currentPage;
             this.getCities(pageSize,(currentPage-1)*pageSize)
+        },
+        goCityDetail(row, event){
+            console.log(row);
+          
+            console.log(event);
         }
     },
     components: {

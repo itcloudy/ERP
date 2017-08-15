@@ -8,6 +8,7 @@
                     {{userinfo.NameZh}}<i class="el-icon-caret-bottom el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="go_front">进入前台</el-dropdown-item>
                     <el-dropdown-item command="self_info">个人信息</el-dropdown-item>
                     <el-dropdown-item command='logout'>注销</el-dropdown-item>
                 </el-dropdown-menu>
@@ -54,6 +55,8 @@
                         }
                         
                     });
+                }else if("go_front"==command){
+                    this.$router.push("/");
                 }
             }
         },
