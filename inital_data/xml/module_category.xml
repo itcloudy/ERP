@@ -12,4 +12,8 @@
         <name>stock</name>
         <description>仓库</description>
     </category>
+    <category id="address">
+        <name>address</name>
+        <description>地址</description>
+    </category>
 </Categories>

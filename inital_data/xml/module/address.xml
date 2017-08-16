@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Modules>
+    <module id="address_country">
+        <name>AddressCountry</name>
+        <description>国家</description>
+        <category>address</category>
+    </module>
+    <module id="address_province">
+        <name>AddressProvince</name>
+        <description>省份</description>
+        <category>address</category>
+    </module>
+    <module id="address_city">
+        <name>AddressCity</name>
+        <description>城市</description>
+        <category>address</category>
+    </module>
+    <module id="address_district">
+        <name>AddressDistrict</name>
+        <description>区县</description>
+        <category>address</category>
+    </module>
+</Modules>

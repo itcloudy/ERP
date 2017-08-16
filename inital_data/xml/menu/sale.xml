@@ -20,7 +20,10 @@
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
-        <viewtype>[{"path":"sale/order","componentpath":"admin/sale/orderTree"}, {"path":"sale/order/:id","componentpath":"admin/sale/oderForm"}]</viewtype>
+        <viewtype>[
+            {"path":"sale/order","componentpath":"admin/sale/orderTree"}, 
+            {"path":"sale/order/:id","componentpath":"admin/sale/oderForm"}
+        ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
     <menu id="sale_order_line">
@@ -32,7 +35,10 @@
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
-        <viewtype>[{"path":"sale/orderline","componentpath":"admin/sale/orderLineTree"}, {"path":"sale/orderline/:id","componentpath":"admin/sale/orderLineForm"}]</viewtype>
+        <viewtype>[
+            {"path":"sale/orderline","componentpath":"admin/sale/orderLineTree"},
+            {"path":"sale/orderline/:id","componentpath":"admin/sale/orderLineForm"}
+        ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
 

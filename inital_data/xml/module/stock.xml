@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Modules>
+    <module id="stock_warehouse">
+        <name>StockWarehouse</name>
+        <description>仓库</description>
+        <category>stock</category>
+    </module>
     <module id="stock_picking">
         <name>StockPicking</name>
         <description>仓库调拨单</description>
+        <category>stock</category>
+    </module>
+    <module id="stock_move">
+        <name>StockMove</name>
+        <description>仓库调拨需求明细</description>
+        <category>stock</category>
+    </module>
+    <module id="stock_pack_operation">
+        <name>StockPackOperation</name>
+        <description>仓库调拨操作明细</description>
+        <category>stock</category>
+    </module>
+    <module id="stock_picking_type">
+        <name>StockPickingType</name>
+        <description>仓库调拨类型</description>
         <category>stock</category>
     </module>
 </Modules>

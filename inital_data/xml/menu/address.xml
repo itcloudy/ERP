@@ -20,7 +20,10 @@
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
-        <viewtype>[{  "path":"address/country","componentpath":"admin/address/countryTree"}, {  "path":"address/country/:id","componentpath":"admin/address/countryForm"}]</viewtype>
+        <viewtype>[
+            {"path":"address/country","componentpath":"admin/address/countryTree"}, 
+            {"path":"address/country/:id","componentpath":"admin/address/countryForm"}
+        ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
     <menu id="address_province_manage">
@@ -32,7 +35,10 @@
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
-        <viewtype>[{"path":"address/province","componentpath":"admin/address/provinceTree"},{"path":"address/province/:id","componentpath":"admin/address/provinceForm"}]</viewtype>
+        <viewtype>[
+            {"path":"address/province","componentpath":"admin/address/provinceTree"},
+            {"path":"address/province/:id","componentpath":"admin/address/provinceForm"}
+        ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
     <menu id="address_city_manage">
@@ -44,7 +50,10 @@
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
-        <viewtype>[{  "path":"address/city","componentpath":"admin/address/cityTree"}, {"path":"address/city/:id","componentpath":"admin/address/cityForm"}]</viewtype>
+        <viewtype>[
+            {"path":"address/city","componentpath":"admin/address/cityTree"}, 
+            {"path":"address/city/:id","componentpath":"admin/address/cityForm"}
+        ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
     <menu id="address_district_manage">
@@ -56,7 +65,10 @@
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
-        <viewtype>[{  "path":"address/district","componentpath":"admin/address/districtTree"}, {  "path":"address/district/:id","componentpath":"admin/address/districtForm"}]</viewtype>
+        <viewtype>[
+            {"path":"address/district","componentpath":"admin/address/districtTree"}, 
+            {  "path":"address/district/:id","componentpath":"admin/address/districtForm"}
+        ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
    

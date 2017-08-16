@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Permissions>
+    <permission id="address_city">
+        <module>AddressCity</module>
+        <create>1</create>
+        <unlink>0</unlink>
+        <write>1</write>
+        <read>1</read>
+    </permission>
+    <permission id="address_district">
+        <module>AddressDistrict</module>
+        <create>1</create>
+        <unlink>0</unlink>
+        <write>1</write>
+        <read>1</read>
+    </permission>
+</Permissions>

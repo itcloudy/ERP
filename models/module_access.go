@@ -23,7 +23,7 @@ type ModelAccess struct {
 	PermUnlink   bool          `orm:"default(false)"`              //删除权限
 	PermWrite    bool          `orm:"default(true)"`               //修改权限
 	PermRead     bool          `orm:"default(true)"`               //读权限
-
+	Domain       string        `orm:"default()"`                   //过滤条件，只在本级有效(权限组直属访问权限)
 }
 
 func init() {

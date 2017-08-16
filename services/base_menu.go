@@ -2,6 +2,7 @@ package services
 
 import (
 	md "golangERP/models"
+	"strings"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -110,6 +111,7 @@ func ServiceGetMenus(isAdmin bool, groupIDs []int64) (menus []md.BaseMenu, err e
 				if _, ok := tempMenus[index]; ok {
 					continue
 				}
+				menu.ViewType = strings.Replace(menu.ViewType, "\n", "", 0)
 				menus = append(menus, *menu)
 				tempMenus[index] = 1
 			}
