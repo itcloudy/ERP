@@ -37,7 +37,7 @@ func (ctl *AddressCityContriller) Get() {
 		}
 		var cities []map[string]interface{}
 		var paginator utils.Paginator
-		if paginator, cities, err = service.ServiceGetAddressCity(0, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		if paginator, cities, err = service.ServiceGetAddressCity(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
