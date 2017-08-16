@@ -16,10 +16,15 @@ clone工程到go的src目录下，工程文件夹的名字必须为golangERP，�
 回到golangERP目录下执行：bee run 
 
 默认端口为8888
+
 默认开启了https
+
 域名为www.hechihan.com 本机修改hosts文件
+
 生成crt文件
+
 gopath下src/crypto/tls/generate_cert.go
+
 go run generate_cert.go -host www.hechihan.com
 
 ##QQ群
