@@ -23,5 +23,14 @@ func (ctl *BaseController) Prepare() {
 	// Setting properties.
 	ctl.StartSession()
 	ctl.Data["PageStartTime"] = time.Now()
+	user := ctl.GetSession("User")
+	if user != nil {
+		ctl.User = user.(md.User)
+		if ctl.User.IsAdmin {
+			ctl.IsAdmin = true
+		}
+		ctl.Data["LoginUser"] = user
+		ctl.Data["LastLogin"] = ctl.GetSession("LastLogin")
+	}
 
 }

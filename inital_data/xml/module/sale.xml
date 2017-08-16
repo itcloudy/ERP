@@ -5,4 +5,9 @@
         <description>销售订单</description>
         <category>sale</category>
     </module>
+    <module id="sale_order_line">
+        <name>SaleOrderLine</name>
+        <description>销售订单明细</description>
+        <category>sale</category>
+    </module>
 </Modules>

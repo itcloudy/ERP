@@ -25,6 +25,7 @@
 		<wechat>272685111</wechat>
 		<group>saleman</group>
 	</user>
+	
 	<user id="manager">
 		<name>manager</name>
 		<isbackground>true</isbackground>
@@ -37,5 +38,18 @@
 		<qq>272685112</qq>
 		<wechat>272685112</wechat>
 		<group>purchasemanager,salemanager</group>
+	</user>
+	<user id="purchaseman">
+		<name>purchaseman</name>
+		<isbackground>true</isbackground>
+		<email>272685113@qq.com</email>
+		<mobile>18129971406</mobile>
+		<password>purchaseman</password>
+		<isAdmin>0</isAdmin>
+		<NameZh>采购员</NameZh>
+		<active>1</active>
+		<qq>272685113</qq>
+		<wechat>272685113</wechat>
+		<group>purchaseman</group>
 	</user>
 </Users>

@@ -8,6 +8,14 @@ import (
 	"github.com/astaxie/beego/session"
 )
 
+// AccessResult 表访问权限
+type AccessResult struct {
+	Create bool
+	Update bool
+	Read   bool
+	Unlink bool
+}
+
 // GlobalGroupMenus 全局权限组菜单
 var GlobalGroupMenus = make(map[string]interface{})
 

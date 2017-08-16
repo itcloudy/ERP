@@ -8,7 +8,7 @@ import (
 )
 
 // ServiceCreateAddressCity 创建记录
-func ServiceCreateAddressCity(obj *md.AddressCity) (id int64, err error) {
+func ServiceCreateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -29,7 +29,7 @@ func ServiceCreateAddressCity(obj *md.AddressCity) (id int64, err error) {
 }
 
 // ServiceUpdateAddressCity 更新记录
-func ServiceUpdateAddressCity(obj *md.AddressCity) (id int64, err error) {
+func ServiceUpdateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -50,7 +50,7 @@ func ServiceUpdateAddressCity(obj *md.AddressCity) (id int64, err error) {
 }
 
 //ServiceGetAddressCity 获得城市列表
-func ServiceGetAddressCity(userID int64, query map[string]interface{}, exclude map[string]interface{},
+func ServiceGetAddressCity(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
 	var arrs []md.AddressCity

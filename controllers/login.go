@@ -21,6 +21,7 @@ func (ctl *LoginContriller) Post() {
 	password := requestBody["password"]
 	if user, ok := service.ServiceUserLogin(username, password); ok {
 		user.Password = ""
+		ctl.SetSession("User", *user)
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
 		data := make(map[string]interface{})

@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"golangERP/utils"
 	"strings"
 	"time"
 
@@ -72,11 +73,8 @@ func GetBaseMenuByID(id int64, ormObj orm.Ormer) (obj *BaseMenu, err error) {
 
 // GetAllBaseMenu retrieves all BaseMenu matches certain condition. Returns empty list if no records exist
 func GetAllBaseMenu(o orm.Ormer, query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
-	fields []string, sortby []string, order []string, offset int64, limit int64) ([]BaseMenu, error) {
-	var (
-		objArrs []BaseMenu
-		err     error
-	)
+	fields []string, sortby []string, order []string, offset int64, limit int64) (objArrs []BaseMenu, err error) {
+
 	if limit == 0 {
 		limit = 200
 	}
@@ -125,7 +123,9 @@ func GetAllBaseMenu(o orm.Ormer, query map[string]interface{}, exclude map[strin
 				} else if order[i] == "asc" {
 					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					err = errors.New("Error: Invalid order. Must be either [asc|desc]")
+					utils.LogOut("error", utils.StringsJoin("GetAllBaseMenu", ":", err.Error()))
+					return
 				}
 				sortFields = append(sortFields, orderby)
 			}
@@ -139,16 +139,22 @@ func GetAllBaseMenu(o orm.Ormer, query map[string]interface{}, exclude map[strin
 				} else if order[0] == "asc" {
 					orderby = strings.Replace(v, ".", "__", -1)
 				} else {
-					return nil, errors.New("Error: Invalid order. Must be either [asc|desc]")
+					err = errors.New("Error: Invalid order. Must be either [asc|desc]")
+					utils.LogOut("error", utils.StringsJoin("GetAllBaseMenu", ":", err.Error()))
+					return
 				}
 				sortFields = append(sortFields, orderby)
 			}
 		} else if len(sortby) != len(order) && len(order) != 1 {
-			return nil, errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
+			err = errors.New("Error: 'sortby', 'order' sizes mismatch or 'order' size is not 1")
+			utils.LogOut("error", utils.StringsJoin("GetAllBaseMenu", ":", err.Error()))
+			return
 		}
 	} else {
 		if len(order) != 0 {
-			return nil, errors.New("Error: unused 'order' fields")
+			err = errors.New("Error: unused 'order' fields")
+			utils.LogOut("error", utils.StringsJoin("GetAllBaseMenu", ":", err.Error()))
+			return
 		}
 	}
 
@@ -162,5 +168,5 @@ func GetAllBaseMenu(o orm.Ormer, query map[string]interface{}, exclude map[strin
 		o.LoadRelated(&objArrs[i], "Groups")
 		o.LoadRelated(&objArrs[i], "Childs")
 	}
-	return objArrs, err
+	return
 }
