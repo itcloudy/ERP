@@ -37,6 +37,9 @@ func InitGroup2DB(filePath string) {
 			if xml.Unmarshal(data, &initGroups) == nil {
 				ormObj := orm.NewOrm()
 				var moduleName = "BaseGroup"
+				var user md.User
+				user.ID = 1
+				user.IsAdmin = true
 				for _, groupXML := range initGroups.Groups {
 					var xmlid = utils.StringsJoin(moduleName, ".", groupXML.XMLID)
 					// 检查在系统中是否已经存在
@@ -54,7 +57,8 @@ func InitGroup2DB(filePath string) {
 							}
 						}
 						if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
-							if insertID, err := service.ServiceCreateBaseGroup(&group); err == nil {
+
+							if insertID, err := service.ServiceCreateBaseGroup(&user, &group); err == nil {
 								var moduleData md.ModuleData
 								moduleData.InsertID = insertID
 								moduleData.XMLID = xmlid

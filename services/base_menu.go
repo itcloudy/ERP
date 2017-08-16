@@ -1,14 +1,25 @@
 package services
 
 import (
+	"errors"
 	md "golangERP/models"
+	"golangERP/utils"
 	"strings"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // ServiceCreateBaseMenu 创建记录
-func ServiceCreateBaseMenu(obj *md.BaseMenu) (id int64, err error) {
+func ServiceCreateBaseMenu(user *md.User, obj *md.BaseMenu) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "BaseMenu"); err == nil {
+		if !access.Create {
+			err = errors.New("has no update permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {

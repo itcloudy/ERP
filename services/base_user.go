@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -8,7 +9,16 @@ import (
 )
 
 // ServiceCreateUser 创建记录
-func ServiceCreateUser(obj *md.User) (id int64, err error) {
+func ServiceCreateUser(user *md.User, obj *md.User) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "User"); err == nil {
+		if !access.Create {
+			err = errors.New("has no create permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {

@@ -1,13 +1,24 @@
 package services
 
 import (
+	"errors"
 	md "golangERP/models"
+	"golangERP/utils"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // ServiceCreateModuleCategory 创建记录
-func ServiceCreateModuleCategory(obj *md.ModuleCategory) (id int64, err error) {
+func ServiceCreateModuleCategory(user *md.User, obj *md.ModuleCategory) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "ModuleCategory"); err == nil {
+		if !access.Create {
+			err = errors.New("has no create permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -28,7 +39,16 @@ func ServiceCreateModuleCategory(obj *md.ModuleCategory) (id int64, err error) {
 }
 
 // ServiceUpdateModuleCategory 更新记录
-func ServiceUpdateModuleCategory(obj *md.ModuleCategory) (id int64, err error) {
+func ServiceUpdateModuleCategory(user *md.User, obj *md.ModuleCategory) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "ModuleCategory"); err == nil {
+		if !access.Update {
+			err = errors.New("has no update permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {

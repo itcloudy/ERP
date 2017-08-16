@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -9,6 +10,16 @@ import (
 
 // ServiceCreateAddressCity 创建记录
 func ServiceCreateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err error) {
+
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
+		if !access.Create {
+			err = errors.New("has no create permission")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -30,6 +41,16 @@ func ServiceCreateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err
 
 // ServiceUpdateAddressCity 更新记录
 func ServiceUpdateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err error) {
+
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
+		if !access.Update {
+			err = errors.New("has no update permission")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -44,6 +65,7 @@ func ServiceUpdateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err
 	if err != nil {
 		return
 	}
+	obj.UpdateUserID = user.ID
 	id, err = md.UpdateAddressCity(obj, o)
 
 	return
@@ -53,6 +75,15 @@ func ServiceUpdateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err
 func ServiceGetAddressCity(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
+		if !access.Read {
+			err = errors.New("has no read permission")
+			return
+		}
+	} else {
+		return
+	}
 	var arrs []md.AddressCity
 	countryMap := make(map[int64]md.AddressCountry)
 	o := orm.NewOrm()

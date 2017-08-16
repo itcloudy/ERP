@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -8,7 +9,16 @@ import (
 )
 
 // ServiceCreateAddressProvince 创建记录
-func ServiceCreateAddressProvince(obj *md.AddressProvince) (id int64, err error) {
+func ServiceCreateAddressProvince(user *md.User, obj *md.AddressProvince) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressProvince"); err == nil {
+		if !access.Create {
+			err = errors.New("has no create permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -29,7 +39,16 @@ func ServiceCreateAddressProvince(obj *md.AddressProvince) (id int64, err error)
 }
 
 // ServiceUpdateAddressProvince 更新记录
-func ServiceUpdateAddressProvince(obj *md.AddressProvince) (id int64, err error) {
+func ServiceUpdateAddressProvince(user *md.User, obj *md.AddressProvince) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressProvince"); err == nil {
+		if !access.Update {
+			err = errors.New("has no update permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -51,11 +70,19 @@ func ServiceUpdateAddressProvince(obj *md.AddressProvince) (id int64, err error)
 }
 
 //ServiceGetAddressProvince 获得省份列表
-func ServiceGetAddressProvince(userID int64, query map[string]interface{}, exclude map[string]interface{},
+func ServiceGetAddressProvince(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressProvince"); err == nil {
+		if !access.Read {
+			err = errors.New("has no read permission ")
+			return
+		}
+	} else {
+		return
+	}
 	var arrs []md.AddressProvince
-
 	o := orm.NewOrm()
 	if paginator, arrs, err = md.GetAllAddressProvince(o, query, exclude, condMap, fields, sortby, order, offset, limit); err == nil {
 		lenArrs := len(arrs)

@@ -1,13 +1,24 @@
 package services
 
 import (
+	"errors"
 	md "golangERP/models"
+	"golangERP/utils"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // ServiceCreateBaseGroup 创建记录
-func ServiceCreateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
+func ServiceCreateBaseGroup(user *md.User, obj *md.BaseGroup) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "BaseGroup"); err == nil {
+		if !access.Create {
+			err = errors.New("has no create permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -68,7 +79,16 @@ func ServiceCreateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
 }
 
 // ServiceUpdateBaseGroup 更新记录
-func ServiceUpdateBaseGroup(obj *md.BaseGroup) (id int64, err error) {
+func ServiceUpdateBaseGroup(user *md.User, obj *md.BaseGroup) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "BaseGroup"); err == nil {
+		if !access.Update {
+			err = errors.New("has no update permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {

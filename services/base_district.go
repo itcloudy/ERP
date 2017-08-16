@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -8,7 +9,16 @@ import (
 )
 
 // ServiceCreateAddressDistrict 创建记录
-func ServiceCreateAddressDistrict(obj *md.AddressDistrict) (id int64, err error) {
+func ServiceCreateAddressDistrict(user *md.User, obj *md.AddressDistrict) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressDistrict"); err == nil {
+		if !access.Create {
+			err = errors.New("has no create permission")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -29,7 +39,16 @@ func ServiceCreateAddressDistrict(obj *md.AddressDistrict) (id int64, err error)
 }
 
 // ServiceUpdateAddressDistrict 更新记录
-func ServiceUpdateAddressDistrict(obj *md.AddressDistrict) (id int64, err error) {
+func ServiceUpdateAddressDistrict(user *md.User, obj *md.AddressDistrict) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressDistrict"); err == nil {
+		if !access.Update {
+			err = errors.New("has no update permission")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -49,9 +68,18 @@ func ServiceUpdateAddressDistrict(obj *md.AddressDistrict) (id int64, err error)
 }
 
 //ServiceGetAddressDistrict 获得区县列表
-func ServiceGetAddressDistrict(userID int64, query map[string]interface{}, exclude map[string]interface{},
+func ServiceGetAddressDistrict(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressDistrict"); err == nil {
+		if !access.Read {
+			err = errors.New("has no read permission")
+			return
+		}
+	} else {
+		return
+	}
 	var arrs []md.AddressDistrict
 	provinceMap := make(map[int64]md.AddressProvince)
 	countryMap := make(map[int64]md.AddressCountry)

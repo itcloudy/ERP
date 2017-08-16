@@ -9,7 +9,16 @@ import (
 )
 
 // ServiceCreateModelAccess 创建记录
-func ServiceCreateModelAccess(obj *md.ModelAccess) (id int64, err error) {
+func ServiceCreateModelAccess(user *md.User, obj *md.ModelAccess) (id int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "ModelAccess"); err == nil {
+		if !access.Create {
+			err = errors.New("has no create permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -30,7 +39,17 @@ func ServiceCreateModelAccess(obj *md.ModelAccess) (id int64, err error) {
 }
 
 // ServiceUpdateModelAccess 更新记录
-func ServiceUpdateModelAccess(obj *md.ModelAccess) (id int64, err error) {
+func ServiceUpdateModelAccess(user *md.User, obj *md.ModelAccess) (id int64, err error) {
+
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "ModelAccess"); err == nil {
+		if !access.Update {
+			err = errors.New("has no create permission ")
+			return
+		}
+	} else {
+		return
+	}
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
