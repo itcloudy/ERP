@@ -3,18 +3,18 @@
         <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/admin' }">后台首页</el-breadcrumb-item>
             <el-breadcrumb-item :to="{ path: '/admin/address' }">地址管理</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin/address/district' }">区县</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/address/user' }">城市</el-breadcrumb-item>
         </el-breadcrumb>
         <div>
             <pagination 
             @pageInfoChange="pageInfoChange"
-            :pageSize="districtsData.pageSize" 
-            :currentPage="districtsData.currentPage"
-            :total="districtsData.total"/>
+            :pageSize="usersData.pageSize" 
+            :currentPage="usersData.currentPage"
+            :total="usersData.total"/>
             <el-table
                 ref="multipleTable"
-                :data="districtsData.districtList"
-                @row-dblclick = "goDistrictDetail"
+                :data="usersData.userList"
+                @row-dblclick = "goUserDetail"
                 style="width: 100%">
                 <el-table-column
                 type="selection"
@@ -25,21 +25,47 @@
                 label="ID">
                 </el-table-column>
                 <el-table-column
-                prop="Country.Name"
-                label="所属国家">
-                </el-table-column>
-                <el-table-column
-                prop="Province.Name"
-                label="所属省份">
-                </el-table-column>
-                <el-table-column
-                prop="City.Name"
-                label="所属城市">
-                </el-table-column>
-                <el-table-column
                 prop="Name"
-                label="区县">
+                label="登录名">
                 </el-table-column>
+                <el-table-column
+                prop="NameZh"
+                label="中文名称">
+                </el-table-column>
+                <el-table-column
+                prop="Email"
+                label="邮箱">
+                </el-table-column>
+                <el-table-column
+                prop="Mobile"
+                label="手机号码">
+                </el-table-column>
+                <el-table-column
+                prop="Tel"
+                label="电话">
+                </el-table-column>
+                <el-table-column
+                prop="IsAdmin"
+                label="系统管理员">
+                </el-table-column>
+                .<el-table-column
+                prop="Active"
+                label="有效">
+                </el-table-column>
+                <el-table-column
+                prop="Qq"
+                label="QQ">
+                </el-table-column>
+                <el-table-column
+                prop="WeChat"
+                label="微信">
+                </el-table-column>
+                 <el-table-column
+                prop="IsBackground"
+                label="后台用户">
+                </el-table-column>
+
+                 
             </el-table>
         </div>
     </div>
@@ -51,17 +77,17 @@
       data() {
         return {
             treeViewHeight: this.$store.state.windowHeight-100,
-            districtsData:{
-                districtList:[],//tree视图数据
+            usersData:{
+                userList:[],//tree视图数据
                 pageSize:20,//每页数量
                 total:0,//总数量
                 currentPage:1,//当前页
             },
-            serverUrlPath:"/address/district"
+            serverUrlPath:"/setting/user"
         }
     },
     methods:{
-        getDistricts(limit,offset){
+        getUsers(limit,offset){
             this.$ajax.get(this.serverUrlPath,{
                     params:{
                         offset:offset,
@@ -70,21 +96,21 @@
                 }).then(response=>{
                 let {code,msg,data} = response.data;
                 if(code=='success'){
-                    this.districtsData.districtList = data["districts"];
+                    this.usersData.userList = data["users"];
                     let paginator = data.paginator;
                     if (paginator){
-                        this.districtsData.total = paginator.totalCount;
+                        this.usersData.total = paginator.totalCount;
                     }
                 }
             });
         },
         pageInfoChange(pageSize,currentPage){
-            this.districtsData.pageSize = pageSize;
-            this.districtsData.currentPage = currentPage;
-            this.getDistricts(pageSize,(currentPage-1)*pageSize)
+            this.usersData.pageSize = pageSize;
+            this.usersData.currentPage = currentPage;
+            this.getUsers(pageSize,(currentPage-1)*pageSize)
         },
-        goDistrictDetail(row, event){
-            this.$router.push("/admin/address/district/"+row.ID);
+        goUserDetail(row, event){
+            this.$router.push("/admin/setting/user/"+row.ID);
         }
     },
     components: {
@@ -92,12 +118,12 @@
     },
     created:function(){
         this.$nextTick(function(){
-            this.getDistricts(this.districtsData.pageSize,this.districtsData.currentPage-1);
+            this.getUsers(this.usersData.pageSize,this.usersData.currentPage-1);
         });
     },
     computed:{
         showBottomPagitator:function(){
-            return this.districtsData.total/this.districtsData.pageSize > 1
+            return this.usersData.total/this.usersData.pageSize > 1
         }
     }
       

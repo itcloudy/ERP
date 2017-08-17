@@ -3,17 +3,19 @@
         <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/admin' }">后台首页</el-breadcrumb-item>
             <el-breadcrumb-item :to="{ path: '/admin/address' }">地址管理</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin/address/country' }">国家地址列表</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/address/country' }">国家</el-breadcrumb-item>
         </el-breadcrumb>
         <div>
             <pagination 
             @pageInfoChange="pageInfoChange"
             :pageSize="countriesData.pageSize" 
             :currentPage="countriesData.currentPage"
+             
             :total="countriesData.total"/>
             <el-table
                 ref="multipleTable"
                 :data="countriesData.countryList"
+                @row-dblclick = "goCountryDetail"
                 style="width: 100%">
                 <el-table-column
                 type="selection"
@@ -45,12 +47,12 @@
                 total:0,//总数量
                 currentPage:1,//当前页
             },
-            urlPath:"/address/country"
+            serverUrlPath:"/address/country"
         }
     },
     methods:{
         getCountries(limit,offset){
-            this.$ajax.get(this.urlPath,{
+            this.$ajax.get(this.serverUrlPath,{
                     params:{
                         offset:offset,
                         limit:limit
@@ -70,6 +72,9 @@
             this.countriesData.pageSize = pageSize;
             this.countriesData.currentPage = currentPage;
             this.getCountries(pageSize,(currentPage-1)*pageSize)
+        },
+        goCountryDetail(row, event){
+            this.$router.push("/admin/address/country/"+row.ID);
         }
     },
     components: {

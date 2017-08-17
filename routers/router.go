@@ -15,4 +15,5 @@ func init() {
 	beego.Router("/address/province/?:id", &controllers.AddressProvinceContriller{})
 	beego.Router("/address/city/?:id", &controllers.AddressCityContriller{})
 	beego.Router("/address/district/?:id", &controllers.AddressDistrictContriller{})
+	beego.Router("/setting/user/?:id", &controllers.UserController{})
 }

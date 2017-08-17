@@ -3,7 +3,7 @@
         <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/admin' }">后台首页</el-breadcrumb-item>
             <el-breadcrumb-item :to="{ path: '/admin/address' }">地址管理</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin/address/city' }">城市地址列表</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/address/city' }">城市</el-breadcrumb-item>
         </el-breadcrumb>
         <div>
             <pagination 
@@ -53,12 +53,12 @@
                 total:0,//总数量
                 currentPage:1,//当前页
             },
-            urlPath:"/address/city"
+            serverUrlPath:"/address/city"
         }
     },
     methods:{
         getCities(limit,offset){
-            this.$ajax.get(this.urlPath,{
+            this.$ajax.get(this.serverUrlPath,{
                     params:{
                         offset:offset,
                         limit:limit

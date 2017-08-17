@@ -21,8 +21,8 @@
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"prouct/template","componentpath":"admin/product/productTemplateTree"}, 
-            {"path":"prouct/template/:id","componentpath":"admin/product/productTemplateForm"}
+            {"path":"product/template","componentpath":"admin/product/productTemplateTree"}, 
+            {"path":"product/template/:id","componentpath":"admin/product/productTemplateForm"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -36,8 +36,8 @@
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"prouct/product","componentpath":"admin/product/productProductTree"}, 
-            {"path":"prouct/product/:id","componentpath":"admin/product/productProductForm"}
+            {"path":"product/product","componentpath":"admin/product/productProductTree"}, 
+            {"path":"product/product/:id","componentpath":"admin/product/productProductForm"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -51,8 +51,8 @@
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"prouct/attribute","componentpath":"admin/product/productAttributeTree"}, 
-            {"path":"prouct/attribute/:id","componentpath":"admin/product/productAttributeForm"}
+            {"path":"product/attribute","componentpath":"admin/product/productAttributeTree"}, 
+            {"path":"product/attribute/:id","componentpath":"admin/product/productAttributeForm"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -66,8 +66,8 @@
         <componentpath>admin/global/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"prouct/attributevalue","componentpath":"admin/product/productAttributeValueTree"}, 
-            {"path":"prouct/attributevalue/:id","componentpath":"admin/product/productAttributeValueForm"}
+            {"path":"product/attributevalue","componentpath":"admin/product/productAttributeValueTree"}, 
+            {"path":"product/attributevalue/:id","componentpath":"admin/product/productAttributeValueForm"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>

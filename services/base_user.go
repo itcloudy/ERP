@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -107,5 +108,45 @@ func ServiceUserLogin(username string, password string) (*md.User, bool) {
 
 // ServiceUserLogout 用户登出
 func ServiceUserLogout(id int64) (ok bool, err error) {
+	return
+}
+
+// ServiceGetUser 获得城市列表
+func ServiceGetUser(user *md.User, query map[string]interface{}, exclude map[string]interface{},
+	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
+	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "User"); err == nil {
+		if !access.Read {
+			err = errors.New("has no read permission")
+			return
+		}
+	} else {
+		return
+	}
+	var arrs []md.User
+	o := orm.NewOrm()
+	if paginator, arrs, err = md.GetAllUser(o, query, exclude, condMap, fields, sortby, order, offset, limit); err == nil {
+		lenArrs := len(arrs)
+
+		for i := 0; i < lenArrs; i++ {
+			obj := arrs[i]
+			objInfo := make(map[string]interface{})
+			objInfo["Name"] = obj.Name
+			objInfo["ID"] = obj.ID
+			objInfo["NameZh"] = obj.NameZh
+			objInfo["Email"] = obj.Email
+			objInfo["Mobile"] = obj.Mobile
+			objInfo["Tel"] = obj.Tel
+			objInfo["IsAdmin"] = obj.IsAdmin
+			objInfo["Active"] = obj.Active
+			objInfo["Qq"] = obj.Qq
+			objInfo["WeChat"] = obj.WeChat
+			objInfo["IsBackground"] = obj.IsBackground
+			results = append(results, objInfo)
+		}
+	} else {
+		fmt.Println(err)
+	}
 	return
 }

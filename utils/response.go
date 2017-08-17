@@ -10,4 +10,4 @@ const SuccessMsg = "操作成功"
 const FailedCode = "failed"
 
 //FailedMsg 失败提示信息
-const FailedMsg = "失败成功"
+const FailedMsg = "操作失败"

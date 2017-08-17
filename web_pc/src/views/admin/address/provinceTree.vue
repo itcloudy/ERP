@@ -3,7 +3,7 @@
          <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/admin' }">后台首页</el-breadcrumb-item>
             <el-breadcrumb-item :to="{ path: '/admin/address' }">地址管理</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin/address/province' }">省份地址列表</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/address/province' }">省份</el-breadcrumb-item>
         </el-breadcrumb>
         <div>
             <pagination 
@@ -14,6 +14,7 @@
             <el-table
                 ref="multipleTable"
                 :data="provincesData.provinceList"
+                 @row-dblclick = "goProvinceDetail"
                 style="width: 100%">
                 <el-table-column
                 type="selection"
@@ -48,12 +49,12 @@
                 total:0,//总数量
                 currentPage:1,//当前页
             },
-            urlPath:"/address/province"
+            serverUrlPath:"/address/province"
         }
     },
     methods:{
         getProvinces(limit,offset){
-            this.$ajax.get(this.urlPath,{
+            this.$ajax.get(this.serverUrlPath,{
                     params:{
                         offset:offset,
                         limit:limit
@@ -73,6 +74,9 @@
             this.provincesData.pageSize = pageSize;
             this.provincesData.currentPage = currentPage;
             this.getProvinces(pageSize,(currentPage-1)*pageSize)
+        },
+        goProvinceDetail(row, event){
+            this.$router.push("/admin/address/province/"+row.ID);
         }
     },
     components: {
