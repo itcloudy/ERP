@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Permissions>
+    <permission id="product_template">
+        <module>ProductTemplate</module>
+        <create>1</create>
+        <unlink>0</unlink>
+        <write>1</write>
+        <read>1</read>
+    </permission>
+    <permission id="product_product">
+        <module>ProductProduct</module>
+        <create>1</create>
+        <unlink>0</unlink>
+        <write>1</write>
+        <read>1</read>
+    </permission>
+    <permission id="product_attribute">
+        <module>ProductAttribute</module>
+        <create>1</create>
+        <unlink>0</unlink>
+        <write>1</write>
+        <read>1</read>
+    </permission>
+    <permission id="product_attribute_value">
+        <module>ProductAttributeValue</module>
+        <create>1</create>
+        <unlink>0</unlink>
+        <write>1</write>
+        <read>1</read>
+    </permission>
+</Permissions>

@@ -16,4 +16,8 @@
         <name>address</name>
         <description>地址</description>
     </category>
+    <category id="product">
+        <name>product</name>
+        <description>产品</description>
+    </category>
 </Categories>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Modules>
+    <module id="product_template">
+        <name>ProductTemplate</name>
+        <description>产品款式</description>
+        <category>product</category>
+    </module>
+    <module id="product_product">
+        <name>ProductProduct</name>
+        <description>产品规格</description>
+        <category>product</category>
+    </module>
+    <module id="product_attribute">
+        <name>ProductAttribute</name>
+        <description>产品属性</description>
+        <category>product</category>
+    </module>
+    <module id="product_attribute_value">
+        <name>ProductAttributeValue</name>
+        <description>产品属性值</description>
+        <category>product</category>
+    </module>
+</Modules>

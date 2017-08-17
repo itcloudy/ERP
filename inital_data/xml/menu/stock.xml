@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Menus>
+    <menu id="stock">
+        <name>仓库管理</name>
+        <parent></parent>
+        <icon>el-icon-menu</icon>
+        <group>stockman,stockmanager</group>
+        <path>stock</path>
+        <componentpath>admin/global/Breadcrumb</componentpath>
+        <meta></meta>
+        <viewtype></viewtype>
+        <isbackground>true</isbackground>
+    </menu>
+    <menu id="stock_warehouse">
+        <name>仓库</name>
+        <parent>stock</parent>
+        <icon>el-icon-menu</icon>
+        <group>stockmanager</group>
+        <path>stock/warehouse</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"stock/warehouse","componentpath":"admin/stock/stockWarehouseTree"}, 
+            {"path":"stock/warehouse/:id","componentpath":"admin/stock/stockWarehouseForm"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
+    <menu id="stock_picking">
+        <name>调拨单</name>
+        <parent>stock</parent>
+        <icon>el-icon-menu</icon>
+        <group>stockman</group>
+        <path>stock/picking</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"stock/picking","componentpath":"admin/stock/stockPickingTree"}, 
+            {"path":"stock/picking/:id","componentpath":"admin/stock/stockPickingForm"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
+    <menu id="stock_quant">
+        <name>仓库估值</name>
+        <parent>stock</parent>
+        <icon>el-icon-menu</icon>
+        <group>stockman</group>
+        <path>stock/quant</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"stock/quant","componentpath":"admin/stock/stockQuantTree"}, 
+            {"path":"stock/quant/:id","componentpath":"admin/stock/stockQuantForm"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
+     
+</Menus>

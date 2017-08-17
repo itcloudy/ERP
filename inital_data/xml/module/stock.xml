@@ -25,4 +25,9 @@
         <description>仓库调拨类型</description>
         <category>stock</category>
     </module>
+    <module id="stock_quant">
+        <name>StockQuant</name>
+        <description>仓库估值</description>
+        <category>stock</category>
+    </module>
 </Modules>

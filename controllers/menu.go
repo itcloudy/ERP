@@ -28,7 +28,6 @@ func (ctl *MenuController) Post() {
 	} else {
 		isAdmin = false
 	}
-
 	if _, ok := requestBody["groups"]; ok {
 		postGroups := utils.ToSlice(requestBody["groups"])
 		for _, group := range postGroups {
@@ -38,7 +37,6 @@ func (ctl *MenuController) Post() {
 			}
 		}
 	}
-	isAdmin = false
 	data := make(map[string]interface{})
 	if !isAdmin && len(groups) == 0 {
 		response["code"] = utils.FailedCode

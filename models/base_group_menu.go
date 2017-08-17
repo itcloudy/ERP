@@ -66,7 +66,7 @@ func GetAllGroupMenu(o orm.Ormer, query map[string]interface{}, exclude map[stri
 		err     error
 	)
 	if limit == 0 {
-		limit = 200
+		limit = 2000
 	}
 
 	qs := o.QueryTable(new(GroupMenu))

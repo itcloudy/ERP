@@ -31,5 +31,23 @@
 		<parent>purchasemanager</parent>
 		<category>purchase</category>
 	</group>
+	<group id="productmanager">
+		<name>productmanager</name>
+		<description>产品资料维护员</description>
+		<parent>productmanager</parent>
+		<category>product</category>
+	</group>
+	<group id="stockmanager">
+		<name>stockmanager</name>
+		<description>仓库经理</description>
+		<parent>manager</parent>
+		<category>stock</category>
+	</group>
+    <group id="stockman">
+		<name>stockman</name>
+		<description>仓管</description>
+		<parent>stockmanager</parent>
+		<category>stock</category>
+	</group>
 	
 </Groups>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Menus>
+    <menu id="product">
+        <name>产品管理</name>
+        <parent></parent>
+        <icon>el-icon-menu</icon>
+        <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
+        <path>product</path>
+        <componentpath>admin/global/Breadcrumb</componentpath>
+        <meta></meta>
+        <viewtype></viewtype>
+        <isbackground>true</isbackground>
+    </menu>
+    <menu id="product_template">
+        <name>产品款式</name>
+        <parent>product</parent>
+        <icon>el-icon-menu</icon>
+        <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
+        <path>product/template</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"prouct/template","componentpath":"admin/product/productTemplateTree"}, 
+            {"path":"prouct/template/:id","componentpath":"admin/product/productTemplateForm"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
+    <menu id="product_product">
+        <name>产品规格</name>
+        <parent>product</parent>
+        <icon>el-icon-menu</icon>
+        <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
+        <path>product/product</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"prouct/product","componentpath":"admin/product/productProductTree"}, 
+            {"path":"prouct/product/:id","componentpath":"admin/product/productProductForm"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
+    <menu id="product_attribute">
+        <name>产品属性</name>
+        <parent>product</parent>
+        <icon>el-icon-menu</icon>
+        <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
+        <path>product/attribute</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"prouct/attribute","componentpath":"admin/product/productAttributeTree"}, 
+            {"path":"prouct/attribute/:id","componentpath":"admin/product/productAttributeForm"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
+    <menu id="product_attributevalue">
+        <name>产品属性值</name>
+        <parent>product</parent>
+        <icon>el-icon-menu</icon>
+        <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
+        <path>product/attributevalue</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"prouct/attributevalue","componentpath":"admin/product/productAttributeValueTree"}, 
+            {"path":"prouct/attributevalue/:id","componentpath":"admin/product/productAttributeValueForm"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
+
+   
+</Menus>

@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -85,7 +84,6 @@ func ServiceGetAddressCity(user *md.User, query map[string]interface{}, exclude 
 	} else {
 		return
 	}
-	fmt.Println("ServiceGetAddressCity")
 	var arrs []md.AddressCity
 	countryMap := make(map[int64]md.AddressCountry)
 	o := orm.NewOrm()
@@ -98,7 +96,6 @@ func ServiceGetAddressCity(user *md.User, query map[string]interface{}, exclude 
 			objInfo["Name"] = obj.Name
 			objInfo["ID"] = obj.ID
 			countryInfo := make(map[string]interface{})
-
 			provinceInfo := make(map[string]interface{})
 			provinceInfo["ID"] = obj.Province.ID
 			provinceInfo["Name"] = obj.Province.Name
