@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -111,7 +110,7 @@ func ServiceUserLogout(id int64) (ok bool, err error) {
 	return
 }
 
-// ServiceGetUser 获得城市列表
+// ServiceGetUser 获得用户列表
 func ServiceGetUser(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
@@ -145,8 +144,6 @@ func ServiceGetUser(user *md.User, query map[string]interface{}, exclude map[str
 			objInfo["IsBackground"] = obj.IsBackground
 			results = append(results, objInfo)
 		}
-	} else {
-		fmt.Println(err)
 	}
 	return
 }

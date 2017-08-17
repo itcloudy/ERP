@@ -22,7 +22,7 @@
         <meta></meta>
         <viewtype>[
             {"path":"setting/user","componentpath":"admin/setting/userTree"}, 
-            {"path":"setting/user/:id","componentpath":"admin/sale/userForm"}
+            {"path":"setting/user/:id","componentpath":"admin/setting/userForm"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -37,7 +37,7 @@
         <meta></meta>
         <viewtype>[
             {"path":"setting/group","componentpath":"admin/setting/groupTree"}, 
-            {"path":"setting/group/:id","componentpath":"admin/sale/groupForm"}
+            {"path":"setting/group/:id","componentpath":"admin/setting/groupForm"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>

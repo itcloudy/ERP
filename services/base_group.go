@@ -108,8 +108,8 @@ func ServiceUpdateBaseGroup(user *md.User, obj *md.BaseGroup) (id int64, err err
 	return
 }
 
-// ServiceGetGroups 获得权限组信息
-func ServiceGetGroups(isAdmin bool, userID int64) (groups []*md.BaseGroup, err error) {
+// ServiceGetUserGroups 获得用户的权限组信息
+func ServiceGetUserGroups(isAdmin bool, userID int64) (groups []*md.BaseGroup, err error) {
 	var (
 		tGroups []md.BaseGroup
 	)
@@ -134,6 +134,37 @@ func ServiceGetGroups(isAdmin bool, userID int64) (groups []*md.BaseGroup, err e
 	} else {
 		if user, err := md.GetUserByID(userID, o); err == nil {
 			groups = user.Groups
+		}
+	}
+	return
+}
+
+// ServiceGetGroup 获得用户列表
+func ServiceGetGroup(user *md.User, query map[string]interface{}, exclude map[string]interface{},
+	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
+	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "Group"); err == nil {
+		if !access.Read {
+			err = errors.New("has no read permission")
+			return
+		}
+	} else {
+		return
+	}
+	var arrs []md.BaseGroup
+	o := orm.NewOrm()
+	if arrs, err = md.GetAllBaseGroup(o, query, exclude, condMap, fields, sortby, order, offset, limit); err == nil {
+		lenArrs := len(arrs)
+
+		for i := 0; i < lenArrs; i++ {
+			obj := arrs[i]
+			objInfo := make(map[string]interface{})
+			objInfo["Name"] = obj.Name
+			objInfo["ID"] = obj.ID
+			objInfo["Category"] = obj.Category
+			objInfo["Description"] = obj.Description
+			results = append(results, objInfo)
 		}
 	}
 	return

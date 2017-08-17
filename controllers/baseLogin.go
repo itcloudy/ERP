@@ -27,7 +27,7 @@ func (ctl *LoginContriller) Post() {
 		data := make(map[string]interface{})
 		data["user"] = &user
 		response["data"] = data
-		if groups, err := service.ServiceGetGroups(user.IsAdmin, user.ID); err == nil {
+		if groups, err := service.ServiceGetUserGroups(user.IsAdmin, user.ID); err == nil {
 			leng := len(groups)
 			groupIDs := make([]int64, leng, leng)
 			for index, group := range groups {
