@@ -34,6 +34,7 @@ func ServiceCreateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err
 	if err != nil {
 		return
 	}
+	obj.CreateUserID = user.ID
 	id, err = md.AddAddressCity(obj, o)
 
 	return

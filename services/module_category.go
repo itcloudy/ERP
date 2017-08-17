@@ -33,6 +33,7 @@ func ServiceCreateModuleCategory(user *md.User, obj *md.ModuleCategory) (id int6
 	if err != nil {
 		return
 	}
+	obj.CreateUserID = user.ID
 	id, err = md.AddModuleCategory(obj, o)
 
 	return
@@ -63,6 +64,7 @@ func ServiceUpdateModuleCategory(user *md.User, obj *md.ModuleCategory) (id int6
 	if err != nil {
 		return
 	}
+	obj.UpdateUserID = user.ID
 	id, err = md.UpdateModuleCategory(obj, o)
 	return
 }

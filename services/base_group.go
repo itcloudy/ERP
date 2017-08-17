@@ -73,6 +73,7 @@ func ServiceCreateBaseGroup(user *md.User, obj *md.BaseGroup) (id int64, err err
 			obj.ParentRight = 1
 		}
 	}
+	obj.CreateUserID = user.ID
 	id, err = md.AddBaseGroup(obj, o)
 
 	return

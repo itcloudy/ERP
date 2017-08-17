@@ -33,6 +33,7 @@ func ServiceCreateModelAccess(user *md.User, obj *md.ModelAccess) (id int64, err
 	if err != nil {
 		return
 	}
+	obj.CreateUserID = user.ID
 	id, err = md.AddModelAccess(obj, o)
 
 	return
@@ -64,6 +65,7 @@ func ServiceUpdateModelAccess(user *md.User, obj *md.ModelAccess) (id int64, err
 	if err != nil {
 		return
 	}
+	obj.UpdateUserID = user.ID
 	id, err = md.UpdateModelAccess(obj, o)
 
 	return
@@ -106,8 +108,7 @@ func ServiceCheckUserModelAssess(user *md.User, moduleName string) (access utils
 				cond["and"] = condAnd
 			}
 			if _, modules, err = md.GetAllModelAccess(o, query, exclude, cond, fields, sortby, order, 0, 0); err == nil {
-				for index, _ := range modules {
-					module := modules[index]
+				for _, module := range modules {
 					access.Create = module.PermCreate || access.Create
 					access.Update = module.PermWrite || access.Update
 					access.Read = module.PermRead || access.Read

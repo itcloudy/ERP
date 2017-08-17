@@ -33,6 +33,7 @@ func ServiceCreateModuleModule(user *md.User, obj *md.ModuleModule) (id int64, e
 	if err != nil {
 		return
 	}
+	obj.CreateUserID = user.ID
 	id, err = md.AddModuleModule(obj, o)
 
 	return
@@ -63,6 +64,7 @@ func ServiceUpdateModuleModule(user *md.User, obj *md.ModuleModule) (id int64, e
 	if err != nil {
 		return
 	}
+	obj.UpdateUserID = user.ID
 	id, err = md.UpdateModuleModule(obj, o)
 
 	return

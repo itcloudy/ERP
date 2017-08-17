@@ -71,6 +71,7 @@ func ServiceCreateBaseMenu(user *md.User, obj *md.BaseMenu) (id int64, err error
 			obj.ParentRight = 1
 		}
 	}
+	obj.CreateUserID = user.ID
 	id, err = md.AddBaseMenu(obj, o)
 
 	return

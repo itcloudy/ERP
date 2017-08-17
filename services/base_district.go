@@ -33,6 +33,7 @@ func ServiceCreateAddressDistrict(user *md.User, obj *md.AddressDistrict) (id in
 	if err != nil {
 		return
 	}
+	obj.CreateUserID = user.ID
 	id, err = md.AddAddressDistrict(obj, o)
 
 	return

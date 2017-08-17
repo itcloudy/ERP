@@ -34,12 +34,13 @@ func ServiceCreateUser(user *md.User, obj *md.User) (id int64, err error) {
 		return
 	}
 	obj.Password = utils.PasswordMD5(obj.Password, obj.Mobile)
+	obj.CreateUserID = user.ID
 	id, err = md.AddUser(obj, o)
 	return
 }
 
 // ServiceUpdateUser 更新记录
-func ServiceUpdateUser(obj *md.User) (id int64, err error) {
+func ServiceUpdateUser(user *md.User, obj *md.User) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -54,13 +55,14 @@ func ServiceUpdateUser(obj *md.User) (id int64, err error) {
 	if err != nil {
 		return
 	}
+	obj.UpdateUserID = user.ID
 	id, err = md.UpdateUser(obj, o)
 
 	return
 }
 
 // ServiceUpdateUserPassWord 更新密码
-func ServiceUpdateUserPassWord(obj *md.User) (id int64, err error) {
+func ServiceUpdateUserPassWord(user *md.User, obj *md.User) (id int64, err error) {
 	o := orm.NewOrm()
 	err = o.Begin()
 	defer func() {
@@ -75,6 +77,7 @@ func ServiceUpdateUserPassWord(obj *md.User) (id int64, err error) {
 	if err != nil {
 		return
 	}
+	obj.UpdateUserID = user.ID
 	id, err = md.UpdateUser(obj, o)
 
 	return

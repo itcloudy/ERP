@@ -80,9 +80,7 @@
             this.getCities(pageSize,(currentPage-1)*pageSize)
         },
         goCityDetail(row, event){
-            console.log(row);
-          
-            console.log(event);
+            this.$router.push("/admin/address/city/"+row.ID);
         }
     },
     components: {

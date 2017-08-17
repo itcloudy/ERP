@@ -61,6 +61,7 @@ func ServiceUpdateAddressProvince(user *md.User, obj *md.AddressProvince) (id in
 	if err != nil {
 		return
 	}
+	obj.CreateUserID = user.ID
 	id, err = md.UpdateAddressProvince(obj, o)
 	err = o.Commit()
 	if err != nil {

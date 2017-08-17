@@ -34,6 +34,7 @@ func ServiceCreateAddressCountry(user *md.User, obj *md.AddressCountry) (id int6
 	if err != nil {
 		return
 	}
+	obj.CreateUserID = user.ID
 	id, err = md.AddAddressCountry(obj, o)
 
 	return
