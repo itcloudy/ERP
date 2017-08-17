@@ -27,7 +27,6 @@
         background-color: rgb(240,238,238);
         .main-container{
             padding:0.5rem;
-            overflow:auto;
         }
     }
     
