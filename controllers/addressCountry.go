@@ -37,7 +37,7 @@ func (ctl *AddressCountryContriller) Get() {
 		}
 		var countries []map[string]interface{}
 		var paginator utils.Paginator
-		if paginator, countries, err = service.ServiceGetAddressCountry(0, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		if paginator, countries, err = service.ServiceGetAddressCountry(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
@@ -47,6 +47,7 @@ func (ctl *AddressCountryContriller) Get() {
 		} else {
 			response["code"] = utils.FailedCode
 			response["msg"] = utils.FailedMsg
+			response["err"] = err
 		}
 	}
 	ctl.Data["json"] = response

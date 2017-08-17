@@ -29,6 +29,9 @@ func InitModuleModule2DB(split string) {
 	if xmlDir, err := os.Getwd(); err == nil {
 		xmlBase := utils.StringsJoin(xmlDir, split, "inital_data", split, "xml", split, "module")
 		if dirList, err := ioutil.ReadDir(xmlBase); err == nil {
+			var user md.User
+			user.ID = 0
+			user.IsAdmin = true
 			for _, dir := range dirList {
 				if dir.IsDir() {
 					continue
@@ -49,7 +52,7 @@ func InitModuleModule2DB(split string) {
 									if category, err := md.GetModuleCategoryByName(moduleXML.Category, ormObj); err == nil {
 										module.Category = category
 									}
-									if insertID, err := service.ServiceCreateModuleModule(&module); err == nil {
+									if insertID, err := service.ServiceCreateModuleModule(&user, &module); err == nil {
 										var moduleData md.ModuleData
 										moduleData.InsertID = insertID
 										moduleData.XMLID = xmlid

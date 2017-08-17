@@ -37,7 +37,7 @@ func (ctl *AddressDistrictContriller) Get() {
 		}
 		var districts []map[string]interface{}
 		var paginator utils.Paginator
-		if paginator, districts, err = service.ServiceGetAddressDistrict(0, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		if paginator, districts, err = service.ServiceGetAddressDistrict(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
@@ -47,6 +47,7 @@ func (ctl *AddressDistrictContriller) Get() {
 		} else {
 			response["code"] = utils.FailedCode
 			response["msg"] = utils.FailedMsg
+			response["err"] = err
 		}
 	}
 	ctl.Data["json"] = response

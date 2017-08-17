@@ -75,6 +75,14 @@ func ServiceCheckUserModelAssess(user *md.User, moduleName string) (access utils
 		groups  []*md.BaseGroup
 		modules []md.ModelAccess
 	)
+	// 若为系统管理员拥有所有的权限
+	if user.IsAdmin {
+		access.Create = true
+		access.Update = true
+		access.Read = true
+		access.Unlink = true
+		return
+	}
 	// 获得用户所有的权限组
 	if groups, err = ServiceGetGroups(user.IsAdmin, user.ID); err == nil {
 		// 获得权限组下所有的模块访问权限

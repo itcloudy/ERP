@@ -34,6 +34,9 @@ func InitModelAccess2DB(split string) {
 
 		var moduleName = "ModuleAccess"
 		if dirList, err := ioutil.ReadDir(xmlBase); err == nil {
+			var user md.User
+			user.ID = 0
+			user.IsAdmin = true
 			for _, dir := range dirList {
 				if dir.IsDir() {
 					var groupStr = dir.Name()
@@ -59,7 +62,7 @@ func InitModelAccess2DB(split string) {
 												module.PermRead = moduleXML.PermRead
 												module.PermUnlink = moduleXML.PermUnlink
 												module.PermWrite = moduleXML.PermWrite
-												if insertID, err := service.ServiceCreateModelAccess(&module); err == nil {
+												if insertID, err := service.ServiceCreateModelAccess(&user, &module); err == nil {
 													var moduleData md.ModuleData
 													moduleData.InsertID = insertID
 													moduleData.XMLID = xmlid

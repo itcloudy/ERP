@@ -38,7 +38,7 @@ func InitGroup2DB(filePath string) {
 				ormObj := orm.NewOrm()
 				var moduleName = "BaseGroup"
 				var user md.User
-				user.ID = 1
+				user.ID = 0
 				user.IsAdmin = true
 				for _, groupXML := range initGroups.Groups {
 					var xmlid = utils.StringsJoin(moduleName, ".", groupXML.XMLID)

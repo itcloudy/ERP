@@ -34,6 +34,9 @@ func InitUser2DB(filePath string) {
 			var moduleName = "User"
 			ormObj := orm.NewOrm()
 			if xml.Unmarshal(data, &initUsers) == nil {
+				var createU md.User
+				createU.ID = 0
+				createU.IsAdmin = true
 				for _, userXML := range initUsers.Users {
 					var user md.User
 					var xmlid = utils.StringsJoin(moduleName, ".", userXML.XMLID)
@@ -48,7 +51,7 @@ func InitUser2DB(filePath string) {
 						user.Qq = userXML.Qq
 						user.WeChat = userXML.WeChat
 						user.IsBackground = userXML.IsBackground
-						if insertID, err := service.ServiceCreateUser(&user); err == nil {
+						if insertID, err := service.ServiceCreateUser(&createU, &user); err == nil {
 							var moduleData md.ModuleData
 							moduleData.InsertID = insertID
 							moduleData.XMLID = xmlid

@@ -32,13 +32,16 @@ func InitModuleCategory2DB(filePath string) {
 			var moduleName = "ModuleCategory"
 			ormObj := orm.NewOrm()
 			if xml.Unmarshal(data, &initModuleCategories) == nil {
+				var user md.User
+				user.ID = 0
+				user.IsAdmin = true
 				for _, categoryXML := range initModuleCategories.Categories {
 					var category md.ModuleCategory
 					var xmlid = utils.StringsJoin(moduleName, ".", categoryXML.XMLID)
 					if _, err = md.GetModuleDataByXMLID(xmlid, ormObj); err != nil {
 						category.Name = categoryXML.Name
 						category.Description = categoryXML.Description
-						if insertID, err := service.ServiceCreateModuleCategory(&category); err == nil {
+						if insertID, err := service.ServiceCreateModuleCategory(&user, &category); err == nil {
 							var moduleData md.ModuleData
 							moduleData.InsertID = insertID
 							moduleData.XMLID = xmlid

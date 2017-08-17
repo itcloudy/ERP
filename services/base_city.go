@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -84,6 +85,7 @@ func ServiceGetAddressCity(user *md.User, query map[string]interface{}, exclude 
 	} else {
 		return
 	}
+	fmt.Println("ServiceGetAddressCity")
 	var arrs []md.AddressCity
 	countryMap := make(map[int64]md.AddressCountry)
 	o := orm.NewOrm()

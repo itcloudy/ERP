@@ -37,6 +37,9 @@ func InitMenus2DB(split string) {
 	if xmlDir, err := os.Getwd(); err == nil {
 		xmlBase := utils.StringsJoin(xmlDir, split, "inital_data", split, "xml", split, "menu")
 		if dirList, err := ioutil.ReadDir(xmlBase); err == nil {
+			var user md.User
+			user.ID = 0
+			user.IsAdmin = true
 			for _, dir := range dirList {
 				if dir.IsDir() {
 					continue
@@ -68,7 +71,7 @@ func InitMenus2DB(split string) {
 											menu.Parent = &parent
 										}
 									}
-									if insertID, err := service.ServiceCreateBaseMenu(&menu); err == nil {
+									if insertID, err := service.ServiceCreateBaseMenu(&user, &menu); err == nil {
 										var moduleData md.ModuleData
 										moduleData.InsertID = insertID
 										moduleData.XMLID = xmlid

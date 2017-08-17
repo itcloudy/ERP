@@ -57,6 +57,7 @@ func (ctl *MenuController) Post() {
 		if err != nil {
 			response["code"] = utils.FailedCode
 			response["msg"] = "菜单获取失败"
+			response["err"] = err
 		}
 	}
 

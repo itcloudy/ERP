@@ -47,6 +47,7 @@ func (ctl *AddressCityContriller) Get() {
 		} else {
 			response["code"] = utils.FailedCode
 			response["msg"] = utils.FailedMsg
+			response["err"] = err
 		}
 	}
 	ctl.Data["json"] = response

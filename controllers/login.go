@@ -42,6 +42,7 @@ func (ctl *LoginContriller) Post() {
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg
+		
 	}
 	ctl.Data["json"] = response
 	ctl.ServeJSON()
