@@ -49,6 +49,22 @@ func (ctl *AddressCityContriller) Get() {
 			response["msg"] = utils.FailedMsg
 			response["err"] = err
 		}
+	} else {
+		// 获得某个城市的信息
+		if cityID, err := utils.GetInt64(IDStr); err == nil {
+			if access, city, err := service.ServiceGetAddressCityByID(&ctl.User, cityID); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				data := make(map[string]interface{})
+				data["city"] = &city
+				data["access"] = access
+				response["data"] = data
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err
+			}
+		}
 	}
 	ctl.Data["json"] = response
 	ctl.ServeJSON()

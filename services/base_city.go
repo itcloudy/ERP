@@ -118,3 +118,36 @@ func ServiceGetAddressCity(user *md.User, query map[string]interface{}, exclude 
 	}
 	return
 }
+
+// ServiceGetAddressCityByID get AddressCity by id
+func ServiceGetAddressCityByID(user *md.User, id int64) (access utils.AccessResult, cityInfo map[string]interface{}, err error) {
+
+	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
+		if !access.Read {
+			err = errors.New("has no update permission")
+			return
+		}
+	} else {
+		return
+	}
+	o := orm.NewOrm()
+	var city *md.AddressCity
+	if city, err = md.GetAddressCityByID(id, o); err == nil {
+		objInfo := make(map[string]interface{})
+		objInfo["Name"] = city.Name
+		objInfo["ID"] = city.ID
+		provinceInfo := make(map[string]interface{})
+		provinceInfo["ID"] = city.Province.ID
+		provinceInfo["Name"] = city.Province.Name
+		objInfo["Province"] = provinceInfo
+
+		countryInfo := make(map[string]interface{})
+		if city.Province.Country != nil {
+			countryInfo["ID"] = city.Province.Country.ID
+			countryInfo["Name"] = city.Province.Country.Name
+			objInfo["Country"] = countryInfo
+		}
+		cityInfo = objInfo
+	}
+	return
+}

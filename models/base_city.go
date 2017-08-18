@@ -57,6 +57,8 @@ func UpdateAddressCity(m *AddressCity, ormObj orm.Ormer) (id int64, err error) {
 func GetAddressCityByID(id int64, ormObj orm.Ormer) (obj *AddressCity, err error) {
 	obj = &AddressCity{ID: id}
 	err = ormObj.Read(obj)
+	ormObj.Read(obj.Province)
+	ormObj.Read(obj.Province.Country)
 	return obj, err
 }
 
