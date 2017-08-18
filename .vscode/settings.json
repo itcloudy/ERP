@@ -13,6 +13,7 @@
     "go.formatTool": "goreturns",
     "go.formatFlags": [],
     "go.goroot": "C:\\Go",
-    "go.gopath": "C:\\GoPackage",
-    "go.gocodeAutoBuild": false
+    "go.gopath": "D:\\GoPkg",
+    "go.gocodeAutoBuild": false,
+    "git.ignoreLimitWarning": true
 }

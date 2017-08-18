@@ -12,17 +12,17 @@ import (
 // BaseMenu 菜单
 type BaseMenu struct {
 	ID            int64        `orm:"column(id);pk;auto"`                                        //主键
-	CreateUserID  int64        `orm:"column(create_user_id);null" json:"-"`                      //创建者
-	UpdateUserID  int64        `orm:"column(update_user_id);null" json:"-"`                      //最后更新者
-	CreateDate    time.Time    `orm:"auto_now_add;type(datetime)" json:"-"`                      //创建时间
-	UpdateDate    time.Time    `orm:"auto_now;type(datetime)" json:"-"`                          //最后更新时间
+	CreateUserID  int64        `orm:"column(create_user_id);null"`                      //创建者
+	UpdateUserID  int64        `orm:"column(update_user_id);null"`                      //最后更新者
+	CreateDate    time.Time    `orm:"auto_now_add;type(datetime)"`                      //创建时间
+	UpdateDate    time.Time    `orm:"auto_now;type(datetime)"`                          //最后更新时间
 	ParentLeft    int64        `orm:"unique"`                                                    //菜单左
 	ParentRight   int64        `orm:"unique"`                                                    //菜单右
 	Name          string       `orm:"size(50)" json:"name"`                                      //菜单名称
 	Parent        *BaseMenu    `orm:"rel(fk);null"`                                              //上级菜单
-	Childs        []*BaseMenu  `orm:"reverse(many)"  json:"-"`                                   //子菜单
+	Childs        []*BaseMenu  `orm:"reverse(many)" `                                   //子菜单
 	Icon          string       `orm:"null"`                                                      //菜单图标样式
-	Groups        []*BaseGroup `orm:"rel(m2m);rel_through(golangERP/models.GroupMenu)" json:"-"` //权限组
+	Groups        []*BaseGroup `orm:"rel(m2m);rel_through(golangERP/models.GroupMenu)"` //权限组
 	Path          string       `orm:"" json:"path"`                                              //菜单点击地址
 	ComponentPath string       `orm:""`                                                          //组件名称
 	Meta          string       `orm:"null"`                                                      //额外参数
