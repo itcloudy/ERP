@@ -97,10 +97,6 @@ func ServiceGetProductCategory(user *md.User, query map[string]interface{}, excl
 			obj := arrs[i]
 			objInfo := make(map[string]interface{})
 			objInfo["Name"] = obj.Name
-			countryInfo := make(map[string]interface{})
-			countryInfo["ID"] = obj.Country.ID
-			countryInfo["Name"] = obj.Country.Name
-			objInfo["Country"] = countryInfo
 			objInfo["ID"] = obj.ID
 			results = append(results, objInfo)
 		}

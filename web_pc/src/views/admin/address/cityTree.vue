@@ -12,6 +12,7 @@
             :currentPage="citiesData.currentPage"
             :total="citiesData.total"/>
             <el-table
+                v-loading.body="loading"
                 ref="multipleTable"
                 :data="citiesData.cityList"
                 @row-dblclick = "goCityDetail"
@@ -53,17 +54,20 @@
                 total:0,//总数量
                 currentPage:1,//当前页
             },
+            loading: false,
             serverUrlPath:"/address/city"
         }
     },
     methods:{
         getCities(limit,offset){
+            this.loading = true;
             this.$ajax.get(this.serverUrlPath,{
                     params:{
                         offset:offset,
                         limit:limit
                     }
                 }).then(response=>{
+                    this.loading = false;
                 let {code,msg,data} = response.data;
                 if(code=='success'){
                     this.citiesData.cityList = data["cities"];
