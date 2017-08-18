@@ -1,6 +1,9 @@
 <template>
     <div>
         <form-top  :Update="access.Update" :Create="access.Create" 
+        @formEdit="formEdit"
+        :edit="edit"
+        @formSave="formSave"
         @changeView="changeView"/>
         <div v-if="edit"  v-loading="loading">
             <el-form ref="cityForm" :model="cityForm" label-width="80px">
@@ -107,6 +110,12 @@
                 if ("list"==type){
                     this.$router.push("/admin/address/city");
                 }
+            },
+            formEdit(){
+                this.edit = true;
+            },
+            formSave(){
+                this.edit = false;
             }
         },
         created:function(){

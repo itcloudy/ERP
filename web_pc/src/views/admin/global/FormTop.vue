@@ -1,7 +1,8 @@
 <template>
     <div id="form-top">
-        <el-button  icon="edit" size="small" type="info" v-if="Update">编辑</el-button>
-        <el-button  icon="document" size="small" v-if="Create">创建</el-button>
+        <el-button  icon="edit" size="small" type="info" v-if="Update && !edit"  @click="formEdit">编辑</el-button>
+        <el-button  icon="edit" size="small" type="info" v-if="edit"  @click="formSave">保存</el-button>
+        <el-button  icon="document" size="small" v-if="Create && !edit">创建</el-button>
         <el-button-group id="view-type">
             <el-button size="small" @click="change2List" icon="menu"></el-button>
             
@@ -17,10 +18,16 @@
                 
             };
         },
-        props:["Create","Update","Unlink","Tree"],
+        props:["Create","Update","Unlink","edit"],
         methods:{
             change2List(){
                 this.$emit("changeView","list","");
+            },
+            formEdit(){
+                 this.$emit("formEdit");
+            },
+            formSave(){
+                this.$emit("formSave");
             }
         }
     }
@@ -29,6 +36,7 @@
     #form-top{
         padding-left: 15px;
         padding-right: 15px;
+        padding-bottom: 20px;
         #view-type{
             float: right;
         }
