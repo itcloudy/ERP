@@ -5,7 +5,9 @@
             <el-breadcrumb-item :to="{ path: '/admin/address' }">地址管理</el-breadcrumb-item>
             <el-breadcrumb-item :to="{ path: '/admin/address/city' }">城市</el-breadcrumb-item>
         </el-breadcrumb>
+         
         <div>
+            <TreeTop :Create="access.Create" @changeCreateForm="changeCreateForm" />
             <pagination 
             @pageInfoChange="pageInfoChange"
             :pageSize="citiesData.pageSize" 
@@ -43,6 +45,7 @@
 </template>
 <script>
     import  {default as Pagination} from '../global/Pagination';
+    import  {default as TreeTop} from '../global/TreeTop'; 
     import { mapState } from 'vuex';
     export default {
       data() {
@@ -55,7 +58,13 @@
                 currentPage:1,//当前页
             },
             loading: false,
-            serverUrlPath:"/address/city"
+            serverUrlPath:"/address/city",
+            access:{
+                    Create:false,
+                    Update:false,
+                    Read:false,
+                    Unlink:false,
+            },
         }
     },
     methods:{
@@ -71,6 +80,7 @@
                 let {code,msg,data} = response.data;
                 if(code=='success'){
                     this.citiesData.cityList = data["cities"];
+                    this.access = data["access"];
                     let paginator = data.paginator;
                     if (paginator){
                         this.citiesData.total = paginator.totalCount;
@@ -85,10 +95,15 @@
         },
         goCityDetail(row, event){
             this.$router.push("/admin/address/city/"+row.ID);
+        },
+        changeCreateForm(){
+            this.$router.push("/admin/address/city/new");
         }
+         
     },
     components: {
         Pagination,
+        TreeTop
     },
     created:function(){
         this.$nextTick(function(){
@@ -103,3 +118,11 @@
       
     }
 </script>
+<style lang="scss" scoped>
+    .tree-form-top{       
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 20px;
+    }
+    
+</style>

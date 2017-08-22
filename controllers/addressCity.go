@@ -37,13 +37,16 @@ func (ctl *AddressCityContriller) Get() {
 		}
 		var cities []map[string]interface{}
 		var paginator utils.Paginator
-		if paginator, cities, err = service.ServiceGetAddressCity(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		var access utils.AccessResult
+		if access, paginator, cities, err = service.ServiceGetAddressCity(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
 			data["cities"] = &cities
 			data["paginator"] = &paginator
+			data["access"] = access
 			response["data"] = data
+
 		} else {
 			response["code"] = utils.FailedCode
 			response["msg"] = utils.FailedMsg

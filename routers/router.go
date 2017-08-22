@@ -17,4 +17,7 @@ func init() {
 	beego.Router("/address/district/?:id", &controllers.AddressDistrictContriller{})
 	beego.Router("/setting/user/?:id", &controllers.UserController{})
 	beego.Router("/setting/group/?:id", &controllers.GroupController{})
+	// 产品管理
+	beego.Router("/product/attribute/?:id", &controllers.ProductAttributeContriller{})
+	beego.Router("/product/attributevalue/?:id", &controllers.ProductAttributeValueContriller{})
 }

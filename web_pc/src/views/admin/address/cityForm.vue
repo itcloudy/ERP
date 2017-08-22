@@ -6,7 +6,7 @@
         @formSave="formSave"
         @changeView="changeView"/>
         <div v-if="edit"  v-loading="loading">
-            <el-form ref="cityForm" :model="cityForm" label-width="80px">
+            <el-form :inline="true" ref="cityForm" :model="cityForm" label-width="80px">
                 <el-form-item label="所属国家">
                     <el-select
                         v-model="cityForm.Country.Name"
@@ -23,17 +23,31 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="所属省份">
-                    <span>{{cityForm.Province.Name}}</span>
+                 
+                 <el-form-item label="所属省份">
+                    <el-select
+                        v-model="cityForm.Province.Name"
+                        filterable
+                        remote
+                        placeholder="请输入国家"
+                        :remote-method="getProvinceList"
+                        >
+                        <el-option
+                            v-for="item in provinceList"
+                            :key="item.ID"
+                            :label="item.Name"
+                            :value="item.Name">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="城市名称">
-                    <span>{{cityForm.Name}}</span>
+                    <el-input v-model="cityForm.Name"></el-input>
                 </el-form-item>
         
             </el-form>
         </div>
         <div v-else  v-loading="loading">
-            <el-form ref="cityForm" :model="cityForm" inline label-width="80px">
+            <el-form ref="cityForm" :model="cityForm" :inline="true"  label-width="80px">
                 <el-form-item label="所属国家">
                     <span>{{cityForm.Country.Name}}</span>
                 </el-form-item>
@@ -62,10 +76,10 @@
                     Unlink:false,
                 },
                 cityForm:{
-                    Name:"123",
+                    Name:"",
                     ID:0,
                     Province:{
-                        Name:"456",
+                        Name:"",
                         ID:0,
                     },
                     Country:{
@@ -73,7 +87,20 @@
                         ID:0,
                     }
                 },
-                countryList:[{Name:"2342",ID:12},{Name:"2334342",ID:124}]
+                NewCityForm:{
+                    Name:"",
+                    ID:0,
+                    Province:{
+                        Name:"",
+                        ID:0,
+                    },
+                    Country:{
+                        Name:"",
+                        ID:0,
+                    }
+                },
+                countryList:[],
+                provinceList:[]
             }
         },
         components:{
@@ -82,33 +109,59 @@
         methods:{
             getCityInfo(){
                 this.loadging = true;
-                 this.cityForm.ID = this.$route.params.id;
-                 this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
-                     this.loadging = false;
-                    let {code,msg,data} = response.data;
-                    if(code=='success'){
-                        this.cityForm = data["city"];
-                        this.access = data["access"];
-                    }
-                });
+                let id  = this.$route.params.id;
+
+                if (id!='new'){
+                    this.cityForm.ID = id;
+                    this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                            this.loadging = false;
+                            let {code,msg,data} = response.data;
+                            if(code=='success'){
+                                this.cityForm = data["city"];
+                                this.access = data["access"];
+                            }
+                        });
+                }else{
+                    this.edit = true;
+                    this.cityForm = this.NewCityForm;
+                }
+                
+                
             },
             getCountryList(query){
-                console.log(query);
                 this.$ajax.get("/address/country",{
                     params:{
                         offset:0,
-                        limit:20
+                        limit:20,
+                        name:query,
                     }
                 }).then(response=>{
-                    console.log(response);
+                    let {code,msg,data} = response.data;
                     if(code=='success'){
                         this.countryList = data["countries"];
                     }
                 });
             },
+            getCountryList(query){
+                this.$ajax.get("/address/province",{
+                    params:{
+                        offset:0,
+                        limit:20,
+                        name:query,
+                    }
+                }).then(response=>{
+                    let {code,msg,data} = response.data;
+                    if(code=='success'){
+                        this.provinceList = data["privinces"];
+                    }
+                });
+            },
             changeView(type,id){
+                console.log(type);
                 if ("list"==type){
                     this.$router.push("/admin/address/city");
+                }else if ("form"==type){
+                    this.$router.push("/admin/address/city/"+id);
                 }
             },
             formEdit(){

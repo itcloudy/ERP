@@ -75,8 +75,7 @@ func ServiceUpdateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err
 //ServiceGetAddressCity 获得城市列表
 func ServiceGetAddressCity(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
-	var access utils.AccessResult
+	offset int64, limit int64) (access utils.AccessResult, paginator utils.Paginator, results []map[string]interface{}, err error) {
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
 		if !access.Read {
 			err = errors.New("has no read permission")

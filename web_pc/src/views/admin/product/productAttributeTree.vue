@@ -6,6 +6,7 @@
             <el-breadcrumb-item :to="{ path: '/admin/product/attribute' }">产品属性</el-breadcrumb-item>
         </el-breadcrumb>
         <div>
+            <TreeTop :Create="access.Create" @changeCreateForm="changeCreateForm" />
             <pagination 
             @pageInfoChange="pageInfoChange"
             :pageSize="attributesData.pageSize" 
@@ -38,6 +39,7 @@
 </template>
 <script>
     import  {default as Pagination} from '../global/Pagination';
+    import  {default as TreeTop} from '../global/TreeTop'; 
     import { mapState } from 'vuex';
     export default {
       data() {
@@ -49,12 +51,17 @@
                 total:0,//总数量
                 currentPage:1,//当前页
             },
+            access:{
+                Create:false,
+                Update:false,
+                Read:false,
+                Unlink:false,
+            },
             serverUrlPath:"/product/attribute"
         }
     },
     methods:{
         getProductAttributes(limit,offset){
-            console.log("getProductAttributes");
             this.$ajax.get(this.serverUrlPath,{
                     params:{
                         offset:offset,
@@ -64,6 +71,7 @@
                 let {code,msg,data} = response.data;
                 if(code=='success'){
                     this.attributesData.attributeList = data["attributes"];
+                    this.access = data["access"];
                     let paginator = data.paginator;
                     if (paginator){
                         this.attributesData.total = paginator.totalCount;
@@ -77,11 +85,15 @@
             this.getProductAttributes(pageSize,(currentPage-1)*pageSize)
         },
         goProductAttributeDetail(row, event){
-            this.$router.push("/admin/address/attribute/"+row.ID);
+            this.$router.push("/admin/product/attribute/"+row.ID);
+        },
+        changeCreateForm(){
+            this.$router.push("/admin/product/attribute/new");
         }
     },
     components: {
         Pagination,
+        TreeTop
     },
     created:function(){
         this.$nextTick(function(){

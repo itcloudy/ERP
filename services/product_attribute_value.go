@@ -95,6 +95,10 @@ func ServiceGetProductAttributeValue(user *md.User, query map[string]interface{}
 			objInfo := make(map[string]interface{})
 			objInfo["Name"] = obj.Name
 			objInfo["ID"] = obj.ID
+			attrInfo := make(map[string]interface{})
+			attrInfo["ID"] = obj.Attribute.ID
+			attrInfo["Name"] = obj.Attribute.Name
+			objInfo["Attribute"] = attrInfo
 			results = append(results, objInfo)
 		}
 	}

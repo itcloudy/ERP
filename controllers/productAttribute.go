@@ -37,17 +37,35 @@ func (ctl *ProductAttributeContriller) Get() {
 		}
 		var attributes []map[string]interface{}
 		var paginator utils.Paginator
-		if paginator, attributes, err = service.ServiceGetProductAttribute(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		var access utils.AccessResult
+		if access, paginator, attributes, err = service.ServiceGetProductAttribute(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
 			data["attributes"] = &attributes
 			data["paginator"] = &paginator
+			data["access"] = access
 			response["data"] = data
 		} else {
 			response["code"] = utils.FailedCode
 			response["msg"] = utils.FailedMsg
 			response["err"] = err
+		}
+	} else {
+		// 获得某个城市的信息
+		if attributeID, err := utils.GetInt64(IDStr); err == nil {
+			if access, attribute, err := service.ServiceGetProductAttributeByID(&ctl.User, attributeID); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				data := make(map[string]interface{})
+				data["attribute"] = &attribute
+				data["access"] = access
+				response["data"] = data
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err
+			}
 		}
 	}
 	ctl.Data["json"] = response
