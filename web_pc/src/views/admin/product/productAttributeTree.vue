@@ -6,7 +6,7 @@
             <el-breadcrumb-item :to="{ path: '/admin/product/attribute' }">产品属性</el-breadcrumb-item>
         </el-breadcrumb>
         <div>
-            <TreeTop :Create="access.Create" @changeCreateForm="changeCreateForm" />
+            <ListTop :Create="access.Create" @changeCreateForm="changeCreateForm" />
             <pagination 
             @pageInfoChange="pageInfoChange"
             :pageSize="attributesData.pageSize" 
@@ -38,8 +38,8 @@
     </div>
 </template>
 <script>
-    import  {default as Pagination} from '../global/Pagination';
-    import  {default as TreeTop} from '../global/TreeTop'; 
+    import  {default as Pagination} from '../common/Pagination';
+    import  {default as ListTop} from '../common/ListTop'; 
     import { mapState } from 'vuex';
     export default {
       data() {
@@ -93,7 +93,7 @@
     },
     components: {
         Pagination,
-        TreeTop
+        ListTop
     },
     created:function(){
         this.$nextTick(function(){

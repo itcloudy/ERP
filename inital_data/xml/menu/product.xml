@@ -6,7 +6,7 @@
         <icon>el-icon-menu</icon>
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product</path>
-        <componentpath>admin/global/Breadcrumb</componentpath>
+        <componentpath>admin/common/Breadcrumb</componentpath>
         <meta></meta>
         <viewtype></viewtype>
         <isbackground>true</isbackground>
@@ -18,7 +18,7 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/template</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
             {"path":"product/template","componentpath":"admin/product/productTemplateTree"}, 
@@ -33,7 +33,7 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/product</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
             {"path":"product/product","componentpath":"admin/product/productProductTree"}, 
@@ -48,7 +48,7 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/attribute</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
             {"path":"product/attribute","componentpath":"admin/product/productAttributeTree"}, 
@@ -63,7 +63,7 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/attributevalue</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
             {"path":"product/attributevalue","componentpath":"admin/product/productAttributeValueTree"}, 

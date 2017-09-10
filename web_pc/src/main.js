@@ -9,6 +9,7 @@ import Vuex from 'vuex'
 
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import "styles/index.scss";
 import localStore from 'utils/local_store';
 import lazyLoadMenusRoutes from 'utils/lazyload';
 import axios from 'axios';

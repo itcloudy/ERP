@@ -17,7 +17,7 @@
                             <template slot="title"><i :class="menu.Icon"></i>{{menu.name}}</template>
                             <template v-for="(firstMenu,index) in menu.children">
                                 <template v-if="firstMenu.expand">
-                                    <el-submenu  >
+                                    <el-submenu :key="index">
                                         <template slot="title"><i :class="firstMenu.Icon"></i>{{firstMenu.name}}</template>
                                         <template v-for="(secondMenu,index) in firstMenu.children" >
                                             <el-menu-item v-if="!secondMenu.expand" :index="secondMenu.path" :key="secondMenu.index">{{secondMenu.name}}</el-menu-item>
@@ -25,7 +25,7 @@
                                     </el-submenu>
                                 </template>
                                 <template v-if="!firstMenu.expand"  >
-                                    <el-menu-item :index="firstMenu.path"><i :class="firstMenu.Icon"></i>{{firstMenu.name}}</el-menu-item>
+                                    <el-menu-item :index="firstMenu.path" :key="index"><i :class="firstMenu.Icon"></i>{{firstMenu.name}}</el-menu-item>
                                 </template>
                             </template>
                         </el-submenu>

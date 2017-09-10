@@ -1,3 +1,19 @@
 body {
     margin: 0rem;
 }
+
+// 详情页面样式
+.form-read-only {
+    font-size: 0;
+}
+
+.form-read-only label {
+    width: 80px;
+    color: #99a9bf;
+}
+
+.form-read-only .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 272px;
+}

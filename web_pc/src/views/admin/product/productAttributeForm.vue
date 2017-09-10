@@ -30,7 +30,7 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '../global/FormTop';         
+    import  {default as FormTop} from '../common/FormTop';         
     import { mapState } from 'vuex';
     export default {
         data() {

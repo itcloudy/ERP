@@ -6,7 +6,7 @@
         <icon>el-icon-menu</icon>
         <group>saleman,salemanager</group>
         <path>setting</path>
-        <componentpath>admin/global/Breadcrumb</componentpath>
+        <componentpath>admin/common/Breadcrumb</componentpath>
         <meta></meta>
         <viewtype></viewtype>
         <isbackground>true</isbackground>
@@ -18,7 +18,7 @@
         <group></group>
         <path>setting/user</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
             {"path":"setting/user","componentpath":"admin/setting/userTree"}, 
@@ -33,7 +33,7 @@
         <group></group>
         <path>setting/group</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
             {"path":"setting/group","componentpath":"admin/setting/groupTree"}, 

@@ -71,7 +71,7 @@
     </div>
 </template>
 <script>
-    import  {default as Pagination} from '../global/Pagination';
+    import  {default as Pagination} from '../common/Pagination';
     import { mapState } from 'vuex';
     export default {
       data() {

@@ -6,7 +6,7 @@
         <icon>el-icon-menu</icon>
         <group>stockman,stockmanager</group>
         <path>stock</path>
-        <componentpath>admin/global/Breadcrumb</componentpath>
+        <componentpath>admin/common/Breadcrumb</componentpath>
         <meta></meta>
         <viewtype></viewtype>
         <isbackground>true</isbackground>
@@ -18,7 +18,7 @@
         <group>stockmanager</group>
         <path>stock/warehouse</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
             {"path":"stock/warehouse","componentpath":"admin/stock/stockWarehouseTree"}, 
@@ -33,7 +33,7 @@
         <group>stockman</group>
         <path>stock/picking</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
             {"path":"stock/picking","componentpath":"admin/stock/stockPickingTree"}, 
@@ -48,7 +48,7 @@
         <group>stockman</group>
         <path>stock/quant</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/global/MiddleRouterView</componentpath>
+        <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
             {"path":"stock/quant","componentpath":"admin/stock/stockQuantTree"}, 
