@@ -122,7 +122,7 @@
                             if (code=='success'){
                                 let user = data.user;
                                 //提示
-                                 this.$message({ message:msg, type: 'success' });
+                                this.$message({ message:msg, type: 'success' });
                                 // 本地缓存用户信息
                                 localStore.set('userinfo',JSON.stringify(user));
                                 //更新store中的userinfo

@@ -4,12 +4,13 @@ import (
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
+	"reflect"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // ServiceCreateAddressCity 创建记录
-func ServiceCreateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err error) {
+func ServiceCreateAddressCity(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
@@ -34,14 +35,33 @@ func ServiceCreateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err
 	if err != nil {
 		return
 	}
+	var obj md.AddressCity
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
+	var province md.AddressProvince
+	if Province, ok := requestBody["Province"]; ok {
+		provinceT := reflect.TypeOf(Province)
+		if provinceT.Kind() == reflect.Map {
+			provinceMap := Province.(map[string]interface{})
+			if provinceID, ok := provinceMap["ID"]; ok {
+				province.ID, _ = utils.ToInt64(provinceID)
+				obj.Province = &province
+			}
+		} else if provinceT.Kind() == reflect.String {
+			province.ID, _ = utils.ToInt64(Province)
+			obj.Province = &province
+		}
+	}
+
 	obj.CreateUserID = user.ID
-	id, err = md.AddAddressCity(obj, o)
+	id, err = md.AddAddressCity(&obj, o)
 
 	return
 }
 
 // ServiceUpdateAddressCity 更新记录
-func ServiceUpdateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err error) {
+func ServiceUpdateAddressCity(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
@@ -66,8 +86,35 @@ func ServiceUpdateAddressCity(user *md.User, obj *md.AddressCity) (id int64, err
 	if err != nil {
 		return
 	}
+	var obj md.AddressCity
+	var objPtr *md.AddressCity
+	if _, ok := requestBody["ID"]; !ok {
+		return
+	}
+	id, _ = utils.ToInt64(requestBody["ID"])
+	if objPtr, err = md.GetAddressCityByID(id, o); err != nil {
+		return
+	}
+	obj = *objPtr
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
+	var province md.AddressProvince
+	if Province, ok := requestBody["Province"]; ok {
+		provinceT := reflect.TypeOf(Province)
+		if provinceT.Kind() == reflect.Map {
+			provinceMap := Province.(map[string]interface{})
+			if provinceID, ok := provinceMap["ID"]; ok {
+				province.ID, _ = utils.ToInt64(provinceID)
+				obj.Province = &province
+			}
+		} else if provinceT.Kind() == reflect.String {
+			province.ID, _ = utils.ToInt64(Province)
+			obj.Province = &province
+		}
+	}
 	obj.UpdateUserID = user.ID
-	id, err = md.UpdateAddressCity(obj, o)
+	id, err = md.UpdateAddressCity(&obj, o)
 
 	return
 }

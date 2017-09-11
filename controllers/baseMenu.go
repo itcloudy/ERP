@@ -31,7 +31,7 @@ func (ctl *MenuController) Post() {
 	if _, ok := requestBody["groups"]; ok {
 		postGroups := utils.ToSlice(requestBody["groups"])
 		for _, group := range postGroups {
-			if groupID, err := utils.GetInt64(group); err == nil {
+			if groupID, err := utils.ToInt64(group); err == nil {
 				groups = append(groups, groupID)
 
 			}

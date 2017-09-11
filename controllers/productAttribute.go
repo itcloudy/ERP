@@ -27,11 +27,11 @@ func (ctl *ProductAttributeContriller) Get() {
 		var offset int64
 		var limit int64 = 20
 		if offsetStr != "" {
-			offset, _ = utils.GetInt64(offsetStr)
+			offset, _ = utils.ToInt64(offsetStr)
 		}
 		limitStr := ctl.Input().Get("limit")
 		if limitStr != "" {
-			if limit, err = utils.GetInt64(limitStr); err != nil {
+			if limit, err = utils.ToInt64(limitStr); err != nil {
 				limit = 20
 			}
 		}
@@ -53,7 +53,7 @@ func (ctl *ProductAttributeContriller) Get() {
 		}
 	} else {
 		// 获得某个城市的信息
-		if attributeID, err := utils.GetInt64(IDStr); err == nil {
+		if attributeID, err := utils.ToInt64(IDStr); err == nil {
 			if access, attribute, err := service.ServiceGetProductAttributeByID(&ctl.User, attributeID); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg

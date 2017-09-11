@@ -34,6 +34,9 @@ func AddAddressDistrict(m *AddressDistrict, ormObj orm.Ormer) (id int64, err err
 func GetAddressDistrictByID(id int64, ormObj orm.Ormer) (obj *AddressDistrict, err error) {
 	obj = &AddressDistrict{ID: id}
 	err = ormObj.Read(obj)
+	ormObj.Read(obj.City)
+	ormObj.Read(obj.City.Province)
+	ormObj.Read(obj.City.Province.Country)
 	return obj, err
 }
 

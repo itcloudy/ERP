@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -9,7 +10,7 @@ import (
 )
 
 // ServiceCreateAddressCountry 创建记录
-func ServiceCreateAddressCountry(user *md.User, obj *md.AddressCountry) (id int64, err error) {
+func ServiceCreateAddressCountry(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCountry"); err == nil {
@@ -34,14 +35,19 @@ func ServiceCreateAddressCountry(user *md.User, obj *md.AddressCountry) (id int6
 	if err != nil {
 		return
 	}
+
+	var obj md.AddressCountry
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
 	obj.CreateUserID = user.ID
-	id, err = md.AddAddressCountry(obj, o)
+	id, err = md.AddAddressCountry(&obj, o)
 
 	return
 }
 
 // ServiceUpdateAddressCountry 更新记录
-func ServiceUpdateAddressCountry(user *md.User, obj *md.AddressCountry) (id int64, err error) {
+func ServiceUpdateAddressCountry(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCountry"); err == nil {
 		if !access.Update {
@@ -66,8 +72,21 @@ func ServiceUpdateAddressCountry(user *md.User, obj *md.AddressCountry) (id int6
 	if err != nil {
 		return
 	}
+	var obj md.AddressCountry
+	var objPtr *md.AddressCountry
+	if _, ok := requestBody["ID"]; !ok {
+		return
+	}
+	id, _ = utils.ToInt64(requestBody["ID"])
+	if objPtr, err = md.GetAddressCountryByID(id, o); err != nil {
+		return
+	}
+	obj = *objPtr
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
 	obj.UpdateUserID = user.ID
-	id, err = md.UpdateAddressCountry(obj, o)
+	id, err = md.UpdateAddressCountry(&obj, o)
 
 	return
 }
@@ -75,8 +94,7 @@ func ServiceUpdateAddressCountry(user *md.User, obj *md.AddressCountry) (id int6
 //ServiceGetAddressCountry 获得国家列表
 func ServiceGetAddressCountry(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
-	var access utils.AccessResult
+	offset int64, limit int64) (access utils.AccessResult, paginator utils.Paginator, results []map[string]interface{}, err error) {
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCountry"); err == nil {
 		if !access.Read {
 			err = errors.New("has no read permission")
@@ -96,6 +114,29 @@ func ServiceGetAddressCountry(user *md.User, query map[string]interface{}, exclu
 			objInfo["ID"] = obj.ID
 			results = append(results, objInfo)
 		}
+	}
+	return
+}
+
+// ServiceGetAddressCountryByID get AddressCountry by id
+func ServiceGetAddressCountryByID(user *md.User, id int64) (access utils.AccessResult, cityInfo map[string]interface{}, err error) {
+
+	if access, err = ServiceCheckUserModelAssess(user, "AddressCountry"); err == nil {
+		if !access.Read {
+			err = errors.New("has no update permission")
+			return
+		}
+	} else {
+		return
+	}
+	o := orm.NewOrm()
+	var country *md.AddressCountry
+	fmt.Println(id)
+	if country, err = md.GetAddressCountryByID(id, o); err == nil {
+		objInfo := make(map[string]interface{})
+		objInfo["Name"] = country.Name
+		objInfo["ID"] = country.ID
+		cityInfo = objInfo
 	}
 	return
 }

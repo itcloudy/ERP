@@ -36,27 +36,45 @@ func (ctl *AddressProvinceContriller) Get() {
 		var offset int64
 		var limit int64 = 20
 		if offsetStr != "" {
-			offset, _ = utils.GetInt64(offsetStr)
+			offset, _ = utils.ToInt64(offsetStr)
 		}
 		limitStr := ctl.Input().Get("limit")
 		if limitStr != "" {
-			if limit, err = utils.GetInt64(limitStr); err != nil {
+			if limit, err = utils.ToInt64(limitStr); err != nil {
 				limit = 20
 			}
 		}
 		var provinces []map[string]interface{}
 		var paginator utils.Paginator
-		if paginator, provinces, err = service.ServiceGetAddressProvince(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		var access utils.AccessResult
+		if access, paginator, provinces, err = service.ServiceGetAddressProvince(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
 			data["provinces"] = &provinces
 			data["paginator"] = &paginator
+			data["access"] = access
 			response["data"] = data
 		} else {
 			response["code"] = utils.FailedCode
 			response["msg"] = utils.FailedMsg
 			response["err"] = err
+		}
+	} else {
+		// 获得某个省份的信息
+		if provinceID, err := utils.ToInt64(IDStr); err == nil {
+			if access, province, err := service.ServiceGetAddressProvinceByID(&ctl.User, provinceID); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				data := make(map[string]interface{})
+				data["province"] = &province
+				data["access"] = access
+				response["data"] = data
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err
+			}
 		}
 	}
 	ctl.Data["json"] = response

@@ -2,19 +2,11 @@
     <div>
         <form-top  :Update="access.Update" :Create="access.Create" 
         @formEdit="formEdit"
-        :edit="edit"
-        @formSave="formSave"
         @changeView="changeView"/>       
         <div v-loading="loading">
-            <el-form ref="cityForm" :model="cityForm" :inline="true"  class="form-read-only">
-                <el-form-item label="所属国家">
-                    <span>{{cityForm.Country.Name}}</span>
-                </el-form-item>
-                <el-form-item label="所属省份">
-                    <span>{{cityForm.Province.Name}}</span>
-                </el-form-item>
-                <el-form-item label="城市名称">
-                    <span>{{cityForm.Name}}</span>
+            <el-form ref="countryForm" :model="countryForm" :inline="true"  class="form-read-only">
+                <el-form-item label="国家名称">
+                    <span>{{countryForm.Name}}</span>
                 </el-form-item>
             </el-form>
         </div>
@@ -34,108 +26,51 @@
                     Read:false,
                     Unlink:false,
                 },
-                cityForm:{
+                countryForm:{
                     Name:"",
                     ID:0,
-                    Province:{
-                        Name:"",
-                        ID:0,
-                    },
-                    Country:{
-                        Name:"",
-                        ID:0,
-                    }
+                     
                 },
-                NewCityForm:{
-                    Name:"",
-                    ID:0,
-                    Province:{
-                        Name:"",
-                        ID:0,
-                    },
-                    Country:{
-                        Name:"",
-                        ID:0,
-                    }
-                },
-                countryList:[],
-                provinceList:[]
+                
             }
         },
         components:{
            FormTop
         },
         methods:{
-            getCityInfo(){
+            getcountryInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
 
                 if (id!='new'){
-                    this.cityForm.ID = id;
-                    this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                    this.countryForm.ID = id;
+                    this.$ajax.get("/address/country/"+this.countryForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){
-                                this.cityForm = data["city"];
+                                this.countryForm = data["country"];
                                 this.access = data["access"];
                             }
                         });
-                }else{
-                    this.edit = true;
-                    this.cityForm = this.NewCityForm;
-                }
-                
-                
-            },
-            getCountryList(query){
-                this.$ajax.get("/address/country",{
-                    params:{
-                        offset:0,
-                        limit:20,
-                        name:query,
-                    }
-                }).then(response=>{
-                    let {code,msg,data} = response.data;
-                    if(code=='success'){
-                        this.countryList = data["countries"];
-                    }
-                });
-            },
-            getCountryList(query){
-                this.$ajax.get("/address/province",{
-                    params:{
-                        offset:0,
-                        limit:20,
-                        name:query,
-                    }
-                }).then(response=>{
-                    let {code,msg,data} = response.data;
-                    if(code=='success'){
-                        this.provinceList = data["privinces"];
-                    }
-                });
+                } 
             },
             changeView(type,id){
-                console.log(type);
                 if ("list"==type){
-                    this.$router.push("/admin/address/city");
+                    this.$router.push("/admin/address/country");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/city/form/"+id);
+                    this.$router.push("/admin/address/country/form/"+id);
                 }
             },
             formEdit(){
-                this.edit = true;
+                 this.$router.push("/admin/address/country/form/"+this.countryForm.ID);
             },
-            formSave(){
-                this.edit = false;
-            }
         },
         created:function(){
-            this.getCityInfo();
+            this.getcountryInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getCityInfo'
+            '$route': 'getcountryInfo'
         },
          
     }

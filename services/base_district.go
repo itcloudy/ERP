@@ -71,8 +71,8 @@ func ServiceUpdateAddressDistrict(user *md.User, obj *md.AddressDistrict) (id in
 //ServiceGetAddressDistrict 获得区县列表
 func ServiceGetAddressDistrict(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
-	var access utils.AccessResult
+	offset int64, limit int64) (access utils.AccessResult, paginator utils.Paginator, results []map[string]interface{}, err error) {
+
 	if access, err = ServiceCheckUserModelAssess(user, "AddressDistrict"); err == nil {
 		if !access.Read {
 			err = errors.New("has no read permission")
@@ -124,6 +124,45 @@ func ServiceGetAddressDistrict(user *md.User, query map[string]interface{}, excl
 			objInfo["Province"] = provinceInfo
 			results = append(results, objInfo)
 		}
+	}
+	return
+}
+
+// ServiceGetAddressDistrictByID get AddressDistrict by id
+func ServiceGetAddressDistrictByID(user *md.User, id int64) (access utils.AccessResult, districtInfo map[string]interface{}, err error) {
+
+	if access, err = ServiceCheckUserModelAssess(user, "AddressDistrict"); err == nil {
+		if !access.Read {
+			err = errors.New("has no update permission")
+			return
+		}
+	} else {
+		return
+	}
+	o := orm.NewOrm()
+	var district *md.AddressDistrict
+
+	if district, err = md.GetAddressDistrictByID(id, o); err == nil {
+		objInfo := make(map[string]interface{})
+		objInfo["Name"] = district.Name
+		objInfo["ID"] = district.ID
+		cityInfo := make(map[string]interface{})
+		cityInfo["ID"] = district.City.ID
+		cityInfo["Name"] = district.City.Name
+		provinceInfo := make(map[string]interface{})
+		if district.City.Province != nil {
+			provinceInfo["ID"] = district.City.Province.ID
+			provinceInfo["Name"] = district.City.Province.Name
+			objInfo["Province"] = provinceInfo
+			countryInfo := make(map[string]interface{})
+			if district.City.Province.Country != nil {
+				countryInfo["ID"] = district.City.Province.Country.ID
+				countryInfo["Name"] = district.City.Province.Country.Name
+				objInfo["Country"] = countryInfo
+			}
+		}
+
+		districtInfo = objInfo
 	}
 	return
 }

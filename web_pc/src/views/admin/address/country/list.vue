@@ -6,6 +6,7 @@
             <el-breadcrumb-item :to="{ path: '/admin/address/country' }">国家</el-breadcrumb-item>
         </el-breadcrumb>
         <div>
+            <ListTop :Create="access.Create" @changeCreateForm="changeCreateForm" />
             <pagination 
             @pageInfoChange="pageInfoChange"
             :pageSize="countriesData.pageSize" 
@@ -35,6 +36,7 @@
     </div>
 </template>
 <script>
+    import  {default as ListTop} from '@/views/admin/common/ListTop'; 
     import  {default as Pagination} from '@/views/admin/common/Pagination';
     import { mapState } from 'vuex';
     export default {
@@ -46,6 +48,12 @@
                 pageSize:20,//每页数量
                 total:0,//总数量
                 currentPage:1,//当前页
+            },
+            access:{
+                    Create:false,
+                    Update:false,
+                    Read:false,
+                    Unlink:false,
             },
             serverUrlPath:"/address/country"
         }
@@ -61,6 +69,7 @@
                 let {code,msg,data} = response.data;
                 if(code=='success'){
                     this.countriesData.countryList = data["countries"];
+                    this.access = data["access"];
                     let paginator = data.paginator;
                     if (paginator){
                         this.countriesData.total = paginator.totalCount;
@@ -75,10 +84,15 @@
         },
         goCountryDetail(row, event){
             this.$router.push("/admin/address/country/detail/"+row.ID);
+        },
+        changeCreateForm(){
+            this.$router.push("/admin/address/country/form/new");
         }
+
     },
     components: {
         Pagination,
+        ListTop
     },
     created:function(){
         this.$nextTick(function(){

@@ -23,6 +23,12 @@ func PasswordMD5(passwd, salt string) string {
 	return result
 }
 
+// ToString 类型转换，获得string
+func ToString(v interface{}) (re string) {
+	re = v.(string)
+	return
+}
+
 // StringsJoin 字符串拼接
 func StringsJoin(strs ...string) string {
 	var str string
@@ -39,8 +45,8 @@ func StringsJoin(strs ...string) string {
 
 }
 
-// GetInt64 类型转换，获得int64
-func GetInt64(v interface{}) (re int64, err error) {
+// ToInt64 类型转换，获得int64
+func ToInt64(v interface{}) (re int64, err error) {
 	switch v.(type) {
 	case string:
 		re, err = strconv.ParseInt(v.(string), 10, 64)

@@ -8,7 +8,8 @@
             <el-form :inline="true" ref="cityForm" :model="cityForm" label-width="80px">
                 <el-form-item label="所属国家">
                     <el-select
-                        v-model="cityForm.Country.Name"
+                        v-model="cityForm.Country.ID"
+                        :name="cityForm.Country.Name"
                         filterable
                         remote
                         placeholder="请输入国家"
@@ -17,13 +18,14 @@
                             v-for="item in countryList"
                             :key="item.ID"
                             :label="item.Name"
-                            :value="item.Name">
+                            :value="item.ID">
                         </el-option>
                     </el-select>
                 </el-form-item>
                  <el-form-item label="所属省份">
                     <el-select
-                        v-model="cityForm.Province.Name"
+                        v-model="cityForm.Province.ID"
+                        :name="cityForm.Province.Name"
                         filterable
                         remote
                         placeholder="请输入省份"
@@ -32,7 +34,7 @@
                             v-for="item in provinceList"
                             :key="item.ID"
                             :label="item.Name"
-                            :value="item.Name">
+                            :value="item.ID">
                         </el-option>
                     </el-select>
                 </el-form-item>
@@ -91,7 +93,27 @@
         },
         methods:{
             formSave(){
-                console.log(JSON.stringify(this.cityForm));
+                if (this.cityForm.ID >0){
+                    this.$ajax.put("/address/city",this.cityForm).then(response=>{
+                        let {code,msg,cityID} = response.data;
+                        if(code=='success'){
+                            this.$message({ message:msg, type: 'success' });
+                            this.$router.push("/admin/address/city/detail/"+cityID);
+                        }else{
+                            this.$message({ message:msg, type: 'error' });
+                        }
+                    });
+                }else{
+                    this.$ajax.post("/address/city",this.cityForm).then(response=>{
+                        let {code,msg,cityID} = response.data;
+                        if(code=='success'){
+                            this.$message({ message:msg, type: 'success' });
+                            this.$router.push("/admin/address/city/detail/"+cityID);
+                        }else{
+                            this.$message({ message:msg, type: 'error' });
+                        }
+                    });
+                }
             },
             getCityInfo(){
                 this.loadging = true;
@@ -103,6 +125,8 @@
                             let {code,msg,data} = response.data;
                             if(code=='success'){
                                 this.cityForm = data["city"];
+                                this.provinceList = [this.cityForm.Province]
+                                this.countryList = [this.cityForm.Country]
                                 this.access = data["access"];
                             }
                         });

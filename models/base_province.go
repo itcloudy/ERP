@@ -57,6 +57,7 @@ func UpdateAddressProvince(m *AddressProvince, ormObj orm.Ormer) (id int64, err 
 func GetAddressProvinceByID(id int64, ormObj orm.Ormer) (obj *AddressProvince, err error) {
 	obj = &AddressProvince{ID: id}
 	err = ormObj.Read(obj)
+	ormObj.Read(obj.Country)
 	return obj, err
 }
 

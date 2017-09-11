@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -8,6 +9,44 @@ import (
 // AddressCityContriller 城市模块
 type AddressCityContriller struct {
 	BaseController
+}
+
+// Put  create test line
+func (ctl *AddressCityContriller) Put() {
+	response := make(map[string]interface{})
+	var requestBody map[string]interface{}
+	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+	if cityID, err := service.ServiceUpdateAddressCity(&ctl.User, requestBody); err == nil {
+		response["code"] = utils.SuccessCode
+		response["msg"] = utils.SuccessMsg
+		response["cityID"] = cityID
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = err.Error()
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
+}
+
+// Post create test line
+func (ctl *AddressCityContriller) Post() {
+	response := make(map[string]interface{})
+	var requestBody map[string]interface{}
+	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+	if cityID, err := service.ServiceCreateAddressCity(&ctl.User, requestBody); err == nil {
+		response["code"] = utils.SuccessCode
+		response["msg"] = utils.SuccessMsg
+		response["cityID"] = cityID
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = err.Error()
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
 }
 
 // Get get cities
@@ -27,11 +66,11 @@ func (ctl *AddressCityContriller) Get() {
 		var offset int64
 		var limit int64 = 20
 		if offsetStr != "" {
-			offset, _ = utils.GetInt64(offsetStr)
+			offset, _ = utils.ToInt64(offsetStr)
 		}
 		limitStr := ctl.Input().Get("limit")
 		if limitStr != "" {
-			if limit, err = utils.GetInt64(limitStr); err != nil {
+			if limit, err = utils.ToInt64(limitStr); err != nil {
 				limit = 20
 			}
 		}
@@ -54,7 +93,7 @@ func (ctl *AddressCityContriller) Get() {
 		}
 	} else {
 		// 获得某个城市的信息
-		if cityID, err := utils.GetInt64(IDStr); err == nil {
+		if cityID, err := utils.ToInt64(IDStr); err == nil {
 			if access, city, err := service.ServiceGetAddressCityByID(&ctl.User, cityID); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
