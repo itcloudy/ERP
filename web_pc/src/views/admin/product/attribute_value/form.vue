@@ -105,7 +105,7 @@
                             }
                         });
                 }else{
-                    this.valueForm = this.NewCityForm;
+                    this.valueForm = this.NewValueForm;
                 }
             },
             getAttributeList(query){
