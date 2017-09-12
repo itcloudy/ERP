@@ -99,9 +99,18 @@ func (ctl *ProductAttributeValueContriller) Get() {
 		query := make(map[string]interface{})
 		exclude := make(map[string]interface{})
 		cond := make(map[string]map[string]interface{})
+		condAnd := make(map[string]interface{})
 		fields := make([]string, 0, 0)
 		sortby := make([]string, 0, 0)
 		order := make([]string, 0, 0)
+		nameStr := ctl.Input().Get("name")
+
+		if nameStr != "" {
+			condAnd["Name__icontains"] = nameStr
+		}
+		if len(condAnd) > 0 {
+			cond["and"] = condAnd
+		}
 		offsetStr := ctl.Input().Get("offset")
 		var offset int64
 		var limit int64 = 20
@@ -133,11 +142,11 @@ func (ctl *ProductAttributeValueContriller) Get() {
 	} else {
 		// 获得某个城市的信息
 		if valueID, err := utils.ToInt64(IDStr); err == nil {
-			if access, attribute, err := service.ServiceGetProductAttributeValueByID(&ctl.User, valueID); err == nil {
+			if access, attributeValue, err := service.ServiceGetProductAttributeValueByID(&ctl.User, valueID); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				data := make(map[string]interface{})
-				data["attribute"] = &attribute
+				data["attributeValue"] = &attributeValue
 				data["access"] = access
 				response["data"] = data
 			} else {

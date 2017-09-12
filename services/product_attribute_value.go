@@ -4,6 +4,7 @@ import (
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
+	"reflect"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -99,6 +100,25 @@ func ServiceUpdateProductAttributeValue(user *md.User, requestBody map[string]in
 		return
 	}
 	var obj md.ProductAttributeValue
+	var objPtr *md.ProductAttributeValue
+	if objPtr, err = md.GetProductAttributeValueByID(id, o); err != nil {
+		return
+	}
+	obj = *objPtr
+	var attribute md.ProductAttribute
+	if Attribute, ok := requestBody["Attribute"]; ok {
+		attributeT := reflect.TypeOf(Attribute)
+		if attributeT.Kind() == reflect.Map {
+			attributeMap := Attribute.(map[string]interface{})
+			if attributeID, ok := attributeMap["ID"]; ok {
+				attribute.ID, _ = utils.ToInt64(attributeID)
+				obj.Attribute = &attribute
+			}
+		} else if attributeT.Kind() == reflect.String {
+			attribute.ID, _ = utils.ToInt64(Attribute)
+			obj.Attribute = &attribute
+		}
+	}
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateProductAttributeValue(&obj, o)
 

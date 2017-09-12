@@ -74,9 +74,18 @@ func (ctl *ProductAttributeContriller) Get() {
 		query := make(map[string]interface{})
 		exclude := make(map[string]interface{})
 		cond := make(map[string]map[string]interface{})
+		condAnd := make(map[string]interface{})
 		fields := make([]string, 0, 0)
 		sortby := make([]string, 0, 0)
 		order := make([]string, 0, 0)
+		nameStr := ctl.Input().Get("name")
+
+		if nameStr != "" {
+			condAnd["Name__icontains"] = nameStr
+		}
+		if len(condAnd) > 0 {
+			cond["and"] = condAnd
+		}
 		offsetStr := ctl.Input().Get("offset")
 		var offset int64
 		var limit int64 = 20

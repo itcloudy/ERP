@@ -5,41 +5,25 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="cityForm" :model="cityForm" label-width="80px">
-                <el-form-item label="所属国家">
+            <el-form :inline="true" ref="valueForm" :model="valueForm" label-width="80px">
+                 <el-form-item label="属性">
                     <el-select
-                        v-model="cityForm.Country.ID"
-                        :name="cityForm.Country.Name"
+                        v-model="valueForm.Attribute.ID"
+                        :name="valueForm.Attribute.Name"
                         filterable
                         remote
-                        placeholder="请输入国家"
-                        :remote-method="getCountryList">
+                        placeholder="请输入属性"
+                        :remote-method="getAttributeList">
                         <el-option
-                            v-for="item in countryList"
+                            v-for="item in attributeList"
                             :key="item.ID"
                             :label="item.Name"
                             :value="item.ID">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                 <el-form-item label="所属省份">
-                    <el-select
-                        v-model="cityForm.Province.ID"
-                        :name="cityForm.Province.Name"
-                        filterable
-                        remote
-                        placeholder="请输入省份"
-                        :remote-method="getProvinceList">
-                        <el-option
-                            v-for="item in provinceList"
-                            :key="item.ID"
-                            :label="item.Name"
-                            :value="item.ID">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="城市名称">
-                    <el-input v-model="cityForm.Name"></el-input>
+                <el-form-item label="属性值">
+                    <el-input v-model="valueForm.Name"></el-input>
                 </el-form-item>
         
             </el-form>
@@ -59,32 +43,23 @@
                     Read:false,
                     Unlink:false,
                 },
-                cityForm:{
+                valueForm:{
                     Name:"",
                     ID:0,
-                    Province:{
+                    Attribute:{
                         Name:"",
                         ID:0,
                     },
-                    Country:{
-                        Name:"",
-                        ID:0,
-                    }
                 },
-                NewCityForm:{
+                NewValueForm:{
                     Name:"",
                     ID:0,
-                    Province:{
+                    Attribute:{
                         Name:"",
                         ID:0,
                     },
-                    Country:{
-                        Name:"",
-                        ID:0,
-                    }
                 },
-                provinceList:[],
-                countryList:[],
+                attributeList:[]
             }
         },
         components:{
@@ -92,49 +67,49 @@
         },
         methods:{
             formSave(){
-                if (this.cityForm.ID >0){
-                    this.$ajax.put("/address/city/"+this.cityForm.ID ,this.cityForm).then(response=>{
-                        let {code,msg,cityID} = response.data;
+                if (this.valueForm.ID >0){
+                    this.$ajax.put("/product/attributevalue/"+this.valueForm.ID ,this.valueForm).then(response=>{
+                        let {code,msg,attributeValueID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
+                            this.$router.push("/admin/product/attributevalue/detail/"+attributeValueID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
                     });
                 }else{
-                    this.$ajax.post("/address/city",this.cityForm).then(response=>{
-                        let {code,msg,cityID} = response.data;
+                    this.$ajax.post("/product/attributevalue",this.valueForm).then(response=>{
+                        let {code,msg,attributeValueID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
+                            this.$router.push("/admin/product/attributevalue/detail/"+attributeValueID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
                     });
                 }
             },
-            getCityInfo(){
+            getAttributeValueInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 if (id!='new'){
-                    this.cityForm.ID = id;
-                    this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                    this.valueForm.ID = id;
+                    this.$ajax.get("/product/attributevalue/"+this.valueForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){
-                                this.cityForm = data["city"];
-                                this.provinceList = [this.cityForm.Province]
-                                this.countryList = [this.cityForm.Country]
-                                this.access = data["access"];
+                                this.valueForm = data["attributeValue"];
+                                console.log(JSON.stringify(this.valueForm));
+                                this.attributeList = [this.valueForm.Attribute];
+                                
                             }
                         });
                 }else{
-                    this.cityForm = this.NewCityForm;
+                    this.valueForm = this.NewCityForm;
                 }
             },
-            getCountryList(query){
-                this.$ajax.get("/address/country",{
+            getAttributeList(query){
+                this.$ajax.get("/product/attribute",{
                     params:{
                         offset:0,
                         limit:20,
@@ -143,38 +118,24 @@
                 }).then(response=>{
                     let {code,msg,data} = response.data;
                     if(code=='success'){
-                        this.countryList = data["countries"];
-                    }
-                });
-            },
-            getProvinceList(query){
-                this.$ajax.get("/address/province",{
-                    params:{
-                        offset:0,
-                        limit:20,
-                        name:query,
-                    }
-                }).then(response=>{
-                    let {code,msg,data} = response.data;
-                    if(code=='success'){
-                        this.provinceList = data["provinces"];
+                        this.attributeList = data["attributes"];
                     }
                 });
             },
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/city");
+                    this.$router.push("/admin/product/attributevalue");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/city/form/"+id);
+                    this.$router.push("/admin/product/attributevalue/form/"+id);
                 }
             },
         },
         created:function(){
-            this.getCityInfo();
+            this.getAttributeValueInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getCityInfo'
+            '$route': 'getAttributeValueInfo'
         },
          
     }

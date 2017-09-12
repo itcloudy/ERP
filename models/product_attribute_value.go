@@ -57,6 +57,7 @@ func UpdateProductAttributeValue(m *ProductAttributeValue, ormObj orm.Ormer) (id
 func GetProductAttributeValueByID(id int64, ormObj orm.Ormer) (obj *ProductAttributeValue, err error) {
 	obj = &ProductAttributeValue{ID: id}
 	err = ormObj.Read(obj)
+	ormObj.Read(obj.Attribute)
 	return obj, err
 }
 

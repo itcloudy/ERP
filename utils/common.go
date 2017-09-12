@@ -54,6 +54,10 @@ func ToInt64(v interface{}) (re int64, err error) {
 		re = int64(v.(float64))
 	case float32:
 		re = int64(v.(float32))
+	case int64:
+		re = v.(int64)
+	case int32:
+		re = v.(int64)
 	default:
 		err = errors.New("不能转换")
 	}

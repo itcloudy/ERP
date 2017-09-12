@@ -4,15 +4,12 @@
         @formEdit="formEdit"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form ref="cityForm" :model="cityForm" :inline="true"  class="form-read-only">
-                <el-form-item label="所属国家">
-                    <span>{{cityForm.Country.Name}}</span>
+            <el-form ref="valueForm" :model="valueForm" :inline="true"  class="form-read-only">
+                <el-form-item label="属性">
+                    <span>{{valueForm.Attribute.Name}}</span>
                 </el-form-item>
-                <el-form-item label="所属省份">
-                    <span>{{cityForm.Province.Name}}</span>
-                </el-form-item>
-                <el-form-item label="城市名称">
-                    <span>{{cityForm.Name}}</span>
+                <el-form-item label="属性值">
+                    <span>{{valueForm.Name}}</span>
                 </el-form-item>
             </el-form>
         </div>
@@ -31,43 +28,43 @@
                     Read:false,
                     Unlink:false,
                 },
-                cityForm:{}
+                valueForm:{}
             }
         },
         components:{
            FormTop
         },
         methods:{
-            getCityInfo(){
+            getAttributeValueInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
-                this.cityForm.ID = id;
-                this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                this.valueForm.ID = id;
+                this.$ajax.get("/product/attributevalue/"+this.valueForm.ID).then(response=>{
                         this.loadging = false;
                         let {code,msg,data} = response.data;
                         if(code=='success'){
-                            this.cityForm = data["city"];
+                            this.valueForm = data["attributeValue"];
                             this.access = data["access"];
                         }
                     });
             },
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/city");
+                    this.$router.push("/admin/product/attributevalue");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/city/form/"+id);
+                    this.$router.push("/admin/product/attributevalue/form/"+id);
                 }
             },
             formEdit(){
-                 this.$router.push("/admin/address/city/form/"+this.cityForm.ID);
+                 this.$router.push("/admin/product/attributevalue/form/"+this.valueForm.ID);
             },
         },
         created:function(){
-            this.getCityInfo();
+            this.getAttributeValueInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getCityInfo'
+            '$route': 'getAttributeValueInfo'
         },
          
     }
