@@ -36,6 +36,23 @@ func ServiceCreateProductAttributeValue(user *md.User, requestBody map[string]in
 		return
 	}
 	var obj md.ProductAttributeValue
+	var attribute md.ProductAttribute
+	if Attribute, ok := requestBody["Attribute"]; ok {
+		attributeT := reflect.TypeOf(Attribute)
+		if attributeT.Kind() == reflect.Map {
+			attributeMap := Attribute.(map[string]interface{})
+			if attributeID, ok := attributeMap["ID"]; ok {
+				attribute.ID, _ = utils.ToInt64(attributeID)
+				obj.Attribute = &attribute
+			}
+		} else if attributeT.Kind() == reflect.String {
+			attribute.ID, _ = utils.ToInt64(Attribute)
+			obj.Attribute = &attribute
+		}
+	}
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
 	obj.CreateUserID = user.ID
 	id, err = md.AddProductAttributeValue(&obj, o)
 
@@ -68,6 +85,7 @@ func ServiceDeleteProductAttributeValue(user *md.User, id int64) (num int64, err
 		return
 	}
 	var obj md.ProductAttributeValue
+
 	obj.ID = id
 	num, err = md.DeleteProductAttributeValueByID(id, o)
 	return
@@ -118,6 +136,9 @@ func ServiceUpdateProductAttributeValue(user *md.User, requestBody map[string]in
 			attribute.ID, _ = utils.ToInt64(Attribute)
 			obj.Attribute = &attribute
 		}
+	}
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
 	}
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateProductAttributeValue(&obj, o)
