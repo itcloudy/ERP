@@ -3,7 +3,7 @@
         <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/admin' }">后台首页</el-breadcrumb-item>
             <el-breadcrumb-item :to="{ path: '/admin/product' }">产品管理</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin/product/attributevalue' }">属性值管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/product/attributevalue' }">属性值</el-breadcrumb-item>
         </el-breadcrumb>
          
         <div>

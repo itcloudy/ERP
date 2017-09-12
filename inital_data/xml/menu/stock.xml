@@ -21,8 +21,9 @@
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"stock/warehouse","componentpath":"admin/stock/stockWarehouseTree"}, 
-            {"path":"stock/warehouse/:id","componentpath":"admin/stock/stockWarehouseForm"}
+            {"path":"stock/warehouse","componentpath":"admin/stock/warehouse/list"}, 
+            {"path":"stock/warehouse/form/:id","componentpath":"admin/stock/warehouse/form"},
+            {"path":"stock/warehouse/detail/:id","componentpath":"admin/stock/warehouse/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -36,8 +37,9 @@
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"stock/picking","componentpath":"admin/stock/stockPickingTree"}, 
-            {"path":"stock/picking/:id","componentpath":"admin/stock/stockPickingForm"}
+            {"path":"stock/picking","componentpath":"admin/stock/picking/list"}, 
+            {"path":"stock/picking/form/:id","componentpath":"admin/stock/picking/form"},
+            {"path":"stock/picking/detail/:id","componentpath":"admin/stock/picking/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -51,8 +53,9 @@
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"stock/quant","componentpath":"admin/stock/stockQuantTree"}, 
-            {"path":"stock/quant/:id","componentpath":"admin/stock/stockQuantForm"}
+            {"path":"stock/quant","componentpath":"admin/stock/quant/list"}, 
+            {"path":"stock/quant/form/:id","componentpath":"admin/stock/quant/form"},
+            {"path":"stock/quant/detail/:id","componentpath":"admin/stock/quant/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>

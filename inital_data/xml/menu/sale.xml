@@ -21,8 +21,9 @@
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"sale/order","componentpath":"admin/sale/orderTree"}, 
-            {"path":"sale/order/:id","componentpath":"admin/sale/oderForm"}
+            {"path":"sale/order","componentpath":"admin/sale/order/list"}, 
+            {"path":"sale/order/form/:id","componentpath":"admin/sale/order/form"},
+            {"path":"sale/order/detail/:id","componentpath":"admin/sale/order/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -36,8 +37,9 @@
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"sale/orderline","componentpath":"admin/sale/orderLineTree"},
-            {"path":"sale/orderline/:id","componentpath":"admin/sale/orderLineForm"}
+            {"path":"sale/orderline","componentpath":"admin/sale/orderline/list"}, 
+            {"path":"sale/orderline/form/:id","componentpath":"admin/sale/orderline/form"},
+            {"path":"sale/orderline/detail/:id","componentpath":"admin/sale/orderline/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
