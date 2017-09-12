@@ -60,6 +60,13 @@ func GetProductAttributeValueByID(id int64, ormObj orm.Ormer) (obj *ProductAttri
 	return obj, err
 }
 
+// DeleteProductAttributeValueByID delete  ProductAttributeValue by ID
+func DeleteProductAttributeValueByID(id int64, ormObj orm.Ormer) (num int64, err error) {
+	obj := &ProductAttributeValue{ID: id}
+	num, err = ormObj.Delete(obj)
+	return
+}
+
 // GetAllProductAttributeValue retrieves all ProductAttributeValue matches certain condition. Returns empty list if no records exist
 func GetAllProductAttributeValue(o orm.Ormer, query map[string]interface{}, exclude map[string]interface{}, condMap map[string]map[string]interface{},
 	fields []string, sortby []string, order []string, offset int64, limit int64) (utils.Paginator, []ProductAttributeValue, error) {

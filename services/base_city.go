@@ -60,8 +60,39 @@ func ServiceCreateAddressCity(user *md.User, requestBody map[string]interface{})
 	return
 }
 
+// ServiceDeleteAddressCity 删除记录
+func ServiceDeleteAddressCity(user *md.User, id int64) (num int64, err error) {
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
+		if !access.Unlink {
+			err = errors.New("has no update permission")
+			return
+		}
+	} else {
+		return
+	}
+	o := orm.NewOrm()
+	err = o.Begin()
+	defer func() {
+		if err == nil {
+			if o.Commit() != nil {
+				if errRollback := o.Rollback(); errRollback != nil {
+					err = errRollback
+				}
+			}
+		}
+	}()
+	if err != nil {
+		return
+	}
+	var obj md.AddressCity
+	obj.ID = id
+	num, err = md.DeleteAddressCityByID(id, o)
+	return
+}
+
 // ServiceUpdateAddressCity 更新记录
-func ServiceUpdateAddressCity(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceUpdateAddressCity(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
@@ -88,10 +119,6 @@ func ServiceUpdateAddressCity(user *md.User, requestBody map[string]interface{})
 	}
 	var obj md.AddressCity
 	var objPtr *md.AddressCity
-	if _, ok := requestBody["ID"]; !ok {
-		return
-	}
-	id, _ = utils.ToInt64(requestBody["ID"])
 	if objPtr, err = md.GetAddressCityByID(id, o); err != nil {
 		return
 	}

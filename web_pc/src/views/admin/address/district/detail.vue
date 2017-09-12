@@ -6,15 +6,15 @@
         <div v-loading="loading">
             <el-form ref="districtForm" :model="districtForm" :inline="true"  class="form-read-only">
                 <el-form-item label="所属国家">
-                    <span v-if="districtForm.Country">{{provinceForm.Country.Name}}</span>
+                    <span v-if="districtForm.Country">{{districtForm.Country.Name}}</span>
                     <span v-else>未知</span>
                 </el-form-item>
                 <el-form-item label="所属省份">
-                    <span v-if="districtForm.Province">{{provinceForm.Country.Name}}</span>
+                    <span v-if="districtForm.Province">{{districtForm.Province.Name}}</span>
                     <span v-else>未知</span>
                 </el-form-item>
                 <el-form-item label="所属城市">
-                    <span v-if="districtForm.City">{{provinceForm.Country.Name}}</span>
+                    <span v-if="districtForm.City">{{districtForm.City.Name}}</span>
                     <span v-else>未知</span>
                 </el-form-item>
                 <el-form-item label="区县名称">
@@ -44,7 +44,7 @@
            FormTop
         },
         methods:{
-            getCityInfo(){
+            getDistrictInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 this.districtForm.ID = id;
@@ -69,11 +69,11 @@
             },
         },
         created:function(){
-            this.getCityInfo();
+            this.getDistrictInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getCityInfo'
+            '$route': 'getDistrictInfo'
         },
          
     }

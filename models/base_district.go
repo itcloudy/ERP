@@ -40,6 +40,13 @@ func GetAddressDistrictByID(id int64, ormObj orm.Ormer) (obj *AddressDistrict, e
 	return obj, err
 }
 
+// DeleteAddressDistrictByID delete  Company by ID
+func DeleteAddressDistrictByID(id int64, ormObj orm.Ormer) (num int64, err error) {
+	obj := &AddressDistrict{ID: id}
+	num, err = ormObj.Delete(obj)
+	return
+}
+
 // BatchAddAddressDistrict insert  list of  Country into database and returns  number of  success.
 func BatchAddAddressDistrict(districtes []*AddressDistrict, ormObj orm.Ormer) (num int64, err error) {
 	qs := ormObj.QueryTable(&AddressDistrict{})

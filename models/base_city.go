@@ -53,6 +53,13 @@ func UpdateAddressCity(m *AddressCity, ormObj orm.Ormer) (id int64, err error) {
 	return
 }
 
+// DeleteAddressCityByID delete  ProductAttributeValue by ID
+func DeleteAddressCityByID(id int64, ormObj orm.Ormer) (num int64, err error) {
+	obj := &AddressCity{ID: id}
+	num, err = ormObj.Delete(obj)
+	return
+}
+
 // GetAddressCityByID retrieves AddressCity by ID. Returns error if ID doesn't exist
 func GetAddressCityByID(id int64, ormObj orm.Ormer) (obj *AddressCity, err error) {
 	obj = &AddressCity{ID: id}

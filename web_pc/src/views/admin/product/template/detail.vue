@@ -4,13 +4,15 @@
         @formEdit="formEdit"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form ref="provinceForm" :model="provinceForm" :inline="true"  class="form-read-only">
+            <el-form ref="cityForm" :model="cityForm" :inline="true"  class="form-read-only">
                 <el-form-item label="所属国家">
-                    <span v-if="provinceForm.Country">{{provinceForm.Country.Name}}</span>
-                    <span v-else>未知</span>
+                    <span>{{cityForm.Country.Name}}</span>
+                </el-form-item>
+                <el-form-item label="所属省份">
+                    <span>{{cityForm.Province.Name}}</span>
                 </el-form-item>
                 <el-form-item label="城市名称">
-                    <span>{{provinceForm.Name}}</span>
+                    <span>{{cityForm.Name}}</span>
                 </el-form-item>
             </el-form>
         </div>
@@ -29,43 +31,43 @@
                     Read:false,
                     Unlink:false,
                 },
-                provinceForm:{}
+                cityForm:{}
             }
         },
         components:{
            FormTop
         },
         methods:{
-            getProvinceInfo(){
+            getCityInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
-                this.provinceForm.ID = id;
-                this.$ajax.get("/address/province/"+this.provinceForm.ID).then(response=>{
+                this.cityForm.ID = id;
+                this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
                         this.loadging = false;
                         let {code,msg,data} = response.data;
                         if(code=='success'){
-                            this.provinceForm = data["province"];
+                            this.cityForm = data["city"];
                             this.access = data["access"];
                         }
                     });
             },
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/province");
+                    this.$router.push("/admin/address/city");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/province/form/"+id);
+                    this.$router.push("/admin/address/city/form/"+id);
                 }
             },
             formEdit(){
-                 this.$router.push("/admin/address/province/form/"+this.provinceForm.ID);
+                 this.$router.push("/admin/address/city/form/"+this.cityForm.ID);
             },
         },
         created:function(){
-            this.getProvinceInfo();
+            this.getCityInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getProvinceInfo'
+            '$route': 'getCityInfo'
         },
          
     }

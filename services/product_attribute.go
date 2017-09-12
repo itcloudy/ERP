@@ -9,7 +9,7 @@ import (
 )
 
 // ServiceCreateProductAttribute 创建记录
-func ServiceCreateProductAttribute(user *md.User, obj *md.ProductAttribute) (id int64, err error) {
+func ServiceCreateProductAttribute(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductAttribute"); err == nil {
@@ -34,14 +34,25 @@ func ServiceCreateProductAttribute(user *md.User, obj *md.ProductAttribute) (id 
 	if err != nil {
 		return
 	}
+	var obj md.ProductAttribute
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
+	if Code, ok := requestBody["Code"]; ok {
+		obj.Code = utils.ToString(Code)
+	}
+	if CreatVariant, ok := requestBody["CreatVariant"]; ok {
+		obj.CreatVariant = CreatVariant.(bool)
+	}
+
 	obj.CreateUserID = user.ID
-	id, err = md.AddProductAttribute(obj, o)
+	id, err = md.AddProductAttribute(&obj, o)
 
 	return
 }
 
 // ServiceUpdateProductAttribute 更新记录
-func ServiceUpdateProductAttribute(user *md.User, obj *md.ProductAttribute) (id int64, err error) {
+func ServiceUpdateProductAttribute(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductAttribute"); err == nil {
@@ -66,8 +77,24 @@ func ServiceUpdateProductAttribute(user *md.User, obj *md.ProductAttribute) (id 
 	if err != nil {
 		return
 	}
+	var obj md.ProductAttribute
+	var objPtr *md.ProductAttribute
+	if objPtr, err = md.GetProductAttributeByID(id, o); err != nil {
+		return
+	}
+	obj = *objPtr
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
+	if Code, ok := requestBody["Code"]; ok {
+		obj.Code = utils.ToString(Code)
+	}
+	if CreatVariant, ok := requestBody["CreatVariant"]; ok {
+		obj.CreatVariant = CreatVariant.(bool)
+	}
+
 	obj.UpdateUserID = user.ID
-	id, err = md.UpdateProductAttribute(obj, o)
+	id, err = md.UpdateProductAttribute(&obj, o)
 
 	return
 }
@@ -88,14 +115,12 @@ func ServiceGetProductAttribute(user *md.User, query map[string]interface{}, exc
 	o := orm.NewOrm()
 	if paginator, arrs, err = md.GetAllProductAttribute(o, query, exclude, condMap, fields, sortby, order, offset, limit); err == nil {
 		lenArrs := len(arrs)
-
 		for i := 0; i < lenArrs; i++ {
 			obj := arrs[i]
 			objInfo := make(map[string]interface{})
 			objInfo["Name"] = obj.Name
 			objInfo["Code"] = obj.Code
 			objInfo["ID"] = obj.ID
-
 			results = append(results, objInfo)
 		}
 	}
@@ -120,6 +145,19 @@ func ServiceGetProductAttributeByID(user *md.User, id int64) (access utils.Acces
 		objInfo["Name"] = attr.Name
 		objInfo["ID"] = attr.ID
 		objInfo["Code"] = attr.Code
+		objInfo["CreatVariant"] = attr.CreatVariant
+		lenValues := len(attr.ValueIds)
+
+		if lenValues > 0 {
+			var Values []interface{}
+			for i := 0; i < lenValues; i++ {
+				valueInfo := make(map[string]interface{})
+				valueInfo["ID"] = attr.ValueIds[i].ID
+				valueInfo["Name"] = attr.ValueIds[i].Name
+				Values = append(Values, valueInfo)
+			}
+			objInfo["Values"] = Values
+		}
 		attrInfo = objInfo
 	}
 	return

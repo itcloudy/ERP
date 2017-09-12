@@ -45,6 +45,13 @@ func BatchAddAddressProvince(privinces []*AddressProvince, ormObj orm.Ormer) (nu
 	return
 }
 
+// DeleteAddressProvinceByID delete  Company by ID
+func DeleteAddressProvinceByID(id int64, ormObj orm.Ormer) (num int64, err error) {
+	obj := &AddressProvince{ID: id}
+	num, err = ormObj.Delete(obj)
+	return
+}
+
 // UpdateAddressProvince update AddressProvince into database and returns id on success
 func UpdateAddressProvince(m *AddressProvince, ormObj orm.Ormer) (id int64, err error) {
 	if _, err = ormObj.Update(m); err == nil {

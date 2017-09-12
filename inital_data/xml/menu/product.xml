@@ -21,8 +21,9 @@
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/template","componentpath":"admin/product/productTemplateTree"}, 
-            {"path":"product/template/:id","componentpath":"admin/product/productTemplateForm"}
+            {"path":"product/template","componentpath":"admin/product/template/list"}, 
+            {"path":"product/template/form/:id","componentpath":"admin/product/template/form"},
+            {"path":"product/template/detail/:id","componentpath":"admin/product/template/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -36,8 +37,9 @@
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/product","componentpath":"admin/product/productProductTree"}, 
-            {"path":"product/product/:id","componentpath":"admin/product/productProductForm"}
+            {"path":"product/product","componentpath":"admin/product/product/list"}, 
+            {"path":"product/product/form/:id","componentpath":"admin/product/product/form"},
+            {"path":"product/product/detail/:id","componentpath":"admin/product/product/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -51,8 +53,9 @@
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/attribute","componentpath":"admin/product/productAttributeTree"}, 
-            {"path":"product/attribute/:id","componentpath":"admin/product/productAttributeForm"}
+            {"path":"product/attribute","componentpath":"admin/product/attribute/list"}, 
+            {"path":"product/attribute/form/:id","componentpath":"admin/product/attribute/form"},
+            {"path":"product/attribute/detail/:id","componentpath":"admin/product/attribute/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -66,8 +69,9 @@
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/attributevalue","componentpath":"admin/product/productAttributeValueTree"}, 
-            {"path":"product/attributevalue/:id","componentpath":"admin/product/productAttributeValueForm"}
+            {"path":"product/attributevalue","componentpath":"admin/product/attribute_value/list"}, 
+            {"path":"product/attributevalue/form/:id","componentpath":"admin/product/attribute_value/form"},
+            {"path":"product/attributevalue/detail/:id","componentpath":"admin/product/attribute_value/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -8,6 +9,39 @@ import (
 // AddressDistrictContriller 城市模块
 type AddressDistrictContriller struct {
 	BaseController
+}
+
+// Put  update district
+func (ctl *AddressDistrictContriller) Put() {
+	response := make(map[string]interface{})
+	IDStr := ctl.Ctx.Input.Param(":id")
+	if IDStr != "" {
+		var requestBody map[string]interface{}
+		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+		if id, err := utils.ToInt64(IDStr); err == nil {
+			if err := service.ServiceUpdateAddressDistrict(&ctl.User, requestBody, id); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				response["districtID"] = id
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err.Error()
+			}
+		} else {
+			response["code"] = utils.FailedCode
+			response["msg"] = utils.FailedMsg
+			response["err"] = "ID转换失败"
+		}
+
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = "ID为空"
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
 }
 
 // Get get districts
@@ -20,9 +54,18 @@ func (ctl *AddressDistrictContriller) Get() {
 		query := make(map[string]interface{})
 		exclude := make(map[string]interface{})
 		cond := make(map[string]map[string]interface{})
+		condAnd := make(map[string]interface{})
 		fields := make([]string, 0, 0)
 		sortby := make([]string, 0, 0)
 		order := make([]string, 0, 0)
+		nameStr := ctl.Input().Get("name")
+
+		if nameStr != "" {
+			condAnd["Name__icontains"] = nameStr
+		}
+		if len(condAnd) > 0 {
+			cond["and"] = condAnd
+		}
 		offsetStr := ctl.Input().Get("offset")
 		var offset int64
 		var limit int64 = 20

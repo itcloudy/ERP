@@ -2,22 +2,20 @@
     <div>
         <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/admin' }">后台首页</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin/address' }">地址管理</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin/address/city' }">城市</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/product' }">产品管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/product/attribute' }">属性</el-breadcrumb-item>
         </el-breadcrumb>
-         
-        <div>
+       <div>
             <ListTop :Create="access.Create" @changeCreateForm="changeCreateForm" />
             <pagination 
             @pageInfoChange="pageInfoChange"
-            :pageSize="citiesData.pageSize" 
-            :currentPage="citiesData.currentPage"
-            :total="citiesData.total"/>
+            :pageSize="attributesData.pageSize" 
+            :currentPage="attributesData.currentPage"
+            :total="attributesData.total"/>
             <el-table
-                v-loading.body="loading"
                 ref="multipleTable"
-                :data="citiesData.cityList"
-                @row-dblclick = "goCityDetail"
+                :data="attributesData.attributeList"
+                @row-dblclick = "goProductAttributeDetail"
                 style="width: 100%">
                 <el-table-column
                 type="selection"
@@ -28,16 +26,12 @@
                 label="ID">
                 </el-table-column>
                 <el-table-column
-                prop="Country.Name"
-                label="所属国家">
-                </el-table-column>
-                <el-table-column
-                prop="Province.Name"
-                label="所属省份">
-                </el-table-column>
-                <el-table-column
                 prop="Name"
-                label="名称">
+                label="属性">
+                </el-table-column>
+                <el-table-column
+                prop="Code"
+                label="属性编码">
                 </el-table-column>
             </el-table>
         </div>
@@ -51,24 +45,24 @@
       data() {
         return {
             treeViewHeight: this.$store.state.windowHeight-100,
-            citiesData:{
-                cityList:[],//tree视图数据
+            attributesData:{
+                attributeList:[],//tree视图数据
                 pageSize:20,//每页数量
                 total:0,//总数量
                 currentPage:1,//当前页
             },
             loading: false,
-            serverUrlPath:"/address/city",
             access:{
-                    Create:false,
-                    Update:false,
-                    Read:false,
-                    Unlink:false,
+                Create:false,
+                Update:false,
+                Read:false,
+                Unlink:false,
             },
+            serverUrlPath:"/product/attribute"
         }
     },
     methods:{
-        getCities(limit,offset){
+        getAttributes(limit,offset){
             this.loading = true;
             this.$ajax.get(this.serverUrlPath,{
                     params:{
@@ -79,25 +73,25 @@
                     this.loading = false;
                 let {code,msg,data} = response.data;
                 if(code=='success'){
-                    this.citiesData.cityList = data["cities"];
+                    this.attributesData.attributeList = data["attributes"];
                     this.access = data["access"];
                     let paginator = data.paginator;
                     if (paginator){
-                        this.citiesData.total = paginator.totalCount;
+                        this.attributesData.total = paginator.totalCount;
                     }
                 }
             });
         },
         pageInfoChange(pageSize,currentPage){
-            this.citiesData.pageSize = pageSize;
-            this.citiesData.currentPage = currentPage;
-            this.getCities(pageSize,(currentPage-1)*pageSize)
+            this.attributesData.pageSize = pageSize;
+            this.attributesData.currentPage = currentPage;
+            this.getAttributes(pageSize,(currentPage-1)*pageSize)
         },
-        goCityDetail(row, event){
-            this.$router.push("/admin/address/city/detail/"+row.ID);
+        goProductAttributeDetail(row, event){
+            this.$router.push("/admin/product/attribute/detail/"+row.ID);
         },
         changeCreateForm(){
-            this.$router.push("/admin/address/city/form/new");
+            this.$router.push("/admin/product/attribute/form/new");
         }
          
     },
@@ -107,18 +101,18 @@
     },
     created:function(){
         this.$nextTick(function(){
-            this.getCities(this.citiesData.pageSize,this.citiesData.currentPage-1);
+            this.getAttributes(this.attributesData.pageSize,this.attributesData.currentPage-1);
         });
     },
     computed:{
         showBottomPagitator:function(){
-            return this.citiesData.total/this.citiesData.pageSize > 1
+            return this.attributesData.total/this.attributesData.pageSize > 1
         }
     }
       
     }
 </script>
 <style lang="scss" scoped>
-    
+     
     
 </style>

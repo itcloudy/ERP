@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -8,6 +9,40 @@ import (
 // AddressProvinceContriller 城市模块
 type AddressProvinceContriller struct {
 	BaseController
+}
+
+// Put  update province
+func (ctl *AddressProvinceContriller) Put() {
+	response := make(map[string]interface{})
+	IDStr := ctl.Ctx.Input.Param(":id")
+	if IDStr != "" {
+
+		var requestBody map[string]interface{}
+		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+		if id, err := utils.ToInt64(IDStr); err == nil {
+			if err := service.ServiceUpdateAddressProvince(&ctl.User, requestBody, id); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				response["provinceID"] = id
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err.Error()
+			}
+		} else {
+			response["code"] = utils.FailedCode
+			response["msg"] = utils.FailedMsg
+			response["err"] = "ID转换失败"
+		}
+
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = "ID为空"
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
 }
 
 // Get get provinces

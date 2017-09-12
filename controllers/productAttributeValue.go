@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -8,6 +9,84 @@ import (
 // ProductAttributeValueContriller 城市模块
 type ProductAttributeValueContriller struct {
 	BaseController
+}
+
+// Delete delete product attribute value
+func (ctl *ProductAttributeValueContriller) Delete() {
+	response := make(map[string]interface{})
+	IDStr := ctl.Ctx.Input.Param(":id")
+
+	if id, err := utils.ToInt64(IDStr); err == nil {
+		if _, err := service.ServiceDeleteProductAttributeValue(&ctl.User, id); err == nil {
+			response["code"] = utils.SuccessCode
+			response["msg"] = utils.SuccessMsg
+			response["attributeValueID"] = id
+		} else {
+			response["code"] = utils.FailedCode
+			response["msg"] = utils.FailedMsg
+			response["err"] = err.Error()
+		}
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = "ID转换失败"
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
+}
+
+// Put update product attribute value
+func (ctl *ProductAttributeValueContriller) Put() {
+	response := make(map[string]interface{})
+	IDStr := ctl.Ctx.Input.Param(":id")
+	if IDStr != "" {
+
+		var requestBody map[string]interface{}
+		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+		if id, err := utils.ToInt64(IDStr); err == nil {
+			if err := service.ServiceUpdateProductAttributeValue(&ctl.User, requestBody, id); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				response["attributeValueID"] = id
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err.Error()
+			}
+		} else {
+			response["code"] = utils.FailedCode
+			response["msg"] = utils.FailedMsg
+			response["err"] = "ID转换失败"
+		}
+
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = "ID为空"
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
+}
+
+// Post create product attribute value
+func (ctl *ProductAttributeValueContriller) Post() {
+	response := make(map[string]interface{})
+	var requestBody map[string]interface{}
+	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+	if attributeValueID, err := service.ServiceCreateProductAttributeValue(&ctl.User, requestBody); err == nil {
+		response["code"] = utils.SuccessCode
+		response["msg"] = utils.SuccessMsg
+		response["attributeValueID"] = attributeValueID
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = err.Error()
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
 }
 
 // Get get attributeValues
@@ -37,17 +116,35 @@ func (ctl *ProductAttributeValueContriller) Get() {
 		}
 		var attributeValues []map[string]interface{}
 		var paginator utils.Paginator
-		if paginator, attributeValues, err = service.ServiceGetProductAttributeValue(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		var access utils.AccessResult
+		if access, paginator, attributeValues, err = service.ServiceGetProductAttributeValue(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
 			data["attributeValues"] = &attributeValues
 			data["paginator"] = &paginator
+			data["access"] = access
 			response["data"] = data
 		} else {
 			response["code"] = utils.FailedCode
 			response["msg"] = utils.FailedMsg
 			response["err"] = err
+		}
+	} else {
+		// 获得某个城市的信息
+		if valueID, err := utils.ToInt64(IDStr); err == nil {
+			if access, attribute, err := service.ServiceGetProductAttributeValueByID(&ctl.User, valueID); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				data := make(map[string]interface{})
+				data["attribute"] = &attribute
+				data["access"] = access
+				response["data"] = data
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err
+			}
 		}
 	}
 	ctl.Data["json"] = response

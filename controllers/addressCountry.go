@@ -11,26 +11,41 @@ type AddressCountryContriller struct {
 	BaseController
 }
 
-// Put  create test line
+// Put
 func (ctl *AddressCountryContriller) Put() {
 	response := make(map[string]interface{})
-	var requestBody map[string]interface{}
-	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	if countryID, err := service.ServiceUpdateAddressCountry(&ctl.User, requestBody); err == nil {
-		response["code"] = utils.SuccessCode
-		response["msg"] = utils.SuccessMsg
-		response["countryID"] = countryID
+	IDStr := ctl.Ctx.Input.Param(":id")
+	if IDStr != "" {
+
+		var requestBody map[string]interface{}
+		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+		if id, err := utils.ToInt64(IDStr); err == nil {
+			if err := service.ServiceUpdateAddressCountry(&ctl.User, requestBody, id); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				response["counytryID"] = id
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err.Error()
+			}
+		} else {
+			response["code"] = utils.FailedCode
+			response["msg"] = utils.FailedMsg
+			response["err"] = "ID转换失败"
+		}
+
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg
-		response["err"] = err.Error()
+		response["err"] = "ID为空"
 	}
 
 	ctl.Data["json"] = response
 	ctl.ServeJSON()
 }
 
-// Post create test line
+// Post update country
 func (ctl *AddressCountryContriller) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]interface{}

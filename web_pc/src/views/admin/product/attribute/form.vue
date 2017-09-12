@@ -5,11 +5,16 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="countryForm" :model="countryForm" label-width="80px">
-                <el-form-item label="国家名称">
-                    <el-input v-model="countryForm.Name"></el-input>
+            <el-form :inline="true" ref="attributeForm" :model="attributeForm" label-width="80px">
+                <el-form-item label="属性名称">
+                    <el-input v-model="attributeForm.Name"></el-input>
                 </el-form-item>
-        
+                <el-form-item label="属性编码">
+                    <el-input v-model="attributeForm.Code"></el-input>
+                </el-form-item>
+                <el-form-item label="创建规格">
+                    <el-switch on-text="是" off-text="否" v-model="attributeForm.CreatVariant"></el-switch>
+                </el-form-item>
             </el-form>
         </div>
     </div>
@@ -27,14 +32,20 @@
                     Read:false,
                     Unlink:false,
                 },
-                countryForm:{
+                attributeForm:{
                     Name:"",
                     ID:0,
+                    Code:"",
+                    CreatVariant:true,
+                    
                 },
-                NewCountryForm:{
+                NewProductAttributeForm:{
                     Name:"",
-                    ID:0,   
+                    ID:0,
+                    Code:"",
+                    CreatVariant:true,
                 },
+                
             }
         },
         components:{
@@ -42,61 +53,61 @@
         },
         methods:{
             formSave(){
-                if (this.countryForm.ID >0){
-                    this.$ajax.put("/address/country/"+this.countryForm.ID,this.countryForm).then(response=>{
-                        let {code,msg,countryID} = response.data;
+                if (this.attributeForm.ID >0){
+                    this.$ajax.put("/product/attribute/"+this.attributeForm.ID ,this.attributeForm).then(response=>{
+                        let {code,msg,attributeID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/country/detail/"+countryID);
+                            this.$router.push("/admin/product/attribute/detail/"+attributeID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
                     });
                 }else{
-                    this.$ajax.post("/address/country",this.countryForm).then(response=>{
-                        let {code,msg,countryID} = response.data;
+                    this.$ajax.post("/product/attribute",this.attributeForm).then(response=>{
+                        let {code,msg,attributeID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/country/detail/"+countryID);
+                            this.$router.push("/admin/product/attribute/detail/"+attributeID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
                     });
                 }
             },
-            getCountryInfo(){
+            getProductAttributeInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 if (id!='new'){
-                    this.countryForm.ID = id;
-                    this.$ajax.get("/address/country/"+this.countryForm.ID).then(response=>{
+                    this.attributeForm.ID = id;
+                    this.$ajax.get("/product/attribute/"+this.attributeForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){
-                                this.countryForm = data["country"];
+                                this.attributeForm = data["attribute"];
+                                this.provinceList = [this.attributeForm.Province]
+                                this.countryList = [this.attributeForm.Country]
                                 this.access = data["access"];
                             }
                         });
                 }else{
-                    this.countryForm = this.NewCountryForm;
+                    this.attributeForm = this.NewProductAttributeForm;
                 }
             },
-            
-            
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/country");
+                    this.$router.push("/admin/product/attribute");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/country/form/"+id);
+                    this.$router.push("/admin/product/attribute/form/"+id);
                 }
             },
         },
         created:function(){
-            this.getCountryInfo();
+            this.getProductAttributeInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getCountryInfo'
+            '$route': 'getProductAttributeInfo'
         },
          
     }

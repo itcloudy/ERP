@@ -47,6 +47,13 @@ func GetAddressCountryByID(id int64, ormObj orm.Ormer) (obj *AddressCountry, err
 	return obj, err
 }
 
+// DeleteAddressCountryByID delete  Company by ID
+func DeleteAddressCountryByID(id int64, ormObj orm.Ormer) (num int64, err error) {
+	obj := &AddressCountry{ID: id}
+	num, err = ormObj.Delete(obj)
+	return
+}
+
 // BatchAddAddressCountry insert  list of  Country into database and returns  number of  success.
 func BatchAddAddressCountry(countries []*AddressCountry, ormObj orm.Ormer) (num int64, err error) {
 	qs := ormObj.QueryTable(&AddressCountry{})

@@ -58,7 +58,15 @@ func UpdateProductAttribute(m *ProductAttribute, ormObj orm.Ormer) (id int64, er
 func GetProductAttributeByID(id int64, ormObj orm.Ormer) (obj *ProductAttribute, err error) {
 	obj = &ProductAttribute{ID: id}
 	err = ormObj.Read(obj)
+	ormObj.LoadRelated(obj, "ValueIds")
 	return obj, err
+}
+
+// DeleteProductAttributeByID delete  Company by ID
+func DeleteProductAttributeByID(id int64, ormObj orm.Ormer) (num int64, err error) {
+	obj := &ProductAttribute{ID: id}
+	num, err = ormObj.Delete(obj)
+	return
 }
 
 // GetAllProductAttribute retrieves all ProductAttribute matches certain condition. Returns empty list if no records exist

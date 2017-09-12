@@ -47,7 +47,7 @@ func ServiceCreateAddressCountry(user *md.User, requestBody map[string]interface
 }
 
 // ServiceUpdateAddressCountry 更新记录
-func ServiceUpdateAddressCountry(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceUpdateAddressCountry(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCountry"); err == nil {
 		if !access.Update {
@@ -74,10 +74,6 @@ func ServiceUpdateAddressCountry(user *md.User, requestBody map[string]interface
 	}
 	var obj md.AddressCountry
 	var objPtr *md.AddressCountry
-	if _, ok := requestBody["ID"]; !ok {
-		return
-	}
-	id, _ = utils.ToInt64(requestBody["ID"])
 	if objPtr, err = md.GetAddressCountryByID(id, o); err != nil {
 		return
 	}

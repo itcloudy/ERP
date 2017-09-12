@@ -11,26 +11,66 @@ type AddressCityContriller struct {
 	BaseController
 }
 
-// Put  create test line
-func (ctl *AddressCityContriller) Put() {
+// Delete delete city attribute value
+func (ctl *AddressCityContriller) Delete() {
 	response := make(map[string]interface{})
-	var requestBody map[string]interface{}
-	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	if cityID, err := service.ServiceUpdateAddressCity(&ctl.User, requestBody); err == nil {
-		response["code"] = utils.SuccessCode
-		response["msg"] = utils.SuccessMsg
-		response["cityID"] = cityID
+	IDStr := ctl.Ctx.Input.Param(":id")
+
+	if id, err := utils.ToInt64(IDStr); err == nil {
+		if _, err := service.ServiceDeleteAddressCity(&ctl.User, id); err == nil {
+			response["code"] = utils.SuccessCode
+			response["msg"] = utils.SuccessMsg
+			response["cityID"] = id
+		} else {
+			response["code"] = utils.FailedCode
+			response["msg"] = utils.FailedMsg
+			response["err"] = err.Error()
+		}
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg
-		response["err"] = err.Error()
+		response["err"] = "ID转换失败"
 	}
 
 	ctl.Data["json"] = response
 	ctl.ServeJSON()
 }
 
-// Post create test line
+// Put update city
+func (ctl *AddressCityContriller) Put() {
+	response := make(map[string]interface{})
+	IDStr := ctl.Ctx.Input.Param(":id")
+	if IDStr != "" {
+
+		var requestBody map[string]interface{}
+		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+		if id, err := utils.ToInt64(IDStr); err == nil {
+			if err := service.ServiceUpdateAddressCity(&ctl.User, requestBody, id); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				response["cityID"] = id
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err.Error()
+			}
+		} else {
+			response["code"] = utils.FailedCode
+			response["msg"] = utils.FailedMsg
+			response["err"] = "ID转换失败"
+		}
+
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = "ID为空"
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
+}
+
+// Post
 func (ctl *AddressCityContriller) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]interface{}
@@ -59,9 +99,18 @@ func (ctl *AddressCityContriller) Get() {
 		query := make(map[string]interface{})
 		exclude := make(map[string]interface{})
 		cond := make(map[string]map[string]interface{})
+		condAnd := make(map[string]interface{})
 		fields := make([]string, 0, 0)
 		sortby := make([]string, 0, 0)
 		order := make([]string, 0, 0)
+		nameStr := ctl.Input().Get("name")
+
+		if nameStr != "" {
+			condAnd["Name__icontains"] = nameStr
+		}
+		if len(condAnd) > 0 {
+			cond["and"] = condAnd
+		}
 		offsetStr := ctl.Input().Get("offset")
 		var offset int64
 		var limit int64 = 20

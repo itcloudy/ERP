@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -8,6 +9,59 @@ import (
 // ProductAttributeContriller 城市模块
 type ProductAttributeContriller struct {
 	BaseController
+}
+
+// Put update product attribute
+func (ctl *ProductAttributeContriller) Put() {
+	response := make(map[string]interface{})
+	IDStr := ctl.Ctx.Input.Param(":id")
+	if IDStr != "" {
+
+		var requestBody map[string]interface{}
+		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+		if id, err := utils.ToInt64(IDStr); err == nil {
+			if err := service.ServiceUpdateProductAttribute(&ctl.User, requestBody, id); err == nil {
+				response["code"] = utils.SuccessCode
+				response["msg"] = utils.SuccessMsg
+				response["attributeID"] = id
+			} else {
+				response["code"] = utils.FailedCode
+				response["msg"] = utils.FailedMsg
+				response["err"] = err.Error()
+			}
+		} else {
+			response["code"] = utils.FailedCode
+			response["msg"] = utils.FailedMsg
+			response["err"] = "ID转换失败"
+		}
+
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = "ID为空"
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
+}
+
+// Post create product attribute
+func (ctl *ProductAttributeContriller) Post() {
+	response := make(map[string]interface{})
+	var requestBody map[string]interface{}
+	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+	if attributeID, err := service.ServiceCreateProductAttribute(&ctl.User, requestBody); err == nil {
+		response["code"] = utils.SuccessCode
+		response["msg"] = utils.SuccessMsg
+		response["attributeID"] = attributeID
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = err.Error()
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
 }
 
 // Get get attributes
@@ -69,6 +123,5 @@ func (ctl *ProductAttributeContriller) Get() {
 		}
 	}
 	ctl.Data["json"] = response
-
 	ctl.ServeJSON()
 }

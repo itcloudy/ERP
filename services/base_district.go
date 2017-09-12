@@ -4,6 +4,7 @@ import (
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
+	"reflect"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -40,7 +41,7 @@ func ServiceCreateAddressDistrict(user *md.User, obj *md.AddressDistrict) (id in
 }
 
 // ServiceUpdateAddressDistrict 更新记录
-func ServiceUpdateAddressDistrict(user *md.User, obj *md.AddressDistrict) (id int64, err error) {
+func ServiceUpdateAddressDistrict(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressDistrict"); err == nil {
 		if !access.Update {
@@ -64,7 +65,31 @@ func ServiceUpdateAddressDistrict(user *md.User, obj *md.AddressDistrict) (id in
 	if err != nil {
 		return
 	}
-	id, err = md.UpdateAddressDistrict(obj, o)
+	var obj md.AddressDistrict
+	var objPtr *md.AddressDistrict
+	if objPtr, err = md.GetAddressDistrictByID(id, o); err != nil {
+		return
+	}
+	obj = *objPtr
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
+	var city md.AddressCity
+	if City, ok := requestBody["Country"]; ok {
+		cityT := reflect.TypeOf(City)
+		if cityT.Kind() == reflect.Map {
+			cityMap := City.(map[string]interface{})
+			if cityID, ok := cityMap["ID"]; ok {
+				city.ID, _ = utils.ToInt64(cityID)
+				obj.City = &city
+			}
+		} else if cityT.Kind() == reflect.String {
+			city.ID, _ = utils.ToInt64(City)
+			obj.City = &city
+		}
+	}
+	obj.UpdateUserID = user.ID
+	id, err = md.UpdateAddressDistrict(&obj, o)
 	return
 }
 
@@ -149,6 +174,7 @@ func ServiceGetAddressDistrictByID(user *md.User, id int64) (access utils.Access
 		cityInfo := make(map[string]interface{})
 		cityInfo["ID"] = district.City.ID
 		cityInfo["Name"] = district.City.Name
+		objInfo["City"] = cityInfo
 		provinceInfo := make(map[string]interface{})
 		if district.City.Province != nil {
 			provinceInfo["ID"] = district.City.Province.ID
