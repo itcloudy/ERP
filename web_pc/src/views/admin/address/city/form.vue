@@ -62,26 +62,26 @@
                 },
                 cityForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     Province:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     },
                     Country:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     }
                 },
                 NewCityForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     Province:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     },
                     Country:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     }
                 },
                 provinceList:[],

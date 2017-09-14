@@ -6,13 +6,13 @@ import (
 	"golangERP/utils"
 )
 
-// AddressCountryController 城市模块
-type AddressCountryController struct {
+// ProductUomController 城市模块
+type ProductUomController struct {
 	BaseController
 }
 
-// Put
-func (ctl *AddressCountryController) Put() {
+// Put update product uom
+func (ctl *ProductUomController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
@@ -20,10 +20,10 @@ func (ctl *AddressCountryController) Put() {
 		var requestBody map[string]interface{}
 		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 		if id, err := utils.ToInt64(IDStr); err == nil {
-			if err := service.ServiceUpdateAddressCountry(&ctl.User, requestBody, id); err == nil {
+			if err := service.ServiceUpdateProductUom(&ctl.User, requestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
-				response["counytryID"] = id
+				response["uomID"] = id
 			} else {
 				response["code"] = utils.FailedCode
 				response["msg"] = utils.FailedMsg
@@ -45,15 +45,15 @@ func (ctl *AddressCountryController) Put() {
 	ctl.ServeJSON()
 }
 
-// Post update country
-func (ctl *AddressCountryController) Post() {
+// Post create product uom
+func (ctl *ProductUomController) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]interface{}
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	if countryID, err := service.ServiceCreateAddressCountry(&ctl.User, requestBody); err == nil {
+	if uomID, err := service.ServiceCreateProductUom(&ctl.User, requestBody); err == nil {
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
-		response["countryID"] = countryID
+		response["uomID"] = uomID
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg
@@ -64,8 +64,8 @@ func (ctl *AddressCountryController) Post() {
 	ctl.ServeJSON()
 }
 
-// Get get countries
-func (ctl *AddressCountryController) Get() {
+// Get get uoms
+func (ctl *ProductUomController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	var err error
@@ -78,7 +78,6 @@ func (ctl *AddressCountryController) Get() {
 		fields := make([]string, 0, 0)
 		sortby := make([]string, 0, 0)
 		order := make([]string, 0, 0)
-		offsetStr := ctl.Input().Get("offset")
 		nameStr := ctl.Input().Get("name")
 
 		if nameStr != "" {
@@ -87,6 +86,7 @@ func (ctl *AddressCountryController) Get() {
 		if len(condAnd) > 0 {
 			cond["and"] = condAnd
 		}
+		offsetStr := ctl.Input().Get("offset")
 		var offset int64
 		var limit int64 = 20
 		if offsetStr != "" {
@@ -98,14 +98,14 @@ func (ctl *AddressCountryController) Get() {
 				limit = 20
 			}
 		}
-		var countries []map[string]interface{}
+		var uoms []map[string]interface{}
 		var paginator utils.Paginator
 		var access utils.AccessResult
-		if access, paginator, countries, err = service.ServiceGetAddressCountry(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		if access, paginator, uoms, err = service.ServiceGetProductUom(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
-			data["countries"] = &countries
+			data["uoms"] = &uoms
 			data["paginator"] = &paginator
 			data["access"] = access
 			response["data"] = data
@@ -115,13 +115,13 @@ func (ctl *AddressCountryController) Get() {
 			response["err"] = err
 		}
 	} else {
-		// 获得某个国家的信息
-		if countryID, err := utils.ToInt64(IDStr); err == nil {
-			if access, country, err := service.ServiceGetAddressCountryByID(&ctl.User, countryID); err == nil {
+		// 获得某个城市的信息
+		if uomID, err := utils.ToInt64(IDStr); err == nil {
+			if access, uom, err := service.ServiceGetProductUomByID(&ctl.User, uomID); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				data := make(map[string]interface{})
-				data["country"] = &country
+				data["uom"] = &uom
 				data["access"] = access
 				response["data"] = data
 			} else {

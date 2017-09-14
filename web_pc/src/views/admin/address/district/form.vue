@@ -77,34 +77,34 @@
                 },
                 districtForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     City:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     },
                     Province:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     },
                     Country:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     }
                 },
                 NewDistrictForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     City:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     },
                     Province:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     },
                     Country:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     }
                 },
                 cityList:[],

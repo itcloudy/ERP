@@ -35,14 +35,14 @@
                 },
                 attributeForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     Code:"",
                     CreatVariant:true,
                     
                 },
                 NewProductAttributeForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     Code:"",
                     CreatVariant:true,
                 },

@@ -6,13 +6,13 @@ import (
 	"golangERP/utils"
 )
 
-// ProductAttributeContriller 城市模块
-type ProductAttributeContriller struct {
+// ProductAttributeController 城市模块
+type ProductAttributeController struct {
 	BaseController
 }
 
 // Put update product attribute
-func (ctl *ProductAttributeContriller) Put() {
+func (ctl *ProductAttributeController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
@@ -46,7 +46,7 @@ func (ctl *ProductAttributeContriller) Put() {
 }
 
 // Post create product attribute
-func (ctl *ProductAttributeContriller) Post() {
+func (ctl *ProductAttributeController) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]interface{}
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
@@ -65,7 +65,7 @@ func (ctl *ProductAttributeContriller) Post() {
 }
 
 // Get get attributes
-func (ctl *ProductAttributeContriller) Get() {
+func (ctl *ProductAttributeController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	var err error

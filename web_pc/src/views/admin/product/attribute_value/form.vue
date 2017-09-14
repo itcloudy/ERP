@@ -46,18 +46,18 @@
                 },
                 valueForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     Attribute:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     },
                 },
                 NewValueForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     Attribute:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     },
                 },
                 attributeList:[]

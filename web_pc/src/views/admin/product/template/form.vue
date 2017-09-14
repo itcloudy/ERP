@@ -5,41 +5,10 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="cityForm" :model="cityForm" label-width="80px">
-                <el-form-item label="所属国家">
-                    <el-select
-                        v-model="cityForm.Country.ID"
-                        :name="cityForm.Country.Name"
-                        filterable
-                        remote
-                        placeholder="请输入国家"
-                        :remote-method="getCountryList">
-                        <el-option
-                            v-for="item in countryList"
-                            :key="item.ID"
-                            :label="item.Name"
-                            :value="item.ID">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                 <el-form-item label="所属省份">
-                    <el-select
-                        v-model="cityForm.Province.ID"
-                        :name="cityForm.Province.Name"
-                        filterable
-                        remote
-                        placeholder="请输入省份"
-                        :remote-method="getProvinceList">
-                        <el-option
-                            v-for="item in provinceList"
-                            :key="item.ID"
-                            :label="item.Name"
-                            :value="item.ID">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="城市名称">
-                    <el-input v-model="cityForm.Name"></el-input>
+            <el-form :inline="true" ref="templateForm" :model="templateForm" label-width="80px">
+                 
+                <el-form-item label="款式名称">
+                    <el-input v-model="templateForm.Name"></el-input>
                 </el-form-item>
         
             </el-form>
@@ -47,7 +16,8 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop'; 
+    import  {SERVER_PRODUCT_TEMPLATE} from '@/server_address';         
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -59,32 +29,16 @@
                     Read:false,
                     Unlink:false,
                 },
-                cityForm:{
+                templateForm:{
                     Name:"",
-                    ID:0,
-                    Province:{
-                        Name:"",
-                        ID:0,
-                    },
-                    Country:{
-                        Name:"",
-                        ID:0,
-                    }
+                    ID:"",
+                    
                 },
-                NewCityForm:{
+                NewTemplateForm:{
                     Name:"",
-                    ID:0,
-                    Province:{
-                        Name:"",
-                        ID:0,
-                    },
-                    Country:{
-                        Name:"",
-                        ID:0,
-                    }
+                    ID:"",
+                    
                 },
-                provinceList:[],
-                countryList:[],
             }
         },
         components:{
@@ -92,22 +46,22 @@
         },
         methods:{
             formSave(){
-                if (this.cityForm.ID >0){
-                    this.$ajax.put("/address/city/"+this.cityForm.ID ,this.cityForm).then(response=>{
-                        let {code,msg,cityID} = response.data;
+                if (this.templateForm.ID >0){
+                    this.$ajax.put(SERVER_PRODUCT_TEMPLATE+this.templateForm.ID ,this.templateForm).then(response=>{
+                        let {code,msg,templateID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
+                            this.$router.push("/admin/product/template/detail/"+templateID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
                     });
                 }else{
-                    this.$ajax.post("/address/city",this.cityForm).then(response=>{
-                        let {code,msg,cityID} = response.data;
+                    this.$ajax.post(SERVER_PRODUCT_TEMPLATE,this.templateForm).then(response=>{
+                        let {code,msg,templateID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
+                            this.$router.push("/admin/product/template/detail/"+templateID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
@@ -118,54 +72,25 @@
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 if (id!='new'){
-                    this.cityForm.ID = id;
-                    this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                    this.templateForm.ID = id;
+                    this.$ajax.get(SERVER_PRODUCT_TEMPLATE+this.templateForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){
-                                this.cityForm = data["city"];
-                                this.provinceList = [this.cityForm.Province]
-                                this.countryList = [this.cityForm.Country]
+                                this.templateForm = data["template"];
                                 this.access = data["access"];
                             }
                         });
                 }else{
-                    this.cityForm = this.NewCityForm;
+                    this.templateForm = this.NewTemplateForm;
                 }
             },
-            getCountryList(query){
-                this.$ajax.get("/address/country",{
-                    params:{
-                        offset:0,
-                        limit:20,
-                        name:query,
-                    }
-                }).then(response=>{
-                    let {code,msg,data} = response.data;
-                    if(code=='success'){
-                        this.countryList = data["countries"];
-                    }
-                });
-            },
-            getProvinceList(query){
-                this.$ajax.get("/address/province",{
-                    params:{
-                        offset:0,
-                        limit:20,
-                        name:query,
-                    }
-                }).then(response=>{
-                    let {code,msg,data} = response.data;
-                    if(code=='success'){
-                        this.provinceList = data["provinces"];
-                    }
-                });
-            },
+             
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/city");
+                    this.$router.push("/admin/product/template");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/city/form/"+id);
+                    this.$router.push("/admin/product/template/form/"+id);
                 }
             },
         },

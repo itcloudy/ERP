@@ -6,13 +6,13 @@ import (
 	"golangERP/utils"
 )
 
-// AddressCountryController 城市模块
-type AddressCountryController struct {
+// ProductAttributeLineController 城市模块
+type ProductAttributeLineController struct {
 	BaseController
 }
 
-// Put
-func (ctl *AddressCountryController) Put() {
+// Put update product attribute  line
+func (ctl *ProductAttributeLineController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
@@ -20,10 +20,10 @@ func (ctl *AddressCountryController) Put() {
 		var requestBody map[string]interface{}
 		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 		if id, err := utils.ToInt64(IDStr); err == nil {
-			if err := service.ServiceUpdateAddressCountry(&ctl.User, requestBody, id); err == nil {
+			if err := service.ServiceUpdateProductAttributeLine(&ctl.User, requestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
-				response["counytryID"] = id
+				response["lineID"] = id
 			} else {
 				response["code"] = utils.FailedCode
 				response["msg"] = utils.FailedMsg
@@ -45,15 +45,15 @@ func (ctl *AddressCountryController) Put() {
 	ctl.ServeJSON()
 }
 
-// Post update country
-func (ctl *AddressCountryController) Post() {
+// Post create product attribute line
+func (ctl *ProductAttributeLineController) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]interface{}
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	if countryID, err := service.ServiceCreateAddressCountry(&ctl.User, requestBody); err == nil {
+	if attributeID, err := service.ServiceCreateProductAttributeLine(&ctl.User, requestBody); err == nil {
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
-		response["countryID"] = countryID
+		response["attributeID"] = attributeID
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg
@@ -64,8 +64,8 @@ func (ctl *AddressCountryController) Post() {
 	ctl.ServeJSON()
 }
 
-// Get get countries
-func (ctl *AddressCountryController) Get() {
+// Get get attributes
+func (ctl *ProductAttributeLineController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	var err error
@@ -74,19 +74,10 @@ func (ctl *AddressCountryController) Get() {
 		query := make(map[string]interface{})
 		exclude := make(map[string]interface{})
 		cond := make(map[string]map[string]interface{})
-		condAnd := make(map[string]interface{})
 		fields := make([]string, 0, 0)
 		sortby := make([]string, 0, 0)
 		order := make([]string, 0, 0)
 		offsetStr := ctl.Input().Get("offset")
-		nameStr := ctl.Input().Get("name")
-
-		if nameStr != "" {
-			condAnd["Name__icontains"] = nameStr
-		}
-		if len(condAnd) > 0 {
-			cond["and"] = condAnd
-		}
 		var offset int64
 		var limit int64 = 20
 		if offsetStr != "" {
@@ -98,14 +89,14 @@ func (ctl *AddressCountryController) Get() {
 				limit = 20
 			}
 		}
-		var countries []map[string]interface{}
+		var attributes []map[string]interface{}
 		var paginator utils.Paginator
 		var access utils.AccessResult
-		if access, paginator, countries, err = service.ServiceGetAddressCountry(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		if access, paginator, attributes, err = service.ServiceGetProductAttributeLine(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
-			data["countries"] = &countries
+			data["attributes"] = &attributes
 			data["paginator"] = &paginator
 			data["access"] = access
 			response["data"] = data
@@ -115,13 +106,13 @@ func (ctl *AddressCountryController) Get() {
 			response["err"] = err
 		}
 	} else {
-		// 获得某个国家的信息
-		if countryID, err := utils.ToInt64(IDStr); err == nil {
-			if access, country, err := service.ServiceGetAddressCountryByID(&ctl.User, countryID); err == nil {
+		// 获得某个城市的信息
+		if attributeID, err := utils.ToInt64(IDStr); err == nil {
+			if access, line, err := service.ServiceGetProductAttributeLineByID(&ctl.User, attributeID); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				data := make(map[string]interface{})
-				data["country"] = &country
+				data["line"] = &line
 				data["access"] = access
 				response["data"] = data
 			} else {

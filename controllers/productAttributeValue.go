@@ -6,13 +6,13 @@ import (
 	"golangERP/utils"
 )
 
-// ProductAttributeValueContriller 城市模块
-type ProductAttributeValueContriller struct {
+// ProductAttributeValueController 城市模块
+type ProductAttributeValueController struct {
 	BaseController
 }
 
 // Delete delete product attribute value
-func (ctl *ProductAttributeValueContriller) Delete() {
+func (ctl *ProductAttributeValueController) Delete() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 
@@ -37,7 +37,7 @@ func (ctl *ProductAttributeValueContriller) Delete() {
 }
 
 // Put update product attribute value
-func (ctl *ProductAttributeValueContriller) Put() {
+func (ctl *ProductAttributeValueController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
@@ -71,7 +71,7 @@ func (ctl *ProductAttributeValueContriller) Put() {
 }
 
 // Post create product attribute value
-func (ctl *ProductAttributeValueContriller) Post() {
+func (ctl *ProductAttributeValueController) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]interface{}
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
@@ -90,7 +90,7 @@ func (ctl *ProductAttributeValueContriller) Post() {
 }
 
 // Get get attributeValues
-func (ctl *ProductAttributeValueContriller) Get() {
+func (ctl *ProductAttributeValueController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	var err error

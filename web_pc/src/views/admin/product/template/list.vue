@@ -2,22 +2,22 @@
     <div>
         <el-breadcrumb separator="/">
             <el-breadcrumb-item :to="{ path: '/admin' }">后台首页</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin/address' }">地址管理</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/admin/address/city' }">城市</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/address' }">产品管理</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/admin/product/template' }">款式</el-breadcrumb-item>
         </el-breadcrumb>
          
         <div>
             <ListTop :Create="access.Create" @changeCreateForm="changeCreateForm" />
             <pagination 
             @pageInfoChange="pageInfoChange"
-            :pageSize="citiesData.pageSize" 
-            :currentPage="citiesData.currentPage"
-            :total="citiesData.total"/>
+            :pageSize="templatesData.pageSize" 
+            :currentPage="templatesData.currentPage"
+            :total="templatesData.total"/>
             <el-table
                 v-loading.body="loading"
                 ref="multipleTable"
-                :data="citiesData.cityList"
-                @row-dblclick = "goCityDetail"
+                :data="templatesData.templateList"
+                @row-dblclick = "goProductTemplateDetail"
                 style="width: 100%">
                 <el-table-column
                 type="selection"
@@ -28,16 +28,65 @@
                 label="ID">
                 </el-table-column>
                 <el-table-column
-                prop="Country.Name"
-                label="所属国家">
+                prop="Name"
+                label="款式名称">
                 </el-table-column>
                 <el-table-column
-                prop="Province.Name"
+                prop="Category.Name"
                 label="所属省份">
                 </el-table-column>
                 <el-table-column
-                prop="Name"
-                label="名称">
+                prop="Rental"
+                label="代售品">
+                </el-table-column>
+                <el-table-column
+                prop="Price"
+                label="款式价格">
+                </el-table-column>
+                <el-table-column
+                prop="StandardPrice"
+                label="成本价格">
+                </el-table-column>
+                <el-table-column
+                prop="StandardWeight"
+                label="标准重量">
+                </el-table-column>
+                <el-table-column
+                prop="SaleOk"
+                label="可销售">
+                </el-table-column>
+                <el-table-column
+                prop="Active"
+                label="有效">
+                </el-table-column>
+                <el-table-column
+                prop="IsProductVariant"
+                label="是规格产品">
+                </el-table-column>
+                <el-table-column
+                prop="FirstSaleUom.Name"
+                label="第一销售单位">
+                </el-table-column>
+                <el-table-column
+                prop="SecondSaleUom.Name"
+                label="第二销售单位">
+                </el-table-column>
+                <el-table-column
+                prop="VariantCount"
+                label="产品规格数量">
+                </el-table-column>
+                 
+                <el-table-column
+                prop="DefaultCode"
+                label="产品编码">
+                </el-table-column>
+                <el-table-column
+                prop="ProductType"
+                label="产品类型">
+                </el-table-column>
+                <el-table-column
+                prop="ProductMethod"
+                label="规格创建方式">
                 </el-table-column>
             </el-table>
         </div>
@@ -46,31 +95,31 @@
 <script>
     import  {default as Pagination} from '@/views/admin/common/Pagination';
     import  {default as ListTop} from '@/views/admin/common/ListTop'; 
+    import  {SERVER_PRODUCT_TEMPLATE} from '@/server_address'; 
     import { mapState } from 'vuex';
     export default {
       data() {
         return {
             treeViewHeight: this.$store.state.windowHeight-100,
-            citiesData:{
-                cityList:[],//tree视图数据
+            templatesData:{
+                templateList:[],//tree视图数据
                 pageSize:20,//每页数量
                 total:0,//总数量
                 currentPage:1,//当前页
             },
             loading: false,
-            serverUrlPath:"/address/city",
             access:{
-                    Create:false,
-                    Update:false,
-                    Read:false,
-                    Unlink:false,
+                Create:false,
+                Update:false,
+                Read:false,
+                Unlink:false,
             },
         }
     },
     methods:{
-        getCities(limit,offset){
+        getProductTemplates(limit,offset){
             this.loading = true;
-            this.$ajax.get(this.serverUrlPath,{
+            this.$ajax.get(SERVER_PRODUCT_TEMPLATE,{
                     params:{
                         offset:offset,
                         limit:limit
@@ -79,25 +128,25 @@
                     this.loading = false;
                 let {code,msg,data} = response.data;
                 if(code=='success'){
-                    this.citiesData.cityList = data["cities"];
+                    this.templatesData.templateList = data["templates"];
                     this.access = data["access"];
                     let paginator = data.paginator;
                     if (paginator){
-                        this.citiesData.total = paginator.totalCount;
+                        this.templatesData.total = paginator.totalCount;
                     }
                 }
             });
         },
         pageInfoChange(pageSize,currentPage){
-            this.citiesData.pageSize = pageSize;
-            this.citiesData.currentPage = currentPage;
-            this.getCities(pageSize,(currentPage-1)*pageSize)
+            this.templatesData.pageSize = pageSize;
+            this.templatesData.currentPage = currentPage;
+            this.getProductTemplates(pageSize,(currentPage-1)*pageSize)
         },
-        goCityDetail(row, event){
-            this.$router.push("/admin/address/city/detail/"+row.ID);
+        goProductTemplateDetail(row, event){
+            this.$router.push("/admin/product/template/detail/"+row.ID);
         },
         changeCreateForm(){
-            this.$router.push("/admin/address/city/form/new");
+            this.$router.push("/admin/product/template/form/new");
         }
          
     },
@@ -107,17 +156,18 @@
     },
     created:function(){
         this.$nextTick(function(){
-            this.getCities(this.citiesData.pageSize,this.citiesData.currentPage-1);
+            this.getProductTemplates(this.templatesData.pageSize,this.templatesData.currentPage-1);
         });
     },
     computed:{
         showBottomPagitator:function(){
-            return this.citiesData.total/this.citiesData.pageSize > 1
+            return this.templatesData.total/this.templatesData.pageSize > 1
         }
     }
       
     }
 </script>
 <style lang="scss" scoped>
-     
+    
+    
 </style>

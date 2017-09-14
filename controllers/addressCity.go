@@ -6,13 +6,13 @@ import (
 	"golangERP/utils"
 )
 
-// AddressCityContriller 城市模块
-type AddressCityContriller struct {
+// AddressCityController 城市模块
+type AddressCityController struct {
 	BaseController
 }
 
 // Delete delete city attribute value
-func (ctl *AddressCityContriller) Delete() {
+func (ctl *AddressCityController) Delete() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 
@@ -37,7 +37,7 @@ func (ctl *AddressCityContriller) Delete() {
 }
 
 // Put update city
-func (ctl *AddressCityContriller) Put() {
+func (ctl *AddressCityController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
@@ -71,7 +71,7 @@ func (ctl *AddressCityContriller) Put() {
 }
 
 // Post
-func (ctl *AddressCityContriller) Post() {
+func (ctl *AddressCityController) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]interface{}
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
@@ -90,7 +90,7 @@ func (ctl *AddressCityContriller) Post() {
 }
 
 // Get get cities
-func (ctl *AddressCityContriller) Get() {
+func (ctl *AddressCityController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	var err error

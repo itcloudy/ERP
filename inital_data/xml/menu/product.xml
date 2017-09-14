@@ -75,6 +75,22 @@
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
+    <menu id="product_uom">
+        <name>产品单位</name>
+        <parent>product</parent>
+        <icon>el-icon-menu</icon>
+        <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
+        <path>product/uom</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"product/uom","componentpath":"admin/product/uom/list"}, 
+            {"path":"product/uom/form/:id","componentpath":"admin/product/uom/form"},
+            {"path":"product/uom/detail/:id","componentpath":"admin/product/uom/detail"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
 
    
 </Menus>

@@ -46,19 +46,19 @@
                 },
                 provinceForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     Country:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     }
                 },
                 NewProvinceForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                     
                     Country:{
                         Name:"",
-                        ID:0,
+                        ID:"",
                     }
                 },
                 countryList:[],

@@ -6,13 +6,13 @@ import (
 	"golangERP/utils"
 )
 
-// AddressProvinceContriller 城市模块
-type AddressProvinceContriller struct {
+// AddressProvinceController 城市模块
+type AddressProvinceController struct {
 	BaseController
 }
 
 // Put  update province
-func (ctl *AddressProvinceContriller) Put() {
+func (ctl *AddressProvinceController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
@@ -46,7 +46,7 @@ func (ctl *AddressProvinceContriller) Put() {
 }
 
 // Get get provinces
-func (ctl *AddressProvinceContriller) Get() {
+func (ctl *AddressProvinceController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	var err error

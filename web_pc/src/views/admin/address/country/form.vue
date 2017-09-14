@@ -30,11 +30,11 @@
                 },
                 countryForm:{
                     Name:"",
-                    ID:0,
+                    ID:"",
                 },
                 NewCountryForm:{
                     Name:"",
-                    ID:0,   
+                    ID:"",   
                 },
             }
         },

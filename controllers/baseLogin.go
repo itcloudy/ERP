@@ -7,13 +7,13 @@ import (
 	"strconv"
 )
 
-// LoginContriller 登录模块
-type LoginContriller struct {
+// LoginController 登录模块
+type LoginController struct {
 	BaseController
 }
 
 // Post 登录请求
-func (ctl *LoginContriller) Post() {
+func (ctl *LoginController) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]string
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
@@ -49,7 +49,7 @@ func (ctl *LoginContriller) Post() {
 }
 
 // Get 注销登录请求
-func (ctl *LoginContriller) Get() {
+func (ctl *LoginController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if ID, err := strconv.ParseInt(IDStr, 10, 64); err == nil {
