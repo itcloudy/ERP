@@ -60,18 +60,7 @@
                     Read:false,
                     Unlink:false,
                 },
-                cityForm:{
-                    Name:"",
-                    ID:"",
-                    Province:{
-                        Name:"",
-                        ID:"",
-                    },
-                    Country:{
-                        Name:"",
-                        ID:"",
-                    }
-                },
+                cityForm:{ },
                 NewCityForm:{
                     Name:"",
                     ID:"",

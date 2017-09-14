@@ -4,12 +4,13 @@ import (
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
+	"reflect"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // ServiceCreateProductCategory 创建记录
-func ServiceCreateProductCategory(user *md.User, obj *md.ProductCategory) (id int64, err error) {
+func ServiceCreateProductCategory(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductCategory"); err == nil {
 		if !access.Create {
@@ -33,9 +34,30 @@ func ServiceCreateProductCategory(user *md.User, obj *md.ProductCategory) (id in
 	if err != nil {
 		return
 	}
+	var obj md.ProductCategory
 	var cateMax md.ProductCategory
-	if obj.Parent != nil {
-		if parent, err := md.GetProductCategoryByID(obj.Parent.ID, o); err == nil {
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
+	parentNotOK := false
+	var parent md.ProductCategory
+	if Parent, ok := requestBody["Parent"]; ok {
+
+		parentT := reflect.TypeOf(Parent)
+		if parentT.Kind() == reflect.Map {
+			parentMap := Parent.(map[string]interface{})
+			if pID, ok := parentMap["ID"]; ok {
+				parent.ID, _ = utils.ToInt64(pID)
+				obj.Parent = &parent
+			}
+		} else if parentT.Kind() == reflect.String {
+			parent.ID, _ = utils.ToInt64(Parent)
+			obj.Parent = &parent
+		}
+		if parent.ID > 0 {
+			if pt, err := md.GetProductCategoryByID(parent.ID, o); err == nil {
+				parent = *pt
+			}
 			var maxParentRight int64
 			if err = o.QueryTable(&parent).Filter("Parent__id", parent.ID).OrderBy("-ParentRight").Limit(1).One(&cateMax); err == nil {
 				maxParentRight = cateMax.ParentRight
@@ -59,8 +81,11 @@ func ServiceCreateProductCategory(user *md.User, obj *md.ProductCategory) (id in
 					"ParentRight": orm.ColValue(orm.ColAdd, 2),
 				})
 			}
+		} else {
+			parentNotOK = true
 		}
-	} else {
+	}
+	if parentNotOK {
 		// 判断是否有分类
 		if err = o.QueryTable(&obj).OrderBy("-ParentRight").Limit(1).One(&cateMax); err == nil {
 			obj.ParentLeft = cateMax.ParentRight + 1
@@ -71,7 +96,49 @@ func ServiceCreateProductCategory(user *md.User, obj *md.ProductCategory) (id in
 		}
 	}
 	obj.CreateUserID = user.ID
-	id, err = md.AddProductCategory(obj, o)
+	id, err = md.AddProductCategory(&obj, o)
+
+	return
+}
+
+// ServiceUpdateProductCategory 更新记录
+func ServiceUpdateProductCategory(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+
+	var access utils.AccessResult
+	if access, err = ServiceCheckUserModelAssess(user, "ProductCategory"); err == nil {
+		if !access.Update {
+			err = errors.New("has no update permission")
+			return
+		}
+	} else {
+		return
+	}
+	o := orm.NewOrm()
+	err = o.Begin()
+	defer func() {
+		if err == nil {
+			if o.Commit() != nil {
+				if errRollback := o.Rollback(); errRollback != nil {
+					err = errRollback
+				}
+			}
+		}
+	}()
+	if err != nil {
+		return
+	}
+	var obj md.ProductCategory
+	var objPtr *md.ProductCategory
+	if objPtr, err = md.GetProductCategoryByID(id, o); err != nil {
+		return
+	}
+	obj = *objPtr
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
+
+	obj.UpdateUserID = user.ID
+	id, err = md.UpdateProductCategory(&obj, o)
 
 	return
 }
@@ -79,8 +146,7 @@ func ServiceCreateProductCategory(user *md.User, obj *md.ProductCategory) (id in
 //ServiceGetProductCategory 获得分类列表
 func ServiceGetProductCategory(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
-	offset int64, limit int64) (paginator utils.Paginator, results []map[string]interface{}, err error) {
-	var access utils.AccessResult
+	offset int64, limit int64) (access utils.AccessResult, paginator utils.Paginator, results []map[string]interface{}, err error) {
 	if access, err = ServiceCheckUserModelAssess(user, "ProductCategory"); err == nil {
 		if !access.Read {
 			err = errors.New("has no read permission ")
@@ -98,8 +164,39 @@ func ServiceGetProductCategory(user *md.User, query map[string]interface{}, excl
 			objInfo := make(map[string]interface{})
 			objInfo["Name"] = obj.Name
 			objInfo["ID"] = obj.ID
+			parentInfo := make(map[string]interface{})
+			parentInfo["ID"] = obj.Parent.ID
+			parentInfo["Name"] = obj.Parent.Name
+			objInfo["Parent"] = parentInfo
 			results = append(results, objInfo)
 		}
+	}
+	return
+}
+
+// ServiceGetProductCategoryByID get ProductCategory by id
+func ServiceGetProductCategoryByID(user *md.User, id int64) (access utils.AccessResult, catetoryInfo map[string]interface{}, err error) {
+
+	if access, err = ServiceCheckUserModelAssess(user, "ProductCategory"); err == nil {
+		if !access.Read {
+			err = errors.New("has no update permission")
+			return
+		}
+	} else {
+		return
+	}
+	o := orm.NewOrm()
+	var catetory *md.ProductCategory
+	if catetory, err = md.GetProductCategoryByID(id, o); err == nil {
+		objInfo := make(map[string]interface{})
+		objInfo["Name"] = catetory.Name
+		objInfo["ID"] = catetory.ID
+		parentInfo := make(map[string]interface{})
+		parentInfo["ID"] = catetory.Parent.ID
+		parentInfo["Name"] = catetory.Parent.Name
+		objInfo["Parent"] = parentInfo
+
+		catetoryInfo = objInfo
 	}
 	return
 }

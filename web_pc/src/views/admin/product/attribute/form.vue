@@ -33,13 +33,7 @@
                     Read:false,
                     Unlink:false,
                 },
-                attributeForm:{
-                    Name:"",
-                    ID:"",
-                    Code:"",
-                    CreatVariant:true,
-                    
-                },
+                attributeForm:{},
                 NewProductAttributeForm:{
                     Name:"",
                     ID:"",

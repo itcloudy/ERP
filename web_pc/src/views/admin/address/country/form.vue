@@ -28,10 +28,7 @@
                     Read:false,
                     Unlink:false,
                 },
-                countryForm:{
-                    Name:"",
-                    ID:"",
-                },
+                countryForm:{ },
                 NewCountryForm:{
                     Name:"",
                     ID:"",   

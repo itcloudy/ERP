@@ -75,22 +75,7 @@
                     Read:false,
                     Unlink:false,
                 },
-                districtForm:{
-                    Name:"",
-                    ID:"",
-                    City:{
-                        Name:"",
-                        ID:"",
-                    },
-                    Province:{
-                        Name:"",
-                        ID:"",
-                    },
-                    Country:{
-                        Name:"",
-                        ID:"",
-                    }
-                },
+                districtForm:{ },
                 NewDistrictForm:{
                     Name:"",
                     ID:"",

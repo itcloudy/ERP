@@ -6,13 +6,13 @@ import (
 	"golangERP/utils"
 )
 
-// ProductTemplateController 产品款式模块
-type ProductTemplateController struct {
+// ProductCategoryController 产品分类模块
+type ProductCategoryController struct {
 	BaseController
 }
 
-// Put update product template
-func (ctl *ProductTemplateController) Put() {
+// Put update product category
+func (ctl *ProductCategoryController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
@@ -20,10 +20,10 @@ func (ctl *ProductTemplateController) Put() {
 		var requestBody map[string]interface{}
 		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 		if id, err := utils.ToInt64(IDStr); err == nil {
-			if err := service.ServiceUpdateProductTemplate(&ctl.User, requestBody, id); err == nil {
+			if err := service.ServiceUpdateProductCategory(&ctl.User, requestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
-				response["templateID"] = id
+				response["categoryID"] = id
 			} else {
 				response["code"] = utils.FailedCode
 				response["msg"] = utils.FailedMsg
@@ -45,15 +45,15 @@ func (ctl *ProductTemplateController) Put() {
 	ctl.ServeJSON()
 }
 
-// Post create product template
-func (ctl *ProductTemplateController) Post() {
+// Post create product category
+func (ctl *ProductCategoryController) Post() {
 	response := make(map[string]interface{})
 	var requestBody map[string]interface{}
 	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	if templateID, err := service.ServiceCreateProductTemplate(&ctl.User, requestBody); err == nil {
+	if categoryID, err := service.ServiceCreateProductCategory(&ctl.User, requestBody); err == nil {
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
-		response["templateID"] = templateID
+		response["categoryID"] = categoryID
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg
@@ -64,8 +64,8 @@ func (ctl *ProductTemplateController) Post() {
 	ctl.ServeJSON()
 }
 
-// Get get templates
-func (ctl *ProductTemplateController) Get() {
+// Get get categories
+func (ctl *ProductCategoryController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	var err error
@@ -98,14 +98,14 @@ func (ctl *ProductTemplateController) Get() {
 				limit = 20
 			}
 		}
-		var templates []map[string]interface{}
+		var categories []map[string]interface{}
 		var paginator utils.Paginator
 		var access utils.AccessResult
-		if access, paginator, templates, err = service.ServiceGetProductTemplate(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		if access, paginator, categories, err = service.ServiceGetProductCategory(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
-			data["templates"] = &templates
+			data["categories"] = &categories
 			data["paginator"] = &paginator
 			data["access"] = access
 			response["data"] = data
@@ -115,13 +115,13 @@ func (ctl *ProductTemplateController) Get() {
 			response["err"] = err
 		}
 	} else {
-		// 获得某个款式的信息
-		if templateID, err := utils.ToInt64(IDStr); err == nil {
-			if access, template, err := service.ServiceGetProductTemplateByID(&ctl.User, templateID); err == nil {
+		// 获得某个城市的信息
+		if categoryID, err := utils.ToInt64(IDStr); err == nil {
+			if access, category, err := service.ServiceGetProductCategoryByID(&ctl.User, categoryID); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				data := make(map[string]interface{})
-				data["template"] = &template
+				data["category"] = &category
 				data["access"] = access
 				response["data"] = data
 			} else {

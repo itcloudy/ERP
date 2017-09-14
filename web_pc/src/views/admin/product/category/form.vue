@@ -5,34 +5,34 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="provinceForm" :model="provinceForm" label-width="80px">
-                <el-form-item label="所属国家">
+            <el-form :inline="true" ref="categoryForm" :model="categoryForm" label-width="80px">
+                <el-form-item label="上级分类">
                     <el-select
-                        v-model="provinceForm.Country.ID"
-                        :name="provinceForm.Country.Name"
+                        v-model="categoryForm.Parent.ID"
+                        :name="categoryForm.Parent.Name"
                         filterable
                         remote
-                        placeholder="请输入国家"
-                        :remote-method="getCountryList">
+                        placeholder="请输入上级分类"
+                        :remote-method="getProductCategoryList">
                         <el-option
-                            v-for="item in countryList"
+                            v-for="item in categoryList"
                             :key="item.ID"
                             :label="item.Name"
                             :value="item.ID">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="省份名称">
-                    <el-input v-model="provinceForm.Name"></el-input>
+                 
+                <el-form-item label="分类名称">
+                    <el-input v-model="categoryForm.Name"></el-input>
                 </el-form-item>
-        
             </el-form>
         </div>
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';      
-    import  {SERVER_ADDRESS_COUNTRY,SERVER_ADDRESS_PROVINCE} from '@/server_address';           
+    import  {default as FormTop} from '@/views/admin/common/FormTop';
+    import  {SERVER_PRODUCT_CATEGORY} from '@/server_address';           
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -44,17 +44,17 @@
                     Read:false,
                     Unlink:false,
                 },
-                provinceForm:{ },
-                NewProvinceForm:{
+                categoryForm:{  },
+                NewCategoryForm:{
                     Name:"",
                     ID:"",
-                    
-                    Country:{
+                    Parent:{
                         Name:"",
                         ID:"",
-                    }
+                    },
                 },
-                countryList:[],
+                categoryList:[]
+                
             }
         },
         components:{
@@ -62,48 +62,48 @@
         },
         methods:{
             formSave(){
-                if (this.provinceForm.ID >0){
-                    this.$ajax.put(SERVER_ADDRESS_PROVINCE+this.provinceForm.ID ,this.provinceForm).then(response=>{
-                        let {code,msg,provinceID} = response.data;
+                if (this.categoryForm.ID >0){
+                    this.$ajax.put(SERVER_PRODUCT_CATEGORY+this.categoryForm.ID ,this.categoryForm).then(response=>{
+                        let {code,msg,categoryID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/province/detail/"+provinceID);
+                            this.$router.push("/admin/product/category/detail/"+categoryID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
                     });
                 }else{
-                    this.$ajax.post(SERVER_ADDRESS_PROVINCE,this.provinceForm).then(response=>{
-                        let {code,msg,provinceID} = response.data;
+                    this.$ajax.post(SERVER_PRODUCT_CATEGORY,this.categoryForm).then(response=>{
+                        let {code,msg,categoryID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/province/detail/"+provinceID);
+                            this.$router.push("/admin/product/category/detail/"+categoryID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
                     });
                 }
             },
-            getProvinceInfo(){
+            getProductCategoryInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 if (id!='new'){
-                    this.provinceForm.ID = id;
-                    this.$ajax.get(SERVER_ADDRESS_PROVINCE+this.provinceForm.ID).then(response=>{
+                    this.categoryForm.ID = id;
+                    this.$ajax.get(SERVER_PRODUCT_CATEGORY+this.categoryForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){
-                                this.provinceForm = data["province"];
-                                this.countryList = [this.provinceForm.Country]
+                                this.categoryForm = data["category"];
+                                this.categoryList = [this.categoryForm.Parent];
                                 this.access = data["access"];
                             }
                         });
                 }else{
-                    this.provinceForm = this.NewProvinceForm;
+                    this.categoryForm = this.NewCategoryForm;
                 }
             },
-            getCountryList(query){
-                this.$ajax.get(SERVER_ADDRESS_COUNTRY,{
+            getProductCategoryList(query){
+                this.$ajax.get(SERVER_PRODUCT_CATEGORY,{
                     params:{
                         offset:0,
                         limit:20,
@@ -112,24 +112,24 @@
                 }).then(response=>{
                     let {code,msg,data} = response.data;
                     if(code=='success'){
-                        this.countryList = data["countries"];
+                        this.categoryList = data["categories"];
                     }
                 });
             },
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/province");
+                    this.$router.push("/admin/product/category");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/province/form/"+id);
+                    this.$router.push("/admin/product/category/form/"+id);
                 }
             },
         },
         created:function(){
-            this.getProvinceInfo();
+            this.getProductCategoryInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getProvinceInfo'
+            '$route': 'getProductCategoryInfo'
         },
          
     }

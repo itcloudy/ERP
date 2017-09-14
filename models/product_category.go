@@ -11,15 +11,15 @@ import (
 
 // ProductCategory 产品分类
 type ProductCategory struct {
-	ID           int64              `orm:"column(id);pk;auto"`                   //主键
+	ID           int64              `orm:"column(id);pk;auto"`          //主键
 	CreateUserID int64              `orm:"column(create_user_id);null"` //创建者
 	UpdateUserID int64              `orm:"column(update_user_id);null"` //最后更新者
 	CreateDate   time.Time          `orm:"auto_now_add;type(datetime)"` //创建时间
 	UpdateDate   time.Time          `orm:"auto_now;type(datetime)"`     //最后更新时间
-	ParentLeft   int64              `orm:"unique"`                               //分类左
-	ParentRight  int64              `orm:"unique"`                               //分类右
-	Name         string             `orm:"size(50)" json:"name"`                 //分类名称
-	Parent       *ProductCategory   `orm:"rel(fk);null"`                         //上级分类
+	ParentLeft   int64              `orm:"unique"`                      //分类左
+	ParentRight  int64              `orm:"unique"`                      //分类右
+	Name         string             `orm:"size(50)" json:"name"`        //分类名称
+	Parent       *ProductCategory   `orm:"rel(fk);null"`                //上级分类
 	Childs       []*ProductCategory `orm:"reverse(many)" `              //下级分类
 }
 
@@ -60,6 +60,7 @@ func GetProductCategoryByID(id int64, ormObj orm.Ormer) (obj *ProductCategory, e
 	obj = &ProductCategory{ID: id}
 	err = ormObj.Read(obj)
 	ormObj.LoadRelated(obj, "Childs")
+	ormObj.Read(obj.Parent)
 	return obj, err
 }
 

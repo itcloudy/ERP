@@ -59,18 +59,7 @@
                     Read:false,
                     Unlink:false,
                 },
-                cityForm:{
-                    Name:"",
-                    ID:"",
-                    Province:{
-                        Name:"",
-                        ID:"",
-                    },
-                    Country:{
-                        Name:"",
-                        ID:"",
-                    }
-                },
+                cityForm:{},
                 NewCityForm:{
                     Name:"",
                     ID:"",
@@ -93,21 +82,21 @@
         methods:{
             formSave(){
                 if (this.cityForm.ID >0){
-                    this.$ajax.put("/address/city/"+this.cityForm.ID ,this.cityForm).then(response=>{
+                    this.$ajax.put("/product/product/"+this.cityForm.ID ,this.cityForm).then(response=>{
                         let {code,msg,cityID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
+                            this.$router.push("/admin/product/product/detail/"+cityID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
                     });
                 }else{
-                    this.$ajax.post("/address/city",this.cityForm).then(response=>{
+                    this.$ajax.post("/product/product",this.cityForm).then(response=>{
                         let {code,msg,cityID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
+                            this.$router.push("/admin/product/product/detail/"+cityID);
                         }else{
                             this.$message({ message:msg, type: 'error' });
                         }
@@ -119,11 +108,11 @@
                 let id  = this.$route.params.id;
                 if (id!='new'){
                     this.cityForm.ID = id;
-                    this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                    this.$ajax.get("/product/product/"+this.cityForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){
-                                this.cityForm = data["city"];
+                                this.cityForm = data["product"];
                                 this.provinceList = [this.cityForm.Province]
                                 this.countryList = [this.cityForm.Country]
                                 this.access = data["access"];
@@ -134,7 +123,7 @@
                 }
             },
             getCountryList(query){
-                this.$ajax.get("/address/country",{
+                this.$ajax.get("/product/country",{
                     params:{
                         offset:0,
                         limit:20,
@@ -148,7 +137,7 @@
                 });
             },
             getProvinceList(query){
-                this.$ajax.get("/address/province",{
+                this.$ajax.get("/product/province",{
                     params:{
                         offset:0,
                         limit:20,
@@ -163,9 +152,9 @@
             },
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/city");
+                    this.$router.push("/admin/product/product");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/city/form/"+id);
+                    this.$router.push("/admin/product/product/form/"+id);
                 }
             },
         },

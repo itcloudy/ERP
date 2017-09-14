@@ -6,7 +6,7 @@
         @changeView="changeView"/>
         <div v-loading="loading">
             <el-form :inline="true" ref="valueForm" :model="valueForm" label-width="80px">
-                 <el-form-item label="属性">
+                <el-form-item label="属性">
                     <el-select
                         v-model="valueForm.Attribute.ID"
                         :name="valueForm.Attribute.Name"
@@ -44,14 +44,7 @@
                     Read:false,
                     Unlink:false,
                 },
-                valueForm:{
-                    Name:"",
-                    ID:"",
-                    Attribute:{
-                        Name:"",
-                        ID:"",
-                    },
-                },
+                valueForm:{},
                 NewValueForm:{
                     Name:"",
                     ID:"",
