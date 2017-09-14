@@ -11,9 +11,11 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import "styles/index.scss";
 import localStore from 'utils/local_store';
+import stringTimeFormat from 'utils/filters';
 import lazyLoadMenusRoutes from 'utils/lazyload';
 import axios from 'axios';
 
+Vue.filter('stringTimeFormat', stringTimeFormat);
 Vue.prototype.$ajax = axios;
 // import 'font-awesome/css/font-awesome.min.css'
 Vue.use(ElementUI)

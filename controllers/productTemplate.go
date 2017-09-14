@@ -121,7 +121,7 @@ func (ctl *ProductTemplateController) Get() {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				data := make(map[string]interface{})
-				data["template"] = &template
+				data["template"] = template
 				data["access"] = access
 				response["data"] = data
 			} else {
