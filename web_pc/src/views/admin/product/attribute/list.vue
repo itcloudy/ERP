@@ -40,6 +40,7 @@
 <script>
     import  {default as Pagination} from '@/views/admin/common/Pagination';
     import  {default as ListTop} from '@/views/admin/common/ListTop'; 
+    import  {SERVER_PRODUCT_ATTRIBUTE} from '@/server_address';        
     import { mapState } from 'vuex';
     export default {
       data() {
@@ -58,13 +59,13 @@
                 Read:false,
                 Unlink:false,
             },
-            serverUrlPath:"/product/attribute"
+             
         }
     },
     methods:{
         getAttributes(limit,offset){
             this.loading = true;
-            this.$ajax.get(this.serverUrlPath,{
+            this.$ajax.get(SERVER_PRODUCT_ATTRIBUTE,{
                     params:{
                         offset:offset,
                         limit:limit

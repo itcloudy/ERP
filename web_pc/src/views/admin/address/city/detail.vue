@@ -19,7 +19,8 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop';   
+    import  {SERVER_ADDRESS_CITY} from '@/server_address';       
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -42,7 +43,7 @@
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 this.cityForm.ID = id;
-                this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                this.$ajax.get(SERVER_ADDRESS_CITY+this.cityForm.ID).then(response=>{
                         this.loadging = false;
                         let {code,msg,data} = response.data;
                         if(code=='success'){

@@ -20,7 +20,8 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop';  
+    import  {SERVER_PRODUCT_ATTRIBUTE} from '@/server_address';               
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -54,7 +55,7 @@
         methods:{
             formSave(){
                 if (this.attributeForm.ID >0){
-                    this.$ajax.put("/product/attribute/"+this.attributeForm.ID ,this.attributeForm).then(response=>{
+                    this.$ajax.put(SERVER_PRODUCT_ATTRIBUTE+this.attributeForm.ID ,this.attributeForm).then(response=>{
                         let {code,msg,attributeID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
@@ -64,7 +65,7 @@
                         }
                     });
                 }else{
-                    this.$ajax.post("/product/attribute",this.attributeForm).then(response=>{
+                    this.$ajax.post(SERVER_PRODUCT_ATTRIBUTE,this.attributeForm).then(response=>{
                         let {code,msg,attributeID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
@@ -80,7 +81,7 @@
                 let id  = this.$route.params.id;
                 if (id!='new'){
                     this.attributeForm.ID = id;
-                    this.$ajax.get("/product/attribute/"+this.attributeForm.ID).then(response=>{
+                    this.$ajax.get(SERVER_PRODUCT_ATTRIBUTE+this.attributeForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){

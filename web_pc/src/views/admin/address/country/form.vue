@@ -15,7 +15,8 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop';   
+    import  {SERVER_ADDRESS_COUNTRY} from '@/server_address';      
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -43,7 +44,7 @@
         methods:{
             formSave(){
                 if (this.countryForm.ID >0){
-                    this.$ajax.put("/address/country/"+this.countryForm.ID,this.countryForm).then(response=>{
+                    this.$ajax.put(SERVER_ADDRESS_COUNTRY+this.countryForm.ID,this.countryForm).then(response=>{
                         let {code,msg,countryID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
@@ -53,7 +54,7 @@
                         }
                     });
                 }else{
-                    this.$ajax.post("/address/country",this.countryForm).then(response=>{
+                    this.$ajax.post(SERVER_ADDRESS_COUNTRY,this.countryForm).then(response=>{
                         let {code,msg,countryID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
@@ -69,7 +70,7 @@
                 let id  = this.$route.params.id;
                 if (id!='new'){
                     this.countryForm.ID = id;
-                    this.$ajax.get("/address/country/"+this.countryForm.ID).then(response=>{
+                    this.$ajax.get(SERVER_ADDRESS_COUNTRY+this.countryForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){

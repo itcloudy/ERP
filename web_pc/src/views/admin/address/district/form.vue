@@ -62,7 +62,8 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop';    
+    import  {SERVER_ADDRESS_CITY,SERVER_ADDRESS_COUNTRY,SERVER_ADDRESS_PROVINCE,SERVER_ADDRESS_DISTRICT} from '@/server_address';             
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -117,7 +118,7 @@
         methods:{
             formSave(){
                 if (this.districtForm.ID >0){
-                    this.$ajax.put("/address/district/"+this.districtForm.ID ,this.districtForm).then(response=>{
+                    this.$ajax.put(SERVER_ADDRESS_DISTRICT+this.districtForm.ID ,this.districtForm).then(response=>{
                         let {code,msg,districtID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
@@ -127,7 +128,7 @@
                         }
                     });
                 }else{
-                    this.$ajax.post("/address/district",this.districtForm).then(response=>{
+                    this.$ajax.post(SERVER_ADDRESS_DISTRICT,this.districtForm).then(response=>{
                         let {code,msg,districtID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
@@ -143,7 +144,7 @@
                 let id  = this.$route.params.id;
                 if (id!='new'){
                     this.districtForm.ID = id;
-                    this.$ajax.get("/address/district/"+this.districtForm.ID).then(response=>{
+                    this.$ajax.get(SERVER_ADDRESS_DISTRICT+this.districtForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){
@@ -159,7 +160,7 @@
                 }
             },
             getCountryList(query){
-                this.$ajax.get("/address/country",{
+                this.$ajax.get(SERVER_ADDRESS_COUNTRY,{
                     params:{
                         offset:0,
                         limit:20,
@@ -173,7 +174,7 @@
                 });
             },
             getProvinceList(query){
-                this.$ajax.get("/address/province",{
+                this.$ajax.get(SERVER_ADDRESS_PROVINCE,{
                     params:{
                         offset:0,
                         limit:20,
@@ -187,7 +188,7 @@
                 });
             },
             getCityList(query){
-                this.$ajax.get("/address/city",{
+                this.$ajax.get(SERVER_ADDRESS_CITY,{
                     params:{
                         offset:0,
                         limit:20,

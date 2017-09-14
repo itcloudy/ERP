@@ -49,7 +49,8 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop'; 
+    import  {SERVER_PRODUCT_ATTRIBUTE} from '@/server_address';        
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -73,7 +74,7 @@
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 this.attributeForm.ID = id;
-                this.$ajax.get("/product/attribute/"+this.attributeForm.ID).then(response=>{
+                this.$ajax.get(SERVER_PRODUCT_ATTRIBUTE+this.attributeForm.ID).then(response=>{
                         this.loadging = false;
                         let {code,msg,data} = response.data;
                         if(code=='success'){

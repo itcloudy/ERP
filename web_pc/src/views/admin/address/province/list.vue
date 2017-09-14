@@ -40,6 +40,7 @@
 <script>
     import  {default as ListTop} from '@/views/admin/common/ListTop'; 
     import  {default as Pagination} from '@/views/admin/common/Pagination';
+    import  {SERVER_ADDRESS_PROVINCE} from '@/server_address';        
     import { mapState } from 'vuex';
     export default {
       data() {
@@ -57,12 +58,12 @@
                     Read:false,
                     Unlink:false,
             },
-            serverUrlPath:"/address/province"
+            
         }
     },
     methods:{
         getProvinces(limit,offset){
-            this.$ajax.get(this.serverUrlPath,{
+            this.$ajax.get(SERVER_ADDRESS_PROVINCE,{
                     params:{
                         offset:offset,
                         limit:limit

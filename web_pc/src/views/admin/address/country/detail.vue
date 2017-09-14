@@ -13,7 +13,8 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop';    
+    import  {SERVER_ADDRESS_COUNTRY} from '@/server_address';     
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -44,7 +45,7 @@
 
                 if (id!='new'){
                     this.countryForm.ID = id;
-                    this.$ajax.get("/address/country/"+this.countryForm.ID).then(response=>{
+                    this.$ajax.get(SERVER_ADDRESS_COUNTRY+this.countryForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){

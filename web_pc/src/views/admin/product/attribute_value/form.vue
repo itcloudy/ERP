@@ -31,7 +31,8 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop';    
+    import  {SERVER_PRODUCT_ATTRIBUTE,SERVER_PRODUCT_ATTRIBUTE_VALUE} from '@/server_address';             
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -68,7 +69,7 @@
         methods:{
             formSave(){
                 if (this.valueForm.ID >0){
-                    this.$ajax.put("/product/attributevalue/"+this.valueForm.ID ,this.valueForm).then(response=>{
+                    this.$ajax.put(SERVER_PRODUCT_ATTRIBUTE_VALUE+this.valueForm.ID ,this.valueForm).then(response=>{
                         let {code,msg,attributeValueID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
@@ -78,7 +79,7 @@
                         }
                     });
                 }else{
-                    this.$ajax.post("/product/attributevalue",this.valueForm).then(response=>{
+                    this.$ajax.post(SERVER_PRODUCT_ATTRIBUTE_VALUE,this.valueForm).then(response=>{
                         let {code,msg,attributeValueID} = response.data;
                         if(code=='success'){
                             this.$message({ message:msg, type: 'success' });
@@ -94,14 +95,12 @@
                 let id  = this.$route.params.id;
                 if (id!='new'){
                     this.valueForm.ID = id;
-                    this.$ajax.get("/product/attributevalue/"+this.valueForm.ID).then(response=>{
+                    this.$ajax.get(SERVER_PRODUCT_ATTRIBUTE_VALUE+this.valueForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){
                                 this.valueForm = data["attributeValue"];
-                                console.log(JSON.stringify(this.valueForm));
                                 this.attributeList = [this.valueForm.Attribute];
-                                
                             }
                         });
                 }else{
@@ -109,7 +108,7 @@
                 }
             },
             getAttributeList(query){
-                this.$ajax.get("/product/attribute",{
+                this.$ajax.get(SERVER_PRODUCT_ATTRIBUTE,{
                     params:{
                         offset:0,
                         limit:20,

@@ -46,6 +46,7 @@
 <script>
     import  {default as Pagination} from '@/views/admin/common/Pagination';
     import  {default as ListTop} from '@/views/admin/common/ListTop'; 
+    import  {SERVER_ADDRESS_CITY} from '@/server_address'; 
     import { mapState } from 'vuex';
     export default {
       data() {
@@ -58,19 +59,18 @@
                 currentPage:1,//当前页
             },
             loading: false,
-            serverUrlPath:"/address/city",
             access:{
-                    Create:false,
-                    Update:false,
-                    Read:false,
-                    Unlink:false,
+                Create:false,
+                Update:false,
+                Read:false,
+                Unlink:false,
             },
         }
     },
     methods:{
         getCities(limit,offset){
             this.loading = true;
-            this.$ajax.get(this.serverUrlPath,{
+            this.$ajax.get(SERVER_ADDRESS_CITY,{
                     params:{
                         offset:offset,
                         limit:limit

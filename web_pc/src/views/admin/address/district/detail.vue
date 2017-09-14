@@ -25,7 +25,8 @@
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop'; 
+    import  {SERVER_ADDRESS_CITY,SERVER_ADDRESS_COUNTRY,SERVER_ADDRESS_PROVINCE,SERVER_ADDRESS_DISTRICT} from '@/server_address';        
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -48,7 +49,7 @@
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 this.districtForm.ID = id;
-                this.$ajax.get("/address/district/"+this.districtForm.ID).then(response=>{
+                this.$ajax.get(SERVER_ADDRESS_DISTRICT+this.districtForm.ID).then(response=>{
                         this.loadging = false;
                         let {code,msg,data} = response.data;
                         if(code=='success'){

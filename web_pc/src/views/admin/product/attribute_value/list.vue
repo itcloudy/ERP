@@ -46,6 +46,7 @@
 <script>
     import  {default as Pagination} from '@/views/admin/common/Pagination';
     import  {default as ListTop} from '@/views/admin/common/ListTop'; 
+    import  {SERVER_PRODUCT_ATTRIBUTE_VALUE} from '@/server_address';             
     import { mapState } from 'vuex';
     export default {
       data() {
@@ -58,7 +59,6 @@
                 currentPage:1,//当前页
             },
             loading: false,
-            serverUrlPath:"/product/attributevalue/",
             access:{
                     Create:false,
                     Update:false,
@@ -70,7 +70,7 @@
     methods:{
         getAttributeValues(limit,offset){
             this.loading = true;
-            this.$ajax.get(this.serverUrlPath,{
+            this.$ajax.get(SERVER_PRODUCT_ATTRIBUTE_VALUE,{
                 params:{
                     offset:offset,
                     limit:limit
