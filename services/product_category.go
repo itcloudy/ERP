@@ -135,25 +135,6 @@ func ServiceUpdateProductCategory(user *md.User, requestBody []byte, id int64) (
 	}
 	obj = *objPtr
 	json.Unmarshal([]byte(requestBody), &obj)
-
-	var requestBodyMap map[string]interface{}
-	json.Unmarshal(requestBody, &requestBodyMap)
-
-	var parent md.ProductCategory
-	if Parent, ok := requestBodyMap["Parent"]; ok {
-		parentT := reflect.TypeOf(Parent)
-		if parentT.Kind() == reflect.Map {
-			parentMap := Parent.(map[string]interface{})
-			if parentID, ok := parentMap["ID"]; ok {
-				parent.ID, _ = utils.ToInt64(parentID)
-				obj.Parent = &parent
-			}
-		} else if parentT.Kind() == reflect.String {
-			parent.ID, _ = utils.ToInt64(Parent)
-			obj.Parent = &parent
-		}
-	}
-
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateProductCategory(&obj, o)
 

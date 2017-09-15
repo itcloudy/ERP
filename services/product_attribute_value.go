@@ -1,16 +1,16 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
-	"reflect"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // ServiceCreateProductAttributeValue 创建记录
-func ServiceCreateProductAttributeValue(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceCreateProductAttributeValue(user *md.User, requestBody []byte) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductAttributeValue"); err == nil {
@@ -36,23 +36,7 @@ func ServiceCreateProductAttributeValue(user *md.User, requestBody map[string]in
 		return
 	}
 	var obj md.ProductAttributeValue
-	var attribute md.ProductAttribute
-	if Attribute, ok := requestBody["Attribute"]; ok {
-		attributeT := reflect.TypeOf(Attribute)
-		if attributeT.Kind() == reflect.Map {
-			attributeMap := Attribute.(map[string]interface{})
-			if attributeID, ok := attributeMap["ID"]; ok {
-				attribute.ID, _ = utils.ToInt64(attributeID)
-				obj.Attribute = &attribute
-			}
-		} else if attributeT.Kind() == reflect.String {
-			attribute.ID, _ = utils.ToInt64(Attribute)
-			obj.Attribute = &attribute
-		}
-	}
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
 	obj.CreateUserID = user.ID
 	id, err = md.AddProductAttributeValue(&obj, o)
 
@@ -92,7 +76,7 @@ func ServiceDeleteProductAttributeValue(user *md.User, id int64) (num int64, err
 }
 
 // ServiceUpdateProductAttributeValue 更新记录
-func ServiceUpdateProductAttributeValue(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+func ServiceUpdateProductAttributeValue(user *md.User, requestBody []byte, id int64) (err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductAttributeValue"); err == nil {
@@ -123,23 +107,7 @@ func ServiceUpdateProductAttributeValue(user *md.User, requestBody map[string]in
 		return
 	}
 	obj = *objPtr
-	var attribute md.ProductAttribute
-	if Attribute, ok := requestBody["Attribute"]; ok {
-		attributeT := reflect.TypeOf(Attribute)
-		if attributeT.Kind() == reflect.Map {
-			attributeMap := Attribute.(map[string]interface{})
-			if attributeID, ok := attributeMap["ID"]; ok {
-				attribute.ID, _ = utils.ToInt64(attributeID)
-				obj.Attribute = &attribute
-			}
-		} else if attributeT.Kind() == reflect.String {
-			attribute.ID, _ = utils.ToInt64(Attribute)
-			obj.Attribute = &attribute
-		}
-	}
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateProductAttributeValue(&obj, o)
 

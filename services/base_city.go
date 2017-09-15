@@ -5,7 +5,6 @@ import (
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
-	"reflect"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -37,28 +36,7 @@ func ServiceCreateAddressCity(user *md.User, requestBody []byte) (id int64, err 
 		return
 	}
 	var obj md.AddressCity
-
-	var province md.AddressProvince
-
 	json.Unmarshal([]byte(requestBody), &obj)
-
-	var requestBodyMap map[string]interface{}
-	json.Unmarshal(requestBody, &requestBodyMap)
-
-	if Province, ok := requestBodyMap["Province"]; ok {
-		provinceT := reflect.TypeOf(Province)
-		if provinceT.Kind() == reflect.Map {
-			provinceMap := Province.(map[string]interface{})
-			if provinceID, ok := provinceMap["ID"]; ok {
-				province.ID, _ = utils.ToInt64(provinceID)
-				obj.Province = &province
-			}
-		} else if provinceT.Kind() == reflect.String {
-			province.ID, _ = utils.ToInt64(Province)
-			obj.Province = &province
-		}
-	}
-
 	obj.CreateUserID = user.ID
 	id, err = md.AddAddressCity(&obj, o)
 
@@ -129,23 +107,6 @@ func ServiceUpdateAddressCity(user *md.User, requestBody []byte, id int64) (err 
 	}
 	obj = *objPtr
 	json.Unmarshal([]byte(requestBody), &obj)
-	var requestBodyMap map[string]interface{}
-	json.Unmarshal(requestBody, &requestBodyMap)
-
-	var province md.AddressProvince
-	if Province, ok := requestBodyMap["Province"]; ok {
-		provinceT := reflect.TypeOf(Province)
-		if provinceT.Kind() == reflect.Map {
-			provinceMap := Province.(map[string]interface{})
-			if provinceID, ok := provinceMap["ID"]; ok {
-				province.ID, _ = utils.ToInt64(provinceID)
-				obj.Province = &province
-			}
-		} else if provinceT.Kind() == reflect.String {
-			province.ID, _ = utils.ToInt64(Province)
-			obj.Province = &province
-		}
-	}
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateAddressCity(&obj, o)
 

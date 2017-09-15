@@ -15,12 +15,11 @@ func (ctl *AddressCountryController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
-
 		if id, err := utils.ToInt64(IDStr); err == nil {
 			if err := service.ServiceUpdateAddressCountry(&ctl.User, ctl.Ctx.Input.RequestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
-				response["counytryID"] = id
+				response["countryID"] = id
 			} else {
 				response["code"] = utils.FailedCode
 				response["msg"] = utils.FailedMsg

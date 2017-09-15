@@ -5,7 +5,6 @@ import (
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
-	"reflect"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -37,24 +36,6 @@ func ServiceCreateAddressDistrict(user *md.User, requestBody []byte) (id int64, 
 	}
 	var obj md.AddressDistrict
 	json.Unmarshal([]byte(requestBody), &obj)
-	var city md.AddressCity
-
-	var requestBodyMap map[string]interface{}
-	json.Unmarshal(requestBody, &requestBodyMap)
-
-	if City, ok := requestBodyMap["Country"]; ok {
-		cityT := reflect.TypeOf(City)
-		if cityT.Kind() == reflect.Map {
-			cityMap := City.(map[string]interface{})
-			if cityID, ok := cityMap["ID"]; ok {
-				city.ID, _ = utils.ToInt64(cityID)
-				obj.City = &city
-			}
-		} else if cityT.Kind() == reflect.String {
-			city.ID, _ = utils.ToInt64(City)
-			obj.City = &city
-		}
-	}
 	obj.CreateUserID = user.ID
 	id, err = md.AddAddressDistrict(&obj, o)
 
@@ -87,31 +68,13 @@ func ServiceUpdateAddressDistrict(user *md.User, requestBody []byte, id int64) (
 		return
 	}
 	var obj md.AddressDistrict
-	var requestBodyMap map[string]interface{}
-
-	json.Unmarshal([]byte(requestBody), &obj)
-	json.Unmarshal(requestBody, &requestBodyMap)
-
 	var objPtr *md.AddressDistrict
 	if objPtr, err = md.GetAddressDistrictByID(id, o); err != nil {
 		return
 	}
 	obj = *objPtr
+	json.Unmarshal([]byte(requestBody), &obj)
 
-	var city md.AddressCity
-	if City, ok := requestBodyMap["Country"]; ok {
-		cityT := reflect.TypeOf(City)
-		if cityT.Kind() == reflect.Map {
-			cityMap := City.(map[string]interface{})
-			if cityID, ok := cityMap["ID"]; ok {
-				city.ID, _ = utils.ToInt64(cityID)
-				obj.City = &city
-			}
-		} else if cityT.Kind() == reflect.String {
-			city.ID, _ = utils.ToInt64(City)
-			obj.City = &city
-		}
-	}
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateAddressDistrict(&obj, o)
 	return

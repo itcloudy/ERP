@@ -5,7 +5,6 @@ import (
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
-	"reflect"
 
 	"github.com/astaxie/beego/orm"
 )
@@ -38,22 +37,6 @@ func ServiceCreateProductUom(user *md.User, requestBody []byte) (id int64, err e
 	}
 	var obj md.ProductUom
 	json.Unmarshal([]byte(requestBody), &obj)
-	var requestBodyMap map[string]interface{}
-	json.Unmarshal(requestBody, &requestBodyMap)
-	var uomcateg md.ProductUomCateg
-	if Category, ok := requestBodyMap["Category"]; ok {
-		uomcategT := reflect.TypeOf(Category)
-		if uomcategT.Kind() == reflect.Map {
-			uomcategMap := Category.(map[string]interface{})
-			if uomcategID, ok := uomcategMap["ID"]; ok {
-				uomcateg.ID, _ = utils.ToInt64(uomcategID)
-				obj.Category = &uomcateg
-			}
-		} else if uomcategT.Kind() == reflect.String {
-			uomcateg.ID, _ = utils.ToInt64(Category)
-			obj.Category = &uomcateg
-		}
-	}
 	obj.CreateUserID = user.ID
 	id, err = md.AddProductUom(&obj, o)
 
