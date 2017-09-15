@@ -54,14 +54,23 @@
                 <el-table-column
                 prop="SaleOk"
                 label="可销售">
+                <template scope="scope">
+                    <span v-if="row.SaleOk">是</span><span  v-else>否</span>
+                </template>
                 </el-table-column>
                 <el-table-column
                 prop="Active"
                 label="有效">
+                    <template scope="scope">
+                        <span v-if="row.Active">是</span><span  v-else>否</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                 prop="IsProductVariant"
                 label="是规格产品">
+                    <template scope="scope">
+                        <span v-if="row.IsProductVariant">是</span><span  v-else>否</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                 prop="FirstSaleUom.Name"
@@ -75,18 +84,23 @@
                 prop="VariantCount"
                 label="产品规格数量">
                 </el-table-column>
-                 
                 <el-table-column
                 prop="DefaultCode"
                 label="产品编码">
                 </el-table-column>
                 <el-table-column
                 prop="ProductType"
-                label="产品类型">
+                label="产品类型" scope="scope">
+                    <template >
+                        <span>{{productTypeDict[row.ProductType]}}</span>
+                    </template>
                 </el-table-column>
                 <el-table-column
                 prop="ProductMethod"
                 label="规格创建方式">
+                    <template scope="scope">
+                        <span>{{productMethodDict[row.ProductMethod]}}</span>
+                    </template>
                 </el-table-column>
             </el-table>
         </div>
@@ -114,6 +128,8 @@
                 Read:false,
                 Unlink:false,
             },
+            productTypeDict:{"stock":"库存商品","consume":"消耗品","service":"服务"},
+            productMethodDict:{"hand":"手动","auto":"自动"}
         }
     },
     methods:{
