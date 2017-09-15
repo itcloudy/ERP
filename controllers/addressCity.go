@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -41,11 +40,8 @@ func (ctl *AddressCityController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
-
-		var requestBody map[string]interface{}
-		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 		if id, err := utils.ToInt64(IDStr); err == nil {
-			if err := service.ServiceUpdateAddressCity(&ctl.User, requestBody, id); err == nil {
+			if err := service.ServiceUpdateAddressCity(&ctl.User, ctl.Ctx.Input.RequestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				response["cityID"] = id
@@ -70,12 +66,10 @@ func (ctl *AddressCityController) Put() {
 	ctl.ServeJSON()
 }
 
-// Post
+// Post create
 func (ctl *AddressCityController) Post() {
 	response := make(map[string]interface{})
-	var requestBody map[string]interface{}
-	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	if cityID, err := service.ServiceCreateAddressCity(&ctl.User, requestBody); err == nil {
+	if cityID, err := service.ServiceCreateAddressCity(&ctl.User, ctl.Ctx.Input.RequestBody); err == nil {
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
 		response["cityID"] = cityID

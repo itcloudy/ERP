@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
@@ -10,7 +11,7 @@ import (
 )
 
 // ServiceCreateAddressDistrict 创建记录
-func ServiceCreateAddressDistrict(user *md.User, obj *md.AddressDistrict) (id int64, err error) {
+func ServiceCreateAddressDistrict(user *md.User, requestBody []byte) (id int64, err error) {
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressDistrict"); err == nil {
 		if !access.Create {
@@ -34,14 +35,34 @@ func ServiceCreateAddressDistrict(user *md.User, obj *md.AddressDistrict) (id in
 	if err != nil {
 		return
 	}
+	var obj md.AddressDistrict
+	json.Unmarshal([]byte(requestBody), &obj)
+	var city md.AddressCity
+
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
+
+	if City, ok := requestBodyMap["Country"]; ok {
+		cityT := reflect.TypeOf(City)
+		if cityT.Kind() == reflect.Map {
+			cityMap := City.(map[string]interface{})
+			if cityID, ok := cityMap["ID"]; ok {
+				city.ID, _ = utils.ToInt64(cityID)
+				obj.City = &city
+			}
+		} else if cityT.Kind() == reflect.String {
+			city.ID, _ = utils.ToInt64(City)
+			obj.City = &city
+		}
+	}
 	obj.CreateUserID = user.ID
-	id, err = md.AddAddressDistrict(obj, o)
+	id, err = md.AddAddressDistrict(&obj, o)
 
 	return
 }
 
 // ServiceUpdateAddressDistrict 更新记录
-func ServiceUpdateAddressDistrict(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+func ServiceUpdateAddressDistrict(user *md.User, requestBody []byte, id int64) (err error) {
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressDistrict"); err == nil {
 		if !access.Update {
@@ -66,16 +87,19 @@ func ServiceUpdateAddressDistrict(user *md.User, requestBody map[string]interfac
 		return
 	}
 	var obj md.AddressDistrict
+	var requestBodyMap map[string]interface{}
+
+	json.Unmarshal([]byte(requestBody), &obj)
+	json.Unmarshal(requestBody, &requestBodyMap)
+
 	var objPtr *md.AddressDistrict
 	if objPtr, err = md.GetAddressDistrictByID(id, o); err != nil {
 		return
 	}
 	obj = *objPtr
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+
 	var city md.AddressCity
-	if City, ok := requestBody["Country"]; ok {
+	if City, ok := requestBodyMap["Country"]; ok {
 		cityT := reflect.TypeOf(City)
 		if cityT.Kind() == reflect.Map {
 			cityMap := City.(map[string]interface{})

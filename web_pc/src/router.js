@@ -2,8 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-const Login = resolve => require(['./views/admin/global/login'], resolve);
-const FrontHome = resolve => require(['./views/front/global/Home'], resolve);
+const Login = resolve => require(['@/views/admin/global/login'], resolve);
+const FrontHome = resolve => require(['@/views/front/global/Home'], resolve);
+const Work = resolve => require(['@/views/front/work/home'], resolve);
 let routes = [{
         path: '/admin/login',
         name: 'adminlogin',
@@ -12,7 +13,10 @@ let routes = [{
     {
         path: "/",
         name: "frontHome",
-        component: FrontHome
+        component: FrontHome,
+        children: [
+            { path: "work", name: "work", component: Work },
+        ]
     }
 
 ];

@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -16,10 +15,8 @@ func (ctl *AddressDistrictController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
-		var requestBody map[string]interface{}
-		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 		if id, err := utils.ToInt64(IDStr); err == nil {
-			if err := service.ServiceUpdateAddressDistrict(&ctl.User, requestBody, id); err == nil {
+			if err := service.ServiceUpdateAddressDistrict(&ctl.User, ctl.Ctx.Input.RequestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				response["districtID"] = id

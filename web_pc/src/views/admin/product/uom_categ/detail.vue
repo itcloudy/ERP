@@ -4,22 +4,17 @@
         @formEdit="formEdit"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form ref="cityForm" :model="cityForm" :inline="true"  class="form-read-only">
-                <el-form-item label="所属国家">
-                    <span>{{cityForm.Country.Name}}</span>
-                </el-form-item>
-                <el-form-item label="所属省份">
-                    <span>{{cityForm.Province.Name}}</span>
-                </el-form-item>
-                <el-form-item label="城市名称">
-                    <span>{{cityForm.Name}}</span>
+            <el-form ref="uomcategForm" :model="uomcategForm" :inline="true"  class="form-read-only">
+                <el-form-item label="类别名称">
+                    <span>{{uomcategForm.Name}}</span>
                 </el-form-item>
             </el-form>
         </div>
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop';   
+    import  {SERVER_PRODUCT_UOM_CATEG} from '@/server_address';    
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -31,43 +26,43 @@
                     Read:false,
                     Unlink:false,
                 },
-                cityForm:{}
+                uomcategForm:{}
             }
         },
         components:{
            FormTop
         },
         methods:{
-            getCityInfo(){
+            getUomCategInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
-                this.cityForm.ID = id;
-                this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                this.uomcategForm.ID = id;
+                this.$ajax.get(SERVER_PRODUCT_UOM_CATEG+this.uomcategForm.ID).then(response=>{
                         this.loadging = false;
                         let {code,msg,data} = response.data;
                         if(code=='success'){
-                            this.cityForm = data["city"];
+                            this.uomcategForm = data["uomcateg"];
                             this.access = data["access"];
                         }
                     });
             },
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/city");
+                    this.$router.push("/admin/product/uomcateg");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/city/form/"+id);
+                    this.$router.push("/admin/product/uomcateg/form/"+id);
                 }
             },
             formEdit(){
-                 this.$router.push("/admin/address/city/form/"+this.cityForm.ID);
+                 this.$router.push("/admin/product/uomcateg/form/"+this.uomcategForm.ID);
             },
         },
         created:function(){
-            this.getCityInfo();
+            this.getUomCategInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getCityInfo'
+            '$route': 'getUomCategInfo'
         },
          
     }

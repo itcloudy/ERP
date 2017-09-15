@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
@@ -10,7 +11,7 @@ import (
 )
 
 // ServiceCreateAddressCity 创建记录
-func ServiceCreateAddressCity(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceCreateAddressCity(user *md.User, requestBody []byte) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
@@ -36,11 +37,15 @@ func ServiceCreateAddressCity(user *md.User, requestBody map[string]interface{})
 		return
 	}
 	var obj md.AddressCity
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+
 	var province md.AddressProvince
-	if Province, ok := requestBody["Province"]; ok {
+
+	json.Unmarshal([]byte(requestBody), &obj)
+
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
+
+	if Province, ok := requestBodyMap["Province"]; ok {
 		provinceT := reflect.TypeOf(Province)
 		if provinceT.Kind() == reflect.Map {
 			provinceMap := Province.(map[string]interface{})
@@ -92,7 +97,7 @@ func ServiceDeleteAddressCity(user *md.User, id int64) (num int64, err error) {
 }
 
 // ServiceUpdateAddressCity 更新记录
-func ServiceUpdateAddressCity(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+func ServiceUpdateAddressCity(user *md.User, requestBody []byte, id int64) (err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCity"); err == nil {
@@ -123,11 +128,12 @@ func ServiceUpdateAddressCity(user *md.User, requestBody map[string]interface{},
 		return
 	}
 	obj = *objPtr
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
+
 	var province md.AddressProvince
-	if Province, ok := requestBody["Province"]; ok {
+	if Province, ok := requestBodyMap["Province"]; ok {
 		provinceT := reflect.TypeOf(Province)
 		if provinceT.Kind() == reflect.Map {
 			provinceMap := Province.(map[string]interface{})

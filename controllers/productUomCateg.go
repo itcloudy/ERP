@@ -5,22 +5,21 @@ import (
 	"golangERP/utils"
 )
 
-// ProductAttributeController 城市模块
-type ProductAttributeController struct {
+// ProductUomCategController 城市模块
+type ProductUomCategController struct {
 	BaseController
 }
 
-// Put update product attribute
-func (ctl *ProductAttributeController) Put() {
+// Put update product uomcateg
+func (ctl *ProductUomCategController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
-
 		if id, err := utils.ToInt64(IDStr); err == nil {
-			if err := service.ServiceUpdateProductAttribute(&ctl.User, ctl.Ctx.Input.RequestBody, id); err == nil {
+			if err := service.ServiceUpdateProductUomCateg(&ctl.User, ctl.Ctx.Input.RequestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
-				response["attributeID"] = id
+				response["uomcategID"] = id
 			} else {
 				response["code"] = utils.FailedCode
 				response["msg"] = utils.FailedMsg
@@ -42,13 +41,13 @@ func (ctl *ProductAttributeController) Put() {
 	ctl.ServeJSON()
 }
 
-// Post create product attribute
-func (ctl *ProductAttributeController) Post() {
+// Post create product uomcateg
+func (ctl *ProductUomCategController) Post() {
 	response := make(map[string]interface{})
-	if attributeID, err := service.ServiceCreateProductAttribute(&ctl.User, ctl.Ctx.Input.RequestBody); err == nil {
+	if uomcategID, err := service.ServiceCreateProductUomCateg(&ctl.User, ctl.Ctx.Input.RequestBody); err == nil {
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
-		response["attributeID"] = attributeID
+		response["uomcategID"] = uomcategID
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg
@@ -59,8 +58,8 @@ func (ctl *ProductAttributeController) Post() {
 	ctl.ServeJSON()
 }
 
-// Get get attributes
-func (ctl *ProductAttributeController) Get() {
+// Get get uomcategs
+func (ctl *ProductUomCategController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	var err error
@@ -93,14 +92,14 @@ func (ctl *ProductAttributeController) Get() {
 				limit = 20
 			}
 		}
-		var attributes []map[string]interface{}
+		var uomcategs []map[string]interface{}
 		var paginator utils.Paginator
 		var access utils.AccessResult
-		if access, paginator, attributes, err = service.ServiceGetProductAttribute(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		if access, paginator, uomcategs, err = service.ServiceGetProductUomCateg(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
-			data["attributes"] = &attributes
+			data["uomcategs"] = &uomcategs
 			data["paginator"] = &paginator
 			data["access"] = access
 			response["data"] = data
@@ -111,12 +110,12 @@ func (ctl *ProductAttributeController) Get() {
 		}
 	} else {
 		// 获得某个城市的信息
-		if attributeID, err := utils.ToInt64(IDStr); err == nil {
-			if access, attribute, err := service.ServiceGetProductAttributeByID(&ctl.User, attributeID); err == nil {
+		if uomcategID, err := utils.ToInt64(IDStr); err == nil {
+			if access, uomcateg, err := service.ServiceGetProductUomCategByID(&ctl.User, uomcategID); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				data := make(map[string]interface{})
-				data["attribute"] = &attribute
+				data["uomcateg"] = &uomcateg
 				data["access"] = access
 				response["data"] = data
 			} else {

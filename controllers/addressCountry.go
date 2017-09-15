@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -17,10 +16,8 @@ func (ctl *AddressCountryController) Put() {
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
 
-		var requestBody map[string]interface{}
-		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 		if id, err := utils.ToInt64(IDStr); err == nil {
-			if err := service.ServiceUpdateAddressCountry(&ctl.User, requestBody, id); err == nil {
+			if err := service.ServiceUpdateAddressCountry(&ctl.User, ctl.Ctx.Input.RequestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				response["counytryID"] = id
@@ -48,9 +45,7 @@ func (ctl *AddressCountryController) Put() {
 // Post update country
 func (ctl *AddressCountryController) Post() {
 	response := make(map[string]interface{})
-	var requestBody map[string]interface{}
-	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	if countryID, err := service.ServiceCreateAddressCountry(&ctl.User, requestBody); err == nil {
+	if countryID, err := service.ServiceCreateAddressCountry(&ctl.User, ctl.Ctx.Input.RequestBody); err == nil {
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
 		response["countryID"] = countryID

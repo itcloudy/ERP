@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -16,11 +15,8 @@ func (ctl *ProductCategoryController) Put() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
-
-		var requestBody map[string]interface{}
-		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 		if id, err := utils.ToInt64(IDStr); err == nil {
-			if err := service.ServiceUpdateProductCategory(&ctl.User, requestBody, id); err == nil {
+			if err := service.ServiceUpdateProductCategory(&ctl.User, ctl.Ctx.Input.RequestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				response["categoryID"] = id
@@ -48,9 +44,7 @@ func (ctl *ProductCategoryController) Put() {
 // Post create product category
 func (ctl *ProductCategoryController) Post() {
 	response := make(map[string]interface{})
-	var requestBody map[string]interface{}
-	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	if categoryID, err := service.ServiceCreateProductCategory(&ctl.User, requestBody); err == nil {
+	if categoryID, err := service.ServiceCreateProductCategory(&ctl.User, ctl.Ctx.Input.RequestBody); err == nil {
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
 		response["categoryID"] = categoryID

@@ -22,7 +22,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                 <el-form-item label="所属省份" prop="Province">
+                <el-form-item label="所属省份" prop="Province">
                     <el-select
                         v-model="cityForm.Province.ID"
                         :name="cityForm.Province.Name"

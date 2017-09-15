@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
@@ -9,7 +10,7 @@ import (
 )
 
 // ServiceCreateProductTemplate 创建记录
-func ServiceCreateProductTemplate(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceCreateProductTemplate(user *md.User, requestBody []byte) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductTemplate"); err == nil {
@@ -35,9 +36,7 @@ func ServiceCreateProductTemplate(user *md.User, requestBody map[string]interfac
 		return
 	}
 	var obj md.ProductTemplate
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
 
 	obj.CreateUserID = user.ID
 	id, err = md.AddProductTemplate(&obj, o)
@@ -46,7 +45,7 @@ func ServiceCreateProductTemplate(user *md.User, requestBody map[string]interfac
 }
 
 // ServiceUpdateProductTemplate 更新记录
-func ServiceUpdateProductTemplate(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+func ServiceUpdateProductTemplate(user *md.User, requestBody []byte, id int64) (err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductTemplate"); err == nil {
@@ -77,9 +76,7 @@ func ServiceUpdateProductTemplate(user *md.User, requestBody map[string]interfac
 		return
 	}
 	obj = *objPtr
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
 
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateProductTemplate(&obj, o)

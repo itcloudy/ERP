@@ -31,8 +31,8 @@
     </div>
 </template>
 <script>
-    import localStore from '../../../utils/local_store';
-    import lazyLoadMenusRoutes from '../../../utils/lazyload';
+    import localStore from '@/utils/local_store';
+    import lazyLoadMenusRoutes from '@/utils/lazyload';
     import { mapMutations } from 'vuex';
     import { mapState } from 'vuex';
 
@@ -137,8 +137,6 @@
                                 this.$ajax.post("/menu",params).then(response=>{
                                     let {code,msg,data} = response.data;
                                     if(code=='success'){
-                                        //提示
-                                        this.$message({ message:msg, type: 'success' });
                                         // 后台菜单
                                         let backgroundMenus = this.menuList2Json(data.menus);
                                         // 本地缓存后台菜单信息
@@ -149,7 +147,7 @@
                                         this.$message({  message:msg,   type: 'error' });
                                     }
                                     //登录成功跳转到后台首页
-                                    this.$router.push('/admin');
+                                    this.$router.push('/');
                                 });
                             }else{
                                 this.$message({  message:msg,   type: 'error' });

@@ -14,7 +14,7 @@
         components:{
             frontFooter,
             frontHeader,
-            frontMain
+            frontMain,
         },
         data(){
             return {

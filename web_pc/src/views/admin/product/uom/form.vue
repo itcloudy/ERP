@@ -5,49 +5,60 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="cityForm" :model="cityForm" label-width="80px">
-                <el-form-item label="所属国家">
+            <el-form :inline="true" ref="uomForm" :model="uomForm"  :rules="uomFormRules"label-width="80px">
+                 <el-form-item label="所属类别" prop="Category">
                     <el-select
-                        v-model="cityForm.Country.ID"
-                        :name="cityForm.Country.Name"
+                        v-model="uomForm.Category.ID"
+                        :name="uomForm.Category.Name"
                         filterable
                         remote
-                        placeholder="请输入国家"
-                        :remote-method="getCountryList">
+                        placeholder="请选择类别"
+                        :remote-method="getUomCategList">
                         <el-option
-                            v-for="item in countryList"
+                            v-for="item in categoryList"
                             :key="item.ID"
                             :label="item.Name"
                             :value="item.ID">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                 <el-form-item label="所属省份">
+                <el-form-item label="单位名称" prop="Name">
+                    <el-input v-model="uomForm.Name"></el-input>
+                </el-form-item>
+                 <el-form-item label="类型"  prop="Type">
                     <el-select
-                        v-model="cityForm.Province.ID"
-                        :name="cityForm.Province.Name"
-                        filterable
-                        remote
-                        placeholder="请输入省份"
-                        :remote-method="getProvinceList">
+                        v-model="uomForm.Type"
+                        :name="uomTypes[uomForm.Type['label']]"
+                        placeholder="请选择类型">
                         <el-option
-                            v-for="item in provinceList"
-                            :key="item.ID"
-                            :label="item.Name"
-                            :value="item.ID">
+                            v-for="item in uomTypes"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="城市名称">
-                    <el-input v-model="cityForm.Name"></el-input>
+               
+                <el-form-item label="舍入精度" >
+                    <el-input v-model="uomForm.Rounding"></el-input>
                 </el-form-item>
-        
+                <el-form-item label="符号位置">
+                    <el-switch on-text="前置" off-text="后置" v-model="uomForm.Symbol"></el-switch>
+                </el-form-item>
+                <el-form-item label="比率" v-show="uomForm.Type == 'smaller'">
+                    <el-input v-model="uomForm.Factor"></el-input>
+                </el-form-item>
+                <el-form-item label="更大比率"  v-show="uomForm.Type == 'bigger'">
+                    <el-input v-model="uomForm.Factor"></el-input>
+                </el-form-item>
             </el-form>
         </div>
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop'; 
+    import  {SERVER_PRODUCT_UOM,SERVER_PRODUCT_UOM_CATEG} from '@/server_address'; 
+    import {validateObjectID} from '@/utils/validators';       
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -59,32 +70,40 @@
                     Read:false,
                     Unlink:false,
                 },
-                cityForm:{
+                uomForm:{
                     Name:"",
                     ID:"",
-                    Province:{
+                },
+                NewUomForm:{
+                    Name:"",
+                    ID:"",
+                    Category:{
                         Name:"",
                         ID:"",
                     },
-                    Country:{
-                        Name:"",
-                        ID:"",
-                    }
+                    Type:"reference",
+                    Factor:1,
+                    FactorInv:1,
+                    Rounding:0.01,
+                    Symbol:false
                 },
-                NewCityForm:{
-                    Name:"",
-                    ID:"",
-                    Province:{
-                        Name:"",
-                        ID:"",
-                    },
-                    Country:{
-                        Name:"",
-                        ID:"",
-                    }
-                },
-                provinceList:[],
-                countryList:[],
+                uomTypes:[
+                     {value:"reference",label:"参考单位"},
+                     {value:"bigger",label:"大于参考单位"},
+                     {value:"smaller",label:"小于参考单位"},
+                ],
+                categoryList:[],
+                uomFormRules:{
+                    Name:[
+                        { required: true, message: '请输入单位名称', trigger: 'blur' }
+                    ],
+                    Category:[
+                        { required: true, message: '请选择类别', validator: validateObjectID, trigger: 'blur' }
+                    ],
+                    Type:[
+                        { required: true, message: '请选择类型', trigger: 'blur' }
+                    ],
+                }
             }
         },
         components:{
@@ -92,49 +111,52 @@
         },
         methods:{
             formSave(){
-                if (this.cityForm.ID >0){
-                    this.$ajax.put("/address/city/"+this.cityForm.ID ,this.cityForm).then(response=>{
-                        let {code,msg,cityID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
+                this.$refs['uomForm'].validate((valid) => {
+                    if (valid) {
+                        if (this.uomForm.ID >0){
+                            this.$ajax.put(SERVER_PRODUCT_UOM + this.uomForm.ID ,this.uomForm).then(response=>{
+                                let {code,msg,uomID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/product/uom/detail/"+uomID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }else{
-                            this.$message({ message:msg, type: 'error' });
+                            this.$ajax.post(SERVER_PRODUCT_UOM,this.uomForm).then(response=>{
+                                let {code,msg,uomID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/product/uom/detail/"+uomID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }
-                    });
-                }else{
-                    this.$ajax.post("/address/city",this.cityForm).then(response=>{
-                        let {code,msg,cityID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
-                        }else{
-                            this.$message({ message:msg, type: 'error' });
-                        }
-                    });
-                }
+                    }
+                });
             },
-            getCityInfo(){
+            getUomInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 if (id!='new'){
-                    this.cityForm.ID = id;
-                    this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                    this.uomForm.ID = id;
+                    this.$ajax.get(SERVER_PRODUCT_UOM+this.uomForm.ID).then(response=>{
                             this.loadging = false;
                             let {code,msg,data} = response.data;
                             if(code=='success'){
-                                this.cityForm = data["city"];
-                                this.provinceList = [this.cityForm.Province]
-                                this.countryList = [this.cityForm.Country]
+                                this.uomForm = data["uom"];
+                                this.categoryList = [this.uomForm.Category]
                                 this.access = data["access"];
                             }
                         });
                 }else{
-                    this.cityForm = this.NewCityForm;
+                    this.uomForm = this.NewUomForm;
                 }
             },
-            getCountryList(query){
-                this.$ajax.get("/address/country",{
+            getUomCategList(query){
+                this.$ajax.get(SERVER_PRODUCT_UOM_CATEG,{
                     params:{
                         offset:0,
                         limit:20,
@@ -143,38 +165,24 @@
                 }).then(response=>{
                     let {code,msg,data} = response.data;
                     if(code=='success'){
-                        this.countryList = data["countries"];
-                    }
-                });
-            },
-            getProvinceList(query){
-                this.$ajax.get("/address/province",{
-                    params:{
-                        offset:0,
-                        limit:20,
-                        name:query,
-                    }
-                }).then(response=>{
-                    let {code,msg,data} = response.data;
-                    if(code=='success'){
-                        this.provinceList = data["provinces"];
+                        this.categoryList = data["uomcategs"];
                     }
                 });
             },
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/city");
+                    this.$router.push("/admin/product/uom");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/city/form/"+id);
+                    this.$router.push("/admin/product/uom/form/"+id);
                 }
             },
         },
         created:function(){
-            this.getCityInfo();
+            this.getUomInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getCityInfo'
+            '$route': 'getUomInfo'
         },
          
     }

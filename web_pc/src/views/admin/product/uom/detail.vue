@@ -4,22 +4,17 @@
         @formEdit="formEdit"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form ref="cityForm" :model="cityForm" :inline="true"  class="form-read-only">
-                <el-form-item label="所属国家">
-                    <span>{{cityForm.Country.Name}}</span>
-                </el-form-item>
-                <el-form-item label="所属省份">
-                    <span>{{cityForm.Province.Name}}</span>
-                </el-form-item>
-                <el-form-item label="城市名称">
-                    <span>{{cityForm.Name}}</span>
+            <el-form ref="uomForm" :model="uomForm" :inline="true"  class="form-read-only">
+                <el-form-item label="单位名称">
+                    <span>{{uomForm.Name}}</span>
                 </el-form-item>
             </el-form>
         </div>
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop';   
+    import  {SERVER_PRODUCT_UOM} from '@/server_address';       
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -31,43 +26,43 @@
                     Read:false,
                     Unlink:false,
                 },
-                cityForm:{}
+                uomForm:{}
             }
         },
         components:{
            FormTop
         },
         methods:{
-            getCityInfo(){
+            getProductUomInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
-                this.cityForm.ID = id;
-                this.$ajax.get("/address/city/"+this.cityForm.ID).then(response=>{
+                this.uomForm.ID = id;
+                this.$ajax.get(SERVER_ADDRESS_CITY+this.uomForm.ID).then(response=>{
                         this.loadging = false;
                         let {code,msg,data} = response.data;
                         if(code=='success'){
-                            this.cityForm = data["city"];
+                            this.uomForm = data["uom"];
                             this.access = data["access"];
                         }
                     });
             },
             changeView(type,id){
                 if ("list"==type){
-                    this.$router.push("/admin/address/city");
+                    this.$router.push("/admin/product/uom");
                 }else if ("form"==type){
-                    this.$router.push("/admin/address/city/form/"+id);
+                    this.$router.push("/admin/product/uom/form/"+id);
                 }
             },
             formEdit(){
-                 this.$router.push("/admin/address/city/form/"+this.cityForm.ID);
+                 this.$router.push("/admin/product/uom/form/"+this.uomForm.ID);
             },
         },
         created:function(){
-            this.getCityInfo();
+            this.getProductUomInfo();
         },
         watch: {
             // 如果路由有变化，会再次执行该方法
-            '$route': 'getCityInfo'
+            '$route': 'getProductUomInfo'
         },
          
     }

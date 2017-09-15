@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
@@ -10,7 +11,7 @@ import (
 )
 
 // ServiceCreateProductCategory 创建记录
-func ServiceCreateProductCategory(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceCreateProductCategory(user *md.User, requestBody []byte) (id int64, err error) {
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductCategory"); err == nil {
 		if !access.Create {
@@ -36,12 +37,12 @@ func ServiceCreateProductCategory(user *md.User, requestBody map[string]interfac
 	}
 	var obj md.ProductCategory
 	var cateMax md.ProductCategory
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
 	parentNotOK := false
 	var parent md.ProductCategory
-	if Parent, ok := requestBody["Parent"]; ok {
+	if Parent, ok := requestBodyMap["Parent"]; ok {
 
 		parentT := reflect.TypeOf(Parent)
 		if parentT.Kind() == reflect.Map {
@@ -102,7 +103,7 @@ func ServiceCreateProductCategory(user *md.User, requestBody map[string]interfac
 }
 
 // ServiceUpdateProductCategory 更新记录
-func ServiceUpdateProductCategory(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+func ServiceUpdateProductCategory(user *md.User, requestBody []byte, id int64) (err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductCategory"); err == nil {
@@ -133,8 +134,24 @@ func ServiceUpdateProductCategory(user *md.User, requestBody map[string]interfac
 		return
 	}
 	obj = *objPtr
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
+	json.Unmarshal([]byte(requestBody), &obj)
+
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
+
+	var parent md.ProductCategory
+	if Parent, ok := requestBodyMap["Parent"]; ok {
+		parentT := reflect.TypeOf(Parent)
+		if parentT.Kind() == reflect.Map {
+			parentMap := Parent.(map[string]interface{})
+			if parentID, ok := parentMap["ID"]; ok {
+				parent.ID, _ = utils.ToInt64(parentID)
+				obj.Parent = &parent
+			}
+		} else if parentT.Kind() == reflect.String {
+			parent.ID, _ = utils.ToInt64(Parent)
+			obj.Parent = &parent
+		}
 	}
 
 	obj.UpdateUserID = user.ID

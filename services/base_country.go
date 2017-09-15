@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	md "golangERP/models"
@@ -10,7 +11,7 @@ import (
 )
 
 // ServiceCreateAddressCountry 创建记录
-func ServiceCreateAddressCountry(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceCreateAddressCountry(user *md.User, requestBody []byte) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCountry"); err == nil {
@@ -37,9 +38,9 @@ func ServiceCreateAddressCountry(user *md.User, requestBody map[string]interface
 	}
 
 	var obj md.AddressCountry
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+
+	json.Unmarshal([]byte(requestBody), &obj)
+
 	obj.CreateUserID = user.ID
 	id, err = md.AddAddressCountry(&obj, o)
 
@@ -47,7 +48,7 @@ func ServiceCreateAddressCountry(user *md.User, requestBody map[string]interface
 }
 
 // ServiceUpdateAddressCountry 更新记录
-func ServiceUpdateAddressCountry(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+func ServiceUpdateAddressCountry(user *md.User, requestBody []byte, id int64) (err error) {
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressCountry"); err == nil {
 		if !access.Update {
@@ -78,9 +79,7 @@ func ServiceUpdateAddressCountry(user *md.User, requestBody map[string]interface
 		return
 	}
 	obj = *objPtr
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateAddressCountry(&obj, o)
 

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
@@ -10,7 +11,7 @@ import (
 )
 
 // ServiceCreateAddressProvince 创建记录
-func ServiceCreateAddressProvince(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceCreateAddressProvince(user *md.User, requestBody []byte) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressProvince"); err == nil {
@@ -36,11 +37,11 @@ func ServiceCreateAddressProvince(user *md.User, requestBody map[string]interfac
 		return
 	}
 	var obj md.AddressProvince
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
 	var country md.AddressCountry
-	if Country, ok := requestBody["Country"]; ok {
+	if Country, ok := requestBodyMap["Country"]; ok {
 		countryT := reflect.TypeOf(Country)
 		if countryT.Kind() == reflect.Map {
 			countryMap := Country.(map[string]interface{})
@@ -59,7 +60,7 @@ func ServiceCreateAddressProvince(user *md.User, requestBody map[string]interfac
 }
 
 // ServiceUpdateAddressProvince 更新记录
-func ServiceUpdateAddressProvince(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+func ServiceUpdateAddressProvince(user *md.User, requestBody []byte, id int64) (err error) {
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressProvince"); err == nil {
 		if !access.Update {
@@ -87,11 +88,11 @@ func ServiceUpdateAddressProvince(user *md.User, requestBody map[string]interfac
 		return
 	}
 	obj = *objPtr
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
 	var country md.AddressCountry
-	if Country, ok := requestBody["Country"]; ok {
+	if Country, ok := requestBodyMap["Country"]; ok {
 		countryT := reflect.TypeOf(Country)
 		if countryT.Kind() == reflect.Map {
 			countryMap := Country.(map[string]interface{})

@@ -1,15 +1,17 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
 	md "golangERP/models"
 	"golangERP/utils"
+	"reflect"
 
 	"github.com/astaxie/beego/orm"
 )
 
 // ServiceCreateProductUom 创建记录
-func ServiceCreateProductUom(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceCreateProductUom(user *md.User, requestBody []byte) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductUom"); err == nil {
@@ -35,10 +37,23 @@ func ServiceCreateProductUom(user *md.User, requestBody map[string]interface{}) 
 		return
 	}
 	var obj md.ProductUom
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
+	json.Unmarshal([]byte(requestBody), &obj)
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
+	var uomcateg md.ProductUomCateg
+	if Category, ok := requestBodyMap["Category"]; ok {
+		uomcategT := reflect.TypeOf(Category)
+		if uomcategT.Kind() == reflect.Map {
+			uomcategMap := Category.(map[string]interface{})
+			if uomcategID, ok := uomcategMap["ID"]; ok {
+				uomcateg.ID, _ = utils.ToInt64(uomcategID)
+				obj.Category = &uomcateg
+			}
+		} else if uomcategT.Kind() == reflect.String {
+			uomcateg.ID, _ = utils.ToInt64(Category)
+			obj.Category = &uomcateg
+		}
 	}
-
 	obj.CreateUserID = user.ID
 	id, err = md.AddProductUom(&obj, o)
 
@@ -46,7 +61,7 @@ func ServiceCreateProductUom(user *md.User, requestBody map[string]interface{}) 
 }
 
 // ServiceUpdateProductUom 更新记录
-func ServiceUpdateProductUom(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+func ServiceUpdateProductUom(user *md.User, requestBody []byte, id int64) (err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductUom"); err == nil {
@@ -77,9 +92,7 @@ func ServiceUpdateProductUom(user *md.User, requestBody map[string]interface{}, 
 		return
 	}
 	obj = *objPtr
-	if Name, ok := requestBody["Name"]; ok {
-		obj.Name = utils.ToString(Name)
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateProductUom(&obj, o)
 
