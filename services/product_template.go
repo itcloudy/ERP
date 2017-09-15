@@ -104,6 +104,7 @@ func ServiceGetProductTemplate(user *md.User, query map[string]interface{}, excl
 			obj := arrs[i]
 			objInfo := make(map[string]interface{})
 			objInfo["Name"] = obj.Name
+			objInfo["ID"] = obj.ID
 			objInfo["Description"] = obj.Description
 			objInfo["DescriptionSale"] = obj.DescriptionSale
 			objInfo["DescriptionPurchase"] = obj.DescriptionPurchase
@@ -161,6 +162,7 @@ func ServiceGetProductTemplateByID(user *md.User, id int64) (access utils.Access
 	if obj, err = md.GetProductTemplateByID(id, o); err == nil {
 		objInfo := make(map[string]interface{})
 		objInfo["Name"] = obj.Name
+		objInfo["ID"] = obj.ID
 		objInfo["Description"] = obj.Description
 		objInfo["DescriptionSale"] = obj.DescriptionSale
 		objInfo["DescriptionPurchase"] = obj.DescriptionPurchase

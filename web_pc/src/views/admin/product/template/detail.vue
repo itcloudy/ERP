@@ -1,7 +1,7 @@
 <template>
     <div>
         <form-top  :Update="access.Update" :Create="access.Create" 
-        @formSave="formSave"
+        @formEdit="formEdit"
         @changeView="changeView"/>
         <div v-loading="loading">
             <el-form :inline="true" ref="templateForm" :model="templateForm" class="form-read-only">
@@ -12,7 +12,7 @@
                     <span>{{templateForm.DefaultCode}}</span>
                 </el-form-item>
                 <el-form-item label="产品类别">
-                    <span v-if="templateForm.Category">{{templateForm.Category.Name}}</span v-else><span>暂未定</span>
+                    <span v-if="templateForm.Category">{{templateForm.Category.Name}}</span><span  v-else>暂未定</span>
                 </el-form-item>
                 <el-form-item label="可销售">
                     <span v-if="templateForm.SaleOk">是</span ><span v-else>否</span>
@@ -39,22 +39,22 @@
                     <span>{{templateForm.StandardWeight}}</span>
                 </el-form-item>
                 <el-form-item label="第一销售单位">
-                    <span v-if="templateForm.SecondSaleUom">{{templateForm.SecondSaleUom.Name}}</span v-else><span>暂未定</span>
+                    <span v-if="templateForm.SecondSaleUom">{{templateForm.SecondSaleUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
                 <el-form-item label="第二销售单位">
-                    <span v-if="templateForm.SecondSaleUom">{{templateForm.SecondSaleUom.Name}}</span v-else><span>暂未定</span>
+                    <span v-if="templateForm.SecondSaleUom">{{templateForm.SecondSaleUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
                 <el-form-item label="第一采购单位">
-                    <span v-if="templateForm.FirstPurchaseUom">{{templateForm.FirstPurchaseUom.Name}}</span v-else><span>暂未定</span>
+                    <span v-if="templateForm.FirstPurchaseUom">{{templateForm.FirstPurchaseUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
                 <el-form-item label="第二采购单位">
-                    <span v-if="templateForm.SecondPurchaseUom">{{templateForm.SecondPurchaseUom.Name}}</span v-else><span>暂未定</span>
+                    <span v-if="templateForm.SecondPurchaseUom">{{templateForm.SecondPurchaseUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
                 <el-form-item label="产品类型">
-                    <span>{{templateForm.ProductType}}</span>
+                    <span v-if="templateForm.ProductType">{{productType[templateForm.ProductType]}}</span><span v-else>暂未定</span>
                 </el-form-item>
                 <el-form-item label="规格创建方式">
-                    <span>{{templateForm.ProductMethod}}</span>
+                    <span v-if="templateForm.ProductMethod">{{productMethod[templateForm.ProductMethod]}}</span><span v-else>暂未定</span>
                 </el-form-item>
                 
             </el-form>
@@ -100,8 +100,8 @@
                     Unlink:false,
                 },
                 templateForm:{},
-               
-
+                productType:{"stock":"库存商品","consume":"消耗品","service":"服务"},
+                productMethod:{"hand":"手动","auto":"自动"}
             }
         },
         components:{
@@ -111,7 +111,6 @@
             showAddAttributeLineDailog(){
                 this.formSave();
             },
-             
             getProductTemplateInfo(){
                 this.loadging = true;
                 let id  = this.$route.params.id;
@@ -130,8 +129,6 @@
                     this.templateForm = this.NewTemplateForm;
                 }
             },
-            
-            
             changeView(type,id){
                 if ("list"==type){
                     this.$router.push("/admin/product/template");
@@ -139,6 +136,9 @@
                     this.$router.push("/admin/product/template/form/"+id);
                 }
             },
+            formEdit(){
+                 this.$router.push("/admin/product/template/form/"+this.templateForm.ID);
+            }
         },
         created:function(){
             this.getProductTemplateInfo();

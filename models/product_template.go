@@ -82,6 +82,12 @@ func UpdateProductTemplate(m *ProductTemplate, ormObj orm.Ormer) (id int64, err 
 func GetProductTemplateByID(id int64, ormObj orm.Ormer) (obj *ProductTemplate, err error) {
 	obj = &ProductTemplate{ID: id}
 	err = ormObj.Read(obj)
+	ormObj.Read(obj.Category)
+	ormObj.Read(obj.FirstPurchaseUom)
+	ormObj.Read(obj.SecondPurchaseUom)
+	ormObj.Read(obj.FirstSaleUom)
+	ormObj.Read(obj.SecondSaleUom)
+	ormObj.LoadRelated(obj, "AttributeLines")
 	return obj, err
 }
 

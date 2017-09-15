@@ -11,7 +11,8 @@
                     <el-input v-model="templateForm.Name"></el-input>
                 </el-form-item>
                 <el-form-item label="产品编码" prop="DefaultCode">
-                    <el-input v-model="templateForm.DefaultCode"></el-input>
+                    <span  v-if="templateForm.ID" >{{templateForm.DefaultCode}}</span>
+                    <el-input v-else v-model="templateForm.DefaultCode"></el-input>
                 </el-form-item>
                 <el-form-item label="产品类别" prop="Category">
                     <el-select
@@ -255,10 +256,7 @@
                     ProductMethod:[
                         { required: true, message: '请选择规格创建方式', trigger: 'blur' }
                     ],
-                     
                 }
-
-
             }
         },
         components:{
@@ -306,11 +304,33 @@
                             let {code,msg,data} = response.data;
                             if(code=='success'){
                                 this.templateForm = data["template"];
+                                this.categoryList= [this.templateForm.Category];
+                                this.getInitUomList();
                                 this.access = data["access"];
                             }
                         });
                 }else{
                     this.templateForm = this.NewTemplateForm;
+                }
+            },
+            getInitUomList(){
+                if (this.templateForm){
+                    let uomDict = {};
+                    if (this.templateForm.FirstPurchaseUom && this.templateForm.FirstPurchaseUom.ID >0){
+                        uomDict[this.templateForm.FirstPurchaseUom.ID] = this.templateForm.FirstPurchaseUom;
+                    }
+                    if (this.templateForm.FirstSaleUom && this.templateForm.FirstSaleUom.ID >0){
+                        uomDict[this.templateForm.FirstSaleUom.ID] = this.templateForm.FirstSaleUom;
+                    }
+                    if (this.templateForm.SecondPurchaseUom && this.templateForm.SecondPurchaseUom.ID >0){
+                        uomDict[this.templateForm.SecondPurchaseUom.ID] = this.templateForm.SecondPurchaseUom;
+                    }
+                    if (this.templateForm.SecondSaleUom && this.templateForm.SecondSaleUom.ID >0){
+                        uomDict[this.templateForm.SecondSaleUom.ID] = this.templateForm.SecondSaleUom;
+                    }
+                    for (let key in uomDict) {
+                        this.uomList.push(uomDict[key]);
+                    }
                 }
             },
             getProductCategoryList(query){
@@ -337,7 +357,7 @@
                 }).then(response=>{
                     let {code,msg,data} = response.data;
                     if(code=='success'){
-                        this.uomList = data["categories"];
+                        this.uomList = data["uoms"];
                     }
                 });
             },
