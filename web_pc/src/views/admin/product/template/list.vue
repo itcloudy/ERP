@@ -55,21 +55,21 @@
                 prop="SaleOk"
                 label="可销售">
                 <template scope="scope">
-                    <span v-if="row.SaleOk">是</span><span  v-else>否</span>
+                    <span v-if="scope.row.SaleOk">是</span><span  v-else>否</span>
                 </template>
                 </el-table-column>
                 <el-table-column
                 prop="Active"
                 label="有效">
                     <template scope="scope">
-                        <span v-if="row.Active">是</span><span  v-else>否</span>
+                        <span v-if="scope.row.Active">是</span><span  v-else>否</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                 prop="IsProductVariant"
                 label="是规格产品">
                     <template scope="scope">
-                        <span v-if="row.IsProductVariant">是</span><span  v-else>否</span>
+                        <span v-if="scope.row.IsProductVariant">是</span><span  v-else>否</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -92,14 +92,14 @@
                 prop="ProductType"
                 label="产品类型" scope="scope">
                     <template >
-                        <span>{{productTypeDict[row.ProductType]}}</span>
+                        <span>{{productTypeDict[scope.row.ProductType]}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                 prop="ProductMethod"
                 label="规格创建方式">
                     <template scope="scope">
-                        <span>{{productMethodDict[row.ProductMethod]}}</span>
+                        <span>{{productMethodDict[scope.row.ProductMethod]}}</span>
                     </template>
                 </el-table-column>
             </el-table>
