@@ -5,14 +5,14 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="cityForm" :model="cityForm" label-width="80px">
-                <el-form-item label="所属国家">
+            <el-form :inline="true" ref="cityForm" :model="cityForm" :rules="cityFormRules" label-width="80px">
+                <el-form-item label="所属国家"  prop="Country">
                     <el-select
                         v-model="cityForm.Country.ID"
                         :name="cityForm.Country.Name"
                         filterable
                         remote
-                        placeholder="请输入国家"
+                        placeholder="请选择国家"
                         :remote-method="getCountryList">
                         <el-option
                             v-for="item in countryList"
@@ -22,13 +22,13 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                 <el-form-item label="所属省份">
+                 <el-form-item label="所属省份" prop="Province">
                     <el-select
                         v-model="cityForm.Province.ID"
                         :name="cityForm.Province.Name"
                         filterable
                         remote
-                        placeholder="请输入省份"
+                        placeholder="请选择省份"
                         :remote-method="getProvinceList">
                         <el-option
                             v-for="item in provinceList"
@@ -38,7 +38,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="城市名称">
+                <el-form-item label="城市名称" prop="Name">
                     <el-input v-model="cityForm.Name"></el-input>
                 </el-form-item>
         
@@ -49,6 +49,7 @@
 <script>
     import  {default as FormTop} from '@/views/admin/common/FormTop';         
     import  {SERVER_ADDRESS_CITY,SERVER_ADDRESS_COUNTRY,SERVER_ADDRESS_PROVINCE} from '@/server_address';
+    import {validateObjectID} from '@/utils/validators';
     import { mapState } from 'vuex';
     export default {
         data() {
@@ -75,6 +76,17 @@
                 },
                 provinceList:[],
                 countryList:[],
+                cityFormRules:{
+                    Name:[
+                        { required: true, message: '请输入城市名称', trigger: 'blur' }
+                    ],
+                    Province:[
+                        { required: true, message: '请选择省份', validator: validateObjectID, trigger: 'blur' }
+                    ],
+                    Country:[
+                        {required: true, message: '请选择国家',required: true, validator: validateObjectID, trigger: 'blur' }
+                    ]
+                }
             }
         },
         components:{
@@ -82,27 +94,31 @@
         },
         methods:{
             formSave(){
-                if (this.cityForm.ID >0){
-                    this.$ajax.put(SERVER_ADDRESS_CITY+this.cityForm.ID ,this.cityForm).then(response=>{
-                        let {code,msg,cityID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
+                this.$refs['cityForm'].validate((valid) => {
+                    if (valid) {
+                        if (this.cityForm.ID >0){
+                            this.$ajax.put(SERVER_ADDRESS_CITY+this.cityForm.ID ,this.cityForm).then(response=>{
+                                let {code,msg,cityID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/address/city/detail/"+cityID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }else{
-                            this.$message({ message:msg, type: 'error' });
-                        }
-                    });
-                }else{
-                    this.$ajax.post(SERVER_ADDRESS_CITY,this.cityForm).then(response=>{
-                        let {code,msg,cityID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/city/detail/"+cityID);
-                        }else{
-                            this.$message({ message:msg, type: 'error' });
-                        }
-                    });
-                }
+                            this.$ajax.post(SERVER_ADDRESS_CITY,this.cityForm).then(response=>{
+                                let {code,msg,cityID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/address/city/detail/"+cityID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
+                        }  
+                    } 
+                });
             },
             getCityInfo(){
                 this.loadging = true;

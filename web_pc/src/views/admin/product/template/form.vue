@@ -5,15 +5,15 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="templateForm" :model="templateForm" label-width="80px">
+            <el-form :inline="true" ref="templateForm" :model="templateForm" :rules="templateFormRules"  label-width="80px">
                  
-                <el-form-item label="款式名称">
+                <el-form-item label="款式名称" prop="Name">
                     <el-input v-model="templateForm.Name"></el-input>
                 </el-form-item>
-                <el-form-item label="产品编码">
+                <el-form-item label="产品编码" prop="DefaultCode">
                     <el-input v-model="templateForm.DefaultCode"></el-input>
                 </el-form-item>
-                <el-form-item label="产品类别">
+                <el-form-item label="产品类别" prop="Category">
                     <el-select
                         v-model="templateForm.Category.ID"
                         :name="templateForm.Category.Name"
@@ -29,15 +29,33 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="可销售">
-                    <el-switch on-text="是" off-text="否" v-model="templateForm.SaleOk"></el-switch>
+                <el-form-item label="产品类型" prop="ProductType">
+                    <el-select
+                        v-model="templateForm.ProductType"
+                        :name="productTypes[templateForm.ProductType['label']]"
+                        placeholder="请输入产品类型">
+                        <el-option
+                            v-for="item in productTypes"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="有效">
-                    <el-switch on-text="是" off-text="否" v-model="templateForm.Active"></el-switch>
+                <el-form-item label="规格创建方式"  prop="ProductMethod">
+                    <el-select
+                        v-model="templateForm.ProductMethod"
+                        :name="productMethods[templateForm.ProductMethod['label']]"
+                        placeholder="请输入规格创建方式">
+                        <el-option
+                            v-for="item in productMethods"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
-                <el-form-item label="代售品">
-                    <el-switch on-text="是" off-text="否" v-model="templateForm.Rental"></el-switch>
-                </el-form-item>
+                
                 <el-form-item label="描述">
                     <el-input v-model="templateForm.Description"></el-input>
                 </el-form-item>
@@ -53,7 +71,7 @@
                 <el-form-item label="标准重量">
                     <el-input v-model="templateForm.StandardWeight"></el-input>
                 </el-form-item>
-                <el-form-item label="第一销售单位">
+                <el-form-item label="第一销售单位" prop="FirstSaleUom">
                     <el-select
                         v-model="templateForm.FirstSaleUom.ID"
                         :name="templateForm.FirstSaleUom.Name"
@@ -85,7 +103,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="第一采购单位">
+                <el-form-item label="第一采购单位" prop="FirstPurchaseUom">
                     <el-select
                         v-model="templateForm.FirstPurchaseUom.ID"
                         :name="templateForm.FirstPurchaseUom.Name"
@@ -117,31 +135,14 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="产品类型">
-                    <el-select
-                        v-model="templateForm.ProductType"
-                        :name="productTypes[templateForm.ProductType['label']]"
-                        placeholder="请输入产品类型">
-                        <el-option
-                            v-for="item in productTypes"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="可销售">
+                    <el-switch on-text="是" off-text="否" v-model="templateForm.SaleOk"></el-switch>
                 </el-form-item>
-                <el-form-item label="规格创建方式">
-                    <el-select
-                        v-model="templateForm.ProductMethod"
-                        :name="productMethods[templateForm.ProductMethod['label']]"
-                        placeholder="请输入规格创建方式">
-                        <el-option
-                            v-for="item in productMethods"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value">
-                        </el-option>
-                    </el-select>
+                <el-form-item label="有效">
+                    <el-switch on-text="是" off-text="否" v-model="templateForm.Active"></el-switch>
+                </el-form-item>
+                <el-form-item label="代售品">
+                    <el-switch on-text="是" off-text="否" v-model="templateForm.Rental"></el-switch>
                 </el-form-item>
                 
             </el-form>
@@ -181,6 +182,7 @@
     import  {default as FormTop} from '@/views/admin/common/FormTop'; 
     import  {SERVER_PRODUCT_TEMPLATE,SERVER_PRODUCT_CATEGORY,SERVER_PRODUCT_UOM} from '@/server_address';         
     import { mapState } from 'vuex';
+    import {validateObjectID} from '@/utils/validators';
     export default {
         data() {
             return {
@@ -230,7 +232,32 @@
                     {value:"hand",label:"手动"},
                     {value:"auto",label:"自动"}
                 ],
-                attributeLines:[]
+                attributeLines:[],
+                templateFormRules:{
+                    Name:[
+                        { required: true, message: '请输入款式名称', trigger: 'blur' }
+                    ],
+                    Category:[
+                        { required: true, message: '请选择类别',validator: validateObjectID, trigger: 'blur' }
+                    ],
+                    FirstSaleUom:[
+                        { required: true, message: '请选择第一销售单位',validator: validateObjectID, trigger: 'blur' }
+                    ],
+                    FirstPurchaseUom:[
+                        { required: true, message: '请选择第一采购单位',validator: validateObjectID, trigger: 'blur' }
+                    ],
+                    DefaultCode:[
+                        { required: true, message: '请输入款式编码', trigger: 'blur' }
+                    ],
+                    ProductType:[
+                        { required: true, message: '请选择产品类型', trigger: 'blur' }
+                    ],
+                    ProductMethod:[
+                        { required: true, message: '请选择规格创建方式', trigger: 'blur' }
+                    ],
+                     
+                }
+
 
             }
         },
@@ -242,27 +269,31 @@
                 this.formSave();
             },
             formSave(){
-                if (this.templateForm.ID >0){
-                    this.$ajax.put(SERVER_PRODUCT_TEMPLATE+this.templateForm.ID ,this.templateForm).then(response=>{
-                        let {code,msg,templateID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/product/template/detail/"+templateID);
+                 this.$refs['templateForm'].validate((valid) => {
+                    if (valid) {
+                        if (this.templateForm.ID >0){
+                            this.$ajax.put(SERVER_PRODUCT_TEMPLATE+this.templateForm.ID ,this.templateForm).then(response=>{
+                                let {code,msg,templateID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/product/template/detail/"+templateID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }else{
-                            this.$message({ message:msg, type: 'error' });
+                            this.$ajax.post(SERVER_PRODUCT_TEMPLATE,this.templateForm).then(response=>{
+                                let {code,msg,templateID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/product/template/detail/"+templateID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }
-                    });
-                }else{
-                    this.$ajax.post(SERVER_PRODUCT_TEMPLATE,this.templateForm).then(response=>{
-                        let {code,msg,templateID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/product/template/detail/"+templateID);
-                        }else{
-                            this.$message({ message:msg, type: 'error' });
-                        }
-                    });
-                }
+                    }
+                });
             },
             getProductTemplateInfo(){
                 this.loadging = true;

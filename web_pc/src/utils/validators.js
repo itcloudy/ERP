@@ -2,6 +2,13 @@
  *  Author: cloudy
  *  Date: 2017/07/11
  */
+export function validateObjectID(rule, value, callback) {
+    if (value.ID == 0 || value.ID == "") {
+        callback(new Error('不能为空'));
+    } else {
+        callback();
+    }
+};
 
 // 是否为邮箱
 export function validateEmail(email) {

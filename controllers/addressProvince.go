@@ -11,6 +11,25 @@ type AddressProvinceController struct {
 	BaseController
 }
 
+// Post
+func (ctl *AddressProvinceController) Post() {
+	response := make(map[string]interface{})
+	var requestBody map[string]interface{}
+	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
+	if provinceID, err := service.ServiceCreateAddressProvince(&ctl.User, requestBody); err == nil {
+		response["code"] = utils.SuccessCode
+		response["msg"] = utils.SuccessMsg
+		response["provinceID"] = provinceID
+	} else {
+		response["code"] = utils.FailedCode
+		response["msg"] = utils.FailedMsg
+		response["err"] = err.Error()
+	}
+
+	ctl.Data["json"] = response
+	ctl.ServeJSON()
+}
+
 // Put  update province
 func (ctl *AddressProvinceController) Put() {
 	response := make(map[string]interface{})

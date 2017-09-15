@@ -5,8 +5,8 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="valueForm" :model="valueForm" label-width="80px">
-                <el-form-item label="属性">
+            <el-form :inline="true" ref="valueForm" :model="valueForm" :rules="valueFormRules" label-width="80px">
+                <el-form-item label="属性" prop="Attribute">
                     <el-select
                         v-model="valueForm.Attribute.ID"
                         :name="valueForm.Attribute.Name"
@@ -22,7 +22,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="属性值">
+                <el-form-item label="属性值" prop="Name">
                     <el-input v-model="valueForm.Name"></el-input>
                 </el-form-item>
         
@@ -34,6 +34,7 @@
     import  {default as FormTop} from '@/views/admin/common/FormTop';    
     import  {SERVER_PRODUCT_ATTRIBUTE,SERVER_PRODUCT_ATTRIBUTE_VALUE} from '@/server_address';             
     import { mapState } from 'vuex';
+    import {validateObjectID} from '@/utils/validators';
     export default {
         data() {
             return {
@@ -53,7 +54,16 @@
                         ID:"",
                     },
                 },
-                attributeList:[]
+                attributeList:[],
+                valueFormRules:{
+                    Name:[
+                        { required: true, message: '请输入属性值名称', trigger: 'blur' }
+                    ],
+                    Attribute:[
+                        { required: true, message: '请选择属性',validator: validateObjectID, trigger: 'blur' }
+                    ],
+                     
+                }
             }
         },
         components:{
@@ -61,27 +71,31 @@
         },
         methods:{
             formSave(){
-                if (this.valueForm.ID >0){
-                    this.$ajax.put(SERVER_PRODUCT_ATTRIBUTE_VALUE+this.valueForm.ID ,this.valueForm).then(response=>{
-                        let {code,msg,attributeValueID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/product/attributevalue/detail/"+attributeValueID);
+                this.$refs['valueForm'].validate((valid) => {
+                    if (valid) {
+                        if (this.valueForm.ID >0){
+                            this.$ajax.put(SERVER_PRODUCT_ATTRIBUTE_VALUE+this.valueForm.ID ,this.valueForm).then(response=>{
+                                let {code,msg,attributeValueID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/product/attributevalue/detail/"+attributeValueID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }else{
-                            this.$message({ message:msg, type: 'error' });
+                            this.$ajax.post(SERVER_PRODUCT_ATTRIBUTE_VALUE,this.valueForm).then(response=>{
+                                let {code,msg,attributeValueID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/product/attributevalue/detail/"+attributeValueID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }
-                    });
-                }else{
-                    this.$ajax.post(SERVER_PRODUCT_ATTRIBUTE_VALUE,this.valueForm).then(response=>{
-                        let {code,msg,attributeValueID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/product/attributevalue/detail/"+attributeValueID);
-                        }else{
-                            this.$message({ message:msg, type: 'error' });
-                        }
-                    });
-                }
+                    }
+                });
             },
             getAttributeValueInfo(){
                 this.loadging = true;

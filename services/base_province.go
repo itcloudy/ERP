@@ -10,11 +10,12 @@ import (
 )
 
 // ServiceCreateAddressProvince 创建记录
-func ServiceCreateAddressProvince(user *md.User, obj *md.AddressProvince) (id int64, err error) {
+func ServiceCreateAddressProvince(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "AddressProvince"); err == nil {
 		if !access.Create {
-			err = errors.New("has no create permission ")
+			err = errors.New("has no create permission")
 			return
 		}
 	} else {
@@ -34,8 +35,26 @@ func ServiceCreateAddressProvince(user *md.User, obj *md.AddressProvince) (id in
 	if err != nil {
 		return
 	}
-	id, err = md.AddAddressProvince(obj, o)
-
+	var obj md.AddressProvince
+	if Name, ok := requestBody["Name"]; ok {
+		obj.Name = utils.ToString(Name)
+	}
+	var country md.AddressCountry
+	if Country, ok := requestBody["Country"]; ok {
+		countryT := reflect.TypeOf(Country)
+		if countryT.Kind() == reflect.Map {
+			countryMap := Country.(map[string]interface{})
+			if countryID, ok := countryMap["ID"]; ok {
+				country.ID, _ = utils.ToInt64(countryID)
+				obj.Country = &country
+			}
+		} else if countryT.Kind() == reflect.String {
+			country.ID, _ = utils.ToInt64(Country)
+			obj.Country = &country
+		}
+	}
+	obj.CreateUserID = user.ID
+	id, err = md.AddAddressProvince(&obj, o)
 	return
 }
 

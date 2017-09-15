@@ -43,6 +43,24 @@
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
+    
+    
+    <menu id="product_category">
+        <name>产品类别</name>
+        <parent>product</parent>
+        <icon>el-icon-menu</icon>
+        <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
+        <path>product/category</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"product/category","componentpath":"admin/product/category/list"}, 
+            {"path":"product/category/form/:id","componentpath":"admin/product/category/form"},
+            {"path":"product/category/detail/:id","componentpath":"admin/product/category/detail"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
     <menu id="product_attribute">
         <name>产品属性</name>
         <parent>product</parent>
@@ -91,22 +109,21 @@
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
-    <menu id="product_category">
-        <name>产品类别</name>
+    <menu id="product_uom_categ">
+        <name>单位类别</name>
         <parent>product</parent>
         <icon>el-icon-menu</icon>
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
-        <path>product/category</path>
+        <path>product/uomcateg</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
         <componentpath>admin/common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/category","componentpath":"admin/product/category/list"}, 
-            {"path":"product/category/form/:id","componentpath":"admin/product/category/form"},
-            {"path":"product/category/detail/:id","componentpath":"admin/product/category/detail"}
+            {"path":"product/uomcateg","componentpath":"admin/product/uom_categ/list"}, 
+            {"path":"product/uomcateg/form/:id","componentpath":"admin/product/uom_categ/form"},
+            {"path":"product/uomcateg/detail/:id","componentpath":"admin/product/uom_categ/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
-
    
 </Menus>

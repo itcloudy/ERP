@@ -5,8 +5,8 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="provinceForm" :model="provinceForm" label-width="80px">
-                <el-form-item label="所属国家">
+            <el-form :inline="true" ref="provinceForm" :rules="provinceFormRules" :model="provinceForm" label-width="80px">
+                <el-form-item label="所属国家" prop="Country">
                     <el-select
                         v-model="provinceForm.Country.ID"
                         :name="provinceForm.Country.Name"
@@ -22,7 +22,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="省份名称">
+                <el-form-item label="省份名称" prop="Name">
                     <el-input v-model="provinceForm.Name"></el-input>
                 </el-form-item>
         
@@ -34,6 +34,7 @@
     import  {default as FormTop} from '@/views/admin/common/FormTop';      
     import  {SERVER_ADDRESS_COUNTRY,SERVER_ADDRESS_PROVINCE} from '@/server_address';           
     import { mapState } from 'vuex';
+    import {validateObjectID} from '@/utils/validators';
     export default {
         data() {
             return {
@@ -55,6 +56,14 @@
                     }
                 },
                 countryList:[],
+                provinceFormRules:{
+                    Name:[
+                        { required: true, message: '请输入省份名称', trigger: 'blur' }
+                    ],
+                    Country:[
+                        {required: true, message: '请选择国家', validator: validateObjectID, trigger: 'blur' }
+                    ]
+                }
             }
         },
         components:{
@@ -62,27 +71,31 @@
         },
         methods:{
             formSave(){
-                if (this.provinceForm.ID >0){
-                    this.$ajax.put(SERVER_ADDRESS_PROVINCE+this.provinceForm.ID ,this.provinceForm).then(response=>{
-                        let {code,msg,provinceID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/province/detail/"+provinceID);
+                this.$refs['provinceForm'].validate((valid) => {
+                    if (valid) {
+                        if (this.provinceForm.ID >0){
+                            this.$ajax.put(SERVER_ADDRESS_PROVINCE+this.provinceForm.ID ,this.provinceForm).then(response=>{
+                                let {code,msg,provinceID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/address/province/detail/"+provinceID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }else{
-                            this.$message({ message:msg, type: 'error' });
+                            this.$ajax.post(SERVER_ADDRESS_PROVINCE,this.provinceForm).then(response=>{
+                                let {code,msg,provinceID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/address/province/detail/"+provinceID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }
-                    });
-                }else{
-                    this.$ajax.post(SERVER_ADDRESS_PROVINCE,this.provinceForm).then(response=>{
-                        let {code,msg,provinceID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/province/detail/"+provinceID);
-                        }else{
-                            this.$message({ message:msg, type: 'error' });
-                        }
-                    });
-                }
+                    }
+                });
             },
             getProvinceInfo(){
                 this.loadging = true;

@@ -5,8 +5,8 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="districtForm" :model="districtForm" label-width="80px">
-                <el-form-item label="所属国家">
+            <el-form :inline="true" ref="districtForm" :rules="districtFormRules"  :model="districtForm" label-width="80px">
+                <el-form-item label="所属国家"  prop="Country">
                     <el-select
                         v-model="districtForm.Country.ID"
                         :name="districtForm.Country.Name"
@@ -22,7 +22,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="所属省份">
+                <el-form-item label="所属省份"  prop="Province">
                     <el-select
                         v-model="districtForm.Province.ID"
                         :name="districtForm.Province.Name"
@@ -38,7 +38,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="所属城市">
+                <el-form-item label="所属城市"  prop="City">
                     <el-select
                         v-model="districtForm.City.ID"
                         :name="districtForm.City.Name"
@@ -54,7 +54,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="区县名称">
+                <el-form-item label="区县名称"  prop="Name">
                     <el-input v-model="districtForm.Name"></el-input>
                 </el-form-item>
             </el-form>
@@ -65,6 +65,7 @@
     import  {default as FormTop} from '@/views/admin/common/FormTop';    
     import  {SERVER_ADDRESS_CITY,SERVER_ADDRESS_COUNTRY,SERVER_ADDRESS_PROVINCE,SERVER_ADDRESS_DISTRICT} from '@/server_address';             
     import { mapState } from 'vuex';
+    import {validateObjectID} from '@/utils/validators';
     export default {
         data() {
             return {
@@ -94,7 +95,21 @@
                 },
                 cityList:[],
                 provinceList:[],
-                countryList:[]
+                countryList:[],
+                districtFormRules:{
+                    Name:[
+                        { required: true, message: '请输入区县名称', trigger: 'blur' }
+                    ],
+                    City:[
+                        { required: true, message: '请选择城市',validator: validateObjectID, trigger: 'blur' }
+                        ],
+                    Province:[
+                        { required: true, message: '请选择省份',validator: validateObjectID, trigger: 'blur' }
+                    ],
+                    Country:[
+                        { required: true, message: '请选择国家',validator: validateObjectID, trigger: 'blur' }
+                    ]
+                }
             }
         },
         components:{
@@ -102,27 +117,31 @@
         },
         methods:{
             formSave(){
-                if (this.districtForm.ID >0){
-                    this.$ajax.put(SERVER_ADDRESS_DISTRICT+this.districtForm.ID ,this.districtForm).then(response=>{
-                        let {code,msg,districtID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/district/detail/"+districtID);
+                this.$refs['districtForm'].validate((valid) => {
+                    if (valid) {
+                        if (this.districtForm.ID >0){
+                            this.$ajax.put(SERVER_ADDRESS_DISTRICT+this.districtForm.ID ,this.districtForm).then(response=>{
+                                let {code,msg,districtID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/address/district/detail/"+districtID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }else{
-                            this.$message({ message:msg, type: 'error' });
+                            this.$ajax.post(SERVER_ADDRESS_DISTRICT,this.districtForm).then(response=>{
+                                let {code,msg,districtID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/address/district/detail/"+districtID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }
-                    });
-                }else{
-                    this.$ajax.post(SERVER_ADDRESS_DISTRICT,this.districtForm).then(response=>{
-                        let {code,msg,districtID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/district/detail/"+districtID);
-                        }else{
-                            this.$message({ message:msg, type: 'error' });
-                        }
-                    });
-                }
+                    }
+                });
             },
             getDistrictInfo(){
                 this.loadging = true;

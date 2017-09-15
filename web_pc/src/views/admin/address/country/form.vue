@@ -5,8 +5,8 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="countryForm" :model="countryForm" label-width="80px">
-                <el-form-item label="国家名称">
+            <el-form :inline="true" ref="countryForm" :rules="countryFormRules" :model="countryForm" label-width="80px">
+                <el-form-item label="国家名称" prop="Name">
                     <el-input v-model="countryForm.Name"></el-input>
                 </el-form-item>
         
@@ -33,6 +33,11 @@
                     Name:"",
                     ID:"",   
                 },
+                countryFormRules:{
+                    Name:[
+                        { required: true, message: '请输入国家名称', trigger: 'blur' }
+                    ] 
+                }
             }
         },
         components:{
@@ -40,27 +45,31 @@
         },
         methods:{
             formSave(){
-                if (this.countryForm.ID >0){
-                    this.$ajax.put(SERVER_ADDRESS_COUNTRY+this.countryForm.ID,this.countryForm).then(response=>{
-                        let {code,msg,countryID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/country/detail/"+countryID);
+                this.$refs['countryForm'].validate((valid) => {
+                    if (valid) {
+                        if (this.countryForm.ID >0){
+                            this.$ajax.put(SERVER_ADDRESS_COUNTRY+this.countryForm.ID,this.countryForm).then(response=>{
+                                let {code,msg,countryID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/address/country/detail/"+countryID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }else{
-                            this.$message({ message:msg, type: 'error' });
+                            this.$ajax.post(SERVER_ADDRESS_COUNTRY,this.countryForm).then(response=>{
+                                let {code,msg,countryID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/address/country/detail/"+countryID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }
-                    });
-                }else{
-                    this.$ajax.post(SERVER_ADDRESS_COUNTRY,this.countryForm).then(response=>{
-                        let {code,msg,countryID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/address/country/detail/"+countryID);
-                        }else{
-                            this.$message({ message:msg, type: 'error' });
-                        }
-                    });
-                }
+                    }
+                 });
             },
             getCountryInfo(){
                 this.loadging = true;

@@ -5,7 +5,7 @@
         :edit="true"
         @changeView="changeView"/>
         <div v-loading="loading">
-            <el-form :inline="true" ref="categoryForm" :model="categoryForm" label-width="80px">
+            <el-form :inline="true" ref="categoryForm" :model="categoryForm" :rules="categoryFormRules" label-width="80px">
                 <el-form-item label="上级分类">
                     <el-select
                         v-model="categoryForm.Parent.ID"
@@ -23,7 +23,7 @@
                     </el-select>
                 </el-form-item>
                  
-                <el-form-item label="分类名称">
+                <el-form-item label="分类名称" prop="Name">
                     <el-input v-model="categoryForm.Name"></el-input>
                 </el-form-item>
             </el-form>
@@ -53,7 +53,12 @@
                         ID:"",
                     },
                 },
-                categoryList:[]
+                categoryList:[],
+                categoryFormRules:{
+                    Name:[
+                        { required: true, message: '请输入产品分类名称', trigger: 'blur' }
+                    ]
+                }
                 
             }
         },
@@ -62,27 +67,32 @@
         },
         methods:{
             formSave(){
-                if (this.categoryForm.ID >0){
-                    this.$ajax.put(SERVER_PRODUCT_CATEGORY+this.categoryForm.ID ,this.categoryForm).then(response=>{
-                        let {code,msg,categoryID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/product/category/detail/"+categoryID);
+                this.$refs['categoryForm'].validate((valid) => {
+                    if (valid) {
+                        if (this.categoryForm.ID >0){
+                            this.$ajax.put(SERVER_PRODUCT_CATEGORY+this.categoryForm.ID ,this.categoryForm).then(response=>{
+                                let {code,msg,categoryID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/product/category/detail/"+categoryID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }else{
-                            this.$message({ message:msg, type: 'error' });
+                            this.$ajax.post(SERVER_PRODUCT_CATEGORY,this.categoryForm).then(response=>{
+                                let {code,msg,categoryID} = response.data;
+                                if(code=='success'){
+                                    this.$message({ message:msg, type: 'success' });
+                                    this.$router.push("/admin/product/category/detail/"+categoryID);
+                                }else{
+                                    this.$message({ message:msg, type: 'error' });
+                                }
+                            });
                         }
-                    });
-                }else{
-                    this.$ajax.post(SERVER_PRODUCT_CATEGORY,this.categoryForm).then(response=>{
-                        let {code,msg,categoryID} = response.data;
-                        if(code=='success'){
-                            this.$message({ message:msg, type: 'success' });
-                            this.$router.push("/admin/product/category/detail/"+categoryID);
-                        }else{
-                            this.$message({ message:msg, type: 'error' });
-                        }
-                    });
-                }
+                    }
+                });
+            
             },
             getProductCategoryInfo(){
                 this.loadging = true;
