@@ -52,21 +52,18 @@
                 label="标准重量">
                 </el-table-column>
                 <el-table-column
-                prop="SaleOk"
                 label="可销售">
                 <template scope="scope">
                     <span v-if="scope.row.SaleOk">是</span><span  v-else>否</span>
                 </template>
                 </el-table-column>
                 <el-table-column
-                prop="Active"
                 label="有效">
                     <template scope="scope">
                         <span v-if="scope.row.Active">是</span><span  v-else>否</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                prop="IsProductVariant"
                 label="是规格产品">
                     <template scope="scope">
                         <span v-if="scope.row.IsProductVariant">是</span><span  v-else>否</span>
@@ -89,14 +86,12 @@
                 label="产品编码">
                 </el-table-column>
                 <el-table-column
-                prop="ProductType"
                 label="产品类型" scope="scope">
                     <template >
                         <span>{{productTypeDict[scope.row.ProductType]}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
-                prop="ProductMethod"
                 label="规格创建方式">
                     <template scope="scope">
                         <span>{{productMethodDict[scope.row.ProductMethod]}}</span>
