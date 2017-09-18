@@ -42,9 +42,20 @@ func ServiceCreateProductAttributeLine(user *md.User, requestBody []byte) (id in
 	var requestBodyMap map[string]interface{}
 	json.Unmarshal(requestBody, &requestBodyMap)
 	if AttributeValues, ok := requestBodyMap["AttributeValues"]; ok {
-		fmt.Println(reflect.TypeOf(AttributeValues))
-		fmt.Printf("%+v\n", AttributeValues)
+		s := reflect.ValueOf(AttributeValues)
+		if s.Kind() == reflect.Slice {
+			for i := 0; i < s.Len(); i++ {
+				valueID := s.Index(i).Interface()
+				var valueObj md.ProductAttributeValue
+				if valueObj.ID, _ = utils.ToInt64(valueID); valueObj.ID > 0 {
+					obj.AttributeValues = append(obj.AttributeValues, &valueObj)
+
+				}
+			}
+
+		}
 	}
+	fmt.Printf("%+v\n", obj.AttributeValues)
 	obj.CreateUserID = user.ID
 	id, err = md.AddProductAttributeLine(&obj, o)
 

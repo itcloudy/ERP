@@ -177,10 +177,9 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <AttributeLineDialog 
+        <AttributeLineDialog v-show="dialogFormVisible"
         :dialogFormVisible="dialogFormVisible"
         :form="attributeLineForm"
-        @dialogFormVisible="dialogFormVisible" 
         @dialogFormVisible="dialogFormVisible"/>
     </div>
 </template>
