@@ -151,7 +151,7 @@
                 <el-tab-pane label="属性明细" name="attribute_lines">
                     <div class="form-tab-top-info">
                         <el-tooltip class="item" effect="dark" content="点击会先保存基本信息" placement="top-start">
-                            <el-button type="primary" size="small" @click="showAddAttributeLineDailog">添加属性明细</el-button><span></span>
+                            <el-button type="primary" size="small" @click="showAddAttributeLineForm">添加属性明细</el-button><span></span>
                         </el-tooltip>
                     </div>
                     <el-table
@@ -177,16 +177,24 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
+        <AttributeLineDialog 
+        :dialogFormVisible="dialogFormVisible"
+        :form="attributeLineForm"
+        @dialogFormVisible="dialogFormVisible" 
+        @dialogFormVisible="dialogFormVisible"/>
     </div>
 </template>
 <script>
-    import  {default as FormTop} from '@/views/admin/common/FormTop'; 
-    import  {SERVER_PRODUCT_TEMPLATE,SERVER_PRODUCT_CATEGORY,SERVER_PRODUCT_UOM} from '@/server_address';         
+    import  {default as FormTop} from '@/views/admin/common/FormTop';
+    import  {default as AttributeLineDialog} from '@/views/admin/product/template/attribute_line_dialog'; 
+    import  {SERVER_PRODUCT_TEMPLATE,SERVER_PRODUCT_CATEGORY,SERVER_PRODUCT_UOM,
+        SERVER_PRODUCT_ATTRIBUTE,SERVER_PRODUCT_ATTRIBUTE_VALUE,SERVER_PRODUCT_ATTRIBUTE_LINE} from '@/server_address';         
     import { mapState } from 'vuex';
     import {validateObjectID} from '@/utils/validators';
     export default {
         data() {
             return {
+                dialogFormVisible:false,
                 loadging:false,
                 tab_active:"attribute_lines",
                 access:{
@@ -234,6 +242,7 @@
                     {value:"auto",label:"自动"}
                 ],
                 attributeLines:[],
+               
                 templateFormRules:{
                     Name:[
                         { required: true, message: '请输入款式名称', trigger: 'blur' }
@@ -256,15 +265,32 @@
                     ProductMethod:[
                         { required: true, message: '请选择规格创建方式', trigger: 'blur' }
                     ],
+                },
+                attributeLineForm:{
+                    ID:'',
+                    ProductTemplate:{ID:"",Name:""},
+                    Attribute:{ID:"",Name:""},
+                    AttributeValues:[]
                 }
             }
         },
         components:{
-           FormTop
+           FormTop,
+           AttributeLineDialog
         },
         methods:{
-            showAddAttributeLineDailog(){
-                this.formSave();
+            dialogFormVisible(){
+                this.dialogFormVisible = false;
+            },
+            showAddAttributeLineForm(){
+                if (this.templateForm.ID<1){
+                    this.message({ message:"请先保存", type: 'warning' });
+                }else{
+                    this.attributeLineForm.ProductTemplate.ID = this.templateForm.ID;
+                    this.attributeLineForm.ProductTemplate.Name = this.templateForm.Name;
+                    this.dialogFormVisible = true;
+                }
+                 
             },
             formSave(){
                  this.$refs['templateForm'].validate((valid) => {

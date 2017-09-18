@@ -53,20 +53,20 @@
                 </el-table-column>
                 <el-table-column
                 label="可销售">
-                <template scope="scope">
-                    <span v-if="scope.row.SaleOk">是</span><span  v-else>否</span>
-                </template>
+                    <template scope="scope">
+                        {{getYesOrNO(scope.row.SaleOK)}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                 label="有效">
                     <template scope="scope">
-                        <span v-if="scope.row.Active">是</span><span  v-else>否</span>
+                        {{getYesOrNO(scope.row.Active)}}
                     </template>
                 </el-table-column>
                 <el-table-column
                 label="是规格产品">
                     <template scope="scope">
-                        <span v-if="scope.row.IsProductVariant">是</span><span  v-else>否</span>
+                        {{getYesOrNO(scope.row.IsProductVariant)}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -86,15 +86,15 @@
                 label="产品编码">
                 </el-table-column>
                 <el-table-column
-                label="产品类型" scope="scope">
-                    <template >
-                        <span>{{productTypeDict[scope.row.ProductType]}}</span>
+                label="产品类型" >
+                    <template scope="scope">
+                        <span>{{getProductTypeDict(scope.row.ProductType)}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
                 label="规格创建方式">
-                    <template scope="scope">
-                        <span>{{productMethodDict[scope.row.ProductMethod]}}</span>
+                    <template scope="scope" >
+                        <span>{{getProductMethodDict(scope.row.ProductMethod)}}</span>
                     </template>
                 </el-table-column>
             </el-table>
@@ -128,6 +128,19 @@
         }
     },
     methods:{
+        getProductTypeDict(value){
+            return this.productTypeDict[value];
+        },
+        getProductMethodDict(value){
+            return this.productMethodDict[value];
+        },
+        getYesOrNO(boolVar){
+                if (boolVar){
+                    return "是";
+                }else{
+                    return "否";
+                }
+            },
         getProductTemplates(limit,offset){
             this.loading = true;
             this.$ajax.get(SERVER_PRODUCT_TEMPLATE,{

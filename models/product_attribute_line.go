@@ -57,7 +57,9 @@ func UpdateProductAttributeLine(m *ProductAttributeLine, ormObj orm.Ormer) (id i
 func GetProductAttributeLineByID(id int64, ormObj orm.Ormer) (obj *ProductAttributeLine, err error) {
 	obj = &ProductAttributeLine{ID: id}
 	err = ormObj.Read(obj)
-	ormObj.LoadRelated(obj, "ValueIds")
+	ormObj.Read(obj.Attribute)
+	ormObj.Read(obj.ProductTemplate)
+	ormObj.LoadRelated(obj, "AttributeValues")
 	return obj, err
 }
 

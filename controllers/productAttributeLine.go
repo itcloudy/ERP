@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"encoding/json"
 	service "golangERP/services"
 	"golangERP/utils"
 )
@@ -17,10 +16,8 @@ func (ctl *ProductAttributeLineController) Put() {
 	IDStr := ctl.Ctx.Input.Param(":id")
 	if IDStr != "" {
 
-		var requestBody map[string]interface{}
-		json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
 		if id, err := utils.ToInt64(IDStr); err == nil {
-			if err := service.ServiceUpdateProductAttributeLine(&ctl.User, requestBody, id); err == nil {
+			if err := service.ServiceUpdateProductAttributeLine(&ctl.User, ctl.Ctx.Input.RequestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				response["lineID"] = id
@@ -48,9 +45,7 @@ func (ctl *ProductAttributeLineController) Put() {
 // Post create product attribute line
 func (ctl *ProductAttributeLineController) Post() {
 	response := make(map[string]interface{})
-	var requestBody map[string]interface{}
-	json.Unmarshal(ctl.Ctx.Input.RequestBody, &requestBody)
-	if attributeID, err := service.ServiceCreateProductAttributeLine(&ctl.User, requestBody); err == nil {
+	if attributeID, err := service.ServiceCreateProductAttributeLine(&ctl.User, ctl.Ctx.Input.RequestBody); err == nil {
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
 		response["attributeID"] = attributeID

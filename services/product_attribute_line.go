@@ -1,7 +1,9 @@
 package services
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 	"reflect"
@@ -10,7 +12,7 @@ import (
 )
 
 // ServiceCreateProductAttributeLine 创建记录
-func ServiceCreateProductAttributeLine(user *md.User, requestBody map[string]interface{}) (id int64, err error) {
+func ServiceCreateProductAttributeLine(user *md.User, requestBody []byte) (id int64, err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductAttributeLine"); err == nil {
@@ -36,7 +38,13 @@ func ServiceCreateProductAttributeLine(user *md.User, requestBody map[string]int
 		return
 	}
 	var obj md.ProductAttributeLine
-
+	json.Unmarshal([]byte(requestBody), &obj)
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
+	if AttributeValues, ok := requestBodyMap["AttributeValues"]; ok {
+		fmt.Println(reflect.TypeOf(AttributeValues))
+		fmt.Printf("%+v\n", AttributeValues)
+	}
 	obj.CreateUserID = user.ID
 	id, err = md.AddProductAttributeLine(&obj, o)
 
@@ -76,7 +84,7 @@ func ServiceDeleteProductAttributeLine(user *md.User, id int64) (num int64, err 
 }
 
 // ServiceUpdateProductAttributeLine 更新记录
-func ServiceUpdateProductAttributeLine(user *md.User, requestBody map[string]interface{}, id int64) (err error) {
+func ServiceUpdateProductAttributeLine(user *md.User, requestBody []byte, id int64) (err error) {
 
 	var access utils.AccessResult
 	if access, err = ServiceCheckUserModelAssess(user, "ProductAttributeLine"); err == nil {
@@ -107,20 +115,8 @@ func ServiceUpdateProductAttributeLine(user *md.User, requestBody map[string]int
 		return
 	}
 	obj = *objPtr
-	var attribute md.ProductAttribute
-	if Attribute, ok := requestBody["Attribute"]; ok {
-		attributeT := reflect.TypeOf(Attribute)
-		if attributeT.Kind() == reflect.Map {
-			attributeMap := Attribute.(map[string]interface{})
-			if attributeID, ok := attributeMap["ID"]; ok {
-				attribute.ID, _ = utils.ToInt64(attributeID)
-				obj.Attribute = &attribute
-			}
-		} else if attributeT.Kind() == reflect.String {
-			attribute.ID, _ = utils.ToInt64(Attribute)
-			obj.Attribute = &attribute
-		}
-	}
+	json.Unmarshal([]byte(requestBody), &obj)
+	obj.UpdateUserID = user.ID
 
 	obj.UpdateUserID = user.ID
 	id, err = md.UpdateProductAttributeLine(&obj, o)
@@ -128,7 +124,7 @@ func ServiceUpdateProductAttributeLine(user *md.User, requestBody map[string]int
 	return
 }
 
-//ServiceGetProductAttributeLine 获得城市列表
+//ServiceGetProductAttributeLine 获得属性明细列表
 func ServiceGetProductAttributeLine(user *md.User, query map[string]interface{}, exclude map[string]interface{},
 	condMap map[string]map[string]interface{}, fields []string, sortby []string, order []string,
 	offset int64, limit int64) (access utils.AccessResult, paginator utils.Paginator, results []map[string]interface{}, err error) {
@@ -149,7 +145,14 @@ func ServiceGetProductAttributeLine(user *md.User, query map[string]interface{},
 			obj := arrs[i]
 			objInfo := make(map[string]interface{})
 			objInfo["ID"] = obj.ID
-
+			attrInfo := make(map[string]interface{})
+			attrInfo["ID"] = obj.Attribute.ID
+			attrInfo["Name"] = obj.Attribute.Name
+			objInfo["Attribute"] = attrInfo
+			tempInfo := make(map[string]interface{})
+			tempInfo["ID"] = obj.ProductTemplate.ID
+			tempInfo["Name"] = obj.ProductTemplate.Name
+			objInfo["ProductTemplate"] = tempInfo
 			results = append(results, objInfo)
 		}
 	}
@@ -172,6 +175,25 @@ func ServiceGetProductAttributeLineByID(user *md.User, id int64) (access utils.A
 	if obj, err = md.GetProductAttributeLineByID(id, o); err == nil {
 		objInfo := make(map[string]interface{})
 		objInfo["ID"] = obj.ID
+		attrInfo := make(map[string]interface{})
+		attrInfo["ID"] = obj.Attribute.ID
+		attrInfo["Name"] = obj.Attribute.Name
+		objInfo["Attribute"] = attrInfo
+		tempInfo := make(map[string]interface{})
+		tempInfo["ID"] = obj.ProductTemplate.ID
+		tempInfo["Name"] = obj.ProductTemplate.Name
+		objInfo["ProductTemplate"] = tempInfo
+		var attributeValues []map[string]interface{}
+		valuesLen := len(obj.AttributeValues)
+		if valuesLen > 0 {
+			for i := 0; i < valuesLen; i++ {
+				lineInfo := make(map[string]interface{})
+				lineInfo["ID"] = obj.AttributeValues[i].ID
+				lineInfo["Name"] = obj.AttributeValues[i].Name
+				attributeValues = append(attributeValues, lineInfo)
+			}
+		}
+		objInfo["AttributeValues"] = attributeValues
 		valueInfo = objInfo
 	}
 	return

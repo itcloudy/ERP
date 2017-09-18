@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -141,6 +142,7 @@ func ServiceGetProductTemplate(user *md.User, query map[string]interface{}, excl
 			objInfo["ProductType"] = obj.ProductType
 			objInfo["ProductMethod"] = obj.ProductMethod
 			results = append(results, objInfo)
+			fmt.Printf("%+v\n", obj.AttributeLines)
 		}
 	}
 	return
