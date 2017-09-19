@@ -19,7 +19,7 @@ func (ctl *ProductProductController) Put() {
 			if err := service.ServiceUpdateProductProduct(&ctl.User, ctl.Ctx.Input.RequestBody, id); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
-				response["attributeID"] = id
+				response["productID"] = id
 			} else {
 				response["code"] = utils.FailedCode
 				response["msg"] = utils.FailedMsg
@@ -44,10 +44,10 @@ func (ctl *ProductProductController) Put() {
 // Post create product attribute
 func (ctl *ProductProductController) Post() {
 	response := make(map[string]interface{})
-	if attributeID, err := service.ServiceCreateProductProduct(&ctl.User, ctl.Ctx.Input.RequestBody); err == nil {
+	if productID, err := service.ServiceCreateProductProduct(&ctl.User, ctl.Ctx.Input.RequestBody); err == nil {
 		response["code"] = utils.SuccessCode
 		response["msg"] = utils.SuccessMsg
-		response["attributeID"] = attributeID
+		response["productID"] = productID
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg
@@ -58,7 +58,7 @@ func (ctl *ProductProductController) Post() {
 	ctl.ServeJSON()
 }
 
-// Get get attributes
+// Get get products
 func (ctl *ProductProductController) Get() {
 	response := make(map[string]interface{})
 	IDStr := ctl.Ctx.Input.Param(":id")
@@ -92,14 +92,14 @@ func (ctl *ProductProductController) Get() {
 				limit = 20
 			}
 		}
-		var attributes []map[string]interface{}
+		var products []map[string]interface{}
 		var paginator utils.Paginator
 		var access utils.AccessResult
-		if access, paginator, attributes, err = service.ServiceGetProductProduct(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
+		if access, paginator, products, err = service.ServiceGetProductProduct(&ctl.User, query, exclude, cond, fields, sortby, order, offset, limit); err == nil {
 			response["code"] = utils.SuccessCode
 			response["msg"] = utils.SuccessMsg
 			data := make(map[string]interface{})
-			data["attributes"] = &attributes
+			data["products"] = &products
 			data["paginator"] = &paginator
 			data["access"] = access
 			response["data"] = data
@@ -110,8 +110,8 @@ func (ctl *ProductProductController) Get() {
 		}
 	} else {
 		// 获得某个城市的信息
-		if attributeID, err := utils.ToInt64(IDStr); err == nil {
-			if access, attribute, err := service.ServiceGetProductProductByID(&ctl.User, attributeID); err == nil {
+		if productID, err := utils.ToInt64(IDStr); err == nil {
+			if access, attribute, err := service.ServiceGetProductProductByID(&ctl.User, productID); err == nil {
 				response["code"] = utils.SuccessCode
 				response["msg"] = utils.SuccessMsg
 				data := make(map[string]interface{})

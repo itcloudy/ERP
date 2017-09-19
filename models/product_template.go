@@ -88,6 +88,11 @@ func GetProductTemplateByID(id int64, ormObj orm.Ormer) (obj *ProductTemplate, e
 	ormObj.Read(obj.FirstSaleUom)
 	ormObj.Read(obj.SecondSaleUom)
 	ormObj.LoadRelated(obj, "AttributeLines")
+	lenA := len(obj.AttributeLines)
+	for i := 0; i < lenA; i++ {
+		ormObj.Read(obj.AttributeLines[i].Attribute)
+		ormObj.LoadRelated(obj.AttributeLines[i], "AttributeValues")
+	}
 	return obj, err
 }
 

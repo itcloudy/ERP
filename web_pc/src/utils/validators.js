@@ -9,6 +9,14 @@ export function validateObjectID(rule, value, callback) {
         callback();
     }
 };
+export function validateList(rule, value, callback) {
+    if (value.length < 1) {
+        callback(new Error('不能为空'));
+    } else {
+        callback();
+    }
+};
+
 
 // 是否为邮箱
 export function validateEmail(email) {

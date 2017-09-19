@@ -97,7 +97,7 @@
             this.$router.push("/admin/product/attributevalue/detail/"+row.ID);
         },
         deleteProductAttributeValue(index,row){
-            this.$ajax.delete(this.serverUrlPath +row.ID).then(response=>{
+            this.$ajax.delete(SERVER_PRODUCT_ATTRIBUTE_VALUE +row.ID).then(response=>{
                 let {code,msg,attributeValueID} = response.data;
                 if ('success' == code){
                      this.$message({ message:msg, type: 'success' });

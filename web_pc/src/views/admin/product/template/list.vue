@@ -33,7 +33,7 @@
                 </el-table-column>
                 <el-table-column
                 prop="Category.Name"
-                label="所属省份">
+                label="产品分类">
                 </el-table-column>
                 <el-table-column
                 prop="Rental"

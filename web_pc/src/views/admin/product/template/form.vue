@@ -11,8 +11,7 @@
                     <el-input v-model="templateForm.Name"></el-input>
                 </el-form-item>
                 <el-form-item label="产品编码" prop="DefaultCode">
-                    <span  v-if="templateForm.ID" >{{templateForm.DefaultCode}}</span>
-                    <el-input v-else v-model="templateForm.DefaultCode"></el-input>
+                    <el-input v-model="templateForm.DefaultCode"></el-input>
                 </el-form-item>
                 <el-form-item label="产品类别" prop="Category">
                     <el-select
@@ -88,6 +87,22 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                 <el-form-item label="第一采购单位" prop="FirstPurchaseUom">
+                    <el-select
+                        v-model="templateForm.FirstPurchaseUom.ID"
+                        :name="templateForm.FirstPurchaseUom.Name"
+                        filterable
+                        remote
+                        placeholder="请输入第一采购单位"
+                        :remote-method="getProductUomList">
+                        <el-option
+                            v-for="item in uomList"
+                            :key="item.ID"
+                            :label="item.Name"
+                            :value="item.ID">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="第二销售单位">
                     <el-select
                         v-model="templateForm.SecondSaleUom.ID"
@@ -104,22 +119,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="第一采购单位" prop="FirstPurchaseUom">
-                    <el-select
-                        v-model="templateForm.FirstPurchaseUom.ID"
-                        :name="templateForm.FirstPurchaseUom.Name"
-                        filterable
-                        remote
-                        placeholder="请输入第一采购单位"
-                        :remote-method="getProductUomList">
-                        <el-option
-                            v-for="item in uomList"
-                            :key="item.ID"
-                            :label="item.Name"
-                            :value="item.ID">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
+               
                 <el-form-item label="第二采购单位">
                     <el-select
                         v-model="templateForm.SecondPurchaseUom.ID"
@@ -158,16 +158,37 @@
                         ref="caseTable"
                         :data="attributeLines"
                         style="width: 100%">
-                         
                         <el-table-column
-                            prop="Name"
-                            label="属性">
+                            prop="ID"
+                            label="ID">
                         </el-table-column>
                         <el-table-column
-                            prop="Values"
+                            label="属性">
+                            <template scope="scope">
+                                <div slot="reference" class="name-wrapper">
+                                    <el-tag>{{ scope.row.Attribute.Name }}</el-tag>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
                             label="属性值">
+                            <template scope="scope">
+                                <span slot="reference" class="values-wrapper" :key="index" v-for="(attValue,index) in scope.row.AttributeValues">
+                                    <el-tag>{{ attValue.Name }}</el-tag>
+                                </span>
+                            </template>
                         </el-table-column>
                         <el-table-column label="操作">
+                            <template scope="scope">
+                                <el-button
+                                type="info"
+                                size="mini"
+                                @click="updateProductAttributeLine(scope.$index, scope.row)">修改</el-button>
+                                <el-button
+                                type="danger"
+                                size="mini"
+                                @click="deleteProductAttributeLine(scope.$index, scope.row)">删除</el-button>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </el-tab-pane>
@@ -177,10 +198,10 @@
                 </el-tab-pane>
             </el-tabs>
         </div>
-        <AttributeLineDialog v-show="dialogFormVisible"
+        <AttributeLineDialog v-if="dialogFormVisible"
         :dialogFormVisible="dialogFormVisible"
         :form="attributeLineForm"
-        @dialogFormVisible="dialogFormVisible"/>
+        @dialogFormVisibleEn="dialogFormVisibleEn"/>
     </div>
 </template>
 <script>
@@ -278,7 +299,25 @@
            AttributeLineDialog
         },
         methods:{
-            dialogFormVisible(){
+            updateProductAttributeLine(index,row){
+                this.attributeLineForm.Attribute = row.Attribute;
+                this.attributeLineForm.AttributeValues = row.AttributeValues;
+                this.attributeLineForm.ID = row.ID;
+                this.attributeLineForm.ProductTemplate.ID = this.templateForm.ID;
+                this.attributeLineForm.ProductTemplate.Name = this.templateForm.Name;
+                this.dialogFormVisible = true;
+            },
+            deleteProductAttributeLine(index,row){
+                this.$ajax.delete(SERVER_PRODUCT_ATTRIBUTE_LINE +row.ID).then(response=>{
+                let {code,msg,lineID} = response.data;
+                if ('success' == code){
+                     this.$message({ message:msg, type: 'success' });
+                }else{
+                    this.$message({ message:msg, type: 'error' });
+                }
+            });
+            },
+            dialogFormVisibleEn(){
                 this.dialogFormVisible = false;
             },
             showAddAttributeLineForm(){
@@ -330,6 +369,7 @@
                             if(code=='success'){
                                 this.templateForm = data["template"];
                                 this.categoryList= [this.templateForm.Category];
+                                this.attributeLines = this.templateForm.attributeLines;
                                 this.getInitUomList();
                                 this.access = data["access"];
                             }
@@ -405,6 +445,8 @@
     }
 </script>
 <style lang="scss" scoped>
-    
+    .values-wrapper{
+        padding: 0 2px;
+    }
     
 </style>

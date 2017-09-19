@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -142,7 +141,7 @@ func ServiceGetProductTemplate(user *md.User, query map[string]interface{}, excl
 			objInfo["ProductType"] = obj.ProductType
 			objInfo["ProductMethod"] = obj.ProductMethod
 			results = append(results, objInfo)
-			fmt.Printf("%+v\n", obj.AttributeLines)
+
 		}
 	}
 	return
@@ -200,6 +199,28 @@ func ServiceGetProductTemplateByID(user *md.User, id int64) (access utils.Access
 		objInfo["DefaultCode"] = obj.DefaultCode
 		objInfo["ProductType"] = obj.ProductType
 		objInfo["ProductMethod"] = obj.ProductMethod
+		lenAttLine := len(obj.AttributeLines)
+		attributeLines := make([]map[string]interface{}, lenAttLine, lenAttLine)
+		for i := 0; i < lenAttLine; i++ {
+			attLine := obj.AttributeLines[i]
+			lineInfo := make(map[string]interface{})
+			lineInfo["ID"] = attLine.ID
+			valueInfo := make(map[string]interface{})
+			valueInfo["ID"] = attLine.Attribute.ID
+			valueInfo["Name"] = attLine.Attribute.Name
+			lineInfo["Attribute"] = valueInfo
+			lenV := len(attLine.AttributeValues)
+			values := make([]map[string]interface{}, lenV, lenV)
+			for k := 0; k < lenV; k++ {
+				attValueInfo := make(map[string]interface{})
+				attValueInfo["ID"] = attLine.AttributeValues[k].ID
+				attValueInfo["Name"] = attLine.AttributeValues[k].Name
+				values[k] = attValueInfo
+			}
+			lineInfo["AttributeValues"] = values
+			attributeLines[i] = lineInfo
+		}
+		objInfo["attributeLines"] = attributeLines
 		templateInfo = objInfo
 	}
 	return

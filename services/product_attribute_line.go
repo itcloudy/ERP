@@ -39,25 +39,31 @@ func ServiceCreateProductAttributeLine(user *md.User, requestBody []byte) (id in
 	}
 	var obj md.ProductAttributeLine
 	json.Unmarshal([]byte(requestBody), &obj)
+
+	obj.CreateUserID = user.ID
+	id, err = md.AddProductAttributeLine(&obj, o)
+	if err != nil {
+		return
+	}
+	var objPtr *md.ProductAttributeLine
+	objPtr, _ = md.GetProductAttributeLineByID(id, o)
 	var requestBodyMap map[string]interface{}
 	json.Unmarshal(requestBody, &requestBodyMap)
 	if AttributeValues, ok := requestBodyMap["AttributeValues"]; ok {
 		s := reflect.ValueOf(AttributeValues)
 		if s.Kind() == reflect.Slice {
+			m2m := o.QueryM2M(objPtr, "AttributeValues")
+			m2m.Clear()
 			for i := 0; i < s.Len(); i++ {
 				valueID := s.Index(i).Interface()
 				var valueObj md.ProductAttributeValue
 				if valueObj.ID, _ = utils.ToInt64(valueID); valueObj.ID > 0 {
-					obj.AttributeValues = append(obj.AttributeValues, &valueObj)
-
+					m2m.Add(valueObj)
 				}
 			}
 
 		}
 	}
-	fmt.Printf("%+v\n", obj.AttributeValues)
-	obj.CreateUserID = user.ID
-	id, err = md.AddProductAttributeLine(&obj, o)
 
 	return
 }
@@ -121,17 +127,32 @@ func ServiceUpdateProductAttributeLine(user *md.User, requestBody []byte, id int
 		return
 	}
 	var obj md.ProductAttributeLine
+
 	var objPtr *md.ProductAttributeLine
-	if objPtr, err = md.GetProductAttributeLineByID(id, o); err != nil {
-		return
-	}
+	objPtr, _ = md.GetProductAttributeLineByID(id, o)
 	obj = *objPtr
 	json.Unmarshal([]byte(requestBody), &obj)
-	obj.UpdateUserID = user.ID
+	var requestBodyMap map[string]interface{}
+	json.Unmarshal(requestBody, &requestBodyMap)
+	if AttributeValues, ok := requestBodyMap["AttributeValues"]; ok {
+		s := reflect.ValueOf(AttributeValues)
+		if s.Kind() == reflect.Slice {
+			m2m := o.QueryM2M(objPtr, "AttributeValues")
+			m2m.Clear()
+			for i := 0; i < s.Len(); i++ {
+				valueID := s.Index(i).Interface()
+				var valueObj md.ProductAttributeValue
+				if valueObj.ID, _ = utils.ToInt64(valueID); valueObj.ID > 0 {
+					m2m.Add(valueObj)
+				}
+			}
 
-	obj.UpdateUserID = user.ID
+		}
+	}
+
+	fmt.Printf("%+v\n", obj)
 	id, err = md.UpdateProductAttributeLine(&obj, o)
-
+	fmt.Println(err)
 	return
 }
 

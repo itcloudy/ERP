@@ -39,14 +39,15 @@
                     <span>{{templateForm.StandardWeight}}</span>
                 </el-form-item>
                 <el-form-item label="第一销售单位">
-                    <span v-if="templateForm.SecondSaleUom">{{templateForm.SecondSaleUom.Name}}</span ><span v-else>暂未定</span>
-                </el-form-item>
-                <el-form-item label="第二销售单位">
-                    <span v-if="templateForm.SecondSaleUom">{{templateForm.SecondSaleUom.Name}}</span ><span v-else>暂未定</span>
+                    <span v-if="templateForm.FirstSaleUom">{{templateForm.FirstSaleUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
                 <el-form-item label="第一采购单位">
                     <span v-if="templateForm.FirstPurchaseUom">{{templateForm.FirstPurchaseUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
+                <el-form-item label="第二销售单位">
+                    <span v-if="templateForm.SecondSaleUom">{{templateForm.SecondSaleUom.Name}}</span ><span v-else>暂未定</span>
+                </el-form-item>
+               
                 <el-form-item label="第二采购单位">
                     <span v-if="templateForm.SecondPurchaseUom">{{templateForm.SecondPurchaseUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
@@ -60,19 +61,29 @@
             </el-form>
             <el-tabs  v-model="tab_active" type="card" @tab-click="handleClick">
                 <el-tab-pane label="属性明细" name="attribute_lines">
-                    <el-table
+                   <el-table
                         ref="caseTable"
                         :data="attributeLines"
                         style="width: 100%">
                         <el-table-column
-                            prop="Name"
-                            label="属性">
+                            prop="ID"
+                            label="ID">
                         </el-table-column>
                         <el-table-column
-                            prop="Values"
-                            label="属性值">
+                            label="属性">
+                            <template scope="scope">
+                                <div slot="reference" class="name-wrapper">
+                                    <el-tag>{{ scope.row.Attribute.Name }}</el-tag>
+                                </div>
+                            </template>
                         </el-table-column>
-                        <el-table-column label="操作">
+                        <el-table-column
+                            label="属性值">
+                            <template scope="scope">
+                                <span slot="reference" class="values-wrapper" :key="index" v-for="(attValue,index) in scope.row.AttributeValues">
+                                    <el-tag>{{ attValue.Name }}</el-tag>
+                                </span>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </el-tab-pane>
@@ -122,6 +133,7 @@
                             let {code,msg,data} = response.data;
                             if(code=='success'){
                                 this.templateForm = data["template"];
+                                this.attributeLines = this.templateForm.attributeLines;
                                 this.access = data["access"];
                             }
                         });
@@ -151,6 +163,8 @@
     }
 </script>
 <style lang="scss" scoped>
-    
+    .values-wrapper{
+        padding: 0 2px;
+    }
     
 </style>

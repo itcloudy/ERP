@@ -15,3 +15,8 @@ export const SERVER_PRODUCT_CATEGORY = "/product/category/"; //产品分类
 export const SERVER_PRODUCT_UOM = "/product/uom/"; // 产品单位
 export const SERVER_PRODUCT_UOM_CATEG = "/product/uomcateg/"; // 产品单位类别
 export const SERVER_PRODUCT_ATTRIBUTE_LINE = "/product/attribute/line/"; // 产品款式属性明细
+
+
+// 销售
+export const SERVER_SALE_ORDER = "/sale/order/"; //销售订单
+export const SERVER_SALE_ORDER_line = "/sale/order/line"; //销售订单明细
