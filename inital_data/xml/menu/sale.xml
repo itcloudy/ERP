@@ -43,4 +43,20 @@
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
+    <menu id="customer">
+        <name>客户管理</name>
+        <parent>sale</parent>
+        <icon>el-icon-menu</icon>
+        <group>saleman,salemanager</group>
+        <path>partner/?customer=true</path>
+        <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
+        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <meta></meta>
+        <viewtype>[
+            {"path":"partner/?customer=true","componentpath":"admin/partner/list"}, 
+            {"path":"partner/form/:id?customer=true","componentpath":"admin/partner/form"},
+            {"path":"partner/detail/:id?customer=true","componentpath":"admin/partner/detail"}
+        ]</viewtype>
+        <isbackground>true</isbackground>
+    </menu>
 </Menus>
