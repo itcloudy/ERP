@@ -24,12 +24,38 @@
                 width="55">
                 </el-table-column>
                 <el-table-column
-                prop="ID"
-                label="ID">
+                prop="Name"
+                label="订单号">
                 </el-table-column>
                 <el-table-column
-                prop="Name"
-                label="名称">
+                label="客户">
+                    <template scope="scope">
+                        {{scope.row.Partner.Name}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                label="公司">
+                    <template scope="scope">
+                        {{scope.row.Company.Name}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                label="业务员">
+                    <template scope="scope">
+                        {{scope.row.SalesMan.Name}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                label="收货地址">
+                    <template scope="scope">
+                        {{scope.row.Country.Name}}{{scope.row.Province.Name}}{{scope.row.City.Name}}{{scope.row.District.Name}}{{scope.row.Street}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                label="状态">
+                    <template scope="scope">
+                        {{scope.row.State}}
+                    </template>
                 </el-table-column>
             </el-table>
         </div>

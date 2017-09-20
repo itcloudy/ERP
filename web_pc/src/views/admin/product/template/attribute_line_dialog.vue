@@ -24,6 +24,7 @@
                     remote
                     multiple
                     placeholder="请选择属性"
+                    :selected="selectedValues"
                     :remote-method="getProductAttributeValueList">
                     <el-option
                         v-for="item in attributeValueList"
@@ -47,6 +48,7 @@ import {validateObjectID,validateList} from '@/utils/validators';
         data() {
             return {
                 attributeList:[],
+                selectedValues:[],
                 attributeValueList:[],
                 valueFormRules:{
                     Attribute:[
@@ -113,7 +115,7 @@ import {validateObjectID,validateList} from '@/utils/validators';
         created:function(){
             this.attributeList = [this.form.Attribute];
             this.AttributeValues = this.form.AttributeValues;
-            console.log(JSON.stringify(this.form));
+            this.selectedValues = this.form.AttributeValues.map(function(item){return item.ID});
         }
     }
 </script>

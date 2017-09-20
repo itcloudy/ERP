@@ -28,7 +28,7 @@
         <isbackground>true</isbackground>
     </menu>
     <menu id="sale_order_line">
-        <name>销售订单明细</name>
+        <name>订单明细</name>
         <parent>sale</parent>
         <icon>el-icon-menu</icon>
         <group>saleman,salemanager</group>

@@ -28,7 +28,7 @@
         <isbackground>true</isbackground>
     </menu>
     <menu id="purchase_order_line">
-        <name>采购订单明细</name>
+        <name>订单明细</name>
         <parent>purchase</parent>
         <icon>el-icon-menu</icon>
         <group>purchaseman,purchasemanager</group>

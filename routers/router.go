@@ -26,4 +26,7 @@ func init() {
 	beego.Router("/product/uom/?:id", &controllers.ProductUomController{})
 	beego.Router("/product/uomcateg/?:id", &controllers.ProductUomCategController{})
 	beego.Router("/product/category/?:id", &controllers.ProductCategoryController{})
+	// 销售管理
+	beego.Router("/sale/order/?:id", &controllers.SaleOrderController{})
+	beego.Router("/sale/order/line/?:id", &controllers.SaleOrderLineController{})
 }
