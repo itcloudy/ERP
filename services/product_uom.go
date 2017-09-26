@@ -103,6 +103,16 @@ func ServiceGetProductUom(user *md.User, query map[string]interface{}, exclude m
 			objInfo := make(map[string]interface{})
 			objInfo["Name"] = obj.Name
 			objInfo["ID"] = obj.ID
+			objInfo["Factor"] = obj.Factor
+			objInfo["FactorInv"] = obj.FactorInv
+			objInfo["Factor"] = obj.Factor
+			objInfo["Rounding"] = obj.Rounding
+			objInfo["Type"] = obj.Type
+			objInfo["Symbol"] = obj.Symbol
+			categoryInfo := make(map[string]interface{})
+			categoryInfo["ID"] = obj.Category.ID
+			categoryInfo["Name"] = obj.Category.Name
+			objInfo["Category"] = categoryInfo
 			results = append(results, objInfo)
 		}
 	}
@@ -121,11 +131,21 @@ func ServiceGetProductUomByID(user *md.User, id int64) (access utils.AccessResul
 		return
 	}
 	o := orm.NewOrm()
-	var attr *md.ProductUom
-	if attr, err = md.GetProductUomByID(id, o); err == nil {
+	var obj *md.ProductUom
+	if obj, err = md.GetProductUomByID(id, o); err == nil {
 		objInfo := make(map[string]interface{})
-		objInfo["Name"] = attr.Name
-		objInfo["ID"] = attr.ID
+		objInfo["Name"] = obj.Name
+		objInfo["ID"] = obj.ID
+		objInfo["Factor"] = obj.Factor
+		objInfo["FactorInv"] = obj.FactorInv
+		objInfo["Factor"] = obj.Factor
+		objInfo["Rounding"] = obj.Rounding
+		objInfo["Type"] = obj.Type
+		objInfo["Symbol"] = obj.Symbol
+		categoryInfo := make(map[string]interface{})
+		categoryInfo["ID"] = obj.Category.ID
+		categoryInfo["Name"] = obj.Category.Name
+		objInfo["Category"] = categoryInfo
 		attrInfo = objInfo
 	}
 	return

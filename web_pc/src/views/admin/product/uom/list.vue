@@ -32,6 +32,31 @@
                 prop="Name"
                 label="名称">
                 </el-table-column>
+                <el-table-column
+                prop="Category.Name"
+                label="单位类别">
+                </el-table-column>
+                <el-table-column
+                prop="Factor"
+                label="比率">
+                </el-table-column>
+                <el-table-column
+                prop="FactorInv"
+                label="更大比率">
+                </el-table-column>
+                <el-table-column
+                prop="Rounding"
+                label="舍入精度">
+                </el-table-column>
+                <el-table-column
+                prop="Type"
+                label="类型">
+                </el-table-column>
+                <el-table-column
+                prop="Symbol"
+                label="符号位置">
+                </el-table-column>
+
             </el-table>
         </div>
     </div>

@@ -22,7 +22,7 @@ type ProductUom struct {
 	FactorInv    float64          ``                                  //更大比率
 	Rounding     float64          ``                                  //舍入精度
 	Type         string           `orm:"default(reference)"`          //类型：参考单位:reference;大于参考单位:bigger;小于参考单位:smaller
-	Symbol       bool             ``                                  //符号，后置
+	Symbol       bool             ``                                  //符号位置
 
 }
 
@@ -62,7 +62,6 @@ func UpdateProductUom(m *ProductUom, ormObj orm.Ormer) (id int64, err error) {
 func GetProductUomByID(id int64, ormObj orm.Ormer) (obj *ProductUom, err error) {
 	obj = &ProductUom{ID: id}
 	err = ormObj.Read(obj)
-	ormObj.LoadRelated(obj, "ValueIds")
 	return obj, err
 }
 

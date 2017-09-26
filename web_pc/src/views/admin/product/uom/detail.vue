@@ -8,6 +8,24 @@
                 <el-form-item label="单位名称">
                     <span>{{uomForm.Name}}</span>
                 </el-form-item>
+                <el-form-item label="单位类别">
+                    <span>{{uomForm.Category.Name}}</span>
+                </el-form-item>
+                <el-form-item label="比率"  v-if="uomForm.Type =='smaller'">
+                    <span>{{uomForm.Factor}}</span>
+                </el-form-item>
+                <el-form-item label="更大比率"  v-if="uomForm.Type =='bigger'">
+                    <span>{{uomForm.FactorInv}}</span>
+                </el-form-item>
+                <el-form-item label="舍入精度">
+                    <span>{{uomForm.Rounding}}</span>
+                </el-form-item>
+                <el-form-item label="类型">
+                    <span>{{uomForm.Type}}</span>
+                </el-form-item>
+                <el-form-item label="符号位置">
+                    <span v-if="uomForm.Symbol">前</span ><span v-else>后</span>
+                </el-form-item>
             </el-form>
         </div>
     </div>
@@ -37,7 +55,7 @@
                 this.loadging = true;
                 let id  = this.$route.params.id;
                 this.uomForm.ID = id;
-                this.$ajax.get(SERVER_ADDRESS_CITY+this.uomForm.ID).then(response=>{
+                this.$ajax.get(SERVER_PRODUCT_UOM+this.uomForm.ID).then(response=>{
                         this.loadging = false;
                         let {code,msg,data} = response.data;
                         if(code=='success'){
