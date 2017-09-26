@@ -73,7 +73,7 @@
                 prop="FirstSaleUom.Name"
                 label="第一销售单位">
                 </el-table-column>
-                <el-table-column
+                <el-table-column v-if="multiUnit"
                 prop="SecondSaleUom.Name"
                 label="第二销售单位">
                 </el-table-column>
@@ -186,7 +186,10 @@
     computed:{
         showBottomPagitator:function(){
             return this.templatesData.total/this.templatesData.pageSize > 1
-        }
+        },
+        ...mapState({
+               multiUnit: state => state.multiUnit
+        })
     }
       
     }

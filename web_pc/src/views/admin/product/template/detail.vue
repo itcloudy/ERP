@@ -44,11 +44,11 @@
                 <el-form-item label="第一采购单位">
                     <span v-if="templateForm.FirstPurchaseUom">{{templateForm.FirstPurchaseUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
-                <el-form-item label="第二销售单位">
+                <el-form-item label="第二销售单位"  v-if="multiUnit">
                     <span v-if="templateForm.SecondSaleUom">{{templateForm.SecondSaleUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
                
-                <el-form-item label="第二采购单位">
+                <el-form-item label="第二采购单位"  v-if="multiUnit">
                     <span v-if="templateForm.SecondPurchaseUom">{{templateForm.SecondPurchaseUom.Name}}</span ><span v-else>暂未定</span>
                 </el-form-item>
                 <el-form-item label="产品类型">
@@ -159,6 +159,11 @@
             // 如果路由有变化，会再次执行该方法
             '$route': 'getProductTemplateInfo'
         },
+        computed:{
+            ...mapState({
+                multiUnit: state => state.multiUnit
+            })
+        }
          
     }
 </script>

@@ -103,7 +103,7 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="第二销售单位">
+                <el-form-item label="第二销售单位"  v-if="multiUnit">
                     <el-select
                         v-model="templateForm.SecondSaleUom.ID"
                         :name="templateForm.SecondSaleUom.Name"
@@ -120,7 +120,7 @@
                     </el-select>
                 </el-form-item>
                
-                <el-form-item label="第二采购单位">
+                <el-form-item label="第二采购单位"  v-if="multiUnit">
                     <el-select
                         v-model="templateForm.SecondPurchaseUom.ID"
                         :name="templateForm.SecondPurchaseUom.Name"
@@ -441,6 +441,11 @@
             // 如果路由有变化，会再次执行该方法
             '$route': 'getProductTemplateInfo'
         },
+        computed:{
+            ...mapState({
+                multiUnit: state => state.multiUnit
+            })
+        }
          
     }
 </script>

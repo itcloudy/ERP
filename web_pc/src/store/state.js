@@ -9,6 +9,9 @@ const state = {
     //可以访问后台
     isBackgroundUser: false,
 
+    // 多单位支持
+    multiUnit: false,
+
     //显示左侧菜单栏
     showLeftSidebar: true,
     // 窗口高度
