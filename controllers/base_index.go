@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -24,8 +25,10 @@ func (c *IndexController) Get() {
 	}
 	switch accessType {
 	case "pc":
+		fmt.Println("Pc")
 		c.TplName = "index_pc.html"
 	case "mobile":
+		fmt.Println("mobile")
 		c.TplName = "index_mobile.html"
 	default:
 		c.TplName = "index_pc.html"
