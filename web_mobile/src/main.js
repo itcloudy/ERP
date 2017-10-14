@@ -1,21 +1,22 @@
+// The Vue build version to load with the `import` command
+// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
-import router from './router';
-import store from './store'
+import router from './router'
 import Vuex from 'vuex'
+import Mint from 'mint-ui'
 
-import "styles/index.scss";
+import store from './store'
 import localStore from 'utils/local_store';
-import stringTimeFormat from 'utils/filters';
-import lazyLoadMenusRoutes from 'utils/lazyload';
+import 'mint-ui/lib/style.css';
 import axios from 'axios';
 
-Vue.filter('stringTimeFormat', stringTimeFormat);
-Vue.prototype.$ajax = axios;
-// import 'font-awesome/css/font-awesome.min.css'
-import Mint from 'mint-ui';
-import 'mint-ui/lib/style.css';
+import stringTimeFormat from 'utils/filters';
+import lazyLoadMenusRoutes from 'utils/lazyload';
 
+Vue.prototype.$ajax = axios;
+
+Vue.config.productionTip = false
 Vue.use(Mint);
 Vue.use(Vuex)
 
@@ -33,7 +34,7 @@ if (backgroundMenus) {
 
 router.beforeEach((to, from, next) => {
     // NProgress.start();
-    if (to.path == '/admin/login') {
+    if (to.path == '/login') {
         localStore.remove('userinfo');
         localStore.remove("groups");
         localStore.remove("backgroundMenus");
@@ -43,8 +44,8 @@ router.beforeEach((to, from, next) => {
     // 后台必须登录
     let adminPath = path.indexOf('/admin');
     if (adminPath == 0) {
-        if (!user && path != '/admin/login') {
-            next({ path: '/admin/login' })
+        if (!user && path != '/login') {
+            next({ path: '/login' })
         } else {
             next()
         }
@@ -52,9 +53,6 @@ router.beforeEach((to, from, next) => {
         next()
     }
 });
-// router.afterEach(() => {
-//     NProgress.done();
-// });
 new Vue({
     router,
     store,

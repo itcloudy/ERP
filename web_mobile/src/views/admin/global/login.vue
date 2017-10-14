@@ -1,11 +1,33 @@
 <template>
-    <div >
-        <mt-header fixed title="登录"></mt-header>
-        <div id="login">
-            <mt-field  placeholder="请输入用户名" v-model="data.username"></mt-field>
-            <mt-field  placeholder="请输入密码" type="password" v-model="data.password"></mt-field>
-            <mt-button type="primary">登录</mt-button>
-        </div>
+    <div class="login" :style="winSize">
+        <el-row>
+            <el-col :span="24">
+                <div class="content">
+                    <el-form label-position="left" label-width="0px" class="loginform" 
+                    :style="formOffset"
+                    :model='data'
+                    :rules="rule_data"
+                    ref='loginData'>
+                        <h3 class="title"> <span>系统登录</span></h3>
+                        <el-form-item
+                                prop='username'>
+                            <el-input type="text" auto-complete="off" placeholder="请输入账号"
+                                      v-model='data.username'></el-input>
+                        </el-form-item>
+
+                        <el-form-item
+                                prop='password'>
+                            <el-input type="password" auto-complete="off" placeholder="请输入密码"
+                                      v-model='data.password'
+                                      @keyup.native.enter="onLogin('loginData')"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click='onLogin("loginData")'>登录</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-col>
+        </el-row>
     </div>
 </template>
 <script>
@@ -217,7 +239,40 @@
     }
 </script>
 <style lang="scss" scoped>
-    #login{
-        margin-top: 3rem;
+.login {
+    background : #1F2D3D;
+
+    .loginform {
+        box-shadow            : 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);
+        -webkit-border-radius : 5px;
+        border-radius         : 5px;
+        -moz-border-radius    : 5px;
+        background-clip       : padding-box;
+        margin-bottom         : 3rem;
+        background-color      : #F9FAFC;
+        border                : 2px solid #8492A6;
     }
+
+    .title {
+        margin      : 0px auto 40px auto;
+        text-align  : center;
+        color       : red;
+        font-weight : normal;
+        font-size   : 2rem;
+
+        span {
+            cursor : pointer;
+
+            &.active {
+                font-weight : bold;
+                font-size   : 18px;
+            }
+        }
+    }
+
+    .loginform {
+        width   : 350px;
+        padding : 35px 35px 15px 35px;
+    }
+}
 </style>

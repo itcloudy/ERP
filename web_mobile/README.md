@@ -1,6 +1,6 @@
-# web_mobile
+# golangerp
 
-> A Vue.js project
+> golangerp
 
 ## Build Setup
 

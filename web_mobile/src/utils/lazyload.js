@@ -73,7 +73,7 @@ export default function lazyLoadMenusRoutes(menus) {
     //外层增加Home
     let bootMenu = {
         path: "/admin",
-        component: lazyLoadComponent("admin/global/home"),
+        component: lazyLoadComponent("admin/global/Home"),
         children: menus
     }
     return bootMenu;
