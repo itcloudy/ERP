@@ -61,7 +61,7 @@
                         Toast({message:msg,duration: 500});
                     }
                     //登录成功跳转到后台首页
-                    this.$router.push('/admin');
+                    this.$router.push('/admin/menu');
                 });
             }else{
                 Toast({message:"登录失败",duration: 500});

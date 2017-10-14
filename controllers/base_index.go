@@ -30,5 +30,4 @@ func (c *IndexController) Get() {
 	default:
 		c.TplName = "index_pc.html"
 	}
-	c.TplName = "index_mobile.html"
 }

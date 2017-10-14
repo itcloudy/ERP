@@ -1,5 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import 'babel-polyfill'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
@@ -10,7 +11,7 @@ import store from './store'
 import localStore from 'utils/local_store';
 import 'mint-ui/lib/style.css';
 import axios from 'axios';
-
+import "styles/index.scss";
 import stringTimeFormat from 'utils/filters';
 import lazyLoadMenusRoutes from 'utils/lazyload';
 
@@ -41,17 +42,17 @@ router.beforeEach((to, from, next) => {
     }
     let user = JSON.parse(localStore.get('userinfo'));
     let path = to.path;
-    // 后台必须登录
-    let adminPath = path.indexOf('/admin');
-    if (adminPath == 0) {
-        if (!user && path != '/login') {
-            next({ path: '/login' })
-        } else {
-            next()
-        }
+    // // 后台必须登录
+    // let adminPath = path.indexOf('/admin');
+    // if (adminPath == 0) {
+    if (!user && path != '/login') {
+        next({ path: '/login' })
     } else {
         next()
     }
+    // } else {
+    //     next()
+    // }
 });
 new Vue({
     router,
