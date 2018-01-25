@@ -322,7 +322,7 @@
             },
             showAddAttributeLineForm(){
                 if (this.templateForm.ID<1){
-                    this.message({ message:"请先保存", type: 'warning' });
+                    this.$message({ message:"请先保存", type: 'warning' });
                 }else{
                     this.attributeLineForm.ProductTemplate.ID = this.templateForm.ID;
                     this.attributeLineForm.ProductTemplate.Name = this.templateForm.Name;

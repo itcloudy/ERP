@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -126,7 +125,6 @@ func ServiceGetAddressCountryByID(user *md.User, id int64) (access utils.AccessR
 	}
 	o := orm.NewOrm()
 	var country *md.AddressCountry
-	fmt.Println(id)
 	if country, err = md.GetAddressCountryByID(id, o); err == nil {
 		objInfo := make(map[string]interface{})
 		objInfo["Name"] = country.Name

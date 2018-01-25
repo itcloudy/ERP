@@ -8,7 +8,7 @@
                 <el-form-item label="单位名称">
                     <span>{{uomForm.Name}}</span>
                 </el-form-item>
-                <el-form-item label="单位类别">
+                <el-form-item label="所属类别">
                     <span>{{uomForm.Category.Name}}</span>
                 </el-form-item>
                 <el-form-item label="比率"  v-if="uomForm.Type =='smaller'">

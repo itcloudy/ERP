@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"reflect"
 	"strconv"
 	"strings"
@@ -16,9 +15,7 @@ func JSONreflectStruct(jsonData map[string]interface{}, obj interface{}) (err er
 	objV := reflect.ValueOf(obj)
 	objT = objT.Elem()
 	objV = objV.Elem()
-	fmt.Println(objT.NumField())
 	for i := 0; i < objT.NumField(); i++ {
-		fmt.Println("objT.NumField():", i)
 		fieldT := objT.Field(i)
 		fieldV := objV.Field(i)
 		tags := strings.Split(fieldT.Tag.Get("form"), ",")
@@ -35,14 +32,8 @@ func JSONreflectStruct(jsonData map[string]interface{}, obj interface{}) (err er
 		if jsonValue == nil {
 			continue
 		}
-		fmt.Println(jsonValue)
-		fmt.Println(fieldT)
-		fmt.Println(fieldT.Type.Kind())
 
-		if fieldT.Type.Kind() == reflect.Ptr {
-			fmt.Printf("%+v\n", fieldT)
-		} else {
-
+		if fieldT.Type.Kind() != reflect.Ptr {
 			switch fieldT.Type.Kind() {
 			case reflect.Bool:
 				value := jsonValue.(string)

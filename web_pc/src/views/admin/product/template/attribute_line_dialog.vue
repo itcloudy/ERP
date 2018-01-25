@@ -115,7 +115,7 @@ import {validateObjectID,validateList} from '@/utils/validators';
         created:function(){
             this.attributeList = [this.form.Attribute];
             this.AttributeValues = this.form.AttributeValues;
-            this.selectedValues = this.form.AttributeValues.map(function(item){return item.ID});
+            this.selectedValues = this.form.AttributeValues.map(function(item){return item.Name});
         }
     }
 </script>

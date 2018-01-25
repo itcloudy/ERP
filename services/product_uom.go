@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -111,6 +112,7 @@ func ServiceGetProductUom(user *md.User, query map[string]interface{}, exclude m
 			objInfo["Symbol"] = obj.Symbol
 			categoryInfo := make(map[string]interface{})
 			categoryInfo["ID"] = obj.Category.ID
+			fmt.Printf("%+v\n", obj.Category)
 			categoryInfo["Name"] = obj.Category.Name
 			objInfo["Category"] = categoryInfo
 			results = append(results, objInfo)

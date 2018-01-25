@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 
@@ -99,7 +98,6 @@ func ServiceGetProductUomCateg(user *md.User, query map[string]interface{}, excl
 	var arrs []md.ProductUomCateg
 	o := orm.NewOrm()
 	if paginator, arrs, err = md.GetAllProductUomCateg(o, query, exclude, condMap, fields, sortby, order, offset, limit); err == nil {
-		fmt.Printf("%+v\n", arrs)
 		lenArrs := len(arrs)
 		for i := 0; i < lenArrs; i++ {
 			obj := arrs[i]

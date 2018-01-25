@@ -3,7 +3,6 @@ package services
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	md "golangERP/models"
 	"golangERP/utils"
 	"reflect"
@@ -150,9 +149,7 @@ func ServiceUpdateProductAttributeLine(user *md.User, requestBody []byte, id int
 		}
 	}
 
-	fmt.Printf("%+v\n", obj)
 	id, err = md.UpdateProductAttributeLine(&obj, o)
-	fmt.Println(err)
 	return
 }
 

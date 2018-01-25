@@ -25,7 +25,6 @@ func InitCache() {
 		initMemcache()
 	}
 
-	//fmt.Println("[cache] use", cacheConfig)
 }
 
 func initMemcache() {
@@ -45,7 +44,6 @@ func initRedis() {
 
 	defer func() {
 		if r := recover(); r != nil {
-			//fmt.Println("initial redis error caught: %v\n", r)
 			cc = nil
 		}
 	}()
@@ -122,7 +120,6 @@ func DelCache(key string) error {
 
 	defer func() {
 		if r := recover(); r != nil {
-			//fmt.Println("get cache error caught: %v\n", r)
 			cc = nil
 		}
 	}()
