@@ -6,7 +6,7 @@
         <icon>el-icon-menu</icon>
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product</path>
-        <componentpath>admin/common/Breadcrumb</componentpath>
+        <componentpath>common/Breadcrumb</componentpath>
         <meta></meta>
         <viewtype></viewtype>
         <isbackground>true</isbackground>
@@ -18,12 +18,12 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/template</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/template","componentpath":"admin/product/template/list"}, 
-            {"path":"product/template/form/:id","componentpath":"admin/product/template/form"},
-            {"path":"product/template/detail/:id","componentpath":"admin/product/template/detail"}
+            {"path":"product/template","componentpath":"product/template/list"}, 
+            {"path":"product/template/form/:id","componentpath":"product/template/form"},
+            {"path":"product/template/detail/:id","componentpath":"product/template/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -34,12 +34,12 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/product</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/product","componentpath":"admin/product/product/list"}, 
-            {"path":"product/product/form/:id","componentpath":"admin/product/product/form"},
-            {"path":"product/product/detail/:id","componentpath":"admin/product/product/detail"}
+            {"path":"product/product","componentpath":"product/product/list"}, 
+            {"path":"product/product/form/:id","componentpath":"product/product/form"},
+            {"path":"product/product/detail/:id","componentpath":"product/product/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -52,12 +52,12 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/category</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/category","componentpath":"admin/product/category/list"}, 
-            {"path":"product/category/form/:id","componentpath":"admin/product/category/form"},
-            {"path":"product/category/detail/:id","componentpath":"admin/product/category/detail"}
+            {"path":"product/category","componentpath":"product/category/list"}, 
+            {"path":"product/category/form/:id","componentpath":"product/category/form"},
+            {"path":"product/category/detail/:id","componentpath":"product/category/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -68,12 +68,12 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/attribute</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/attribute","componentpath":"admin/product/attribute/list"}, 
-            {"path":"product/attribute/form/:id","componentpath":"admin/product/attribute/form"},
-            {"path":"product/attribute/detail/:id","componentpath":"admin/product/attribute/detail"}
+            {"path":"product/attribute","componentpath":"product/attribute/list"}, 
+            {"path":"product/attribute/form/:id","componentpath":"product/attribute/form"},
+            {"path":"product/attribute/detail/:id","componentpath":"product/attribute/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -84,12 +84,12 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/attributevalue</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/attributevalue","componentpath":"admin/product/attribute_value/list"}, 
-            {"path":"product/attributevalue/form/:id","componentpath":"admin/product/attribute_value/form"},
-            {"path":"product/attributevalue/detail/:id","componentpath":"admin/product/attribute_value/detail"}
+            {"path":"product/attributevalue","componentpath":"product/attribute_value/list"}, 
+            {"path":"product/attributevalue/form/:id","componentpath":"product/attribute_value/form"},
+            {"path":"product/attributevalue/detail/:id","componentpath":"product/attribute_value/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -100,12 +100,12 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/uom</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/uom","componentpath":"admin/product/uom/list"}, 
-            {"path":"product/uom/form/:id","componentpath":"admin/product/uom/form"},
-            {"path":"product/uom/detail/:id","componentpath":"admin/product/uom/detail"}
+            {"path":"product/uom","componentpath":"product/uom/list"}, 
+            {"path":"product/uom/form/:id","componentpath":"product/uom/form"},
+            {"path":"product/uom/detail/:id","componentpath":"product/uom/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -116,12 +116,12 @@
         <group>productmanager,saleman,salemanager,purchaseman,purchasemanager</group>
         <path>product/uomcateg</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"product/uomcateg","componentpath":"admin/product/uom_categ/list"}, 
-            {"path":"product/uomcateg/form/:id","componentpath":"admin/product/uom_categ/form"},
-            {"path":"product/uomcateg/detail/:id","componentpath":"admin/product/uom_categ/detail"}
+            {"path":"product/uomcateg","componentpath":"product/uom_categ/list"}, 
+            {"path":"product/uomcateg/form/:id","componentpath":"product/uom_categ/form"},
+            {"path":"product/uomcateg/detail/:id","componentpath":"product/uom_categ/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>

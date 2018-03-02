@@ -6,7 +6,7 @@
         <icon>el-icon-menu</icon>
         <group>purchaseman,purchasemanager</group>
         <path>purchase</path>
-        <componentpath>admin/common/Breadcrumb</componentpath>
+        <componentpath>common/Breadcrumb</componentpath>
         <meta></meta>
         <viewtype></viewtype>
         <isbackground>true</isbackground>
@@ -18,12 +18,12 @@
         <group>purchaseman,purchasemanager</group>
         <path>purchase/order</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"purchase/order","componentpath":"admin/purchase/order/list"}, 
-            {"path":"purchase/order/form/:id","componentpath":"admin/purchase/order/form"},
-            {"path":"purchase/order/detail/:id","componentpath":"admin/purchase/order/detail"}
+            {"path":"purchase/order","componentpath":"purchase/order/list"}, 
+            {"path":"purchase/order/form/:id","componentpath":"purchase/order/form"},
+            {"path":"purchase/order/detail/:id","componentpath":"purchase/order/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -34,12 +34,12 @@
         <group>purchaseman,purchasemanager</group>
         <path>purchase/orderline</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"purchase/orderline","componentpath":"admin/purchase/orderline/list"}, 
-            {"path":"purchase/orderline/form/:id","componentpath":"admin/purchase/orderline/form"},
-            {"path":"purchase/orderline/detail/:id","componentpath":"admin/purchase/orderline/detail"}
+            {"path":"purchase/orderline","componentpath":"purchase/orderline/list"}, 
+            {"path":"purchase/orderline/form/:id","componentpath":"purchase/orderline/form"},
+            {"path":"purchase/orderline/detail/:id","componentpath":"purchase/orderline/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>

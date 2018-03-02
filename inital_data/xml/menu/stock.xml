@@ -6,7 +6,7 @@
         <icon>el-icon-menu</icon>
         <group>stockman,stockmanager</group>
         <path>stock</path>
-        <componentpath>admin/common/Breadcrumb</componentpath>
+        <componentpath>common/Breadcrumb</componentpath>
         <meta></meta>
         <viewtype></viewtype>
         <isbackground>true</isbackground>
@@ -18,12 +18,12 @@
         <group>stockmanager</group>
         <path>stock/warehouse</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"stock/warehouse","componentpath":"admin/stock/warehouse/list"}, 
-            {"path":"stock/warehouse/form/:id","componentpath":"admin/stock/warehouse/form"},
-            {"path":"stock/warehouse/detail/:id","componentpath":"admin/stock/warehouse/detail"}
+            {"path":"stock/warehouse","componentpath":"stock/warehouse/list"}, 
+            {"path":"stock/warehouse/form/:id","componentpath":"stock/warehouse/form"},
+            {"path":"stock/warehouse/detail/:id","componentpath":"stock/warehouse/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -34,12 +34,12 @@
         <group>stockman</group>
         <path>stock/picking</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"stock/picking","componentpath":"admin/stock/picking/list"}, 
-            {"path":"stock/picking/form/:id","componentpath":"admin/stock/picking/form"},
-            {"path":"stock/picking/detail/:id","componentpath":"admin/stock/picking/detail"}
+            {"path":"stock/picking","componentpath":"stock/picking/list"}, 
+            {"path":"stock/picking/form/:id","componentpath":"stock/picking/form"},
+            {"path":"stock/picking/detail/:id","componentpath":"stock/picking/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -50,12 +50,12 @@
         <group>stockman</group>
         <path>stock/quant</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"stock/quant","componentpath":"admin/stock/quant/list"}, 
-            {"path":"stock/quant/form/:id","componentpath":"admin/stock/quant/form"},
-            {"path":"stock/quant/detail/:id","componentpath":"admin/stock/quant/detail"}
+            {"path":"stock/quant","componentpath":"stock/quant/list"}, 
+            {"path":"stock/quant/form/:id","componentpath":"stock/quant/form"},
+            {"path":"stock/quant/detail/:id","componentpath":"stock/quant/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>

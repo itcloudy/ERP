@@ -7,17 +7,17 @@ import actions from './actions';
 import getters from './getters';
 import mutations from './mutations';
 // 合作伙伴信息
-import adminPartner from './admin/partner';
+import adminPartner from './partner';
 // 产品管理
-import adminProduct from './admin/product';
+import adminProduct from './product';
 // 采购管理
-import adminPurchase from './admin/purchase';
+import adminPurchase from './purchase';
 // 销售管理
-import adminSale from './admin/sale';
+import adminSale from './sale';
 // 库存管理
-import adminStock from './admin/stock'
+import adminStock from './stock'
 // 用户管理
-import adminUser from './admin/user';
+import adminUser from './user';
 
 
 

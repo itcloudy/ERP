@@ -2,22 +2,13 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-const Login = resolve => require(['@/views/admin/global/login'], resolve);
-const FrontHome = resolve => require(['@/views/front/global/Home'], resolve);
-const Work = resolve => require(['@/views/front/work/home'], resolve);
+const Login = resolve => require(['@/views/global/login'], resolve);
 let routes = [{
-        path: '/admin/login',
-        name: 'adminlogin',
+        path: '/login',
+        name: 'login',
         component: Login
     },
-    {
-        path: "/",
-        name: "frontHome",
-        component: FrontHome,
-        children: [
-            { path: "work", name: "work", component: Work },
-        ]
-    }
+
 
 ];
 const scrollBehavior = (to, from, savedPosition) => {

@@ -6,7 +6,7 @@
         <icon>el-icon-menu</icon>
         <group>saleman,salemanager</group>
         <path>sale</path>
-        <componentpath>admin/common/Breadcrumb</componentpath>
+        <componentpath>common/Breadcrumb</componentpath>
         <meta></meta>
         <viewtype></viewtype>
         <isbackground>true</isbackground>
@@ -18,12 +18,12 @@
         <group>saleman,salemanager</group>
         <path>sale/order</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"sale/order","componentpath":"admin/sale/order/list"}, 
-            {"path":"sale/order/form/:id","componentpath":"admin/sale/order/form"},
-            {"path":"sale/order/detail/:id","componentpath":"admin/sale/order/detail"}
+            {"path":"sale/order","componentpath":"sale/order/list"}, 
+            {"path":"sale/order/form/:id","componentpath":"sale/order/form"},
+            {"path":"sale/order/detail/:id","componentpath":"sale/order/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -34,12 +34,12 @@
         <group>saleman,salemanager</group>
         <path>sale/orderline</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"sale/orderline","componentpath":"admin/sale/orderline/list"}, 
-            {"path":"sale/orderline/form/:id","componentpath":"admin/sale/orderline/form"},
-            {"path":"sale/orderline/detail/:id","componentpath":"admin/sale/orderline/detail"}
+            {"path":"sale/orderline","componentpath":"sale/orderline/list"}, 
+            {"path":"sale/orderline/form/:id","componentpath":"sale/orderline/form"},
+            {"path":"sale/orderline/detail/:id","componentpath":"sale/orderline/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -50,12 +50,12 @@
         <group>saleman,salemanager</group>
         <path>partner/?customer=true</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"partner/?customer=true","componentpath":"admin/partner/list"}, 
-            {"path":"partner/form/:id?customer=true","componentpath":"admin/partner/form"},
-            {"path":"partner/detail/:id?customer=true","componentpath":"admin/partner/detail"}
+            {"path":"partner/?customer=true","componentpath":"partner/list"}, 
+            {"path":"partner/form/:id?customer=true","componentpath":"partner/form"},
+            {"path":"partner/detail/:id?customer=true","componentpath":"partner/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>

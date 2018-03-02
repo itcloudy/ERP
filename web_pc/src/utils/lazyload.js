@@ -26,7 +26,7 @@ export default function lazyLoadMenusRoutes(menus) {
                                     su.children = [];
                                 }
                                 su.children.push({
-                                    path: "/admin/" + n.path,
+                                    path: "/" + n.path,
                                     component: lazyLoadComponent(n.componentpath),
                                 })
                             }
@@ -44,7 +44,7 @@ export default function lazyLoadMenusRoutes(menus) {
                                 item.children = [];
                             }
                             item.children.push({
-                                path: "/admin/" + n.path,
+                                path: "/" + n.path,
                                 component: lazyLoadComponent(n.componentpath),
                             })
                         }
@@ -63,7 +63,7 @@ export default function lazyLoadMenusRoutes(menus) {
                         menu.children = [];
                     }
                     menu.children.push({
-                        path: "/admin/" + n.path,
+                        path: "/" + n.path,
                         component: lazyLoadComponent(n.componentpath),
                     })
                 }
@@ -72,8 +72,8 @@ export default function lazyLoadMenusRoutes(menus) {
     });
     //外层增加Home
     let bootMenu = {
-        path: "/admin",
-        component: lazyLoadComponent("admin/global/Home"),
+        path: "",
+        component: lazyLoadComponent("global/Home"),
         children: menus
     }
     return bootMenu;

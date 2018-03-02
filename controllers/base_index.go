@@ -26,7 +26,7 @@ func (c *IndexController) Get() {
 	case "pc":
 		c.TplName = "index_pc.html"
 	case "mobile":
-		c.TplName = "index_mobile.html"
+		c.TplName = "index_pc.html"
 	default:
 		c.TplName = "index_pc.html"
 	}

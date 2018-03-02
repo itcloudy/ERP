@@ -35,24 +35,22 @@ if (backgroundMenus) {
 // NProgress.configure({ showSpinner: false })
 
 router.beforeEach((to, from, next) => {
+    console.log(JSON.stringify(to));
+    console.log(to.path);
     // NProgress.start();
-    if (to.path == '/admin/login') {
+    if (to.path == '/login') {
         localStore.remove('userinfo');
         localStore.remove("groups");
         localStore.remove("backgroundMenus");
     }
     let user = JSON.parse(localStore.get('userinfo'));
+    console.log(JSON.stringify(user));
     let path = to.path;
     // 后台必须登录
-    let adminPath = path.indexOf('/admin');
-    if (adminPath == 0) {
-        if (!user && path != '/admin/login') {
-            next({ path: '/admin/login' })
-        } else {
-            next()
-        }
+    if (!user && path != '/login') {
+        next({ path: '/login' });
     } else {
-        next()
+        next();
     }
 });
 // router.afterEach(() => {

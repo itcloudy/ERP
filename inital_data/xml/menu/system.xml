@@ -6,7 +6,7 @@
         <icon>el-icon-menu</icon>
         <group>saleman,salemanager</group>
         <path>setting</path>
-        <componentpath>admin/common/Breadcrumb</componentpath>
+        <componentpath>common/Breadcrumb</componentpath>
         <meta></meta>
         <viewtype></viewtype>
         <isbackground>true</isbackground>
@@ -18,11 +18,11 @@
         <group></group>
         <path>setting/user</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"setting/user","componentpath":"admin/setting/userTree"}, 
-            {"path":"setting/user/:id","componentpath":"admin/setting/userForm"}
+            {"path":"setting/user","componentpath":"setting/userTree"}, 
+            {"path":"setting/user/:id","componentpath":"setting/userForm"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -33,11 +33,11 @@
         <group></group>
         <path>setting/group</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"setting/group","componentpath":"admin/setting/groupTree"}, 
-            {"path":"setting/group/:id","componentpath":"admin/setting/groupForm"}
+            {"path":"setting/group","componentpath":"setting/groupTree"}, 
+            {"path":"setting/group/:id","componentpath":"setting/groupForm"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>

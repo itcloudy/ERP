@@ -6,7 +6,7 @@
         <icon>el-icon-menu</icon>
         <group>purchasemanager,salemanager</group>
         <path>address</path>
-        <componentpath>admin/common/Breadcrumb</componentpath>
+        <componentpath>common/Breadcrumb</componentpath>
         <meta></meta>
         <viewtype></viewtype>
         <isbackground>true</isbackground>
@@ -18,12 +18,12 @@
         <group>purchasemanager,salemanager</group>
         <path>address/country</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"address/country","componentpath":"admin/address/country/list"}, 
-            {"path":"address/country/form/:id","componentpath":"admin/address/country/form"},
-            {"path":"address/country/detail/:id","componentpath":"admin/address/country/detail"}
+            {"path":"address/country","componentpath":"address/country/list"}, 
+            {"path":"address/country/form/:id","componentpath":"address/country/form"},
+            {"path":"address/country/detail/:id","componentpath":"address/country/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -34,12 +34,12 @@
         <group>purchasemanager,salemanager</group>
         <path>address/province</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"address/province","componentpath":"admin/address/province/list"}, 
-            {"path":"address/province/form/:id","componentpath":"admin/address/province/form"},
-            {"path":"address/province/detail/:id","componentpath":"admin/address/province/detail"}
+            {"path":"address/province","componentpath":"address/province/list"}, 
+            {"path":"address/province/form/:id","componentpath":"address/province/form"},
+            {"path":"address/province/detail/:id","componentpath":"address/province/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -50,12 +50,12 @@
         <group>purchasemanager,salemanager</group>
         <path>address/city</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"address/city","componentpath":"admin/address/city/list"}, 
-            {"path":"address/city/form/:id","componentpath":"admin/address/city/form"},
-            {"path":"address/city/detail/:id","componentpath":"admin/address/city/detail"}
+            {"path":"address/city","componentpath":"address/city/list"}, 
+            {"path":"address/city/form/:id","componentpath":"address/city/form"},
+            {"path":"address/city/detail/:id","componentpath":"address/city/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
@@ -66,12 +66,12 @@
         <group>purchasemanager,salemanager</group>
         <path>address/district</path>
         <!-- 下面有不同的视图，component使用中间件,仅传递router-view -->
-        <componentpath>admin/common/MiddleRouterView</componentpath>
+        <componentpath>common/MiddleRouterView</componentpath>
         <meta></meta>
         <viewtype>[
-            {"path":"address/district","componentpath":"admin/address/district/list"}, 
-            {"path":"address/district/form/:id","componentpath":"admin/address/district/form"},
-            {"path":"address/district/detail/:id","componentpath":"admin/address/district/detail"}
+            {"path":"address/district","componentpath":"address/district/list"}, 
+            {"path":"address/district/form/:id","componentpath":"address/district/form"},
+            {"path":"address/district/detail/:id","componentpath":"address/district/detail"}
         ]</viewtype>
         <isbackground>true</isbackground>
     </menu>
