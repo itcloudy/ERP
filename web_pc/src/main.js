@@ -35,8 +35,6 @@ if (backgroundMenus) {
 // NProgress.configure({ showSpinner: false })
 
 router.beforeEach((to, from, next) => {
-    console.log(JSON.stringify(to));
-    console.log(to.path);
     // NProgress.start();
     if (to.path == '/login') {
         localStore.remove('userinfo');
@@ -44,7 +42,6 @@ router.beforeEach((to, from, next) => {
         localStore.remove("backgroundMenus");
     }
     let user = JSON.parse(localStore.get('userinfo'));
-    console.log(JSON.stringify(user));
     let path = to.path;
     // 后台必须登录
     if (!user && path != '/login') {

@@ -1,4 +1,7 @@
 #golangERP
+
+
+## 
 后台：框架采用国人谢大开发的beego
 
 前端:webpack2+vue2+vuex+vue-router
@@ -7,11 +10,21 @@
 
 clone工程到go的src目录下，工程文件夹的名字必须为golangERP，若要修改名字需要将代码中所有golangERP修改为工程文件夹的名字
 
-前端支持桌面和移动端，服务器根据请求区分（不全面），web_pc针对的是pc端，web_mobile针对的是移动端
-
-增加了前后台，后台地址以admin开始
-
-在golangERP\web_pc和golangERP\web_mobile 目录下执行:npm install & npm run build 
+##　体验步骤
+* 在系统变量GOPATH下src目录中执行下面的命令(文件夹名称必须为goERP,改成其他名称需要替换代码中的包引入中的字符串"goERP")
+<pre><code>
+git clone https://github.com/hexiaoyun128/ERP.git goERP
+</pre></code>
+* cd到web_pc,执行下面的命令
+<pre><code>
+npm install
+npm run build 
+</pre></code>
+* 在goERP目录下执行
+<pre><code>
+bee run
+</pre></code>
+* 浏览器输入[地址](localhost:8888)
 
 回到golangERP目录下执行：bee run 
 
@@ -26,6 +39,8 @@ clone工程到go的src目录下，工程文件夹的名字必须为golangERP，�
 gopath下src/crypto/tls/generate_cert.go
 
 go run generate_cert.go -host www.hechihan.com
+
+
 
 ##QQ群
 ![](http://i.imgur.com/fxfcP6k.png)
