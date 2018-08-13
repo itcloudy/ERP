@@ -1,6 +1,9 @@
 #golangERP
 
 
+## 最新后台请参考
+https://github.com/hexiaoyun128/gin-base-framework
+
 ## 
 后台：框架采用国人谢大开发的beego
 
