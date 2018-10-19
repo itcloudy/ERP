@@ -1,7 +1,7 @@
 <template>
     <div class="left-sidebar" :style="sidebarStyles">
         <div class="left-top">
-             golangERP 
+             goERP
         </div>
         <div class="left-main">
             <el-row class="tac">

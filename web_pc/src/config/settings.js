@@ -1,5 +1,5 @@
 var settings = {
     baseUrl: "/",
-    db_prefix: "golangERP",
+    db_prefix: "goERP",
 };
 module.exports = settings;

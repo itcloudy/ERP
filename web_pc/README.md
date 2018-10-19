@@ -1,4 +1,4 @@
-# golangerp
+# goERP
 
 > golang erp
 
