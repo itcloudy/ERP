@@ -10,7 +10,7 @@ type IndexController struct {
 }
 
 func (c *IndexController) Get() {
-	c.Data["Website"] = "golangERP"
+	c.Data["Website"] = "goERP"
 	c.Data["Email"] = "272685110@qq.com"
 	typeMap := map[string]string{"windows": "pc", "android": "mobile", "linux": "pc", "iphone": "mobile"}
 	accessType := "pc"

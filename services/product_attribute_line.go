@@ -3,8 +3,8 @@ package services
 import (
 	"encoding/json"
 	"errors"
-	md "golangERP/models"
-	"golangERP/utils"
+	md "goERP/models"
+	"goERP/utils"
 	"reflect"
 
 	"github.com/astaxie/beego/orm"

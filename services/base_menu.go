@@ -2,8 +2,8 @@ package services
 
 import (
 	"errors"
-	md "golangERP/models"
-	"golangERP/utils"
+	md "goERP/models"
+	"goERP/utils"
 	"strings"
 
 	"github.com/astaxie/beego/orm"

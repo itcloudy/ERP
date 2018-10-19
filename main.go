@@ -1,9 +1,9 @@
 package main
 
 import (
-	"golangERP/initalActions"
-	_ "golangERP/routers"
-	"golangERP/utils"
+	"goERP/initalActions"
+	_ "goERP/routers"
+	"goERP/utils"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"

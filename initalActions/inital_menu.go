@@ -2,9 +2,9 @@ package initalActions
 
 import (
 	"encoding/xml"
-	md "golangERP/models"
-	service "golangERP/services"
-	"golangERP/utils"
+	md "goERP/models"
+	service "goERP/services"
+	"goERP/utils"
 	"io/ioutil"
 	"os"
 	"strings"

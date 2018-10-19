@@ -2,11 +2,11 @@ package initalActions
 
 import (
 	"encoding/xml"
-	md "golangERP/models"
+	md "goERP/models"
 	"io/ioutil"
 	"os"
 
-	"golangERP/utils"
+	"goERP/utils"
 
 	"github.com/astaxie/beego/orm"
 )

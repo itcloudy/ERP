@@ -2,8 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
-	service "golangERP/services"
-	"golangERP/utils"
+	service "goERP/services"
+	"goERP/utils"
 	"strconv"
 )
 
@@ -42,7 +42,7 @@ func (ctl *LoginController) Post() {
 	} else {
 		response["code"] = utils.FailedCode
 		response["msg"] = utils.FailedMsg
-		
+
 	}
 	ctl.Data["json"] = response
 	ctl.ServeJSON()

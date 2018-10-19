@@ -41,7 +41,7 @@ func init() {
 	consoleLogs = logs.NewLogger(1)
 	consoleLogs.SetLogger(logs.AdapterConsole)
 	fileLogs = logs.NewLogger(10000)
-	fileLogs.SetLogger(logs.AdapterMultiFile, `{"filename":"logs/golangERP.log","separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"],"level":7,"daily":true,"maxdays":10}`)
+	fileLogs.SetLogger(logs.AdapterMultiFile, `{"filename":"logs/goERP.log","separate":["emergency", "alert", "critical", "error", "warning", "notice", "info", "debug"],"level":7,"daily":true,"maxdays":10}`)
 	runmode = strings.TrimSpace(strings.ToLower(beego.AppConfig.String("runmode")))
 	if runmode == "" {
 		runmode = "dev"

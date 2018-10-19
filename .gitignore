@@ -5,7 +5,7 @@
 *.exe
 *.exe~
 settings.json
-golangERP.*
+goERP.*
 debug
 debug~
 settings.json
@@ -15,6 +15,5 @@ logs/*.log
 #vue2+webpack2生成的文件
 static/pc
 static/mobile
-/views
+
 web_pc/node_modules
-web_mobile/node_modules

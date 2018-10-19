@@ -2,9 +2,9 @@ package controllers
 
 import (
 	"encoding/json"
-	md "golangERP/models"
-	service "golangERP/services"
-	"golangERP/utils"
+	md "goERP/models"
+	service "goERP/services"
+	"goERP/utils"
 )
 
 // MenuController 菜单模块

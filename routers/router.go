@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"golangERP/controllers"
+	"goERP/controllers"
 
 	"github.com/astaxie/beego"
 )

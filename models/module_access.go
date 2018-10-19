@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"golangERP/utils"
+	"goERP/utils"
 
 	"github.com/astaxie/beego/orm"
 )

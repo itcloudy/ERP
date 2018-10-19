@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	service "golangERP/services"
-	"golangERP/utils"
+	service "goERP/services"
+	"goERP/utils"
 )
 
 // UserController 城市模块

@@ -1,7 +1,7 @@
 package initalActions
 
 import (
-	"golangERP/utils"
+	"goERP/utils"
 	"os"
 	"runtime"
 )

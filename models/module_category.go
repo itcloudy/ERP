@@ -13,8 +13,8 @@ type ModuleCategory struct {
 	UpdateUserID int64     `orm:"column(update_user_id);null"` //最后更新者
 	CreateDate   time.Time `orm:"auto_now_add;type(datetime)"` //创建时间
 	UpdateDate   time.Time `orm:"auto_now;type(datetime)"`     //最后更新时间
-	Name         string    `orm:"size(50)" xml:"name"`        //模块分类名称
-	Description  string    `xml:"description"`                  //说明
+	Name         string    `orm:"size(50)" xml:"name"`         //模块分类名称
+	Description  string    `xml:"description"`                 //说明
 
 }
 

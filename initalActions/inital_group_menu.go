@@ -1,7 +1,7 @@
 package initalActions
 
 import (
-	md "golangERP/models"
+	md "goERP/models"
 
 	"github.com/astaxie/beego/orm"
 )

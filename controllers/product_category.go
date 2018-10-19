@@ -1,8 +1,8 @@
 package controllers
 
 import (
-	service "golangERP/services"
-	"golangERP/utils"
+	service "goERP/services"
+	"goERP/utils"
 )
 
 // ProductCategoryController 产品分类模块

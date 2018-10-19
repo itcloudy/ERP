@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	md "golangERP/models"
+	md "goERP/models"
 	"time"
 
 	"github.com/astaxie/beego"

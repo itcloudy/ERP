@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	md "golangERP/models"
-	"golangERP/utils"
+	md "goERP/models"
+	"goERP/utils"
 
 	"github.com/astaxie/beego/orm"
 )

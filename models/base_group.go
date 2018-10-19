@@ -15,15 +15,15 @@ type BaseGroup struct {
 	UpdateUserID  int64          `orm:"column(update_user_id);null"` //最后更新者
 	CreateDate    time.Time      `orm:"auto_now_add;type(datetime)"` //创建时间
 	UpdateDate    time.Time      `orm:"auto_now;type(datetime)"`     //最后更新时间
-	Name          string         `orm:"unique;size(50)"`            //权限组名称
-	ModelAccesses []*ModelAccess `orm:"reverse(many)"`                //模块(表)
+	Name          string         `orm:"unique;size(50)"`             //权限组名称
+	ModelAccesses []*ModelAccess `orm:"reverse(many)"`               //模块(表)
 	Childs        []*BaseGroup   `orm:"reverse(many)"`               //下级
-	Parent        *BaseGroup     `orm:"rel(fk);null"`                 //上级
-	ParentLeft    int64          `orm:"unique"`                       //左边界
-	ParentRight   int64          `orm:"unique"`                       //右边界
-	Category      string         `orm:""`                             //分类
-	Description   string         ``                                   //说明
-	Menus         []*BaseMenu    `orm:"reverse(many)"`                //菜单
+	Parent        *BaseGroup     `orm:"rel(fk);null"`                //上级
+	ParentLeft    int64          `orm:"unique"`                      //左边界
+	ParentRight   int64          `orm:"unique"`                      //右边界
+	Category      string         `orm:""`                            //分类
+	Description   string         ``                                  //说明
+	Menus         []*BaseMenu    `orm:"reverse(many)"`               //菜单
 }
 
 func init() {
