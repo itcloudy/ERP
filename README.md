@@ -48,11 +48,4 @@ go run generate_cert.go -host www.hechihan.com
 ##QQ群
 ![](http://i.imgur.com/fxfcP6k.png)
 
-##捐赠
-
-#微信
-![](http://i.imgur.com/ScbDcOW.jpg)
-
-#支付宝
-![](http://i.imgur.com/3zoIh5S.jpg)
 
