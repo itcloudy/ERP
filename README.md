@@ -1,8 +1,7 @@
 #goERP
 
 
-## 最新后台请参考
-https://github.com/hexiaoyun128/gin-base-framework
+## 建议使用新框架 [https://github.com/itcloudy/base-framework/tree/2.0](https://github.com/itcloudy/base-framework/tree/2.0)
 
 ## 
 后台：框架采用国人谢大开发的beego
