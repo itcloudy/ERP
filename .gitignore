@@ -13,7 +13,4 @@ settings.json
 logs/*.log
 /conf/app.conf
 #vue2+webpack2生成的文件
-static/pc
-static/mobile
-
-web_pc/node_modules
+ 
