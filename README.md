@@ -1,4 +1,4 @@
-#goERP
+# goERP
 
 
 ## 建议使用新框架 [https://github.com/itcloudy/base-framework/tree/2.0](https://github.com/itcloudy/base-framework/tree/2.0)
@@ -12,7 +12,7 @@
 
 clone工程到go的src目录下，工程文件夹的名字必须为goERP，若要修改名字需要将代码中所有goERP修改为工程文件夹的名字
 
-##　体验步骤
+## 体验步骤
 * 在系统变量GOPATH下src目录中执行下面的命令(文件夹名称必须为goERP,改成其他名称需要替换代码中的包引入中的字符串"goERP")
 <pre><code>
 git clone https://github.com/hexiaoyun128/ERP.git goERP
@@ -44,7 +44,7 @@ go run generate_cert.go -host www.hechihan.com
 
 
 
-##QQ群
+## QQ群
 ![](http://i.imgur.com/fxfcP6k.png)
 
 
